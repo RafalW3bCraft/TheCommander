@@ -15,7 +15,7 @@ This project is a Flask-based AI agent system called "The Commander" that integr
 
 ## Prerequisites
 
-- Python 3.8 or higher
+- Python 3.11 or higher
 - pip (Python package installer)
 
 ## Installation
@@ -24,7 +24,7 @@ This project is a Flask-based AI agent system called "The Commander" that integr
 
 ```bash
 git clone <repository-url>
-cd TheCommander
+cd VS-Linux-AI-Agent
 ```
 
 2. (Optional) Create and activate a virtual environment:
@@ -37,10 +37,10 @@ source venv/bin/activate
 3. Install required Python packages:
 
 ```bash
-pip install -r requirements.txt
+pip install anthropic email-validator flask flask-sqlalchemy gunicorn openai psutil psycopg2-binary requests trafilatura
 ```
 
-> Note: If `requirements.txt` is not present, please install dependencies manually as needed.
+> Note: If you prefer, you can create a `requirements.txt` file with the above dependencies and run `pip install -r requirements.txt`.
 
 ## Environment Variables
 
