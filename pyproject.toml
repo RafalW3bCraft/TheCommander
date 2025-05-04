@@ -1,7 +1,7 @@
 [project]
-name = "repl-nix-workspace"
+name = "TheCommander"
 version = "0.1.0"
-description = "Add your description here"
+description = "A Flask-based AI agent system integrating Anthropic Claude and OpenAI for natural language understanding, command execution, and workflow automation."
 requires-python = ">=3.11"
 dependencies = [
     "anthropic>=0.50.0",
