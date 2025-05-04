@@ -24,7 +24,7 @@ This project is a Flask-based AI agent system called "The Commander" that integr
 
 ```bash
 git clone <repository-url>
-cd VS-Linux-AI-Agent
+cd <Dir>
 ```
 
 2. (Optional) Create and activate a virtual environment:
