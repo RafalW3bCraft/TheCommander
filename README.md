@@ -169,4 +169,8 @@ You can access task workflows via the web interface at `/tasks` or through the A
 
 ## License
 
-Specify your project's license here.
+This project is licensed under the MIT License - see the [LICENSE](LICENSE) file for details.
+
+## Author
+
+RafalW3bCraft
