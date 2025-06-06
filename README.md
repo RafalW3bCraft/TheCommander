@@ -1,3 +1,4 @@
+<!-- GitAds-Verify: OI7UH8C1YR34Z6DTOACOPUQGPS7CVO9M -->
 # The Commander - AI Agent
 
 This project is a Flask-based AI agent system called "The Commander" that integrates with advanced AI models such as Anthropic Claude and OpenAI to provide natural language understanding, command execution, workflow automation, and more.
