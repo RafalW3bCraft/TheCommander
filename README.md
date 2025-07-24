@@ -1,6 +1,4 @@
-## GitAds Sponsored
-[![Sponsored by GitAds](https://gitads.dev/v1/ad-serve?source=rafalw3bcraft/thecommander@github)](https://gitads.dev/v1/ad-track?source=rafalw3bcraft/thecommander@github)
-
+<!-- GitAds-Verify: HXCTUYR6EHWM5PKDRNOL6SIA2D2O9PSH -->
 # The Commander - AI Agent
 
 This project is a Flask-based AI agent system called "The Commander" that integrates with advanced AI models such as Anthropic Claude and OpenAI to provide natural language understanding, command execution, workflow automation, and more.
