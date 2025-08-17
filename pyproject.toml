@@ -1,5 +1,6 @@
 [project]
 name = "TheCommander"
+author = "RafalW3bCraft"
 version = "0.1.0"
 description = "A Flask-based AI agent system integrating Anthropic Claude and OpenAI for natural language understanding, command execution, and workflow automation."
 requires-python = ">=3.11"
