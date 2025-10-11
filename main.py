@@ -10,17 +10,21 @@ from command_center import command_center
 from ai_service import ai_service
 from task_service import task_service
 
-# Set up logging
 logging.basicConfig(level=logging.DEBUG)
 logger = logging.getLogger(__name__)
 
 app = Flask(__name__)
 app.secret_key = os.environ.get("SESSION_SECRET", "dev-secret-key")
 
+@app.after_request
+def add_header(response):
+    response.headers['Cache-Control'] = 'no-cache, no-store, must-revalidate'
+    response.headers['Pragma'] = 'no-cache'
+    response.headers['Expires'] = '0'
+    return response
+
 @app.route('/')
 def index():
-    """Render the main interface for the Commander agent."""
-    # Check if a task was selected from the tasks page
     task_id = request.args.get('task')
     selected_task = task_service.get_task_template(task_id) if task_id else None
     
@@ -30,28 +34,23 @@ def index():
 
 @app.route('/tasks')
 def tasks_page():
-    """Display task templates and workflows."""
     return render_template('tasks.html', title="Task Workflows - The Commander")
 
 @app.route('/help')
 def help_page():
-    """Display help documentation for the Commander agent."""
     commands = command_center.commander.get_available_commands()
     return render_template('help.html', title="Commander Help", commands=commands)
 
 @app.route('/execute', methods=['POST'])
 def execute_command():
-    """API endpoint to execute a command through the Commander agent."""
     try:
         command = request.json.get('command', '')
         if not command:
             return jsonify({"status": "error", "message": "No command provided"}), 400
         
-        # Check for advanced parsing options
         use_advanced_parsing = request.json.get('use_advanced_parsing', True)
         use_ai = request.json.get('use_ai', True)
         
-        # Execute the command with enhanced parsing and AI understanding
         result = command_center.execute_command(
             command, 
             use_advanced_parsing=use_advanced_parsing,
@@ -64,7 +63,6 @@ def execute_command():
 
 @app.route('/workflow', methods=['POST'])
 def execute_workflow():
-    """API endpoint to execute a multi-agent workflow."""
     try:
         data = request.json
         if not data:
@@ -85,7 +83,6 @@ def execute_workflow():
 
 @app.route('/history')
 def get_history():
-    """API endpoint to retrieve task history."""
     try:
         limit = request.args.get('limit', default=10, type=int)
         history = command_center.get_task_history(limit)
@@ -95,46 +92,37 @@ def get_history():
         
 @app.route('/command-suggestions')
 def get_command_suggestions():
-    """API endpoint to get command suggestions based on user input."""
     try:
         query = request.args.get('query', '').lower()
         use_ai = request.args.get('use_ai', 'true').lower() == 'true'
         
-        # Get all available commands
         all_commands = command_center.commander.get_available_commands()
         
-        # Prepare suggestions list
         suggestions = []
         
-        # If we have a query and AI is enabled, try to use AI for natural language suggestions
-        if query and use_ai and len(query) > 3:  # Only use AI for longer queries
+        if query and use_ai and len(query) > 3:
             try:
                 from ai_service import ai_service
                 from utils import parse_natural_language_command, find_similar_commands
                 
-                # Try to understand the natural language query
                 parsed_command = parse_natural_language_command(
                     query, 
                     ai_service=ai_service,
                     available_commands=all_commands
                 )
                 
-                # If AI successfully parsed a command, add it as a top suggestion
                 if parsed_command and "command" in parsed_command and parsed_command["command"] != "error":
                     cmd = parsed_command["command"]
                     subcommand = parsed_command.get("subcommand")
                     
-                    # Format the suggested command
                     command_text = cmd
                     if subcommand:
                         command_text += f" {subcommand}"
                         
-                    # Add arguments in a friendly way if present
                     if parsed_command.get("args"):
                         args_text = " ".join(parsed_command["args"])
                         command_text += f" {args_text}"
                     
-                    # Create AI-generated suggestion
                     suggestions.append({
                         "command": command_text,
                         "description": f"AI suggestion based on your query: '{query}'",
@@ -142,9 +130,8 @@ def get_command_suggestions():
                         "confidence": parsed_command.get("confidence", 0.9)
                     })
                     
-                    # Also add similar commands as alternatives
                     similar_commands = find_similar_commands(cmd, all_commands)
-                    for similar_cmd in similar_commands[:2]:  # Limit to top 2 similar commands
+                    for similar_cmd in similar_commands[:2]:
                         suggestions.append({
                             "command": similar_cmd,
                             "description": all_commands.get(similar_cmd, {}).get("description", ""),
@@ -152,12 +139,9 @@ def get_command_suggestions():
                             "confidence": 0.7
                         })
             except Exception as e:
-                # If AI processing fails, log the error but continue with normal suggestions
                 logger.warning(f"Error using AI for command suggestions: {str(e)}")
         
-        # If we have a query, filter commands that match the input (traditional approach)
         if query:
-            # Process main commands
             for cmd, desc in all_commands.items():
                 if cmd.lower().startswith(query):
                     suggestions.append({
@@ -166,20 +150,16 @@ def get_command_suggestions():
                         "type": "main"
                     })
                     
-            # Process sub-commands
             for agent_name in ["vscode", "security", "sysadmin", "coder", "researcher", "database", "devops"]:
                 if agent_name.lower().startswith(query):
-                    # Add the agent as a suggestion
                     suggestions.append({
                         "command": agent_name,
                         "description": f"{agent_name.capitalize()} agent commands",
                         "type": "agent"
                     })
                 elif query.startswith(agent_name + " ") or query == agent_name:
-                    # User has typed an agent name, suggest its commands
                     agent_query = query[len(agent_name):].strip()
                     
-                    # Get agent-specific commands
                     agent = getattr(command_center.commander, f"{agent_name}_agent", None)
                     if agent:
                         agent_commands = agent.get_commands()
@@ -191,7 +171,6 @@ def get_command_suggestions():
                                     "type": "subcommand"
                                 })
             
-            # For "file" and "terminal" commands, provide more contextual suggestions
             if query.startswith("file "):
                 file_options = ["list", "read", "write", "create", "delete"]
                 file_query = query[5:].strip()
@@ -204,7 +183,6 @@ def get_command_suggestions():
                         })
                         
             if query.startswith("terminal "):
-                # Terminal commands get special treatment - suggest common Linux commands
                 linux_commands = [
                     "ls", "cd", "mkdir", "rm", "cp", "mv", "cat", "grep",
                     "find", "ps", "top", "df", "du", "ssh", "scp"
@@ -218,7 +196,6 @@ def get_command_suggestions():
                             "type": "subcommand"
                         })
         else:
-            # No query, suggest main command categories
             main_commands = ["help", "file", "terminal", "about"]
             for cmd in main_commands:
                 cmd_info = all_commands.get(cmd, {})
@@ -228,7 +205,6 @@ def get_command_suggestions():
                     "type": "main"
                 })
             
-            # Also suggest main agent types
             for agent in ["vscode", "security", "sysadmin", "coder"]:
                 suggestions.append({
                     "command": agent,
@@ -236,14 +212,12 @@ def get_command_suggestions():
                     "type": "agent"
                 })
         
-        # Sort suggestions: AI suggestions first, then main commands, agent commands, and subcommands
         def sort_key(item):
             type_order = {"ai_suggestion": -1, "ai_alternative": 0, "main": 1, "agent": 2, "subcommand": 3}
             return (type_order.get(item["type"], 4), item["command"])
             
         suggestions.sort(key=sort_key)
         
-        # Remove duplicates while preserving order
         unique_suggestions = []
         seen_commands = set()
         for suggestion in suggestions:
@@ -251,7 +225,6 @@ def get_command_suggestions():
                 unique_suggestions.append(suggestion)
                 seen_commands.add(suggestion["command"])
         
-        # Limit to 10 suggestions for performance
         unique_suggestions = unique_suggestions[:10]
         
         return jsonify({"status": "success", "suggestions": unique_suggestions})
@@ -261,7 +234,6 @@ def get_command_suggestions():
 
 @app.route('/analyze-image', methods=['POST'])
 def analyze_image():
-    """API endpoint to analyze images using multimodal AI."""
     try:
         data = request.json
         if not data:
@@ -273,7 +245,6 @@ def analyze_image():
         if not image_data:
             return jsonify({"status": "error", "message": "Missing image_data parameter"}), 400
             
-        # Execute the analyze_image workflow
         workflow_data = {
             'image_data': image_data,
             'query': query,
@@ -287,7 +258,6 @@ def analyze_image():
 
 @app.route('/generate-image', methods=['POST'])
 def generate_image():
-    """API endpoint to generate images using AI."""
     try:
         data = request.json
         if not data:
@@ -298,7 +268,6 @@ def generate_image():
         if not prompt:
             return jsonify({"status": "error", "message": "Missing prompt parameter"}), 400
             
-        # Execute the generate_image workflow
         workflow_data = {
             'prompt': prompt,
             'store_in_memory': data.get('store_in_memory', False)
@@ -311,7 +280,6 @@ def generate_image():
         
 @app.route('/code-review', methods=['POST'])
 def visual_code_review():
-    """API endpoint for visual code review with AI."""
     try:
         data = request.json
         if not data:
@@ -325,7 +293,6 @@ def visual_code_review():
         if not code:
             return jsonify({"status": "error", "message": "Missing code parameter"}), 400
             
-        # Execute the visual_code_review workflow
         workflow_data = {
             'code': code,
             'language': language,
@@ -340,7 +307,6 @@ def visual_code_review():
         
 @app.route('/research', methods=['POST'])
 def research_with_sources():
-    """API endpoint for enhanced research with cited sources."""
     try:
         data = request.json
         if not data:
@@ -352,7 +318,6 @@ def research_with_sources():
         if not query:
             return jsonify({"status": "error", "message": "Missing query parameter"}), 400
             
-        # Execute the research_with_sources workflow
         workflow_data = {
             'query': query,
             'context_urls': context_urls,
@@ -366,7 +331,6 @@ def research_with_sources():
         
 @app.route('/knowledge', methods=['POST'])
 def knowledge_store():
-    """API endpoint for knowledge management."""
     try:
         data = request.json
         if not data:
@@ -377,7 +341,6 @@ def knowledge_store():
         if not action:
             return jsonify({"status": "error", "message": "Missing action parameter"}), 400
             
-        # Validate required parameters for each action
         if action == 'store' and (not data.get('key') or not data.get('content')):
             return jsonify({"status": "error", "message": "Store action requires key and content parameters"}), 400
             
@@ -387,7 +350,6 @@ def knowledge_store():
         if action == 'search' and not data.get('query'):
             return jsonify({"status": "error", "message": "Search action requires query parameter"}), 400
             
-        # Execute the knowledge_store workflow
         result = command_center.agent_to_agent('commander', 'commander', 'knowledge_store', data)
         return jsonify({"status": "success", "result": result})
     except Exception as e:
@@ -395,7 +357,6 @@ def knowledge_store():
 
 @app.route('/proxy-image')
 def proxy_image():
-    """Proxy for fetching external images."""
     try:
         url = request.args.get('url')
         if not url:
@@ -405,10 +366,8 @@ def proxy_image():
         if response.status_code != 200:
             return jsonify({"status": "error", "message": f"Failed to fetch image: {response.status_code}"}), response.status_code
             
-        # Create a file-like object from the content
         img_io = BytesIO(response.content)
         
-        # Get content type from response headers, default to image/jpeg
         content_type = response.headers.get('Content-Type', 'image/jpeg')
         
         return send_file(img_io, mimetype=content_type)
@@ -417,7 +376,6 @@ def proxy_image():
 
 @app.route('/task-templates')
 def get_task_templates():
-    """API endpoint to get available task templates."""
     try:
         templates = task_service.get_task_templates()
         return jsonify({"status": "success", "templates": templates})
@@ -427,7 +385,6 @@ def get_task_templates():
 
 @app.route('/task-template/<template_id>')
 def get_task_template(template_id):
-    """API endpoint to get a specific task template."""
     try:
         template = task_service.get_task_template(template_id)
         if not template:
@@ -440,7 +397,6 @@ def get_task_template(template_id):
 
 @app.route('/task-suggestions')
 def get_task_suggestions():
-    """API endpoint to get task suggestions based on user query."""
     try:
         query = request.args.get('query', '')
         if not query:
@@ -448,13 +404,11 @@ def get_task_suggestions():
             
         suggestions = task_service.get_task_suggestions(query)
         
-        # Also include task steps for the top suggestion if available
         if suggestions:
             top_suggestion = suggestions[0]
             steps = task_service.get_task_steps(top_suggestion["id"])
             top_suggestion["steps"] = steps
             
-            # Include AI suggestions for the top suggestion
             ai_suggestions = task_service.get_ai_suggestions(top_suggestion["id"])
             top_suggestion["ai_suggestions"] = ai_suggestions
             
@@ -469,7 +423,6 @@ def get_task_suggestions():
 
 @app.route('/task-steps/<template_id>')
 def get_task_steps(template_id):
-    """API endpoint to get the steps for a specific task."""
     try:
         steps = task_service.get_task_steps(template_id)
         if not steps:
@@ -486,7 +439,6 @@ def get_task_steps(template_id):
 
 @app.route('/available-ai-services')
 def get_available_ai_services():
-    """API endpoint to get information about available AI services."""
     try:
         available = task_service._get_available_ai()
         missing = task_service.get_missing_ai_services()

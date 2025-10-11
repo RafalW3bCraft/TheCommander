@@ -1,11 +1,3 @@
-"""
-Advanced AI Service for the Commander Agent System.
-
-This module provides integration with multiple state-of-the-art AI models including 
-Anthropic Claude and OpenAI for sophisticated natural language understanding,
-multimodal processing, and advanced knowledge management.
-"""
-
 import os
 import logging
 import sys
@@ -13,34 +5,29 @@ import json
 import base64
 import requests
 from typing import Dict, List, Any, Optional, Union
-import anthropic
-from anthropic import Anthropic
 
-# Optional OpenAI import
+logging.basicConfig(level=logging.DEBUG)
+logger = logging.getLogger(__name__)
+
+try:
+    import anthropic
+    from anthropic import Anthropic
+    ANTHROPIC_AVAILABLE = True
+except ImportError as e:
+    ANTHROPIC_AVAILABLE = False
+    logger.warning(f"Anthropic not available: {e}")
+
 try:
     import openai
     from openai import OpenAI
     OPENAI_AVAILABLE = True
-except ImportError:
+except ImportError as e:
     OPENAI_AVAILABLE = False
-    
-# Set up logging
-logging.basicConfig(level=logging.DEBUG)
-logger = logging.getLogger(__name__)
+    logger.warning(f"OpenAI not available: {e}")
 
 class AIService:
-    """
-    Service for interacting with advanced AI models.
-    
-    This class provides methods for:
-    - Advanced natural language understanding
-    - Context-aware command parsing
-    - Multi-turn conversation handling
-    - Code generation and analysis
-    """
     
     def __init__(self):
-        """Initialize the AI Service with available AI models."""
         self.models = {}
         self.conversation_history = {}
         self.embedding_cache = {}
@@ -49,8 +36,10 @@ class AIService:
         self.setup_openai()
     
     def setup_anthropic(self):
-        """Set up the Anthropic Claude integration."""
         try:
+            if not ANTHROPIC_AVAILABLE:
+                logger.warning("Anthropic package not available.")
+                return
             anthropic_key = os.environ.get('ANTHROPIC_API_KEY')
             if not anthropic_key:
                 logger.warning("ANTHROPIC_API_KEY not found in environment variables.")
@@ -62,7 +51,6 @@ class AIService:
             logger.error(f"Error initializing Anthropic Claude API: {str(e)}")
     
     def setup_openai(self):
-        """Set up the OpenAI integration."""
         try:
             if not OPENAI_AVAILABLE:
                 logger.warning("OpenAI package not installed. Skipping OpenAI setup.")
@@ -79,24 +67,11 @@ class AIService:
             logger.error(f"Error initializing OpenAI API: {str(e)}")
     
     def understand_command(self, command_text, user_id="default", context=None):
-        """
-        Understand and parse a natural language command into structured format.
-        
-        Args:
-            command_text: The text-based command to understand
-            user_id: Identifier for the user (for conversation history)
-            context: Additional context information
-            
-        Returns:
-            Structured command information
-        """
         if 'claude' not in self.models:
             return {"error": "Claude API not available"}
         
-        # Get conversation history for the user
         history = self.get_conversation_history(user_id)
         
-        # Create system prompt for command understanding
         system_prompt = """
         You are an assistant that helps parse natural language commands into structured formats.
         Your task is to understand user commands related to VS Code configurations, 
@@ -129,14 +104,13 @@ class AIService:
         Format all outputs as JSON.
         """
         
-        # Create user message with context if provided
         user_message = command_text
         if context:
             user_message = f"Context: {json.dumps(context)}\n\nCommand: {command_text}"
         
         try:
             response = self.models['claude'].messages.create(
-                model="claude-3-5-sonnet-20241022",  # the newest Anthropic model is "claude-3-5-sonnet-20241022" which was released October 22, 2024
+                model="claude-3-5-sonnet-20241022",
                 system=system_prompt,
                 messages=[
                     {"role": "user", "content": user_message}
@@ -145,11 +119,9 @@ class AIService:
                 max_tokens=1000
             )
             
-            # Extract and parse the JSON from the response
             result = {}
             try:
                 content = response.content[0].text
-                # Extract JSON from the content (it might be wrapped in ```json or other formatting)
                 if "```json" in content:
                     json_start = content.find("```json") + 7
                     json_end = content.find("```", json_start)
@@ -158,7 +130,6 @@ class AIService:
                 else:
                     result = json.loads(content)
                 
-                # Add to conversation history
                 self.add_to_history(user_id, {"role": "user", "content": user_message})
                 self.add_to_history(user_id, {"role": "assistant", "content": content})
                 
@@ -181,17 +152,6 @@ class AIService:
             }
     
     def generate_code(self, language, description, context=None):
-        """
-        Generate code based on a description.
-        
-        Args:
-            language: The programming language to use
-            description: Description of what the code should do
-            context: Additional context (file snippets, etc.)
-            
-        Returns:
-            Generated code with explanation
-        """
         if 'claude' not in self.models:
             return "Claude API not available. Cannot generate code."
         
@@ -208,7 +168,7 @@ class AIService:
         
         try:
             response = self.models['claude'].messages.create(
-                model="claude-3-5-sonnet-20241022",  # the newest Anthropic model is "claude-3-5-sonnet-20241022" which was released October 22, 2024
+                model="claude-3-5-sonnet-20241022",
                 system=system_prompt,
                 messages=[
                     {"role": "user", "content": user_message}
@@ -224,17 +184,6 @@ class AIService:
             return f"Error generating code: {str(e)}"
     
     def analyze_code(self, language, code, analysis_type="security"):
-        """
-        Analyze code for various purposes (security, optimization, etc.).
-        
-        Args:
-            language: The programming language of the code
-            code: The code to analyze
-            analysis_type: Type of analysis to perform
-            
-        Returns:
-            Analysis results
-        """
         if 'claude' not in self.models:
             return "Claude API not available. Cannot analyze code."
         
@@ -256,7 +205,7 @@ class AIService:
         
         try:
             response = self.models['claude'].messages.create(
-                model="claude-3-5-sonnet-20241022",  # the newest Anthropic model is "claude-3-5-sonnet-20241022" which was released October 22, 2024
+                model="claude-3-5-sonnet-20241022",
                 system=system_prompt,
                 messages=[
                     {"role": "user", "content": code}
@@ -272,16 +221,6 @@ class AIService:
             return f"Error analyzing code: {str(e)}"
     
     def suggest_improvements(self, language, code):
-        """
-        Suggest improvements for the provided code.
-        
-        Args:
-            language: The programming language of the code
-            code: The code to improve
-            
-        Returns:
-            Suggested improvements
-        """
         if 'claude' not in self.models:
             return "Claude API not available. Cannot suggest improvements."
         
@@ -304,7 +243,7 @@ class AIService:
         
         try:
             response = self.models['claude'].messages.create(
-                model="claude-3-5-sonnet-20241022",  # the newest Anthropic model is "claude-3-5-sonnet-20241022" which was released October 22, 2024
+                model="claude-3-5-sonnet-20241022",
                 system=system_prompt,
                 messages=[
                     {"role": "user", "content": code}
@@ -320,16 +259,6 @@ class AIService:
             return f"Error suggesting improvements: {str(e)}"
     
     def explain_code(self, language, code):
-        """
-        Provide an explanation for a code snippet.
-        
-        Args:
-            language: The programming language of the code
-            code: The code to explain
-            
-        Returns:
-            Explanation of the code
-        """
         if 'claude' not in self.models:
             return "Claude API not available. Cannot explain code."
         
@@ -348,7 +277,7 @@ class AIService:
         
         try:
             response = self.models['claude'].messages.create(
-                model="claude-3-5-sonnet-20241022",  # the newest Anthropic model is "claude-3-5-sonnet-20241022" which was released October 22, 2024
+                model="claude-3-5-sonnet-20241022",
                 system=system_prompt,
                 messages=[
                     {"role": "user", "content": code}
@@ -364,16 +293,6 @@ class AIService:
             return f"Error explaining code: {str(e)}"
     
     def generate_test(self, language, code):
-        """
-        Generate tests for the provided code.
-        
-        Args:
-            language: The programming language of the code
-            code: The code to test
-            
-        Returns:
-            Generated tests for the code
-        """
         if 'claude' not in self.models:
             return "Claude API not available. Cannot generate tests."
         
@@ -391,7 +310,7 @@ class AIService:
         
         try:
             response = self.models['claude'].messages.create(
-                model="claude-3-5-sonnet-20241022",  # the newest Anthropic model is "claude-3-5-sonnet-20241022" which was released October 22, 2024
+                model="claude-3-5-sonnet-20241022",
                 system=system_prompt,
                 messages=[
                     {"role": "user", "content": code}
@@ -407,40 +326,24 @@ class AIService:
             return f"Error generating tests: {str(e)}"
     
     def get_conversation_history(self, user_id):
-        """Get conversation history for a user."""
         if user_id not in self.conversation_history:
             self.conversation_history[user_id] = []
         return self.conversation_history[user_id]
     
     def add_to_history(self, user_id, message):
-        """Add a message to a user's conversation history."""
         if user_id not in self.conversation_history:
             self.conversation_history[user_id] = []
         self.conversation_history[user_id].append(message)
-        # Limit history size to avoid memory issues
         if len(self.conversation_history[user_id]) > 20:
             self.conversation_history[user_id] = self.conversation_history[user_id][-20:]
     
     def clear_history(self, user_id):
-        """Clear conversation history for a user."""
         if user_id in self.conversation_history:
             self.conversation_history[user_id] = []
             return f"Conversation history cleared for {user_id}"
         return f"No conversation history found for {user_id}"
         
-    # Multimodal capabilities
-    
     def analyze_image(self, image_data, query=None):
-        """
-        Analyze an image and provide a description or answer questions about it.
-        
-        Args:
-            image_data: The base64-encoded image data
-            query: Optional question about the image
-            
-        Returns:
-            Analysis of the image or answer to the question
-        """
         if 'openai' not in self.models:
             return "OpenAI API not available. Cannot analyze image."
             
@@ -450,7 +353,7 @@ class AIService:
                 prompt = query
                 
             response = self.models['openai'].chat.completions.create(
-                model="gpt-4o", # the newest OpenAI model is "gpt-4o" which was released May 13, 2024
+                model="gpt-4o",
                 messages=[
                     {
                         "role": "user", 
@@ -473,15 +376,6 @@ class AIService:
             return f"Error analyzing image: {str(e)}"
     
     def generate_image(self, prompt):
-        """
-        Generate an image based on a text prompt.
-        
-        Args:
-            prompt: Text description of the image to generate
-            
-        Returns:
-            URL of the generated image
-        """
         if 'openai' not in self.models:
             return "OpenAI API not available. Cannot generate image."
             
@@ -500,25 +394,13 @@ class AIService:
             return f"Error generating image: {str(e)}"
     
     def answer_with_sources(self, query, context_sources):
-        """
-        Answer a question with proper citations to the provided sources.
-        
-        Args:
-            query: The question to answer
-            context_sources: List of documents/sources with their content
-            
-        Returns:
-            Answer with citations to the sources
-        """
         if 'claude' not in self.models and 'openai' not in self.models:
             return "AI APIs not available. Cannot generate answer with sources."
             
-        # Prefer Claude for this task if available
         model_key = 'claude' if 'claude' in self.models else 'openai'
         model_name = "claude-3-5-sonnet-20241022" if model_key == 'claude' else "gpt-4o"
         
         try:
-            # Format context sources
             formatted_context = "\n\n".join([
                 f"SOURCE {i+1}: {source['title']}\n{source['content']}"
                 for i, source in enumerate(context_sources)
@@ -562,17 +444,6 @@ class AIService:
             return f"Error generating answer with sources: {str(e)}"
     
     def store_knowledge(self, key, content, metadata=None):
-        """
-        Store knowledge in the knowledge base with metadata.
-        
-        Args:
-            key: Unique identifier for the knowledge
-            content: The content to store
-            metadata: Additional information about the content
-            
-        Returns:
-            Success message
-        """
         if not metadata:
             metadata = {}
         
@@ -586,51 +457,31 @@ class AIService:
         return f"Knowledge stored with key: {key}"
     
     def retrieve_knowledge(self, key):
-        """
-        Retrieve knowledge from the knowledge base.
-        
-        Args:
-            key: Unique identifier for the knowledge
-            
-        Returns:
-            The stored content or error message
-        """
         if key in self.knowledge_store:
             self.knowledge_store[key]["last_accessed"] = self._get_timestamp()
             return self.knowledge_store[key]["content"]
-        return f"No knowledge found with key: {key}"
+        return f"Knowledge not found for key: {key}"
     
-    def search_knowledge(self, query, limit=5):
-        """
-        Search the knowledge base for relevant information.
-        
-        Args:
-            query: Search query
-            limit: Maximum number of results to return
-            
-        Returns:
-            List of relevant knowledge items
-        """
-        # Simple keyword-based search for now
+    def search_knowledge(self, query):
         results = []
+        query_lower = query.lower()
+        
         for key, data in self.knowledge_store.items():
             content = data["content"]
-            if query.lower() in content.lower():
+            if query_lower in key.lower() or query_lower in content.lower():
                 results.append({
                     "key": key,
-                    "content": content,
-                    "metadata": data["metadata"],
-                    "relevance": content.lower().count(query.lower())
+                    "content_preview": content[:200] + "..." if len(content) > 200 else content,
+                    "metadata": data.get("metadata", {})
                 })
         
-        # Sort by relevance
-        results.sort(key=lambda x: x["relevance"], reverse=True)
-        return results[:limit]
+        if not results:
+            return f"No knowledge found matching query: {query}"
+        
+        return {"results": results, "count": len(results)}
     
     def _get_timestamp(self):
-        """Get a formatted timestamp."""
         from datetime import datetime
         return datetime.now().isoformat()
 
-# Initialize the global AI service
 ai_service = AIService()

@@ -6,30 +6,17 @@ import re
 from pathlib import Path
 from agents.base_agent import BaseAgent
 
-# Set up logging
 logger = logging.getLogger(__name__)
 
 class VSCodeAgent(BaseAgent):
-    """
-    The VSCode Agent - specialized in VS Code and Linux integration.
-    
-    This agent can help with tasks like:
-    - Managing VS Code extensions
-    - Creating and configuring VS Code tasks
-    - Setting up debugging configurations
-    - Managing workspace settings
-    - Automating VS Code operations via CLI
-    """
     
     def __init__(self):
-        """Initialize the VSCode Agent."""
         super().__init__(
             name="VSCodeAgent",
             description="Specialized in Visual Studio Code and Linux integration."
         )
     
     def get_commands(self):
-        """Return the commands this agent can handle."""
         return {
             "install-extension": {
                 "description": "Install a VS Code extension",
@@ -96,7 +83,6 @@ class VSCodeAgent(BaseAgent):
         }
     
     def execute(self, command, args):
-        """Execute a VSCodeAgent command."""
         try:
             if command == "install-extension":
                 if not args:
@@ -157,7 +143,6 @@ class VSCodeAgent(BaseAgent):
             return f"Error executing command: {str(e)}"
     
     def _vscode_dir_exists(self):
-        """Check if .vscode directory exists, create if it doesn't."""
         vscode_dir = Path(".vscode")
         if not vscode_dir.exists():
             vscode_dir.mkdir()
@@ -165,21 +150,8 @@ class VSCodeAgent(BaseAgent):
         return vscode_dir
     
     def _install_extension(self, extension_id):
-        """
-        Install a VS Code extension using the command line.
-        
-        Args:
-            extension_id: The ID of the extension to install
-            
-        Returns:
-            Installation result message
-        """
         try:
             logger.debug(f"Installing VS Code extension: {extension_id}")
-            
-            # Note: This simulates the installation. In a real environment, 
-            # we would use "code --install-extension" command
-            # For Replit environment, we'll just return instructions
             
             return f"""
 To install the VS Code extension '{extension_id}':
@@ -202,24 +174,12 @@ VS Code extensions on your local machine.
             return f"Error installing extension: {str(e)}"
     
     def _create_task(self, task_name, task_command):
-        """
-        Create a VS Code task configuration.
-        
-        Args:
-            task_name: Name of the task
-            task_command: Command to execute
-            
-        Returns:
-            Task creation result
-        """
         try:
             logger.debug(f"Creating VS Code task: {task_name} -> {task_command}")
             
-            # Ensure .vscode directory exists
             vscode_dir = self._vscode_dir_exists()
             tasks_file = vscode_dir / "tasks.json"
             
-            # Define task structure
             new_task = {
                 "label": task_name,
                 "type": "shell",
@@ -231,7 +191,6 @@ VS Code extensions on your local machine.
                 }
             }
             
-            # Read existing tasks.json if it exists
             if tasks_file.exists():
                 with open(tasks_file, 'r') as f:
                     try:
@@ -241,11 +200,9 @@ VS Code extensions on your local machine.
             else:
                 tasks_config = {"version": "2.0.0", "tasks": []}
             
-            # Add new task
             if "tasks" not in tasks_config:
                 tasks_config["tasks"] = []
             
-            # Check if task already exists and update it
             task_exists = False
             for i, task in enumerate(tasks_config["tasks"]):
                 if task.get("label") == task_name:
@@ -256,7 +213,6 @@ VS Code extensions on your local machine.
             if not task_exists:
                 tasks_config["tasks"].append(new_task)
             
-            # Write tasks.json
             with open(tasks_file, 'w') as f:
                 json.dump(tasks_config, f, indent=4)
             
@@ -267,32 +223,18 @@ VS Code extensions on your local machine.
             return f"Error creating task: {str(e)}"
     
     def _create_launch_config(self, config_name, config_type, program=None):
-        """
-        Create a VS Code launch/debug configuration.
-        
-        Args:
-            config_name: Name of the configuration
-            config_type: Type of configuration (python, node, etc.)
-            program: Program to debug
-            
-        Returns:
-            Configuration creation result
-        """
         try:
             logger.debug(f"Creating VS Code launch config: {config_name} ({config_type})")
             
-            # Ensure .vscode directory exists
             vscode_dir = self._vscode_dir_exists()
             launch_file = vscode_dir / "launch.json"
             
-            # Define base launch configuration
             launch_config = {
                 "name": config_name,
                 "type": config_type,
                 "request": "launch",
             }
             
-            # Add type-specific configuration
             if config_type.lower() == "python":
                 launch_config.update({
                     "program": program or "${file}",
@@ -311,7 +253,6 @@ VS Code extensions on your local machine.
                     "webRoot": "${workspaceFolder}"
                 })
             
-            # Read existing launch.json if it exists
             if launch_file.exists():
                 with open(launch_file, 'r') as f:
                     try:
@@ -321,11 +262,9 @@ VS Code extensions on your local machine.
             else:
                 launch_obj = {"version": "0.2.0", "configurations": []}
             
-            # Add new configuration
             if "configurations" not in launch_obj:
                 launch_obj["configurations"] = []
             
-            # Check if configuration already exists and update it
             config_exists = False
             for i, config in enumerate(launch_obj["configurations"]):
                 if config.get("name") == config_name:
@@ -336,7 +275,6 @@ VS Code extensions on your local machine.
             if not config_exists:
                 launch_obj["configurations"].append(launch_config)
             
-            # Write launch.json
             with open(launch_file, 'w') as f:
                 json.dump(launch_obj, f, indent=4)
             
@@ -347,24 +285,12 @@ VS Code extensions on your local machine.
             return f"Error creating launch configuration: {str(e)}"
     
     def _update_workspace_setting(self, setting_name, setting_value):
-        """
-        Update a VS Code workspace setting.
-        
-        Args:
-            setting_name: The name of the setting to update
-            setting_value: The value to set
-            
-        Returns:
-            Setting update result
-        """
         try:
             logger.debug(f"Updating workspace setting: {setting_name} = {setting_value}")
             
-            # Ensure .vscode directory exists
             vscode_dir = self._vscode_dir_exists()
             settings_file = vscode_dir / "settings.json"
             
-            # Read existing settings.json if it exists
             if settings_file.exists():
                 with open(settings_file, 'r') as f:
                     try:
@@ -374,9 +300,7 @@ VS Code extensions on your local machine.
             else:
                 settings = {}
             
-            # Parse the setting value based on its format
             try:
-                # Try to convert to appropriate type
                 if setting_value.lower() == "true":
                     parsed_value = True
                 elif setting_value.lower() == "false":
@@ -392,13 +316,10 @@ VS Code extensions on your local machine.
                 else:
                     parsed_value = setting_value
             except:
-                # If parsing fails, keep as string
                 parsed_value = setting_value
             
-            # Update the setting
             settings[setting_name] = parsed_value
             
-            # Write settings.json
             with open(settings_file, 'w') as f:
                 json.dump(settings, f, indent=4)
             
@@ -409,21 +330,8 @@ VS Code extensions on your local machine.
             return f"Error updating workspace setting: {str(e)}"
     
     def _create_keybinding(self, key, command_name):
-        """
-        Create a custom keybinding for VS Code.
-        
-        Args:
-            key: Key combination
-            command_name: VS Code command to bind
-            
-        Returns:
-            Keybinding creation result
-        """
         try:
             logger.debug(f"Creating keybinding: {key} -> {command_name}")
-            
-            # For keybindings, we'll just provide instructions since they're generally
-            # stored in user settings rather than workspace settings
             
             return f"""
 To create the VS Code keybinding '{key}' for command '{command_name}':
@@ -436,7 +344,7 @@ To create the VS Code keybinding '{key}' for command '{command_name}':
 {{
     "key": "{key}",
     "command": "{command_name}",
-    "when": "editorTextFocus"  // Optional: adjust this condition as needed
+    "when": "editorTextFocus"
 }}
 
 Note: You may need to adjust the "when" clause depending on when you want 
@@ -448,24 +356,12 @@ the keybinding to be active.
             return f"Error creating keybinding: {str(e)}"
     
     def _create_linux_terminal(self, terminal_name, shell_path):
-        """
-        Create a VS Code terminal profile for Linux.
-        
-        Args:
-            terminal_name: Name of the terminal profile
-            shell_path: Path to the shell executable
-            
-        Returns:
-            Terminal profile creation result
-        """
         try:
             logger.debug(f"Creating Linux terminal profile: {terminal_name} -> {shell_path}")
             
-            # Ensure .vscode directory exists
             vscode_dir = self._vscode_dir_exists()
             settings_file = vscode_dir / "settings.json"
             
-            # Read existing settings.json if it exists
             if settings_file.exists():
                 with open(settings_file, 'r') as f:
                     try:
@@ -475,25 +371,20 @@ the keybinding to be active.
             else:
                 settings = {}
             
-            # Check if shell path exists
             if not os.path.exists(shell_path):
                 return f"Warning: The shell path '{shell_path}' does not exist. Creating terminal profile anyway."
             
-            # Create terminal profiles setting
             if "terminal.integrated.profiles.linux" not in settings:
                 settings["terminal.integrated.profiles.linux"] = {}
             
-            # Add or update profile
             settings["terminal.integrated.profiles.linux"][terminal_name] = {
                 "path": shell_path,
                 "icon": "terminal-linux"
             }
             
-            # Set as default if this is the first terminal profile
             if len(settings["terminal.integrated.profiles.linux"]) == 1:
                 settings["terminal.integrated.defaultProfile.linux"] = terminal_name
             
-            # Write settings.json
             with open(settings_file, 'w') as f:
                 json.dump(settings, f, indent=4)
             
@@ -504,19 +395,9 @@ the keybinding to be active.
             return f"Error creating Linux terminal profile: {str(e)}"
     
     def _recommend_extensions(self, project_type):
-        """
-        Get recommended VS Code extensions based on project type.
-        
-        Args:
-            project_type: Type of project (python, javascript, etc.)
-            
-        Returns:
-            List of recommended extensions
-        """
         try:
             logger.debug(f"Getting recommended extensions for project type: {project_type}")
             
-            # Define recommended extensions by project type
             recommendations = {
                 "python": [
                     {"id": "ms-python.python", "name": "Python", "description": "IntelliSense, linting, debugging, etc."},
@@ -552,27 +433,21 @@ the keybinding to be active.
                 ]
             }
             
-            # If project type is not recognized, provide general recommendations
             if project_type not in recommendations:
                 return f"Project type '{project_type}' not recognized. Available types: {', '.join(recommendations.keys())}"
             
-            # Create .vscode/extensions.json if it doesn't exist
             vscode_dir = self._vscode_dir_exists()
             extensions_file = vscode_dir / "extensions.json"
             
-            # Get the recommended extensions for this project type
             project_extensions = recommendations[project_type]
             
-            # Generate recommendations JSON
             extensions_json = {
                 "recommendations": [ext["id"] for ext in project_extensions]
             }
             
-            # Write to extensions.json
             with open(extensions_file, 'w') as f:
                 json.dump(extensions_json, f, indent=4)
             
-            # Format output
             result = f"Recommended VS Code Extensions for {project_type.title()} Projects:\n\n"
             for ext in project_extensions:
                 result += f"1. {ext['name']} ({ext['id']})\n   {ext['description']}\n\n"
@@ -586,12 +461,6 @@ the keybinding to be active.
             return f"Error recommending extensions: {str(e)}"
     
     def _list_extensions(self):
-        """
-        List installed VS Code extensions.
-        
-        Returns:
-            Information about listing extensions
-        """
         return """
 To list VS Code extensions on your system, run one of these commands in your terminal:
 

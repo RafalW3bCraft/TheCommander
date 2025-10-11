@@ -117,7 +117,6 @@
         </div>
         
         <div class="row" id="taskCards">
-            <!-- Task cards will be loaded here -->
             <div class="col-12 text-center py-5">
                 <p class="text-muted">Enter a task description to get personalized suggestions.</p>
             </div>
@@ -136,13 +135,11 @@
                         <div id="aiSuggestions" class="mb-4">
                             <h4>AI-Powered Approach</h4>
                             <div id="aiSuggestionsList" class="mb-3">
-                                <!-- AI suggestions will be inserted here -->
                             </div>
                             <div id="missingAiServices" class="missing-ai" style="display: none;">
                                 <h5>Enable more AI services for better results</h5>
                                 <p>Some advanced capabilities require additional AI services:</p>
                                 <div id="missingAiList">
-                                    <!-- Missing AI services will be listed here -->
                                 </div>
                                 <button class="btn btn-outline-primary btn-sm mt-2" id="configureAi">Configure AI Services</button>
                             </div>
@@ -150,7 +147,6 @@
                         
                         <h4>Step-by-Step Workflow</h4>
                         <div id="taskSteps">
-                            <!-- Task steps will be inserted here -->
                         </div>
                         
                         <div class="mt-4">
@@ -165,7 +161,6 @@
 
     <script>
         document.addEventListener('DOMContentLoaded', function() {
-            // Load initial task templates
             fetch('/task-templates')
                 .then(response => response.json())
                 .then(data => {
@@ -175,7 +170,6 @@
                 })
                 .catch(error => console.error('Error loading task templates:', error));
             
-            // Search form submission
             const searchForm = document.getElementById('searchForm');
             searchForm.addEventListener('submit', function(event) {
                 event.preventDefault();
@@ -200,20 +194,16 @@
                 }
             });
             
-            // Close details button
             document.getElementById('closeDetails').addEventListener('click', function() {
                 document.getElementById('taskDetails').style.display = 'none';
             });
             
-            // Configure AI button
             document.getElementById('configureAi').addEventListener('click', function() {
                 alert('To configure additional AI services, please provide API keys for the services you want to enable.');
             });
             
-            // Start task button
             document.getElementById('startTask').addEventListener('click', function() {
                 const taskId = this.dataset.taskId;
-                // Redirect to main page with the task pre-selected
                 window.location.href = `/?task=${encodeURIComponent(taskId)}`;
             });
         });
@@ -240,12 +230,10 @@
                 `;
                 container.appendChild(card);
                 
-                // Add click event to view details
                 card.querySelector('.view-details').addEventListener('click', function() {
                     viewTaskDetails(task.id);
                 });
                 
-                // Also make the whole card clickable
                 card.querySelector('.task-card').addEventListener('click', function(e) {
                     if (!e.target.classList.contains('btn')) {
                         viewTaskDetails(task.id);
@@ -263,19 +251,14 @@
                         document.getElementById('detailsTitle').textContent = template.name;
                         document.getElementById('detailsDescription').textContent = template.description;
                         
-                        // Set task ID for the start button
                         document.getElementById('startTask').dataset.taskId = taskId;
                         
-                        // Render task steps
                         renderTaskSteps(template.steps || []);
                         
-                        // Render AI suggestions if available
                         renderAiSuggestions(template.ai_suggestions || {});
                         
-                        // Show the details section
                         document.getElementById('taskDetails').style.display = 'block';
                         
-                        // Scroll to details
                         document.getElementById('taskDetails').scrollIntoView({
                             behavior: 'smooth'
                         });
@@ -313,11 +296,9 @@
                 `;
                 container.appendChild(stepEl);
                 
-                // Add click handlers for commands
                 stepEl.querySelectorAll('.task-command').forEach(cmdEl => {
                     cmdEl.addEventListener('click', function() {
                         const command = this.dataset.command;
-                        // Copy command to clipboard
                         navigator.clipboard.writeText(command)
                             .then(() => {
                                 this.classList.add('bg-success', 'bg-opacity-25');
