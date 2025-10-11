@@ -1,5 +1,3 @@
-/* Custom styles for The Commander agent */
-
 .terminal-container {
     height: calc(100vh - 200px);
     min-height: 300px;
@@ -50,7 +48,6 @@
     transform: translateY(-2px);
 }
 
-/* Workflow styles */
 .workflow-suggestion {
     cursor: pointer;
     transition: all 0.2s ease;
@@ -64,7 +61,6 @@
     transform: translateY(-2px);
 }
 
-/* Tab styling */
 .nav-tabs .nav-link {
     color: var(--bs-light);
 }
@@ -76,7 +72,6 @@
     border-bottom-color: var(--bs-gray-800);
 }
 
-/* Terminal output styling for workflows */
 .text-info {
     color: var(--bs-info) !important;
 }
@@ -93,7 +88,6 @@
     color: var(--bs-gray-600) !important;
 }
 
-/* Command suggestion tooltip styles */
 .command-tooltip {
     position: absolute;
     max-width: 90%;

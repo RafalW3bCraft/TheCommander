@@ -6,22 +6,11 @@ import tempfile
 from agents.base_agent import BaseAgent
 from ai_service import ai_service
 
-# Set up logging
 logger = logging.getLogger(__name__)
 
 class CoderAgent(BaseAgent):
-    """
-    The Coder Agent - specialized in code generation and debugging.
-    
-    This agent can help with tasks like:
-    - Writing code snippets in various languages
-    - Fixing bugs in existing code
-    - Explaining code functionality
-    - Generating code from specifications
-    """
     
     def __init__(self):
-        """Initialize the Coder Agent."""
         super().__init__(
             name="CoderAgent",
             description="Specialized in code generation, debugging, and explaining code."
@@ -32,7 +21,6 @@ class CoderAgent(BaseAgent):
         ]
     
     def get_commands(self):
-        """Return the commands this agent can handle."""
         return {
             "write": {
                 "description": "Generate code in a specified language",
@@ -71,7 +59,6 @@ class CoderAgent(BaseAgent):
         }
     
     def execute(self, command, args):
-        """Execute a CoderAgent command."""
         try:
             if command == "languages":
                 return self._list_languages()
@@ -115,35 +102,21 @@ class CoderAgent(BaseAgent):
             return f"Error executing command: {str(e)}"
     
     def _list_languages(self):
-        """List supported programming languages."""
         result = "Supported programming languages:\n"
         for lang in self.supported_languages:
             result += f"- {lang}\n"
         return result
     
     def _write_code(self, language, description):
-        """
-        Generate code based on a description.
-        
-        Args:
-            language: The programming language to use
-            description: Description of what the code should do
-            
-        Returns:
-            Generated code with explanation
-        """
         if language not in self.supported_languages:
             return f"Sorry, {language} is not supported. Use 'languages' to see supported languages."
         
         try:
-            # Try using AI Service first
             try:
-                # Use the AI Service to generate better code
                 logger.debug(f"Using AI Service to generate {language} code for: {description}")
                 ai_generated = ai_service.generate_code(language, description)
                 
                 if ai_generated and "Error" not in ai_generated:
-                    # Return the AI-generated code with proper formatting
                     if "```" not in ai_generated:
                         result = f"Generated {language} code for: {description}\n\n```{language}\n{ai_generated}\n```"
                     else:
@@ -152,7 +125,6 @@ class CoderAgent(BaseAgent):
             except Exception as ai_err:
                 logger.warning(f"AI Service code generation failed: {str(ai_err)}. Falling back to pattern-based generation.")
             
-            # Fallback to simple pattern-based code generation
             if language == "python":
                 if "sort" in description.lower():
                     code = "def sort_numbers(numbers):\n    \"\"\"Sort a list of numbers in ascending order.\"\"\"\n    return sorted(numbers)\n\n# Example usage\nnumbers = [5, 2, 8, 1, 9]\nsorted_numbers = sort_numbers(numbers)\nprint(sorted_numbers)  # Output: [1, 2, 5, 8, 9]"
@@ -185,26 +157,13 @@ class CoderAgent(BaseAgent):
             return f"Error generating code: {str(e)}"
     
     def _explain_code(self, language, code):
-        """
-        Provide an explanation for a code snippet.
-        
-        Args:
-            language: The programming language of the code
-            code: The code to explain
-            
-        Returns:
-            Explanation of the code
-        """
         if language not in self.supported_languages:
             return f"Sorry, {language} is not supported. Use 'languages' to see supported languages."
         
         try:
-            # Strip backticks if the code is wrapped in them
             code = re.sub(r'^```.*\n|```$', '', code.strip())
             
-            # Try using AI Service first
             try:
-                # Use the AI Service to explain code
                 logger.debug(f"Using AI Service to explain {language} code")
                 ai_explanation = ai_service.explain_code(language, code)
                 
@@ -214,7 +173,6 @@ class CoderAgent(BaseAgent):
             except Exception as ai_err:
                 logger.warning(f"AI Service code explanation failed: {str(ai_err)}. Falling back to pattern-based explanation.")
             
-            # Fallback to simple pattern-based code explanation
             if language == "python":
                 if "def factorial" in code:
                     explanation = "This code defines a recursive factorial function. It calculates the factorial of a number 'n', which is the product of all positive integers less than or equal to n.\n\n- Base case: If n is 0 or 1, it returns 1\n- Recursive case: For n > 1, it returns n multiplied by factorial(n-1)\n\nFactorial is commonly used in combinatorics and probability theory."
@@ -246,26 +204,13 @@ class CoderAgent(BaseAgent):
             return f"Error explaining code: {str(e)}"
     
     def _debug_code(self, language, code):
-        """
-        Identify and fix issues in a code snippet.
-        
-        Args:
-            language: The programming language of the code
-            code: The code to debug
-            
-        Returns:
-            Identified issues and fixed code
-        """
         if language not in self.supported_languages:
             return f"Sorry, {language} is not supported. Use 'languages' to see supported languages."
         
         try:
-            # Strip backticks if the code is wrapped in them
             code = re.sub(r'^```.*\n|```$', '', code.strip())
             
-            # Try using AI Service first
             try:
-                # Use the AI Service to analyze and debug code
                 logger.debug(f"Using AI Service to debug {language} code")
                 ai_analysis = ai_service.analyze_code(language, code, analysis_type="debug")
                 
@@ -277,12 +222,10 @@ class CoderAgent(BaseAgent):
             except Exception as ai_err:
                 logger.warning(f"AI Service code debugging failed: {str(ai_err)}. Falling back to pattern-based debugging.")
             
-            # Simple pattern-based debugging as fallback
             if language == "python":
                 issues = []
                 fixed_code = code
                 
-                # Check for potential division by zero
                 if "def divide" in code and "/" in code and not "if" in code:
                     issues.append("Potential division by zero error: The function doesn't check if the divisor is zero.")
                     fixed_code = re.sub(
@@ -291,12 +234,10 @@ class CoderAgent(BaseAgent):
                         code
                     )
                 
-                # Check for missing return statement
                 elif "def" in code and not "return" in code:
                     issues.append("Function doesn't return a value: Add a return statement.")
                     fixed_code = code.rstrip() + "\n    return None\n"
                 
-                # Check for incomplete for loop
                 elif "for" in code and ":" in code and not "in" in code:
                     issues.append("Incomplete for loop: Missing 'in' keyword and iterable.")
                     fixed_code = re.sub(
@@ -325,7 +266,6 @@ class CoderAgent(BaseAgent):
                 issues = []
                 fixed_code = code
                 
-                # Common JavaScript mistakes
                 if "=" in code and "==" not in code and "===" not in code and "if" in code:
                     issues.append("Possible assignment instead of comparison: Using '=' instead of '==' or '===' in a condition.")
                     fixed_code = re.sub(
@@ -334,7 +274,6 @@ class CoderAgent(BaseAgent):
                         code
                     )
                 
-                # Missing semicolons (though optional in many cases)
                 elif "function" in code and not ";" in code:
                     issues.append("Missing semicolons: JavaScript statements traditionally end with semicolons.")
                 
@@ -362,30 +301,16 @@ class CoderAgent(BaseAgent):
             return f"Error debugging code: {str(e)}"
     
     def _run_code(self, language, code):
-        """
-        Execute a code snippet.
-        
-        Args:
-            language: The programming language of the code
-            code: The code to run
-            
-        Returns:
-            The output of the code execution
-        """
-        # Currently only supports Python
         if language.lower() != "python":
             return f"Sorry, code execution is currently only supported for Python. {language} execution is not available."
         
         try:
-            # Strip backticks if the code is wrapped in them
             code = re.sub(r'^```.*\n|```$', '', code.strip())
             
-            # Create a proper temporary file using Python's tempfile module
             with tempfile.NamedTemporaryFile(suffix='.py', mode='w', delete=False) as tmp:
                 tmp_path = tmp.name
                 tmp.write(code)
             
-            # Execute with a timeout
             result = subprocess.run(
                 ["python", tmp_path], 
                 capture_output=True, 
@@ -393,7 +318,6 @@ class CoderAgent(BaseAgent):
                 timeout=10
             )
             
-            # Always clean up the temp file
             try:
                 os.unlink(tmp_path)
             except Exception as e:
@@ -408,7 +332,6 @@ class CoderAgent(BaseAgent):
                 return f"Error:\n```\n{result.stderr}\n```"
             
         except subprocess.TimeoutExpired:
-            # Make sure to clean up
             try:
                 if 'tmp_path' in locals():
                     os.unlink(tmp_path)
@@ -418,7 +341,6 @@ class CoderAgent(BaseAgent):
             
         except Exception as e:
             logger.error(f"Error running code: {str(e)}")
-            # Make sure to clean up if tmp_path is defined
             try:
                 if 'tmp_path' in locals():
                     os.unlink(tmp_path)
