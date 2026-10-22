@@ -1,0 +1,61 @@
+{
+  "timestamp": "2026-10-22T13:38:34.595148+00:00",
+  "endpoint_host": "api.tokenfactory.nebius.com",
+  "model": "nvidia/nemotron-3-super-120b-a12b",
+  "github": "not run: token/repository/write authorization required",
+  "tavily": "not run: real TAVILY_API_KEY required",
+  "checks": [
+    {
+      "check": "model_list",
+      "available": true
+    },
+    {
+      "check": "tool_proposal",
+      "valid": true,
+      "usage": {
+        "completion_tokens": 34,
+        "prompt_tokens": 377,
+        "total_tokens": 411,
+        "completion_tokens_details": {
+          "accepted_prediction_tokens": null,
+          "audio_tokens": null,
+          "reasoning_tokens": 8,
+          "rejected_prediction_tokens": null
+        },
+        "prompt_tokens_details": {
+          "audio_tokens": null,
+          "cached_tokens": 0,
+          "created_cache_tokens": 0,
+          "multimodal_tokens": null
+        },
+        "prompt_cache_hit_tokens": 0,
+        "prompt_cache_miss_tokens": 377
+      },
+      "latency_ms": 1421
+    },
+    {
+      "check": "tool_result_roundtrip",
+      "nonempty_result": true,
+      "usage": {
+        "completion_tokens": 123,
+        "prompt_tokens": 83,
+        "total_tokens": 206,
+        "completion_tokens_details": {
+          "accepted_prediction_tokens": null,
+          "audio_tokens": null,
+          "reasoning_tokens": 111,
+          "rejected_prediction_tokens": null
+        },
+        "prompt_tokens_details": {
+          "audio_tokens": null,
+          "cached_tokens": 0,
+          "created_cache_tokens": 0,
+          "multimodal_tokens": null
+        },
+        "prompt_cache_hit_tokens": 0,
+        "prompt_cache_miss_tokens": 83
+      },
+      "latency_ms": 1894
+    }
+  ]
+}
