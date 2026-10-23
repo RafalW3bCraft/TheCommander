@@ -1,7 +1,7 @@
 {
   "config": {
     "argv": [
-      "/usr/bin/node",
+      "/home/watcher/.nvm/versions/node/v22.23.3/bin/node",
       "/mnt/hostshare/TheCommander/frontend/node_modules/.bin/playwright",
       "test"
     ],
@@ -118,12 +118,12 @@
                   "workerIndex": 0,
                   "parallelIndex": 0,
                   "status": "passed",
-                  "duration": 23317,
+                  "duration": 18178,
                   "errors": [],
                   "stdout": [],
                   "stderr": [],
                   "retry": 0,
-                  "startTime": "2026-10-23T07:04:16.333Z",
+                  "startTime": "2026-10-23T12:15:32.526Z",
                   "annotations": [],
                   "attachments": []
                 }
@@ -152,12 +152,12 @@
                   "workerIndex": 0,
                   "parallelIndex": 0,
                   "status": "passed",
-                  "duration": 11942,
+                  "duration": 3848,
                   "errors": [],
                   "stdout": [],
                   "stderr": [],
                   "retry": 0,
-                  "startTime": "2026-10-23T07:04:40.130Z",
+                  "startTime": "2026-10-23T12:15:50.852Z",
                   "annotations": [],
                   "attachments": []
                 }
@@ -175,8 +175,8 @@
   ],
   "errors": [],
   "stats": {
-    "startTime": "2026-10-23T07:04:07.270Z",
-    "duration": 45070.472,
+    "startTime": "2026-10-23T12:15:29.402Z",
+    "duration": 25455.388,
     "expected": 2,
     "skipped": 0,
     "unexpected": 0,

@@ -6,10 +6,10 @@
   "scripts": {
     "dev": "vite --host 127.0.0.1",
     "build": "tsc --noEmit && vite build",
-    "lint": "eslint src",
+    "lint": "eslint src e2e *.ts *.js",
     "test:e2e": "playwright test",
-    "format": "prettier --write src",
-    "format:check": "prettier --check src",
+    "format": "prettier --write src e2e *.ts *.js package.json tsconfig.json",
+    "format:check": "prettier --check src e2e *.ts *.js package.json tsconfig.json",
     "api:types": "openapi-typescript ../docs/openapi.json -o src/api-schema.d.ts && prettier --write src/api-schema.d.ts"
   },
   "dependencies": {
@@ -29,5 +29,8 @@
     "typescript-eslint": "^8.46.0",
     "eslint-plugin-react-hooks": "^7.0.0",
     "prettier": "^3.6.0"
+  },
+  "engines": {
+    "node": ">=22.12.0 <23"
   }
 }

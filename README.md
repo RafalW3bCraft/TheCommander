@@ -1,176 +1,117 @@
-# TheCommander
+# TheCommander — Personal AI
 
-TheCommander is a Flask-based AI agent system that integrates with advanced AI models such as Anthropic Claude and OpenAI to provide natural language understanding, command execution, workflow automation, and more.
+An owner-controlled engineering assistant with persistent memory, three reusable
+skills, scoped connections, scheduled background work and exact approval for
+GitHub writes. Release 0.2.0 rebuilds the application around FastAPI, React,
+PostgreSQL and a separate worker. The historical application is preserved;
+its instructions are in [LEGACY_README](docs/LEGACY_README.md).
 
-## Features
+**IMPLEMENTATION COMPLETE — LIVE VERIFICATION PENDING.** Local workflows are
+implemented and tested. Nebius inference, Tavily search and workspace effects have live evidence.
+GitHub still requires a real credential and scoped live checks.
+See [release evidence and limitations](docs/RELEASE_REPORT.md).
 
-- Natural language command execution with AI-enhanced parsing
-- Multi-agent orchestration enabling complex workflows
-- Task workflow templates for common security and development tasks
-- AI-powered image analysis and generation
-- Visual code review with multimodal AI
-- Research with cited sources and knowledge management
-- Web interface with task selection, help, and command suggestions
-- API endpoints for command execution, workflows, and AI services
+## Capability status
 
-## Prerequisites
+| Capability | Implemented and locally tested | Live evidence |
+|---|---|---|
+| Owner bootstrap/login/logout; session revocation | Yes | Local API and browser |
+| Memory CRUD/search/export and new-session recall | Yes | PostgreSQL + real Nebius recall |
+| NVIDIA inference and validated tool loop | Yes | Nebius Nemotron model, 29 evaluation calls |
+| Engineering briefing with citations and saved note | Yes | Full live skill blocked by GitHub; Tavily search verified |
+| Research to action: edit, approve, create, confirm issue | Yes | Controlled transport only; live write pending |
+| Follow-through and durable schedules | Yes | Separate worker + local note effects |
+| Cancel, lease recovery, uncertain-write reconciliation | Yes | Failure injection; no live GitHub timeout test |
+| Connections: scope, test, expiry, replace, revoke | Yes | Nebius/Tavily/workspace; GitHub pending |
+| Responsive Today, Memory, Skills, Connections, Activity | Yes | Chromium desktop/mobile and accessibility checks |
 
-- Python 3.11 or higher
-- pip (Python package installer)
+## Start locally
 
-## Installation
+Requires Git, Docker with Compose v2, and uv (tested 0.13.1). Containers build with
+Node 22 and Python 3.13 and use PostgreSQL 17; dependencies are locked. A native
+frontend development environment needs Node 22.12 or newer within Node 22.
 
-1. Clone the repository:
-
-```bash
-git clone <repository-url>
-cd <Dir>
+```sh
+# Fresh installation only; preserve an existing .env.
+cp env.release.example .env
+./scripts/start.sh
 ```
 
-2. (Optional) Create and activate a virtual environment:
+Open http://localhost:8000. Read the generated bootstrap token locally from
+`.env.runtime` and choose your own owner password. The script preserves `.env`,
+generates missing runtime secrets and starts the API, database and worker.
+On this host, Docker is a Podman wrapper; start its API socket with
+`systemctl --user start podman.socket` if necessary.
 
-```bash
-python3 -m venv venv
-source venv/bin/activate
+In Connections, import configured server credentials or enter them directly.
+Test Nebius, enable workspace, select one GitHub repository and set Tavily research
+domains. Save a preference in Memory, then run a skill. Unconfigured integrations
+show errors; the release never substitutes sample completions.
+
+- `NEBIUS_API_KEY`: real Token Factory key. Default endpoint is
+  `https://api.tokenfactory.nebius.com/v1`; model is
+  `nvidia/nemotron-3-super-120b-a12b`. Legacy `MODEL_ID` is supported.
+- `GITHUB_TOKEN` and `GITHUB_REPOSITORY=owner/repository`: selected repository
+  metadata/issues read access, and Issues write for an explicitly approved issue.
+- `TAVILY_API_KEY`: real search key; choose approved domains in Connections.
+- `.env.runtime`: generated encryption key, bootstrap token and Compose database
+  password. Keep this file private and backed up separately from the database.
+
+## Verify
+
+```sh
+# PostgreSQL 17 binaries installed locally; creates a separate loopback test cluster.
+./scripts/test_db.sh
+# Use the URL printed by that script and Node 22 on PATH.
+TEST_DATABASE_URL=postgresql://watcher@127.0.0.1:55432/postgres ./scripts/verify.sh
 ```
 
-3. Install required Python packages:
+On a new machine replace `watcher` with the printed database username. Install
+Chromium once with `cd frontend && npx playwright install chromium` after npm
+installation. The verification script runs formatting, lint, types, PostgreSQL
+integration tests, coverage, production build, browser workflows, dependency
+checks and a configured-secret scan. Controlled vendor transports are test-only.
 
-```bash
-pip install anthropic email-validator flask flask-sqlalchemy gunicorn openai psutil psycopg2-binary requests trafilatura
+Additional checks:
+
+```sh
+uv run python -m scripts.clean_release_smoke
+TEST_DATABASE_URL=postgresql://watcher@127.0.0.1:55432/postgres uv run python -m scripts.backup_smoke
+# Real Nebius usage; requires a working key and incurs provider usage:
+uv run python -m scripts.live_smoke
+TEST_DATABASE_URL=postgresql://watcher@127.0.0.1:55432/postgres uv run python -m scripts.evaluate_live
 ```
 
-> Note: If you prefer, you can create a `requirements.txt` file with the above dependencies and run `pip install -r requirements.txt`.
+The clean smoke builds a secret-free source snapshot, starts an isolated Compose
+project on port 8002 and removes only that disposable project's volumes. The
+backup drill requires permission to create temporary test databases. Live checks
+use fictional tasks and perform no GitHub writes.
 
-## Environment Variables
+## Privacy and operating limits
 
-The application uses the following environment variables:
+PostgreSQL and notes are owner-controlled. Selected memory/context is sent to
+Nebius; search queries go to Tavily; approved issue content goes to GitHub.
+This is not local-only inference or end-to-end encryption. Provider credentials
+are encrypted at rest with a separate key. Deletion removes active application
+records; retained conversation copies, files and backups need their own deletion
+or retention policy. See [privacy](docs/PRIVACY.md).
 
-- `SESSION_SECRET` (optional): Secret key for Flask sessions. Defaults to `"dev-secret-key"` if not set.
-- `ANTHROPIC_API_KEY` (required): API key for Anthropic Claude AI integration. You must obtain this key from [Anthropic](https://www.anthropic.com/) and set it in your environment.
-- `OPENAI_API_KEY` (optional): API key for OpenAI integration. Obtain from [OpenAI](https://openai.com/) if you want to enable OpenAI features.
+The worker must remain running for schedules. Intervals are elapsed UTC durations;
+missed occurrences coalesce. External writes require an exact approval, can become
+uncertain after a lost response, and are reconciled without blind retries.
+Cancellation cannot undo completed effects. Currency cost stays unknown unless
+verified pricing is configured. HTTPS and secure cookies are required for a
+remote production deployment.
 
-Example of setting environment variables on Linux/macOS:
+[Operations](docs/OPERATIONS.md) covers backups, restore, upgrades and legacy import.
+[Architecture](docs/ARCHITECTURE.md), [traceability](docs/TRACEABILITY.md),
+[threat model](docs/THREAT_MODEL.md), [evaluations](docs/EVALUATION.md) and
+[ECC setup](docs/ECC_SETUP.md) record the implementation and evidence.
+[Judge guide](docs/JUDGE_GUIDE.md), [demo script](docs/DEMO_SCRIPT.md),
+[changes](docs/HACKATHON_CHANGES.md), [feedback](docs/FEEDBACK.md) and
+[release checklist](docs/RELEASE_CHECKLIST.md) prepare the submission package.
+No hosted demo, public video or submitted entry is claimed.
 
-```bash
-export SESSION_SECRET="your_secret_key"
-export ANTHROPIC_API_KEY="your_anthropic_api_key"
-export OPENAI_API_KEY="your_openai_api_key"
-```
-
-## Running the Application
-
-To start the Flask web server, run:
-
-```bash
-python3 main.py
-```
-
-The server will start on `http://0.0.0.0:5000`. You can access the app in your browser at:
-
-```
-http://localhost:5000
-```
-
-## Usage
-
-- The main interface is available at `/`
-- Task workflows can be accessed at `/tasks`
-- Help documentation is available at `/help`
-- The app provides various API endpoints for command execution, workflows, image analysis, code review, research, and knowledge management.
-
-## Task Workflows
-
-The Commander includes predefined task workflows to assist with common security and development activities. These workflows provide step-by-step guidance and AI-powered suggestions.
-
-### Bug Bounty Hunting
-
-A comprehensive workflow for finding security vulnerabilities in applications.
-
-**Steps:**
-
-1. Reconnaissance: Gather initial information about the target using commands like `security scan-domain`, `researcher search`, and `terminal nmap`.
-2. Vulnerability Assessment: Identify potential security weaknesses with commands such as `security analyze-headers` and `security check-vulnerabilities`.
-3. Exploitation Testing: Test identified vulnerabilities safely using commands like `security test-injection` and `coder generate`.
-4. Documentation: Document findings for responsible disclosure using memory storage and file writing commands.
-
-**AI Suggestions:**
-
-- OpenAI GPT-4o for visual vulnerability analysis
-- Anthropic Claude for detailed report crafting
-- Perplexity for researching latest CVEs
-- DeepSeek for code snippet analysis
-
-### Code Security Review
-
-Analyze code for security vulnerabilities and best practices.
-
-**Steps:**
-
-1. Setup: Prepare the codebase with commands like `file list`, `coder analyze-repo`, and `terminal git clone`.
-2. Static Analysis: Perform static code analysis using `security static-analysis` and dependency checks.
-3. Dynamic Analysis: Conduct dynamic testing with fuzz testing and scanners.
-4. Report Generation: Generate comprehensive security reports and suggest fixes.
-
-**AI Suggestions:**
-
-- OpenAI GPT-4o for code structure analysis
-- Anthropic Claude for understanding complex security patterns
-- Perplexity for researching secure coding best practices
-- DeepSeek for identifying subtle security issues
-
-### Penetration Testing
-
-Comprehensive penetration testing workflow.
-
-**Steps:**
-
-1. Scope Definition: Define testing scope and boundaries.
-2. Information Gathering: Collect target information.
-3. Vulnerability Scanning: Scan for vulnerabilities.
-4. Exploitation: Attempt to exploit vulnerabilities.
-5. Post-Exploitation: Gather evidence and credentials.
-6. Reporting: Document findings and recommendations.
-
-**AI Suggestions:**
-
-- OpenAI GPT-4o for security posture analysis
-- Anthropic Claude for detailed testing plans
-- Perplexity for latest exploit techniques research
-- DeepSeek for attack vector identification
-
-### Secure Development Lifecycle
-
-Implement security throughout the development lifecycle.
-
-**Steps:**
-
-1. Threat Modeling: Identify threats and security requirements.
-2. Secure Coding: Implement secure coding practices.
-3. Security Testing: Perform security-focused testing.
-4. Deployment Security: Secure deployment environments.
-5. Monitoring & Response: Set up monitoring and incident response.
-
-**AI Suggestions:**
-
-- OpenAI GPT-4o for secure code generation
-- Anthropic Claude for threat modeling
-- Perplexity for researching secure coding practices
-- DeepSeek for early security flaw identification
-
-## Accessing Task Workflows
-
-You can access task workflows via the web interface at `/tasks` or through the API endpoints:
-
-- `/task-templates`: Get available task templates
-- `/task-template/<template_id>`: Get details of a specific task template
-- `/task-suggestions?query=your_query`: Get task suggestions based on a query
-- `/task-steps/<template_id>`: Get detailed steps for a task
-
-## License
-
-This project is licensed under the MIT License - see the [LICENSE](LICENSE) file for details.
-
-## Author
-
-RafalW3bCraft
+Original project: https://github.com/RafalW3bCraft/TheCommander. MIT license and
+existing authorship are preserved; see [LICENSE](LICENSE) and
+[THIRD_PARTY_NOTICES](THIRD_PARTY_NOTICES).

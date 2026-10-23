@@ -61,8 +61,17 @@ class Worker:
                 else:
                     status = "queued" if row["attempts"] < 3 else "failed"
                 conn.execute(
-                    "UPDATE runs SET status=%s,error=%s,lease_until=NULL,available_at=now()+interval '5 seconds',updated_at=now() WHERE id=%s",
-                    (status, "Worker stopped; recovery checkpoint applied", row["id"]),
+                    "UPDATE runs SET status=%s,error=%s,result=%s,lease_until=NULL,available_at=now()+interval '5 seconds',updated_at=now() WHERE id=%s",
+                    (
+                        status,
+                        None
+                        if status == "succeeded"
+                        else "Worker stopped; recovery checkpoint applied",
+                        "Verified issue: " + succeeded["receipt"]["url"]
+                        if status == "succeeded"
+                        else row["result"],
+                        row["id"],
+                    ),
                 )
                 conn.execute(
                     "INSERT INTO events(run_id,kind) VALUES (%s,'recovered')", (row["id"],)
@@ -105,7 +114,7 @@ class Worker:
                 "run_failure run=%s code=%s type=%s", run["id"], code, type(exc).__name__
             )
             self.db.one(
-                "UPDATE runs SET status=CASE WHEN EXISTS(SELECT 1 FROM actions a WHERE a.run_id=runs.id AND a.status IN ('executing','uncertain')) THEN 'uncertain' ELSE 'failed' END,error=%s,lease_until=NULL,updated_at=now() WHERE id=%s AND status='running' AND lease_token=%s RETURNING id",
+                "UPDATE runs SET status=CASE WHEN EXISTS(SELECT 1 FROM actions a WHERE a.run_id=runs.id AND a.status IN ('executing','uncertain')) OR EXISTS(SELECT 1 FROM events e WHERE e.run_id=runs.id AND e.kind='note_intent') THEN 'uncertain' ELSE 'failed' END,error=%s,lease_until=NULL,updated_at=now() WHERE id=%s AND status='running' AND lease_token=%s RETURNING id",
                 (message, run["id"], run["lease_token"]),
             )
             event(self.db, run["id"], "error", {"message": message, "code": code})

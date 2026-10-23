@@ -14,7 +14,9 @@
             "description": "Successful Response",
             "content": {
               "application/json": {
-                "schema": {}
+                "schema": {
+                  "$ref": "#/components/schemas/StatusView"
+                }
               }
             }
           },
@@ -130,7 +132,9 @@
             "description": "Successful Response",
             "content": {
               "application/json": {
-                "schema": {}
+                "schema": {
+                  "$ref": "#/components/schemas/StatusView"
+                }
               }
             }
           },
@@ -246,7 +250,9 @@
             "description": "Successful Response",
             "content": {
               "application/json": {
-                "schema": {}
+                "schema": {
+                  "$ref": "#/components/schemas/AuthStatusView"
+                }
               }
             }
           },
@@ -736,7 +742,9 @@
             "description": "Successful Response",
             "content": {
               "application/json": {
-                "schema": {}
+                "schema": {
+                  "$ref": "#/components/schemas/StatusView"
+                }
               }
             }
           },
@@ -1384,7 +1392,9 @@
             "description": "Successful Response",
             "content": {
               "application/json": {
-                "schema": {}
+                "schema": {
+                  "$ref": "#/components/schemas/StatusView"
+                }
               }
             }
           },
@@ -1622,7 +1632,9 @@
             "description": "Successful Response",
             "content": {
               "application/json": {
-                "schema": {}
+                "schema": {
+                  "$ref": "#/components/schemas/ImportConnectionsView"
+                }
               }
             }
           },
@@ -3173,7 +3185,9 @@
             "description": "Successful Response",
             "content": {
               "application/json": {
-                "schema": {}
+                "schema": {
+                  "$ref": "#/components/schemas/StatusView"
+                }
               }
             }
           },
@@ -3687,7 +3701,9 @@
             "description": "Successful Response",
             "content": {
               "application/json": {
-                "schema": {}
+                "schema": {
+                  "$ref": "#/components/schemas/StatusView"
+                }
               }
             }
           },
@@ -4213,7 +4229,9 @@
             "description": "Successful Response",
             "content": {
               "application/json": {
-                "schema": {}
+                "schema": {
+                  "$ref": "#/components/schemas/WorkerView"
+                }
               }
             }
           },
@@ -4329,7 +4347,13 @@
             "description": "Successful Response",
             "content": {
               "application/json": {
-                "schema": {}
+                "schema": {
+                  "items": {
+                    "$ref": "#/components/schemas/NoteListView"
+                  },
+                  "type": "array",
+                  "title": "Response Notes Api Notes Get"
+                }
               }
             }
           },
@@ -4453,7 +4477,9 @@
             "description": "Successful Response",
             "content": {
               "application/json": {
-                "schema": {}
+                "schema": {
+                  "$ref": "#/components/schemas/NoteReceiptView"
+                }
               }
             }
           },
@@ -4571,6 +4597,7 @@
             "required": true,
             "schema": {
               "type": "string",
+              "pattern": "^[A-Za-z0-9][A-Za-z0-9_-]{0,79}\\.md$",
               "title": "Name"
             }
           }
@@ -4580,7 +4607,9 @@
             "description": "Successful Response",
             "content": {
               "application/json": {
-                "schema": {}
+                "schema": {
+                  "$ref": "#/components/schemas/NoteContentView"
+                }
               }
             }
           },
@@ -4696,7 +4725,9 @@
             "description": "Successful Response",
             "content": {
               "application/json": {
-                "schema": {}
+                "schema": {
+                  "$ref": "#/components/schemas/BudgetView"
+                }
               }
             }
           },
@@ -5000,6 +5031,19 @@
         ],
         "title": "Approval"
       },
+      "AuthStatusView": {
+        "properties": {
+          "bootstrap_required": {
+            "type": "boolean",
+            "title": "Bootstrap Required"
+          }
+        },
+        "type": "object",
+        "required": [
+          "bootstrap_required"
+        ],
+        "title": "AuthStatusView"
+      },
       "Bootstrap": {
         "properties": {
           "username": {
@@ -5029,6 +5073,54 @@
           "token"
         ],
         "title": "Bootstrap"
+      },
+      "BudgetView": {
+        "properties": {
+          "max_steps": {
+            "type": "integer",
+            "title": "Max Steps"
+          },
+          "max_run_seconds": {
+            "type": "integer",
+            "title": "Max Run Seconds"
+          },
+          "max_daily_runs": {
+            "type": "integer",
+            "title": "Max Daily Runs"
+          },
+          "max_daily_tokens": {
+            "type": "integer",
+            "title": "Max Daily Tokens"
+          },
+          "daily_spend_limit_usd": {
+            "anyOf": [
+              {
+                "type": "number"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Daily Spend Limit Usd"
+          },
+          "usage": {
+            "items": {
+              "$ref": "#/components/schemas/UsageView"
+            },
+            "type": "array",
+            "title": "Usage"
+          }
+        },
+        "type": "object",
+        "required": [
+          "max_steps",
+          "max_run_seconds",
+          "max_daily_runs",
+          "max_daily_tokens",
+          "daily_spend_limit_usd",
+          "usage"
+        ],
+        "title": "BudgetView"
       },
       "ConnectionConfigView": {
         "properties": {
@@ -5354,6 +5446,30 @@
         ],
         "title": "EvidenceView"
       },
+      "ImportConnectionsView": {
+        "properties": {
+          "imported": {
+            "items": {
+              "type": "string"
+            },
+            "type": "array",
+            "title": "Imported"
+          },
+          "connections": {
+            "items": {
+              "$ref": "#/components/schemas/ConnectionView"
+            },
+            "type": "array",
+            "title": "Connections"
+          }
+        },
+        "type": "object",
+        "required": [
+          "imported",
+          "connections"
+        ],
+        "title": "ImportConnectionsView"
+      },
       "Issue": {
         "properties": {
           "title": {
@@ -5654,6 +5770,60 @@
           "content"
         ],
         "title": "Note"
+      },
+      "NoteContentView": {
+        "properties": {
+          "name": {
+            "type": "string",
+            "title": "Name"
+          },
+          "content": {
+            "type": "string",
+            "title": "Content"
+          }
+        },
+        "type": "object",
+        "required": [
+          "name",
+          "content"
+        ],
+        "title": "NoteContentView"
+      },
+      "NoteListView": {
+        "properties": {
+          "name": {
+            "type": "string",
+            "title": "Name"
+          }
+        },
+        "type": "object",
+        "required": [
+          "name"
+        ],
+        "title": "NoteListView"
+      },
+      "NoteReceiptView": {
+        "properties": {
+          "name": {
+            "type": "string",
+            "title": "Name"
+          },
+          "bytes": {
+            "type": "integer",
+            "title": "Bytes"
+          },
+          "verified": {
+            "type": "boolean",
+            "title": "Verified"
+          }
+        },
+        "type": "object",
+        "required": [
+          "name",
+          "bytes",
+          "verified"
+        ],
+        "title": "NoteReceiptView"
       },
       "ReceiptView": {
         "properties": {
@@ -6194,6 +6364,68 @@
         ],
         "title": "SkillView"
       },
+      "StatusView": {
+        "properties": {
+          "status": {
+            "type": "string",
+            "title": "Status"
+          }
+        },
+        "type": "object",
+        "required": [
+          "status"
+        ],
+        "title": "StatusView"
+      },
+      "UsageView": {
+        "properties": {
+          "model": {
+            "type": "string",
+            "title": "Model"
+          },
+          "tokens": {
+            "anyOf": [
+              {
+                "additionalProperties": true,
+                "type": "object"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Tokens"
+          },
+          "cost_usd": {
+            "anyOf": [
+              {
+                "type": "number"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Cost Usd"
+          },
+          "latency_ms": {
+            "type": "integer",
+            "title": "Latency Ms"
+          },
+          "created_at": {
+            "type": "string",
+            "format": "date-time",
+            "title": "Created At"
+          }
+        },
+        "type": "object",
+        "required": [
+          "model",
+          "tokens",
+          "cost_usd",
+          "latency_ms",
+          "created_at"
+        ],
+        "title": "UsageView"
+      },
       "UserView": {
         "properties": {
           "owner_id": {
@@ -6216,6 +6448,32 @@
           "csrf"
         ],
         "title": "UserView"
+      },
+      "WorkerView": {
+        "properties": {
+          "online": {
+            "type": "boolean",
+            "title": "Online"
+          },
+          "last_seen": {
+            "anyOf": [
+              {
+                "type": "string",
+                "format": "date-time"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Last Seen"
+          }
+        },
+        "type": "object",
+        "required": [
+          "online",
+          "last_seen"
+        ],
+        "title": "WorkerView"
       }
     }
   }

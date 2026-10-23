@@ -9,9 +9,14 @@ features are supported. Missing/truncated/malformed results fail visibly.
 NVIDIA model: nvidia/nemotron-3-super-120b-a12b was exercised for tool proposal and
 continuation. No broad model-quality benchmark or training claim is made.
 
-GitHub and Tavily: adapters and controlled failure contracts implemented. Live
-provider experience is untested until real credentials/scopes are configured.
-No fabricated product feedback is offered for these providers.
+Tavily: a newly configured key passed live validation on 2026-10-23. An authorized
+broker search restricted to docs.python.org returned five persisted evidence items
+in 3,461 ms. Results included different documentation versions/languages, so domain
+filtering alone does not ensure relevance. No currency cost is claimed.
+
+GitHub: adapter and controlled failure contracts implemented. Live provider
+experience remains untested: token is a placeholder and no repository is selected.
+No fabricated product feedback is offered for GitHub.
 
 ECC: official source and catalog were usable for project-local guidance, but the
 host had no Codex CLI/native ECC plugin cache. Hook parity was not assumed.

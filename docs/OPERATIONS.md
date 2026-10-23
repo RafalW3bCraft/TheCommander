@@ -24,6 +24,7 @@ individually. Nebius validation is a real bounded model request and consumes usa
 
 ## Verification
 
+With Node 22.12+ (within Node 22) on PATH,
 `TEST_DATABASE_URL=postgresql://... ./scripts/verify.sh` runs actual offline gates.
 The database principal must create isolated schemas. With PostgreSQL 17 binaries,
 `./scripts/test_db.sh` starts a loopback-only disposable cluster on 55432 and prints
@@ -81,3 +82,30 @@ Add `--apply` only after review; this backs up the original file and imports all
 validated records transactionally. Existing public SQL tables remain untouched;
 export and review them before explicit transformation. Fictional demo preference:
 `uv run python -m commander.cli seed --owner OWNER`.
+
+## Additional release drills
+
+`uv run python -m scripts.clean_release_smoke` copies tracked/unignored source
+without host dependencies or secrets into a temporary directory, starts the actual
+startup script with new credentials and volumes on port 8002, checks API, worker,
+notes and memory, then removes only that uniquely named test project and volumes.
+It requires Docker/Compose access and a free port 8002.
+
+`TEST_DATABASE_URL=postgresql://... uv run python -m scripts.backup_smoke` requires
+a test database role allowed to create databases. It creates two isolated databases,
+checks custom-format dump/restore and encrypted credential recovery, checks a notes
+archive restore, and removes the test databases. It never selects application data.
+
+`TEST_DATABASE_URL=postgresql://... uv run python -m scripts.evaluate_live` performs
+30 fictional local tasks, with real Nebius inference on the 26 applicable cases.
+`TEST_DATABASE_URL=postgresql://... uv run python -m scripts.live_research_smoke`
+performs live Tavily validation and one authorized documentation search. Both use
+temporary schemas and incur provider usage; neither authorizes GitHub writes.
+
+Optional credential expiry is owner-supplied. The app enforces the stored instant;
+it does not discover every provider's token expiry. A provider 401 remains an
+invalid-credential response unless a known local expiry is present.
+
+Migration 002 invalidates old pending/approved issue proposals whose exact preview
+did not bind the correlation marker. Create a fresh proposal after upgrade; old
+executed receipts remain visible. No existing public-schema data is transformed.

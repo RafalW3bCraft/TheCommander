@@ -56,3 +56,6 @@ test-results/
 .mypy_cache/
 .ruff_cache/
 coverage.json
+
+# Private environment variants; public examples use env.*.example names.
+.env.*

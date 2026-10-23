@@ -3,6 +3,7 @@
 import json
 import os
 import subprocess
+import tarfile
 import uuid
 from datetime import datetime, timezone
 from pathlib import Path
@@ -18,6 +19,7 @@ from commander.contracts import ConnectionInput, MemoryInput
 from commander.db import Database
 from commander.memory import save_memory
 from commander.settings import Settings
+from commander.workspace import Workspace
 
 
 def main():
@@ -53,6 +55,15 @@ def main():
         Connections(db, cfg).save(
             owner, "nebius", ConnectionInput(secret="fictional-backup-provider-secret")
         )
+        notes = Workspace(directory / "source-notes", owner)
+        original_note = notes.write("backup-note.md", "Fictional durable workspace note")
+        with tarfile.open(directory / "notes.tar.gz", "w:gz") as archive:
+            archive.add(directory / "source-notes", arcname=".")
+        with tarfile.open(directory / "notes.tar.gz", "r:gz") as archive:
+            archive.extractall(directory / "restored-notes", filter="data")
+        restored_notes = Workspace(directory / "restored-notes", owner)
+        assert restored_notes.read("backup-note.md") == "Fictional durable workspace note"
+        assert original_note["verified"]
         subprocess.run(
             ["pg_dump", "--dbname", source_url, "-Fc", "-f", str(directory / "backup.dump")],
             check=True,
@@ -88,6 +99,7 @@ def main():
             "memory_and_revision_preserved": True,
             "encrypted_connection_decrypts_with_original_key": True,
             "migrations_after_restore": True,
+            "notes_archive_restore_preserves_content": True,
             "test_databases_removed": True,
         }
         Path("docs/evidence/backup-restore.json").write_text(json.dumps(report, indent=2) + "\n")

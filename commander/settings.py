@@ -6,7 +6,9 @@ from pydantic_settings import BaseSettings, SettingsConfigDict
 
 
 class Settings(BaseSettings):
-    model_config = SettingsConfigDict(env_file=(".env", ".env.runtime"), extra="ignore")
+    model_config = SettingsConfigDict(
+        env_file=(".env", ".env.runtime"), extra="ignore", hide_input_in_errors=True
+    )
     database_url: str
     database_schema: str = Field(default="commander", pattern=r"^[a-z][a-z0-9_]{0,62}$")
     encryption_key: str

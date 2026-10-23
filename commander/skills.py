@@ -2,6 +2,8 @@ import hashlib
 import json
 from typing import Any
 
+from commander.errors import DomainError
+
 DEFINITIONS: list[dict[str, Any]] = [
     {
         "id": "engineering-briefing",
@@ -44,12 +46,14 @@ for item in DEFINITIONS:
 
 
 def definition(skill):
-    return next(
-        (d for d in DEFINITIONS if d["id"] == skill),
-        {
+    if skill == "conversation":
+        return {
             "id": "conversation",
             "version": "1.0.0",
             "hash": "conversation-v1",
             "tools": ["github_read", "search", "save_note", "propose_issue"],
-        },
-    )
+        }
+    for item in DEFINITIONS:
+        if item["id"] == skill:
+            return item
+    raise DomainError("Unknown or retired skill; choose an available skill", 422, "unknown_skill")

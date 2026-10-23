@@ -104,8 +104,12 @@ class Provider:
             timeout=timeout,
         )
         try:
+            if not isinstance(data, dict):
+                raise ValueError()
             choice = data["choices"][0]
             message = choice["message"]
+            if not isinstance(message, dict):
+                raise ValueError()
             finish = choice["finish_reason"]
             if finish not in ("stop", "tool_calls") or message.get("refusal"):
                 raise ProviderError(
@@ -132,7 +136,7 @@ class Provider:
         )
 
     def search(self, secret, query, domains):
-        return self.request(
+        result = self.request(
             "POST",
             "https://api.tavily.com/search",
             secret,
@@ -146,3 +150,16 @@ class Provider:
             },
             retry=True,
         )
+        if (
+            not isinstance(result, dict)
+            or not isinstance(result.get("results"), list)
+            or any(
+                not isinstance(row, dict)
+                or any(not isinstance(row.get(key), str) for key in ("url", "title", "content"))
+                for row in result["results"]
+            )
+        ):
+            raise ProviderError(
+                "Search provider returned malformed evidence", 502, "malformed_response"
+            )
+        return result

@@ -2,8 +2,8 @@
 set -euo pipefail
 cd "$(dirname "$0")/.."
 uv sync --frozen
-uv run ruff check commander tests scripts
-uv run ruff format --check commander tests scripts
+uv run ruff check main.py commander tests scripts
+uv run ruff format --check main.py commander tests scripts
 uv run mypy commander
 uv run pytest --cov=commander --cov-report=term-missing
 uv run python -m scripts.export_openapi

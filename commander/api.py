@@ -10,12 +10,14 @@ from fastapi.staticfiles import StaticFiles
 
 from commander import auth, memory
 from commander.contracts import (
+    AuthStatusView,
     Bootstrap,
     ErrorResponse,
     Login,
     MemoryEdit,
     MemoryInput,
     MemoryView,
+    StatusView,
     UserView,
 )
 from commander.db import Database
@@ -107,10 +109,6 @@ def create_app(settings=None, transport=None):
                     status_code=413,
                 )
         request._body = bytes(body)
-        if len(body) > 65536:
-            return JSONResponse(
-                {"error": {"code": "too_large", "message": "Request too large"}}, status_code=413
-            )
         response = await call_next(request)
         response.headers.update(
             {
@@ -144,16 +142,16 @@ def create_app(settings=None, transport=None):
 
     from fastapi import Response
 
-    @app.get("/health/live")
+    @app.get("/health/live", response_model=StatusView)
     def health_live():
         return {"status": "alive"}
 
-    @app.get("/health/ready")
+    @app.get("/health/ready", response_model=StatusView)
     def health_ready():
         db.one("SELECT 1")
         return {"status": "ready"}
 
-    @app.get("/api/auth/status")
+    @app.get("/api/auth/status", response_model=AuthStatusView)
     def auth_status():
         return {"bootstrap_required": not bool(db.one("SELECT 1 FROM owners LIMIT 1"))}
 
@@ -173,7 +171,7 @@ def create_app(settings=None, transport=None):
         row = auth.authenticate(db, request)
         return {"owner_id": str(owner), "username": row["username"], "csrf": row["csrf"]}
 
-    @app.post("/api/auth/logout")
+    @app.post("/api/auth/logout", response_model=StatusView)
     def logout(request: Request, response: Response, owner=Depends(principal)):
         db.one(
             "DELETE FROM auth_sessions WHERE token_hash=%s RETURNING owner_id",
@@ -198,7 +196,7 @@ def create_app(settings=None, transport=None):
     def edit_memory(item_id: UUID, data: MemoryEdit, owner=Depends(principal)):
         return memory.save_memory(db, owner, data, item_id)
 
-    @app.delete("/api/memory/{item_id}")
+    @app.delete("/api/memory/{item_id}", response_model=StatusView)
     def delete_memory(item_id: UUID, owner=Depends(principal)):
         row = db.one(
             "DELETE FROM memories WHERE id=%s AND owner_id=%s RETURNING id", (item_id, owner)
@@ -207,7 +205,7 @@ def create_app(settings=None, transport=None):
             raise DomainError("Memory not found", 404)
         return {"status": "deleted"}
 
-    # Feature routes are installed here as the vertical slices are integrated.
+    # Install authenticated feature routes.
     from commander.routes import install_routes
 
     install_routes(app, db, settings, principal, transport)

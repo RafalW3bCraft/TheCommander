@@ -1,6 +1,7 @@
 """Probe an explicitly isolated releasecheck Compose deployment; never external writes."""
 
 import json
+import os
 import secrets
 import time
 from datetime import datetime, timezone
@@ -9,12 +10,13 @@ from pathlib import Path
 import httpx
 from dotenv import dotenv_values
 
-base = "http://localhost:8000"
+base = os.getenv("COMPOSE_SMOKE_URL", "http://localhost:8000")
+Path(".runtime").mkdir(exist_ok=True)
 password = secrets.token_urlsafe(24)
 config = dotenv_values(".env.runtime")
 report = {
     "timestamp": datetime.now(timezone.utc).isoformat(),
-    "deployment": "thecommander-releasecheck",
+    "deployment": os.getenv("COMPOSE_PROJECT_NAME", "thecommander-releasecheck"),
     "checks": [],
 }
 with httpx.Client(base_url=base, timeout=10) as client:

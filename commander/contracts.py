@@ -262,3 +262,51 @@ class ErrorDetail(BaseModel):
 
 class ErrorResponse(BaseModel):
     error: ErrorDetail
+
+
+class StatusView(BaseModel):
+    status: str
+
+
+class AuthStatusView(BaseModel):
+    bootstrap_required: bool
+
+
+class WorkerView(BaseModel):
+    online: bool
+    last_seen: datetime | None
+
+
+class NoteListView(BaseModel):
+    name: str
+
+
+class NoteContentView(NoteListView):
+    content: str
+
+
+class NoteReceiptView(NoteListView):
+    bytes: int
+    verified: bool
+
+
+class ImportConnectionsView(BaseModel):
+    imported: list[str]
+    connections: list[ConnectionView]
+
+
+class UsageView(BaseModel):
+    model: str
+    tokens: dict | None
+    cost_usd: float | None
+    latency_ms: int
+    created_at: datetime
+
+
+class BudgetView(BaseModel):
+    max_steps: int
+    max_run_seconds: int
+    max_daily_runs: int
+    max_daily_tokens: int
+    daily_spend_limit_usd: float | None
+    usage: list[UsageView]

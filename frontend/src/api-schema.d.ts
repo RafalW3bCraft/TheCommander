@@ -587,6 +587,11 @@ export interface components {
       /** Args Hash */
       args_hash: string;
     };
+    /** AuthStatusView */
+    AuthStatusView: {
+      /** Bootstrap Required */
+      bootstrap_required: boolean;
+    };
     /** Bootstrap */
     Bootstrap: {
       /** Username */
@@ -595,6 +600,21 @@ export interface components {
       password: string;
       /** Token */
       token: string;
+    };
+    /** BudgetView */
+    BudgetView: {
+      /** Max Steps */
+      max_steps: number;
+      /** Max Run Seconds */
+      max_run_seconds: number;
+      /** Max Daily Runs */
+      max_daily_runs: number;
+      /** Max Daily Tokens */
+      max_daily_tokens: number;
+      /** Daily Spend Limit Usd */
+      daily_spend_limit_usd: number | null;
+      /** Usage */
+      usage: components["schemas"]["UsageView"][];
     };
     /** ConnectionConfigView */
     ConnectionConfigView: {
@@ -717,6 +737,13 @@ export interface components {
        */
       fetched_at: string;
     };
+    /** ImportConnectionsView */
+    ImportConnectionsView: {
+      /** Imported */
+      imported: string[];
+      /** Connections */
+      connections: components["schemas"]["ConnectionView"][];
+    };
     /** Issue */
     Issue: {
       /** Title */
@@ -838,6 +865,27 @@ export interface components {
       name: string;
       /** Content */
       content: string;
+    };
+    /** NoteContentView */
+    NoteContentView: {
+      /** Name */
+      name: string;
+      /** Content */
+      content: string;
+    };
+    /** NoteListView */
+    NoteListView: {
+      /** Name */
+      name: string;
+    };
+    /** NoteReceiptView */
+    NoteReceiptView: {
+      /** Name */
+      name: string;
+      /** Bytes */
+      bytes: number;
+      /** Verified */
+      verified: boolean;
     };
     /** ReceiptView */
     ReceiptView: {
@@ -1052,6 +1100,29 @@ export interface components {
       /** Max Seconds */
       max_seconds: number;
     };
+    /** StatusView */
+    StatusView: {
+      /** Status */
+      status: string;
+    };
+    /** UsageView */
+    UsageView: {
+      /** Model */
+      model: string;
+      /** Tokens */
+      tokens: {
+        [key: string]: unknown;
+      } | null;
+      /** Cost Usd */
+      cost_usd: number | null;
+      /** Latency Ms */
+      latency_ms: number;
+      /**
+       * Created At
+       * Format: date-time
+       */
+      created_at: string;
+    };
     /** UserView */
     UserView: {
       /** Owner Id */
@@ -1060,6 +1131,13 @@ export interface components {
       username: string;
       /** Csrf */
       csrf: string;
+    };
+    /** WorkerView */
+    WorkerView: {
+      /** Online */
+      online: boolean;
+      /** Last Seen */
+      last_seen: string | null;
     };
   };
   responses: never;
@@ -1085,7 +1163,7 @@ export interface operations {
           [name: string]: unknown;
         };
         content: {
-          "application/json": unknown;
+          "application/json": components["schemas"]["StatusView"];
         };
       };
       /** @description Bad Request */
@@ -1195,7 +1273,7 @@ export interface operations {
           [name: string]: unknown;
         };
         content: {
-          "application/json": unknown;
+          "application/json": components["schemas"]["StatusView"];
         };
       };
       /** @description Bad Request */
@@ -1305,7 +1383,7 @@ export interface operations {
           [name: string]: unknown;
         };
         content: {
-          "application/json": unknown;
+          "application/json": components["schemas"]["AuthStatusView"];
         };
       };
       /** @description Bad Request */
@@ -1753,7 +1831,7 @@ export interface operations {
           [name: string]: unknown;
         };
         content: {
-          "application/json": unknown;
+          "application/json": components["schemas"]["StatusView"];
         };
       };
       /** @description Bad Request */
@@ -2317,7 +2395,7 @@ export interface operations {
           [name: string]: unknown;
         };
         content: {
-          "application/json": unknown;
+          "application/json": components["schemas"]["StatusView"];
         };
       };
       /** @description Bad Request */
@@ -2537,7 +2615,7 @@ export interface operations {
           [name: string]: unknown;
         };
         content: {
-          "application/json": unknown;
+          "application/json": components["schemas"]["ImportConnectionsView"];
         };
       };
       /** @description Bad Request */
@@ -3881,7 +3959,7 @@ export interface operations {
           [name: string]: unknown;
         };
         content: {
-          "application/json": unknown;
+          "application/json": components["schemas"]["StatusView"];
         };
       };
       /** @description Bad Request */
@@ -4333,7 +4411,7 @@ export interface operations {
           [name: string]: unknown;
         };
         content: {
-          "application/json": unknown;
+          "application/json": components["schemas"]["StatusView"];
         };
       };
       /** @description Bad Request */
@@ -4787,7 +4865,7 @@ export interface operations {
           [name: string]: unknown;
         };
         content: {
-          "application/json": unknown;
+          "application/json": components["schemas"]["WorkerView"];
         };
       };
       /** @description Bad Request */
@@ -4897,7 +4975,7 @@ export interface operations {
           [name: string]: unknown;
         };
         content: {
-          "application/json": unknown;
+          "application/json": components["schemas"]["NoteListView"][];
         };
       };
       /** @description Bad Request */
@@ -5011,7 +5089,7 @@ export interface operations {
           [name: string]: unknown;
         };
         content: {
-          "application/json": unknown;
+          "application/json": components["schemas"]["NoteReceiptView"];
         };
       };
       /** @description Bad Request */
@@ -5123,7 +5201,7 @@ export interface operations {
           [name: string]: unknown;
         };
         content: {
-          "application/json": unknown;
+          "application/json": components["schemas"]["NoteContentView"];
         };
       };
       /** @description Bad Request */
@@ -5233,7 +5311,7 @@ export interface operations {
           [name: string]: unknown;
         };
         content: {
-          "application/json": unknown;
+          "application/json": components["schemas"]["BudgetView"];
         };
       };
       /** @description Bad Request */

@@ -1,3 +1,5 @@
+# Historical Flask dependencies only; excluded from the supported release.
+# Use uv sync --frozen / scripts/start.sh. See legacy/README.md.
 anthropic
 email-validator
 flask

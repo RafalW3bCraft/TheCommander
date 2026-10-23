@@ -1,6 +1,7 @@
+from typing import Annotated
 from uuid import UUID
 
-from fastapi import Depends
+from fastapi import Depends, Path
 
 from commander import runs, schedules
 from commander.broker import Broker
@@ -8,12 +9,17 @@ from commander.connections import Connections
 from commander.contracts import (
     ActionView,
     Approval,
+    BudgetView,
     ConnectionInput,
     ConnectionView,
     ConversationView,
+    ImportConnectionsView,
     Issue,
     MessageView,
     Note,
+    NoteContentView,
+    NoteListView,
+    NoteReceiptView,
     RunDetailView,
     RunInput,
     RunView,
@@ -21,6 +27,8 @@ from commander.contracts import (
     ScheduleInput,
     ScheduleView,
     SkillView,
+    StatusView,
+    WorkerView,
 )
 from commander.errors import DomainError
 from commander.skills import DEFINITIONS
@@ -35,7 +43,7 @@ def install_routes(app, db, settings, principal, transport):
     def list_connections(owner=Depends(principal)):
         return connections.list(owner)
 
-    @app.post("/api/connections/import-environment")
+    @app.post("/api/connections/import-environment", response_model=ImportConnectionsView)
     def import_environment(owner=Depends(principal)):
         return connections.import_environment(owner)
 
@@ -95,9 +103,14 @@ def install_routes(app, db, settings, principal, transport):
             (conversation_id, owner),
         )
 
-    @app.delete("/api/conversations/{conversation_id}")
+    @app.delete("/api/conversations/{conversation_id}", response_model=StatusView)
     def delete_conversation(conversation_id: UUID, owner=Depends(principal)):
         with db.connect() as conn:
+            if not conn.execute(
+                "SELECT 1 FROM conversations WHERE id=%s AND owner_id=%s FOR UPDATE",
+                (conversation_id, owner),
+            ).fetchone():
+                raise DomainError("Conversation not found", 404)
             if conn.execute(
                 "SELECT 1 FROM runs WHERE conversation_id=%s AND owner_id=%s AND status IN ('queued','running','waiting_approval','uncertain')",
                 (conversation_id, owner),
@@ -131,7 +144,7 @@ def install_routes(app, db, settings, principal, transport):
     def edit_schedule(schedule_id: UUID, data: ScheduleEdit, owner=Depends(principal)):
         return schedules.save(db, owner, data, schedule_id)
 
-    @app.delete("/api/schedules/{schedule_id}")
+    @app.delete("/api/schedules/{schedule_id}", response_model=StatusView)
     def delete_schedule(schedule_id: UUID, owner=Depends(principal)):
         row = db.one(
             "DELETE FROM schedules WHERE id=%s AND owner_id=%s RETURNING id", (schedule_id, owner)
@@ -152,31 +165,34 @@ def install_routes(app, db, settings, principal, transport):
     def reconcile_action(action_id: UUID, owner=Depends(principal)):
         return broker.reconcile(owner, action_id)
 
-    @app.get("/api/worker")
+    @app.get("/api/worker", response_model=WorkerView)
     def worker_status(owner=Depends(principal)):
         row = db.one(
             "SELECT max(seen_at) AS last_seen,bool_or(seen_at>now()-interval '30 seconds') AS online FROM worker_heartbeats"
         )
         return {"online": bool(row["online"]), "last_seen": row["last_seen"]}
 
-    @app.get("/api/notes")
+    @app.get("/api/notes", response_model=list[NoteListView])
     def notes(owner=Depends(principal)):
         connections.get(owner, "workspace")
         return Workspace(settings.workspace_root, owner).list()
 
-    @app.get("/api/notes/{name}")
-    def read_note(name: str, owner=Depends(principal)):
+    @app.get("/api/notes/{name}", response_model=NoteContentView)
+    def read_note(
+        name: Annotated[str, Path(pattern=r"^[A-Za-z0-9][A-Za-z0-9_-]{0,79}\.md$")],
+        owner=Depends(principal),
+    ):
         connections.get(owner, "workspace")
         return {"name": name, "content": Workspace(settings.workspace_root, owner).read(name)}
 
-    @app.post("/api/notes")
+    @app.post("/api/notes", response_model=NoteReceiptView)
     def create_note(data: Note, owner=Depends(principal)):
         row = connections.get(owner, "workspace")
         if not row["config"].get("enabled"):
             raise DomainError("Workspace disabled", 403)
         return Workspace(settings.workspace_root, owner).write(data.name, data.content)
 
-    @app.get("/api/budgets")
+    @app.get("/api/budgets", response_model=BudgetView)
     def budgets(owner=Depends(principal)):
         return {
             "max_steps": settings.max_steps,

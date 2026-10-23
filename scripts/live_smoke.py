@@ -16,7 +16,7 @@ report = {
     "endpoint_host": urlparse(s.nebius_base_url).hostname,
     "model": s.nebius_model,
     "github": "not run: token/repository/write authorization required",
-    "tavily": "not run: real TAVILY_API_KEY required",
+    "tavily": "not run by this Nebius probe; use scripts.live_research_smoke",
     "checks": [],
 }
 if not usable_secret(s.nebius_api_key):

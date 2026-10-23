@@ -1,0 +1,43 @@
+{
+  "timestamp": "2026-10-23T12:15:00.965988+00:00",
+  "provider": "Tavily",
+  "endpoint": "https://api.tavily.com/search",
+  "approved_domains": [
+    "docs.python.org"
+  ],
+  "query": "Python asyncio task cancellation official documentation",
+  "live": true,
+  "external_writes": false,
+  "validation_status": "validated",
+  "search_latency_ms": 3461,
+  "evidence": [
+    {
+      "url": "https://docs.python.org/3/library/asyncio-task.html",
+      "title": "Coroutines and tasks \u2014 Python 3.15.1 documentation",
+      "fetched_at": "2026-10-23T08:15:12.160352-04:00"
+    },
+    {
+      "url": "https://docs.python.org/3/library/asyncio-queue.html",
+      "title": "Queues \u2014 Python 3.15.1 documentation",
+      "fetched_at": "2026-10-23T08:15:12.187007-04:00"
+    },
+    {
+      "url": "https://docs.python.org/3/library/asyncio-runner.html",
+      "title": "Runners \u2014 Python 3.15.1 documentation",
+      "fetched_at": "2026-10-23T08:15:12.196972-04:00"
+    },
+    {
+      "url": "https://docs.python.org/pl/3.6/library/asyncio-task.html",
+      "title": "18.5.3. Tasks and coroutines \u2014 Python 3.6.15 - dokumentacja",
+      "fetched_at": "2026-10-23T08:15:12.208373-04:00"
+    },
+    {
+      "url": "https://docs.python.org/3/library/asyncio-dev.html",
+      "title": "Developing with asyncio \u2014 Python 3.15.1 documentation",
+      "fetched_at": "2026-10-23T08:15:12.218692-04:00"
+    }
+  ],
+  "persisted_evidence_count": 5,
+  "passed": true,
+  "limit": "Connector validation and authorized broker search; no full GitHub skill or issue write"
+}

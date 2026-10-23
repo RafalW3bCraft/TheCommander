@@ -41,6 +41,8 @@ class Connections:
         row = self.db.one("SELECT * FROM connections WHERE owner_id=%s AND kind=%s", (owner, kind))
         if not row or row["status"] == "revoked":
             raise DomainError(f"Configure the {kind} connection first", 409, "disconnected")
+        if not row["config"].get("enabled", True):
+            raise DomainError(f"The {kind} connection is disabled", 409, "disabled")
         expiry = row["config"].get("expires_at")
         if expiry and datetime.fromisoformat(expiry) <= datetime.now(timezone.utc):
             raise DomainError(f"The {kind} credential has expired; replace it", 409, "expired")
@@ -79,6 +81,8 @@ class Connections:
                 <= datetime.now(timezone.utc)
             ):
                 item["status"] = "expired"
+            if row and row["status"] != "revoked" and not row["config"].get("enabled", True):
+                item["status"] = "disabled"
             if kind == "nebius":
                 item["config"] = {
                     **item["config"],
@@ -154,7 +158,18 @@ class Connections:
                 models = self.provider.request(
                     "GET", self.settings.nebius_base_url.rstrip("/") + "/models", secret, retry=True
                 )
-                if self.settings.nebius_model not in [m["id"] for m in models.get("data", [])]:
+                if (
+                    not isinstance(models, dict)
+                    or not isinstance(models.get("data"), list)
+                    or any(
+                        not isinstance(model, dict) or not isinstance(model.get("id"), str)
+                        for model in models["data"]
+                    )
+                ):
+                    raise ProviderError(
+                        "Provider returned malformed model data", 502, "malformed_response"
+                    )
+                if self.settings.nebius_model not in [m["id"] for m in models["data"]]:
                     raise ProviderError(
                         "Configured NVIDIA model is unavailable to this account",
                         502,
@@ -172,14 +187,30 @@ class Connections:
                 )
                 detail = "Model listed and harmless inference completed"
             elif kind == "github":
-                self.provider.request(
+                repository = self.provider.request(
                     "GET",
                     "https://api.github.com/repos/" + row["config"]["repository"],
                     secret,
                     retry=True,
                 )
+                if not isinstance(repository, dict) or not isinstance(
+                    repository.get("full_name"), str
+                ):
+                    raise ProviderError(
+                        "Provider returned malformed repository data", 502, "malformed_response"
+                    )
+                if repository["full_name"].lower() != row["config"]["repository"].lower():
+                    raise ProviderError(
+                        "Provider returned a different repository", 502, "unavailable_resource"
+                    )
                 detail = "Repository read verified. Issue-write permission is verified only when an approved issue succeeds."
             elif kind == "tavily":
+                if not row["config"].get("domains"):
+                    raise DomainError(
+                        "Set approved research domains before testing Tavily",
+                        409,
+                        "source_scope_required",
+                    )
                 self.provider.search(
                     secret, "NVIDIA developer documentation", row["config"].get("domains", [])
                 )
@@ -204,6 +235,12 @@ class Connections:
             ("github", self.settings.github_token),
             ("tavily", self.settings.tavily_api_key),
         ]:
+            # Import only missing connections. Saved scopes, expiry and revocation
+            # are owner decisions and must not be reset by a bulk import.
+            if self.db.one(
+                "SELECT 1 FROM connections WHERE owner_id=%s AND kind=%s", (owner, kind)
+            ):
+                continue
             if usable_secret(key) and (kind != "github" or self.settings.github_repository):
                 self.save(
                     owner,

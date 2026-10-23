@@ -33,6 +33,8 @@ class Vendor:
         body = json.loads(request.content) if request.content else None
         self.calls.append((request.method, str(request.url), body))
         path = request.url.path
+        if self.mode == "malformed_validation" and not path.endswith("/chat/completions"):
+            return httpx.Response(200, json=[])
         if self.mode == "outage":
             return httpx.Response(503, json={"error": "outage"})
         if self.mode == "unauthorized":
@@ -655,3 +657,159 @@ def test_exact_preview_binds_the_visible_correlation_marker(app, settings):
     from commander.broker import args_hash
 
     assert args_hash(action["arguments"]) == action["args_hash"]
+
+
+def test_crash_after_confirmed_issue_restores_receipt_result(app, settings):
+    client, vendor, owner, db = app
+    proposal(vendor)
+    run = run_task(app, settings, "research-to-action")
+    action = run["actions"][0]
+    client.post(
+        "/api/actions/" + action["id"] + "/approve", json={"args_hash": action["args_hash"]}
+    ).raise_for_status()
+    Worker(settings, vendor.transport()).tick()
+    db.one(
+        "UPDATE runs SET status='running',result=NULL,lease_until=now()-interval '1 second' WHERE id=%s RETURNING id",
+        (run["id"],),
+    )
+    Worker(settings, vendor.transport()).recover()
+    recovered = client.get("/api/runs/" + run["id"]).json()
+    assert recovered["status"] == "succeeded"
+    assert recovered["error"] is None
+    assert recovered["actions"][0]["receipt"]["url"] in recovered["result"]
+    assert (
+        len([call for call in vendor.calls if call[0] == "POST" and call[1].endswith("/issues")])
+        == 1
+    )
+
+
+def test_queued_conversation_context_excludes_future_turns(app, settings):
+    client, vendor, owner, db = app
+    first = client.post("/api/runs", json={"prompt": "FIRST pending prompt"}).json()
+    second = client.post(
+        "/api/runs",
+        json={"prompt": "SECOND future prompt", "conversation_id": first["conversation_id"]},
+    ).json()
+    Worker(settings, vendor.transport()).tick()
+    calls = [call[2]["messages"] for call in vendor.calls if call[1].endswith("/chat/completions")]
+    assert "FIRST pending prompt" in json.dumps(calls[0])
+    assert "SECOND future prompt" not in json.dumps(calls[0])
+    Worker(settings, vendor.transport()).tick()
+    calls = [call[2]["messages"] for call in vendor.calls if call[1].endswith("/chat/completions")]
+    assert calls[1][-1]["content"] == "SECOND future prompt"
+    assert any(message["role"] == "assistant" for message in calls[1])
+    assert client.get("/api/runs/" + second["id"]).json()["status"] == "succeeded"
+
+
+@pytest.mark.parametrize("kind", ["nebius", "github", "tavily"])
+def test_malformed_validation_never_marks_connection_valid(app, kind):
+    client, vendor, *_ = app
+    vendor.mode = "malformed_validation"
+    response = client.post("/api/connections/" + kind + "/validate")
+    assert response.status_code == 200
+    connection = next(row for row in response.json() if row["kind"] == kind)
+    assert connection["status"] == "malformed_response"
+
+
+def test_environment_import_preserves_saved_and_revoked_connections(app, settings):
+    client, vendor, owner, db = app
+    settings.github_token = "another-server-credential"
+    settings.github_repository = "different/repository"
+    settings.nebius_api_key = "another-nebius-credential"
+    before = db.one("SELECT * FROM connections WHERE owner_id=%s AND kind='github'", (owner,))
+    client.delete("/api/connections/nebius").raise_for_status()
+    result = client.post("/api/connections/import-environment")
+    result.raise_for_status()
+    after = db.one("SELECT * FROM connections WHERE owner_id=%s AND kind='github'", (owner,))
+    assert after["config"] == before["config"]
+    assert after["revision"] == before["revision"]
+    assert (
+        next(c for c in result.json()["connections"] if c["kind"] == "nebius")["status"]
+        == "revoked"
+    )
+
+
+def test_disabled_connection_denies_reads_and_inference(app, settings):
+    client = app[0]
+    client.put("/api/connections/workspace", json={"enabled": False}).raise_for_status()
+    assert client.get("/api/notes").status_code == 409
+    client.put("/api/connections/nebius", json={"enabled": False}).raise_for_status()
+    assert run_task(app, settings)["status"] == "failed"
+    assert not app[1].calls
+
+
+def test_invalid_note_name_is_a_client_validation_error(app):
+    assert app[0].get("/api/notes/invalid.txt").status_code == 422
+
+
+def test_stale_skill_definition_fails_before_tool_or_model_dispatch(app, settings):
+    client, vendor, owner, db = app
+    run = client.post("/api/runs", json={"skill": "follow-through", "prompt": "Next step"}).json()
+    db.one("UPDATE runs SET skill_version='old-definition' WHERE id=%s RETURNING id", (run["id"],))
+    Worker(settings, vendor.transport()).tick()
+    result = client.get("/api/runs/" + run["id"]).json()
+    assert result["status"] == "failed"
+    assert "version" in result["error"].lower()
+    assert not vendor.calls
+
+
+def test_unknown_skill_does_not_inherit_conversation_authority(app, settings):
+    client, vendor, owner, db = app
+    run = client.post("/api/runs", json={"prompt": "Next step"}).json()
+    db.one("UPDATE runs SET skill='removed-skill' WHERE id=%s RETURNING id", (run["id"],))
+    Worker(settings, vendor.transport()).tick()
+    assert client.get("/api/runs/" + run["id"]).json()["status"] == "failed"
+    assert not vendor.calls
+
+
+def test_note_effect_then_model_failure_remains_reconcilable_after_cancel(app, settings):
+    client, vendor, owner, db = app
+    vendor.completions = [
+        {
+            "tool_calls": [
+                {
+                    "id": "note-1",
+                    "function": {
+                        "name": "save_note",
+                        "arguments": json.dumps(
+                            {"name": "partial.md", "content": "Verified partial effect"}
+                        ),
+                    },
+                }
+            ]
+        },
+        {"content": "Unsupported reference https://invented.example/fake"},
+    ]
+    run = run_task(app, settings)
+    assert run["status"] == "uncertain"
+    assert client.post("/api/runs/" + run["id"] + "/cancel").json()["status"] == "cancelled"
+    client.delete("/api/connections/workspace").raise_for_status()
+    assert client.post("/api/runs/" + run["id"] + "/reconcile-notes").status_code == 409
+    client.put("/api/connections/workspace", json={"enabled": True}).raise_for_status()
+    recovered = client.post("/api/runs/" + run["id"] + "/reconcile-notes")
+    assert recovered.status_code == 200
+    assert recovered.json()["status"] == "cancelled"
+    assert "partial.md" in recovered.json()["result"]
+
+
+def test_model_issue_proposal_rejects_invented_citation(app, settings):
+    proposal(app[1])
+    args = json.loads(app[1].completions[0]["tool_calls"][0]["function"]["arguments"])
+    args["body"] += " Source: https://invented.example/report"
+    app[1].completions[0]["tool_calls"][0]["function"]["arguments"] = json.dumps(args)
+    run = run_task(app, settings, "research-to-action")
+    assert run["status"] == "failed"
+    assert not run["actions"]
+
+
+def test_runtime_validation_errors_hide_private_values(settings):
+    with pytest.raises(ValueError) as failure:
+        settings.__class__(
+            _env_file=None,
+            database_url=settings.database_url,
+            encryption_key=settings.encryption_key,
+            bootstrap_token="private-short-token",
+            nebius_api_key="private-key-canary",
+        )
+    assert "private-short-token" not in str(failure.value)
+    assert "private-key-canary" not in str(failure.value)

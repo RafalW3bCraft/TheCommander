@@ -1,5 +1,6 @@
 import hashlib
 import json as stdjson
+import re
 import uuid
 from datetime import datetime, timezone
 from typing import Any
@@ -159,7 +160,18 @@ class Broker:
         event(self.db, run["id"], "search", {"count": len(result)})
         return result
 
+    def validate_citations(self, run, text):
+        allowed = {
+            row["url"]
+            for row in self.db.all("SELECT url FROM evidence WHERE run_id=%s", (run["id"],))
+        }
+        urls = set(re.findall(r"https?://[^\s)\]>]+", text))
+        if any(url not in allowed and url.rstrip(".,;:!?") not in allowed for url in urls):
+            raise DomainError("Model returned an unsupported citation", 502, "unsupported_citation")
+        return allowed
+
     def propose(self, run, data):
+        self.validate_citations(run, data.body)
         conn = self.connections.get(run["owner_id"], "github")
         action_id = uuid.uuid4()
         args = {
@@ -355,7 +367,13 @@ class Broker:
                     self.connections.secret(conn),
                     retry=True,
                 )
-                matches.extend(i for i in rows if marker in (i.get("body") or ""))
+                if not isinstance(rows, list) or any(not isinstance(item, dict) for item in rows):
+                    raise DomainError(
+                        "Provider returned malformed issue list", 502, "malformed_response"
+                    )
+                matches.extend(
+                    i for i in rows if isinstance(i.get("body"), str) and marker in i["body"]
+                )
                 if len(rows) < 100:
                     break
             if len(matches) != 1:

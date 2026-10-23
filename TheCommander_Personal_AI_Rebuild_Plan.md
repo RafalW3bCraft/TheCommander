@@ -34,6 +34,7 @@ Use official ECC. The former affaan-m/everything-claude-code repository now redi
 10. Use reviewer/domain-agent roles only when supported and permitted by the active host instructions. Otherwise perform separate review passes and record that they were self-review. Never invent independent agent sign-off.
 11. ECC is DEVELOPMENT tooling. Its developer memory, tools, and credentials are not TheCommander's end-user memory or action permissions. Keep these trust boundaries separate.
 12. Installing the full catalog does not authorize paid services, diagnostics uploads, arbitrary MCP connections, or application permissions.
+13. Audit the entire codebase recursively, examining every directory, file, dependency, module, route, configuration, and integration. Trace end-to-end connections and identify obsolete, duplicate, unused, inconsistent, broken, or incomplete components. Fix defects, remove redundancy safely, complete missing implementations, and correct setup, imports, wiring, routing, and configuration. Preserve intended behavior, run relevant tests, and verify all services and workflows operate correctly before delivery.
 
 Follow this development loop:
 inspect → specify → write meaningful failing tests → implement → integrate → review → verify → document.

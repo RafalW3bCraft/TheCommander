@@ -1,10 +1,13 @@
-import React, { useCallback, useEffect, useState } from "react";
+import React, { useCallback, useEffect, useRef, useState } from "react";
 import { createRoot } from "react-dom/client";
 import {
   api,
+  ApiError,
   setCSRF,
   when,
   type User,
+  type Budget,
+  type WorkerStatus,
   type Memory,
   type Run,
   type Detail,
@@ -16,11 +19,18 @@ import {
   type Message,
 } from "./api";
 import "./style.css";
+function localInputTime(value: string | null | undefined) {
+  if (!value) return "";
+  const date = new Date(value);
+  return new Date(date.getTime() - date.getTimezoneOffset() * 60000)
+    .toISOString()
+    .slice(0, 16);
+}
 type Job = (fn: () => Promise<unknown>) => Promise<void>;
 function useJob() {
   const [error, setError] = useState("");
   const [busy, setBusy] = useState(false);
-  const run: Job = async (fn) => {
+  const run: Job = useCallback(async (fn) => {
     setBusy(true);
     setError("");
     try {
@@ -30,7 +40,7 @@ function useJob() {
     } finally {
       setBusy(false);
     }
-  };
+  }, []);
   return { error, busy, run };
 }
 function ErrorBox({ error }: { error: string }) {
@@ -50,7 +60,17 @@ function App() {
   const [ready, setReady] = useState(false);
   const [page, setPage] = useState("Today");
   const [bootstrap, setBootstrap] = useState(false);
-  const job = useJob();
+  useEffect(() => {
+    const expired = () => {
+      setCSRF("");
+      setUser(null);
+    };
+    window.addEventListener("commander-session-expired", expired);
+    return () =>
+      window.removeEventListener("commander-session-expired", expired);
+  }, []);
+
+  const { run: runJob, ...job } = useJob();
   useEffect(() => {
     void (async () => {
       try {
@@ -62,18 +82,18 @@ function App() {
           const me = await api<User>("/auth/me");
           setCSRF(me.csrf);
           setUser(me);
-        } catch {
-          /* An unauthenticated session is expected on first load. */
+        } catch (error) {
+          if (!(error instanceof ApiError) || error.status !== 401) throw error;
         }
       } catch (e) {
-        await job.run(async () => {
+        await runJob(async () => {
           throw e;
         });
       } finally {
         setReady(true);
       }
     })();
-  }, []);
+  }, [runJob]);
   if (!ready)
     return (
       <main>
@@ -96,7 +116,7 @@ function App() {
           onSubmit={(e) => {
             e.preventDefault();
             const form = new FormData(e.currentTarget);
-            void job.run(async () => {
+            void runJob(async () => {
               const body = {
                 username: String(form.get("username")),
                 password: String(form.get("password")),
@@ -175,7 +195,7 @@ function App() {
           <button
             className="quiet"
             onClick={() =>
-              void job.run(async () => {
+              void runJob(async () => {
                 await api("/auth/logout", "POST");
                 setCSRF("");
                 setUser(null);
@@ -212,14 +232,22 @@ function MemoryPage() {
   const [query, setQuery] = useState("");
   const [editing, setEditing] = useState<Memory | null>(null);
   const [loading, setLoading] = useState(true);
-  const job = useJob();
+  const refreshVersion = useRef(0);
+  const { run: runJob, ...job } = useJob();
   const refresh = useCallback(async () => {
-    setItems(await api<Memory[]>("/memory?q=" + encodeURIComponent(query)));
-    setLoading(false);
+    const version = ++refreshVersion.current;
+    try {
+      const result = await api<Memory[]>(
+        "/memory?q=" + encodeURIComponent(query),
+      );
+      if (version === refreshVersion.current) setItems(result);
+    } finally {
+      if (version === refreshVersion.current) setLoading(false);
+    }
   }, [query]);
   useEffect(() => {
-    void job.run(refresh);
-  }, [refresh]);
+    void runJob(refresh);
+  }, [refresh, runJob]);
   return (
     <>
       <p>
@@ -235,7 +263,7 @@ function MemoryPage() {
         <button
           className="secondary"
           onClick={() =>
-            void job.run(async () => {
+            void runJob(async () => {
               const data = await api<Memory[]>("/memory/export");
               const url = URL.createObjectURL(
                 new Blob([JSON.stringify(data, null, 2)], {
@@ -261,11 +289,14 @@ function MemoryPage() {
             e.preventDefault();
             const f = new FormData(e.currentTarget);
             const form = e.currentTarget;
-            void job.run(async () => {
+            void runJob(async () => {
               const body = {
                 key: String(f.get("key")),
                 content: String(f.get("content")),
                 kind: editing?.kind || "explicit",
+                expires_at: f.get("expires_at")
+                  ? new Date(String(f.get("expires_at"))).toISOString()
+                  : null,
                 ...(editing ? { revision: editing.revision } : {}),
               };
               await api(
@@ -297,6 +328,14 @@ function MemoryPage() {
               placeholder="Keep my engineering briefings short and cite sources."
               required
               maxLength={10000}
+            />
+          </label>
+          <label>
+            Memory expiry (optional, your browser’s local time)
+            <input
+              name="expires_at"
+              type="datetime-local"
+              defaultValue={localInputTime(editing?.expires_at)}
             />
           </label>
           <div className="actions">
@@ -340,7 +379,7 @@ function MemoryPage() {
               <button
                 className="quiet danger"
                 onClick={() =>
-                  void job.run(async () => {
+                  void runJob(async () => {
                     await api("/memory/" + item.id, "DELETE");
                     await refresh();
                   })
@@ -364,14 +403,14 @@ function Composer({
   onCreated: (run: Run) => void;
   conversation?: string;
 }) {
-  const job = useJob();
+  const { run: runJob, ...job } = useJob();
   return (
     <form
       onSubmit={(e) => {
         e.preventDefault();
         const f = new FormData(e.currentTarget);
         const form = e.currentTarget;
-        void job.run(async () => {
+        void runJob(async () => {
           const run = await api<Run>("/runs", "POST", {
             skill,
             prompt: String(f.get("prompt")),
@@ -404,48 +443,48 @@ function Composer({
 }
 function Today() {
   const [runs, setRuns] = useState<Run[]>([]);
-  const [worker, setWorker] = useState<{
-    online: boolean;
-    last_seen: string | null;
-  } | null>(null);
+  const [worker, setWorker] = useState<WorkerStatus | null>(null);
+  const [budget, setBudget] = useState<Budget | null>(null);
   const [selected, setSelected] = useState<string | null>(null);
   const [conversations, setConversations] = useState<Conversation[]>([]);
   const [conversation, setConversation] = useState("");
   const [messages, setMessages] = useState<Message[]>([]);
-  const job = useJob();
+  const { run: runJob, ...job } = useJob();
   const refresh = useCallback(async () => {
-    const [r, w, c] = await Promise.all([
+    const [r, w, c, b] = await Promise.all([
       api<Run[]>("/runs"),
-      api<{ online: boolean; last_seen: string | null }>("/worker"),
+      api<WorkerStatus>("/worker"),
       api<Conversation[]>("/conversations"),
+      api<Budget>("/budgets"),
     ]);
     setRuns(r);
     setWorker(w);
     setConversations(c);
+    setBudget(b);
   }, []);
   useEffect(() => {
-    void job.run(refresh);
+    void runJob(refresh);
     const id = setInterval(
       () =>
         void refresh().catch(
           (e) =>
-            void job.run(async () => {
+            void runJob(async () => {
               throw e;
             }),
         ),
       5000,
     );
     return () => clearInterval(id);
-  }, [refresh]);
+  }, [refresh, runJob]);
   useEffect(() => {
     if (conversation)
-      void job.run(async () =>
+      void runJob(async () =>
         setMessages(
           await api<Message[]>("/conversations/" + conversation + "/messages"),
         ),
       );
     else setMessages([]);
-  }, [conversation, runs]);
+  }, [conversation, runs, runJob]);
   return (
     <>
       <ErrorBox error={job.error} />
@@ -489,14 +528,14 @@ function Today() {
           onCreated={(r) => {
             setSelected(r.id);
             setConversation(r.conversation_id || "");
-            void job.run(refresh);
+            void runJob(refresh);
           }}
         />
         {conversation && (
           <button
             className="quiet danger"
             onClick={() =>
-              void job.run(async () => {
+              void runJob(async () => {
                 await api("/conversations/" + conversation, "DELETE");
                 setConversation("");
                 await refresh();
@@ -507,9 +546,39 @@ function Today() {
           </button>
         )}
       </section>
+      {budget && (
+        <details>
+          <summary>Usage and limits</summary>
+          <p>
+            Up to {budget.max_steps} model steps and {budget.max_run_seconds}{" "}
+            seconds per run. Daily limits: {budget.max_daily_runs} runs and{" "}
+            {budget.max_daily_tokens.toLocaleString()} tokens.
+          </p>
+          <p>
+            Daily spending cap:{" "}
+            {budget.daily_spend_limit_usd === null
+              ? "not configured"
+              : "$" + budget.daily_spend_limit_usd}
+            .
+          </p>
+          <p>
+            Latest inference:{" "}
+            {budget.usage.length
+              ? `${budget.usage[0].tokens?.total_tokens ?? "unknown"} tokens; cost ${budget.usage[0].cost_usd === null ? "unknown" : "$" + budget.usage[0].cost_usd.toFixed(6)}`
+              : "no recorded inference"}
+            .
+          </p>
+        </details>
+      )}
       <h2>Recent work</h2>
       <RunList runs={runs.slice(0, 6)} select={setSelected} />
-      {selected && <RunDetail id={selected} close={() => setSelected(null)} />}
+      {selected && (
+        <RunDetail
+          key={selected}
+          id={selected}
+          close={() => setSelected(null)}
+        />
+      )}
       <SchedulePanel />
     </>
   );
@@ -546,7 +615,7 @@ function ActionCard({
   action: Action;
   refresh: () => Promise<void>;
 }) {
-  const job = useJob();
+  const { run: runJob, ...job } = useJob();
   const [edit, setEdit] = useState(false);
   return (
     <article className="approval">
@@ -560,7 +629,7 @@ function ActionCard({
           onSubmit={(e) => {
             e.preventDefault();
             const f = new FormData(e.currentTarget);
-            void job.run(async () => {
+            void runJob(async () => {
               await api("/actions/" + action.id, "PUT", {
                 title: String(f.get("title")),
                 body: String(f.get("body")),
@@ -601,8 +670,8 @@ function ActionCard({
         </>
       )}
       <small>
-        Approval expires {when(action.expires_at)}. A unique reconciliation
-        marker is appended to the issue body.
+        Approval expires {when(action.expires_at)}. The preview includes the
+        unique marker used to find the issue if its response is lost.
       </small>
       <div className="actions">
         {action.status === "pending" && (
@@ -610,7 +679,7 @@ function ActionCard({
             <button
               disabled={job.busy || edit}
               onClick={() =>
-                void job.run(async () => {
+                void runJob(async () => {
                   await api("/actions/" + action.id + "/approve", "POST", {
                     args_hash: action.args_hash,
                   });
@@ -629,7 +698,7 @@ function ActionCard({
           <button
             disabled={job.busy}
             onClick={() =>
-              void job.run(async () => {
+              void runJob(async () => {
                 await api("/actions/" + action.id + "/reconcile", "POST");
                 await refresh();
               })
@@ -650,25 +719,25 @@ function ActionCard({
 }
 function RunDetail({ id, close }: { id: string; close: () => void }) {
   const [detail, setDetail] = useState<Detail | null>(null);
-  const job = useJob();
+  const { run: runJob, ...job } = useJob();
   const refresh = useCallback(
     async () => setDetail(await api<Detail>("/runs/" + id)),
     [id],
   );
   useEffect(() => {
-    void job.run(refresh);
+    void runJob(refresh);
     const timer = setInterval(
       () =>
         void refresh().catch(
           (e) =>
-            void job.run(async () => {
+            void runJob(async () => {
               throw e;
             }),
         ),
       2500,
     );
     return () => clearInterval(timer);
-  }, [refresh]);
+  }, [refresh, runJob]);
   return (
     <section className="run-detail" aria-label="Run details">
       <div className="row">
@@ -695,7 +764,7 @@ function RunDetail({ id, close }: { id: string; close: () => void }) {
               className="secondary"
               disabled={job.busy}
               onClick={() =>
-                void job.run(async () => {
+                void runJob(async () => {
                   await api("/runs/" + id + "/cancel", "POST");
                   await refresh();
                 })
@@ -704,20 +773,22 @@ function RunDetail({ id, close }: { id: string; close: () => void }) {
               Cancel further work
             </button>
           )}
-          {detail.status === "uncertain" && detail.actions.length === 0 && (
-            <button
-              className="secondary"
-              disabled={job.busy}
-              onClick={() =>
-                void job.run(async () => {
-                  await api("/runs/" + id + "/reconcile-notes", "POST");
-                  await refresh();
-                })
-              }
-            >
-              Check saved notes
-            </button>
-          )}
+          {["uncertain", "cancelled"].includes(detail.status) &&
+            detail.actions.length === 0 &&
+            detail.events.some((event) => event.kind === "note_intent") && (
+              <button
+                className="secondary"
+                disabled={job.busy}
+                onClick={() =>
+                  void runJob(async () => {
+                    await api("/runs/" + id + "/reconcile-notes", "POST");
+                    await refresh();
+                  })
+                }
+              >
+                Check saved notes
+              </button>
+            )}
           {detail.actions.map((a) => (
             <ActionCard key={a.id} action={a} refresh={refresh} />
           ))}
@@ -754,29 +825,35 @@ function RunDetail({ id, close }: { id: string; close: () => void }) {
 function Activity() {
   const [items, setItems] = useState<Run[]>([]);
   const [selected, setSelected] = useState<string | null>(null);
-  const job = useJob();
+  const { run: runJob, ...job } = useJob();
   useEffect(() => {
     const refresh = async () => setItems(await api<Run[]>("/runs"));
-    void job.run(refresh);
-    const id = setInterval(() => void job.run(refresh), 5000);
+    void runJob(refresh);
+    const id = setInterval(() => void runJob(refresh), 5000);
     return () => clearInterval(id);
-  }, []);
+  }, [runJob]);
   return (
     <>
       <p>Inspect what ran, what needs approval, and what actually happened.</p>
       <ErrorBox error={job.error} />
       <RunList runs={items} select={setSelected} />
-      {selected && <RunDetail id={selected} close={() => setSelected(null)} />}
+      {selected && (
+        <RunDetail
+          key={selected}
+          id={selected}
+          close={() => setSelected(null)}
+        />
+      )}
     </>
   );
 }
 function SkillsPage() {
   const [items, setItems] = useState<Skill[]>([]);
   const [selected, setSelected] = useState<string | null>(null);
-  const job = useJob();
+  const { run: runJob, ...job } = useJob();
   useEffect(() => {
-    void job.run(async () => setItems(await api<Skill[]>("/skills")));
-  }, []);
+    void runJob(async () => setItems(await api<Skill[]>("/skills")));
+  }, [runJob]);
   return (
     <>
       <p>
@@ -800,23 +877,29 @@ function SkillsPage() {
           <Composer skill={s.id} onCreated={(r) => setSelected(r.id)} />
         </section>
       ))}
-      {selected && <RunDetail id={selected} close={() => setSelected(null)} />}
+      {selected && (
+        <RunDetail
+          key={selected}
+          id={selected}
+          close={() => setSelected(null)}
+        />
+      )}
     </>
   );
 }
 function SchedulePanel() {
   const [items, setItems] = useState<Schedule[]>([]);
   const [editing, setEditing] = useState<Schedule | null>(null);
-  const job = useJob();
+  const { run: runJob, ...job } = useJob();
   const refresh = useCallback(
     async () => setItems(await api<Schedule[]>("/schedules")),
     [],
   );
   useEffect(() => {
-    void job.run(refresh);
-    const timer = setInterval(() => void job.run(refresh), 5000);
+    void runJob(refresh);
+    const timer = setInterval(() => void runJob(refresh), 5000);
     return () => clearInterval(timer);
-  }, [refresh]);
+  }, [refresh, runJob]);
   const update = async (s: Schedule, paused: boolean) => {
     await api("/schedules/" + s.id, "PUT", {
       skill: s.skill,
@@ -844,7 +927,7 @@ function SchedulePanel() {
           e.preventDefault();
           const f = new FormData(e.currentTarget);
           const form = e.currentTarget;
-          void job.run(async () => {
+          void runJob(async () => {
             const body = {
               skill: String(f.get("skill")),
               prompt: String(f.get("prompt")),
@@ -972,7 +1055,7 @@ function SchedulePanel() {
               <button
                 className="quiet"
                 disabled={job.busy}
-                onClick={() => void job.run(() => update(s, !s.paused))}
+                onClick={() => void runJob(() => update(s, !s.paused))}
               >
                 {s.paused ? "Resume" : "Pause"}
               </button>
@@ -981,7 +1064,7 @@ function SchedulePanel() {
               className="quiet danger"
               disabled={job.busy}
               onClick={() =>
-                void job.run(async () => {
+                void runJob(async () => {
                   await api("/schedules/" + s.id, "DELETE");
                   await refresh();
                 })
@@ -997,14 +1080,14 @@ function SchedulePanel() {
 }
 function ConnectionsPage() {
   const [items, setItems] = useState<Connection[]>([]);
-  const job = useJob();
+  const { run: runJob, ...job } = useJob();
   const refresh = useCallback(
     async () => setItems(await api<Connection[]>("/connections")),
     [],
   );
   useEffect(() => {
-    void job.run(refresh);
-  }, [refresh]);
+    void runJob(refresh);
+  }, [refresh, runJob]);
   return (
     <>
       <p>
@@ -1016,7 +1099,7 @@ function ConnectionsPage() {
         className="secondary"
         disabled={job.busy}
         onClick={() =>
-          void job.run(async () => {
+          void runJob(async () => {
             await api("/connections/import-environment", "POST");
             await refresh();
           })
@@ -1038,7 +1121,7 @@ function ConnectionCard({
   connection: Connection;
   refresh: () => Promise<void>;
 }) {
-  const job = useJob();
+  const { run: runJob, ...job } = useJob();
   return (
     <section>
       <div className="row">
@@ -1073,11 +1156,12 @@ function ConnectionCard({
       {c.validated_at && <small>Last checked {when(c.validated_at)}</small>}
       <ErrorBox error={job.error} />
       <form
+        key={c.revision}
         onSubmit={(e) => {
           e.preventDefault();
           const f = new FormData(e.currentTarget);
           const form = e.currentTarget;
-          void job.run(async () => {
+          void runJob(async () => {
             await api("/connections/" + c.kind, "PUT", {
               secret: String(f.get("secret") || ""),
               repository: String(f.get("repository") || ""),
@@ -1130,6 +1214,26 @@ function ConnectionCard({
             />
           </label>
         )}
+        {c.kind !== "workspace" && (
+          <label>
+            Credential expiry (optional, your browser’s local time)
+            <input
+              name="expires_at"
+              type="datetime-local"
+              defaultValue={
+                c.config.expires_at
+                  ? new Date(
+                      new Date(c.config.expires_at).getTime() -
+                        new Date(c.config.expires_at).getTimezoneOffset() *
+                          60000,
+                    )
+                      .toISOString()
+                      .slice(0, 16)
+                  : ""
+              }
+            />
+          </label>
+        )}
         <div className="actions">
           <button disabled={job.busy}>
             {job.busy
@@ -1145,7 +1249,7 @@ function ConnectionCard({
                 className="secondary"
                 disabled={job.busy}
                 onClick={() =>
-                  void job.run(async () => {
+                  void runJob(async () => {
                     await api("/connections/" + c.kind + "/validate", "POST");
                     await refresh();
                   })
@@ -1158,7 +1262,7 @@ function ConnectionCard({
                 className="quiet danger"
                 disabled={job.busy}
                 onClick={() =>
-                  void job.run(async () => {
+                  void runJob(async () => {
                     await api("/connections/" + c.kind, "DELETE");
                     await refresh();
                   })
@@ -1176,7 +1280,7 @@ function ConnectionCard({
 function Notes() {
   const [notes, setNotes] = useState<{ name: string }[]>([]);
   const [content, setContent] = useState("");
-  const job = useJob();
+  const { run: runJob, ...job } = useJob();
   return (
     <section>
       <h2>Workspace files</h2>
@@ -1184,7 +1288,7 @@ function Notes() {
       <button
         className="secondary"
         onClick={() =>
-          void job.run(async () =>
+          void runJob(async () =>
             setNotes(await api<{ name: string }[]>("/notes")),
           )
         }
@@ -1196,7 +1300,7 @@ function Notes() {
           className="note-link"
           key={n.name}
           onClick={() =>
-            void job.run(async () =>
+            void runJob(async () =>
               setContent(
                 (
                   await api<{ content: string }>(
@@ -1218,7 +1322,7 @@ function Notes() {
             e.preventDefault();
             const f = new FormData(e.currentTarget);
             const form = e.currentTarget;
-            void job.run(async () => {
+            void runJob(async () => {
               await api("/notes", "POST", {
                 name: String(f.get("name")),
                 content: String(f.get("content")),
