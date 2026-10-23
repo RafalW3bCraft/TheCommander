@@ -1,0 +1,10 @@
+Found 7 known vulnerabilities in 1 package
+Name         Version ID                  Fix Versions
+------------ ------- ------------------- ------------
+cryptography 47.0.0  PYSEC-2026-3554     49.0.0
+cryptography 47.0.0  PYSEC-2026-3552     50.0.0
+cryptography 47.0.0  PYSEC-2026-3553     49.0.0
+cryptography 47.0.0  PYSEC-2026-3552     50.0.0
+cryptography 47.0.0  PYSEC-2026-3553     49.0.0
+cryptography 47.0.0  PYSEC-2026-3554     49.0.0
+cryptography 47.0.0  GHSA-537c-gmf6-5ccf 48.0.1

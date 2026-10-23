@@ -46,3 +46,13 @@ memory.json
 .upm/
 .cache/
 .config/
+.tools/
+.runtime/
+.env.runtime
+node_modules/
+frontend/dist/
+playwright-report/
+test-results/
+.mypy_cache/
+.ruff_cache/
+coverage.json

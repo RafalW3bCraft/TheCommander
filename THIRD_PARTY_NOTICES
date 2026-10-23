@@ -1,0 +1,13 @@
+TheCommander retains the original MIT license and authorship in LICENSE.
+
+Development guidance: ECC 2.2.3, Affaan Mustafa and contributors, MIT,
+https://github.com/affaan-m/ECC, pinned source 90606c8315ee09cafc303515c5f33024db6b9882.
+ECC is fetched locally and is not bundled in the application image.
+
+Runtime dependencies and exact transitive versions are recorded in uv.lock and
+frontend/package-lock.json. Principal components: FastAPI (MIT), Starlette (BSD),
+Pydantic (MIT), psycopg (LGPL), Uvicorn (BSD), Argon2-cffi (MIT), cryptography
+(Apache-2.0/BSD), HTTPX (BSD), React (MIT), Vite (MIT), PostgreSQL (PostgreSQL License).
+Retain installed dependency license files when redistributing images/packages.
+NVIDIA model weights are accessed via Nebius; no weights are redistributed here.
+Provider trademarks identify integrations and do not imply endorsement.
