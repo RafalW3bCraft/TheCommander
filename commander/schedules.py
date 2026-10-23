@@ -64,6 +64,6 @@ def dispatch_due(db, settings):
                     seconds=(int(elapsed // row["interval_seconds"]) + 1) * row["interval_seconds"]
                 )
             conn.execute(
-                "UPDATE schedules SET last_at=%s,next_at=%s WHERE id=%s",
+                "UPDATE schedules SET last_at=%s,next_at=%s,revision=revision+1 WHERE id=%s",
                 (row["next_at"], next_at, row["id"]),
             )

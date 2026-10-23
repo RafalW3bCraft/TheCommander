@@ -23,7 +23,7 @@ x-app: &app
       max-file: "3"
 services:
   db:
-    image: docker.io/library/postgres:17-bookworm
+    image: docker.io/library/postgres:17-bookworm@sha256:858bb5e98eed02eb8cafbcdc007f9a65d1b613972028944a8ec2133ccaf80d27
     environment:
       POSTGRES_USER: commander
       POSTGRES_DB: commander

@@ -9,7 +9,15 @@ from fastapi.responses import FileResponse, JSONResponse
 from fastapi.staticfiles import StaticFiles
 
 from commander import auth, memory
-from commander.contracts import Bootstrap, Login, MemoryEdit, MemoryInput, MemoryView, UserView
+from commander.contracts import (
+    Bootstrap,
+    ErrorResponse,
+    Login,
+    MemoryEdit,
+    MemoryInput,
+    MemoryView,
+    UserView,
+)
 from commander.db import Database
 from commander.errors import DomainError
 from commander.settings import Settings
@@ -24,7 +32,15 @@ def create_app(settings=None, transport=None):
         db.migrate()
         yield
 
-    app = FastAPI(title="TheCommander", version="0.2.0", lifespan=lifespan)
+    app = FastAPI(
+        title="TheCommander",
+        version="0.2.0",
+        lifespan=lifespan,
+        responses={
+            code: {"model": ErrorResponse}
+            for code in (400, 401, 403, 404, 409, 413, 422, 429, 502, 503)
+        },
+    )
     app.state.db = db
     app.state.settings = settings
     app.state.transport = transport

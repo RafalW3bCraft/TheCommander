@@ -73,6 +73,10 @@ def install_routes(app, db, settings, principal, transport):
     def cancel_run(run_id: UUID, owner=Depends(principal)):
         return runs.cancel(db, owner, run_id)
 
+    @app.post("/api/runs/{run_id}/reconcile-notes", response_model=RunDetailView)
+    def reconcile_notes(run_id: UUID, owner=Depends(principal)):
+        return runs.reconcile_notes(db, settings, owner, run_id)
+
     @app.get("/api/conversations", response_model=list[ConversationView])
     def conversations(owner=Depends(principal)):
         return db.all(

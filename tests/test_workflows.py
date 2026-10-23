@@ -597,3 +597,61 @@ def test_approval_transaction_rolls_back_on_queue_failure(app, settings):
     with pytest.raises(psycopg.errors.RaiseException):
         Broker(db, settings, vendor.transport()).approve(owner, action["id"], action["args_hash"])
     assert db.one("SELECT status FROM actions WHERE id=%s", (action["id"],))["status"] == "pending"
+
+
+def test_note_crash_reconciles_hash_without_repeating_write(app, settings):
+    import hashlib
+
+    from commander.runs import event
+
+    client, vendor, owner, db = app
+    queued = client.post(
+        "/api/runs", json={"skill": "follow-through", "prompt": "Save a note"}
+    ).json()
+    worker = Worker(settings, vendor.transport())
+    run = worker.claim()
+    content = "Recovered fictional next step"
+    name = str(run["id"]) + ".md"
+    event(
+        db,
+        run["id"],
+        "note_intent",
+        {"name": name, "sha256": hashlib.sha256(content.encode()).hexdigest()},
+    )
+    Workspace(settings.workspace_root, owner).write(name, content)
+    db.one(
+        "UPDATE runs SET lease_until=now()-interval '1 second' WHERE id=%s RETURNING id",
+        (run["id"],),
+    )
+    worker.recover()
+    assert client.get("/api/runs/" + queued["id"]).json()["status"] == "uncertain"
+    reconciled = client.post("/api/runs/" + queued["id"] + "/reconcile-notes")
+    assert reconciled.status_code == 200
+    assert reconciled.json()["status"] == "succeeded"
+    assert len(Workspace(settings.workspace_root, owner).list()) == 1
+
+
+def test_connection_expiry_is_distinct_and_blocks_dispatch(app, settings):
+    client, vendor, owner, db = app
+    result = client.put(
+        "/api/connections/nebius",
+        json={
+            "secret": "fixture-secret",
+            "expires_at": (datetime.now(timezone.utc) - timedelta(seconds=1)).isoformat(),
+        },
+    )
+    assert next(c for c in result.json() if c["kind"] == "nebius")["status"] == "expired"
+    assert run_task(app, settings)["status"] == "failed"
+    assert not vendor.calls
+
+
+def test_exact_preview_binds_the_visible_correlation_marker(app, settings):
+    proposal(app[1])
+    run = run_task(app, settings, "research-to-action")
+    action = run["actions"][0]
+    assert (
+        action["arguments"]["correlation_marker"] == f"<!-- thecommander-action:{action['id']} -->"
+    )
+    from commander.broker import args_hash
+
+    assert args_hash(action["arguments"]) == action["args_hash"]

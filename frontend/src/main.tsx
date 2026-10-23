@@ -593,7 +593,11 @@ function ActionCard({
       ) : (
         <>
           <h4>{action.arguments.title}</h4>
-          <p className="prose">{action.arguments.body}</p>
+          <p className="prose">
+            {action.arguments.body +
+              "\n\n" +
+              action.arguments.correlation_marker}
+          </p>
         </>
       )}
       <small>
@@ -700,6 +704,20 @@ function RunDetail({ id, close }: { id: string; close: () => void }) {
               Cancel further work
             </button>
           )}
+          {detail.status === "uncertain" && detail.actions.length === 0 && (
+            <button
+              className="secondary"
+              disabled={job.busy}
+              onClick={() =>
+                void job.run(async () => {
+                  await api("/runs/" + id + "/reconcile-notes", "POST");
+                  await refresh();
+                })
+              }
+            >
+              Check saved notes
+            </button>
+          )}
           {detail.actions.map((a) => (
             <ActionCard key={a.id} action={a} refresh={refresh} />
           ))}
@@ -796,6 +814,8 @@ function SchedulePanel() {
   );
   useEffect(() => {
     void job.run(refresh);
+    const timer = setInterval(() => void job.run(refresh), 5000);
+    return () => clearInterval(timer);
   }, [refresh]);
   const update = async (s: Schedule, paused: boolean) => {
     await api("/schedules/" + s.id, "PUT", {
@@ -941,12 +961,17 @@ function SchedulePanel() {
             Last: {when(s.last_at)}
           </p>
           <div className="actions">
-            <button className="quiet" onClick={() => setEditing(s)}>
+            <button
+              className="quiet"
+              disabled={job.busy}
+              onClick={() => setEditing(s)}
+            >
               Edit schedule
             </button>
             {s.next_at && (
               <button
                 className="quiet"
+                disabled={job.busy}
                 onClick={() => void job.run(() => update(s, !s.paused))}
               >
                 {s.paused ? "Resume" : "Pause"}
@@ -954,6 +979,7 @@ function SchedulePanel() {
             )}
             <button
               className="quiet danger"
+              disabled={job.busy}
               onClick={() =>
                 void job.run(async () => {
                   await api("/schedules/" + s.id, "DELETE");
@@ -1060,6 +1086,9 @@ function ConnectionCard({
                 .map((v) => v.trim())
                 .filter(Boolean),
               enabled: true,
+              expires_at: f.get("expires_at")
+                ? new Date(String(f.get("expires_at"))).toISOString()
+                : null,
             });
             form.reset();
             await refresh();

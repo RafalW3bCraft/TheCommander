@@ -1,5 +1,6 @@
 import hashlib
 import json as stdjson
+import uuid
 from datetime import datetime, timezone
 from typing import Any
 from urllib.parse import urlparse
@@ -160,10 +161,16 @@ class Broker:
 
     def propose(self, run, data):
         conn = self.connections.get(run["owner_id"], "github")
-        args = {"repository": conn["config"]["repository"], **data.model_dump()}
+        action_id = uuid.uuid4()
+        args = {
+            "repository": conn["config"]["repository"],
+            "correlation_marker": f"<!-- thecommander-action:{action_id} -->",
+            **data.model_dump(),
+        }
         row = self.db.one(
-            "INSERT INTO actions(owner_id,run_id,tool,arguments,args_hash,connection_revision) VALUES (%s,%s,%s,%s,%s,%s) RETURNING *",
+            "INSERT INTO actions(id,owner_id,run_id,tool,arguments,args_hash,connection_revision) VALUES (%s,%s,%s,%s,%s,%s,%s) RETURNING *",
             (
+                action_id,
                 run["owner_id"],
                 run["id"],
                 "github_create_issue",

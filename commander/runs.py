@@ -81,3 +81,46 @@ def cancel(db, owner, run_id):
                 {"message": "Further actions stopped. Completed effects are not undone."},
             )
     return detail(db, owner, run_id)
+
+
+def reconcile_notes(db, settings, owner, run_id):
+    import hashlib
+
+    from commander.workspace import Workspace
+
+    with owner_lock(db, owner):
+        run = owned_run(db, owner, run_id)
+        if run["status"] != "uncertain":
+            raise DomainError("Only uncertain runs can be reconciled", 409)
+        if db.one("SELECT 1 FROM actions WHERE run_id=%s", (run_id,)):
+            raise DomainError("Use the external action receipt check", 409)
+        intents = db.all(
+            "SELECT payload FROM events WHERE run_id=%s AND kind='note_intent' ORDER BY id",
+            (run_id,),
+        )
+        if not intents:
+            raise DomainError("No note intent is available to reconcile", 409)
+        recovered = []
+        for item in intents:
+            intent = item["payload"]
+            try:
+                content = Workspace(settings.workspace_root, owner).read(intent["name"])
+            except DomainError:
+                raise DomainError(
+                    "The intended note is missing; run remains uncertain. No write retried.", 409
+                ) from None
+            if hashlib.sha256(content.encode()).hexdigest() != intent.get("sha256"):
+                raise DomainError(
+                    "The note content does not match its intent; run remains uncertain.", 409
+                )
+            recovered.append({"name": intent["name"], "sha256": intent["sha256"], "verified": True})
+        with db.connect() as conn:
+            conn.execute(
+                "UPDATE runs SET status='succeeded',result=%s,error=NULL,updated_at=now() WHERE id=%s",
+                ("Recovered verified notes: " + ", ".join(n["name"] for n in recovered), run_id),
+            )
+            conn.execute(
+                "INSERT INTO events(run_id,kind,payload) VALUES (%s,'note_reconciliation',%s)",
+                (run_id, json({"receipts": recovered})),
+            )
+    return detail(db, owner, run_id)

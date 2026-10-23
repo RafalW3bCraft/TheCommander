@@ -35,6 +35,14 @@ class ConnectionInput(Strict):
     repository: str = Field(default="", pattern=r"^([A-Za-z0-9_.-]+/[A-Za-z0-9_.-]+)?$")
     domains: list[str] = Field(default_factory=list, max_length=10)
     enabled: bool = True
+    expires_at: datetime | None = None
+
+    @field_validator("expires_at")
+    @classmethod
+    def expiry_aware(cls, value):
+        if value is not None and value.tzinfo is None:
+            raise ValueError("Credential expiry must include a UTC offset")
+        return value
 
     @field_validator("domains")
     @classmethod
@@ -140,6 +148,7 @@ class RunView(BaseModel):
 
 
 class IssueArguments(Issue):
+    correlation_marker: str
     repository: str
 
 
@@ -183,6 +192,7 @@ class RunDetailView(RunView):
 
 
 class ConnectionConfigView(BaseModel):
+    expires_at: datetime | None = None
     repository: str | None = None
     domains: list[str] | None = None
     enabled: bool | None = None
@@ -237,3 +247,18 @@ class MessageView(BaseModel):
     role: str
     content: str
     created_at: datetime
+
+
+class ErrorField(BaseModel):
+    field: str
+    message: str
+
+
+class ErrorDetail(BaseModel):
+    code: str
+    message: str
+    fields: list[ErrorField] | None = None
+
+
+class ErrorResponse(BaseModel):
+    error: ErrorDetail

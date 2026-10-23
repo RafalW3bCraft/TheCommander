@@ -27,7 +27,7 @@ test('desktop owner memory connections three skills approvals and receipts',asyn
    await expect(details.getByText('waiting approval',{exact:true})).toBeVisible();
    await details.getByRole('button',{name:'Edit proposal'}).click();await details.getByLabel('Issue title').fill('Reviewed retry safety');await details.getByRole('button',{name:'Save and require new approval'}).click();await expect(details.getByRole('heading',{name:'Reviewed retry safety'})).toBeVisible();
    await details.getByRole('button',{name:'Approve this exact issue'}).click();await expect(details.getByRole('link',{name:'Open verified issue ↗'})).toHaveAttribute('href','https://github.com/fictional/browser/issues/1');
-  }else await expect(details.getByText('succeeded',{exact:true})).toBeVisible();
+  }else await expect(details.getByText('succeeded',{exact:true}).filter({visible:true})).toBeVisible();
   await details.getByRole('button',{name:'Close details'}).click();
  }
  await page.getByRole('button',{name:'Activity',exact:true}).click();await expect(page.locator('.run-item')).toHaveCount(3);
@@ -38,11 +38,13 @@ test('desktop owner memory connections three skills approvals and receipts',asyn
 });
 test('mobile keyboard schedule survives closed page and can be edited paused deleted',async({page,context})=>{
  await page.setViewportSize({width:375,height:812});await login(page);
+ const me=await (await page.request.get('/api/auth/me')).json();
+ for(const kind of ['nebius','workspace'])expect((await page.request.put('/api/connections/'+kind,{headers:{'X-CSRF-Token':me.csrf},data:{secret:'offline-fixture-secret',enabled:true}})).ok()).toBeTruthy();
  await page.getByLabel('Scheduled task').fill('Offline browser scheduled follow-through');
  const future=new Date(Date.now()+60000);const local=new Date(future.getTime()-future.getTimezoneOffset()*60000).toISOString().slice(0,16);
  await page.getByLabel('First run (your browser’s local time)').fill(local);await page.getByRole('button',{name:'Schedule task',exact:true}).click();await expect(page.getByRole('heading',{name:'Offline browser scheduled follow-through'})).toBeVisible();
  await page.getByRole('button',{name:'Pause',exact:true}).click();await expect(page.getByText('paused',{exact:true})).toBeVisible();await page.getByRole('button',{name:'Edit schedule'}).click();
- const past=new Date(Date.now()-60000);await page.getByLabel('First run (your browser’s local time)').fill(new Date(past.getTime()-past.getTimezoneOffset()*60000).toISOString().slice(0,16));await page.getByRole('button',{name:'Save schedule',exact:true}).click();await page.getByRole('button',{name:'Resume',exact:true}).click();
+ const past=new Date(Date.now()-60000);await page.getByLabel('First run (your browser’s local time)').fill(new Date(past.getTime()-past.getTimezoneOffset()*60000).toISOString().slice(0,16));await page.getByRole('button',{name:'Save schedule',exact:true}).click();await page.getByRole('button',{name:'Resume',exact:true}).click();await expect(page.getByText('paused',{exact:true})).toHaveCount(0);
  await page.close();const next=await context.newPage();await next.setViewportSize({width:375,height:812});await next.goto('/');await expect(next.getByRole('heading',{name:'Today',exact:true})).toBeVisible();await expect(next.getByRole('button').filter({hasText:'Offline browser scheduled follow-through'}).first()).toContainText('succeeded',{timeout:15000});
  await next.keyboard.press('Tab');expect(await next.evaluate(()=>document.activeElement?.tagName)).not.toBe('BODY');
  expect(await next.evaluate(()=>document.documentElement.scrollWidth<=window.innerWidth)).toBeTruthy();await next.screenshot({path:'../docs/evidence/browser-mobile.png',fullPage:true});expect((await new AxeBuilder({page:next}).analyze()).violations).toEqual([]);

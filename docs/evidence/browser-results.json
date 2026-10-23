@@ -104,7 +104,7 @@
       "specs": [
         {
           "title": "desktop owner memory connections three skills approvals and receipts",
-          "ok": false,
+          "ok": true,
           "tags": [],
           "tests": [
             {
@@ -117,37 +117,18 @@
                 {
                   "workerIndex": 0,
                   "parallelIndex": 0,
-                  "status": "failed",
-                  "duration": 102,
-                  "error": {
-                    "message": "Error: browserType.launch: Executable doesn't exist at /home/watcher/.cache/ms-playwright/chromium_headless_shell-1248/chrome-headless-shell-linux64/chrome-headless-shell\n╔════════════════════════════════════════════════════════════╗\n║ Looks like Playwright was just installed or updated.       ║\n║ Please run the following command to download new browsers: ║\n║                                                            ║\n║     npx playwright install                                 ║\n║                                                            ║\n║ <3 Playwright Team                                         ║\n╚════════════════════════════════════════════════════════════╝",
-                    "stack": "Error: browserType.launch: Executable doesn't exist at /home/watcher/.cache/ms-playwright/chromium_headless_shell-1248/chrome-headless-shell-linux64/chrome-headless-shell\n╔════════════════════════════════════════════════════════════╗\n║ Looks like Playwright was just installed or updated.       ║\n║ Please run the following command to download new browsers: ║\n║                                                            ║\n║     npx playwright install                                 ║\n║                                                            ║\n║ <3 Playwright Team                                         ║\n╚════════════════════════════════════════════════════════════╝"
-                  },
-                  "errors": [
-                    {
-                      "message": "Error: browserType.launch: Executable doesn't exist at /home/watcher/.cache/ms-playwright/chromium_headless_shell-1248/chrome-headless-shell-linux64/chrome-headless-shell\n╔════════════════════════════════════════════════════════════╗\n║ Looks like Playwright was just installed or updated.       ║\n║ Please run the following command to download new browsers: ║\n║                                                            ║\n║     npx playwright install                                 ║\n║                                                            ║\n║ <3 Playwright Team                                         ║\n╚════════════════════════════════════════════════════════════╝"
-                    }
-                  ],
+                  "status": "passed",
+                  "duration": 23317,
+                  "errors": [],
                   "stdout": [],
                   "stderr": [],
                   "retry": 0,
-                  "startTime": "2026-10-23T01:15:21.823Z",
+                  "startTime": "2026-10-23T07:04:16.333Z",
                   "annotations": [],
-                  "attachments": [
-                    {
-                      "name": "error-context",
-                      "contentType": "text/markdown",
-                      "path": "/mnt/hostshare/TheCommander/frontend/test-results/workflows-desktop-owner-me-d3c8b-ills-approvals-and-receipts-chromium/error-context.md"
-                    },
-                    {
-                      "name": "trace",
-                      "contentType": "application/zip",
-                      "path": "/mnt/hostshare/TheCommander/frontend/test-results/workflows-desktop-owner-me-d3c8b-ills-approvals-and-receipts-chromium/trace.zip"
-                    }
-                  ]
+                  "attachments": []
                 }
               ],
-              "status": "unexpected"
+              "status": "expected"
             }
           ],
           "id": "26aa48cee8983222f549-4adce86fbf3b3ec59ded",
@@ -157,7 +138,7 @@
         },
         {
           "title": "mobile keyboard schedule survives closed page and can be edited paused deleted",
-          "ok": false,
+          "ok": true,
           "tags": [],
           "tests": [
             {
@@ -168,39 +149,20 @@
               "projectName": "chromium",
               "results": [
                 {
-                  "workerIndex": 1,
+                  "workerIndex": 0,
                   "parallelIndex": 0,
-                  "status": "failed",
-                  "duration": 207,
-                  "error": {
-                    "message": "Error: browserType.launch: Executable doesn't exist at /home/watcher/.cache/ms-playwright/chromium_headless_shell-1248/chrome-headless-shell-linux64/chrome-headless-shell\n╔════════════════════════════════════════════════════════════╗\n║ Looks like Playwright was just installed or updated.       ║\n║ Please run the following command to download new browsers: ║\n║                                                            ║\n║     npx playwright install                                 ║\n║                                                            ║\n║ <3 Playwright Team                                         ║\n╚════════════════════════════════════════════════════════════╝",
-                    "stack": "Error: browserType.launch: Executable doesn't exist at /home/watcher/.cache/ms-playwright/chromium_headless_shell-1248/chrome-headless-shell-linux64/chrome-headless-shell\n╔════════════════════════════════════════════════════════════╗\n║ Looks like Playwright was just installed or updated.       ║\n║ Please run the following command to download new browsers: ║\n║                                                            ║\n║     npx playwright install                                 ║\n║                                                            ║\n║ <3 Playwright Team                                         ║\n╚════════════════════════════════════════════════════════════╝"
-                  },
-                  "errors": [
-                    {
-                      "message": "Error: browserType.launch: Executable doesn't exist at /home/watcher/.cache/ms-playwright/chromium_headless_shell-1248/chrome-headless-shell-linux64/chrome-headless-shell\n╔════════════════════════════════════════════════════════════╗\n║ Looks like Playwright was just installed or updated.       ║\n║ Please run the following command to download new browsers: ║\n║                                                            ║\n║     npx playwright install                                 ║\n║                                                            ║\n║ <3 Playwright Team                                         ║\n╚════════════════════════════════════════════════════════════╝"
-                    }
-                  ],
+                  "status": "passed",
+                  "duration": 11942,
+                  "errors": [],
                   "stdout": [],
                   "stderr": [],
                   "retry": 0,
-                  "startTime": "2026-10-23T01:15:35.273Z",
+                  "startTime": "2026-10-23T07:04:40.130Z",
                   "annotations": [],
-                  "attachments": [
-                    {
-                      "name": "error-context",
-                      "contentType": "text/markdown",
-                      "path": "/mnt/hostshare/TheCommander/frontend/test-results/workflows-mobile-keyboard--470c1-an-be-edited-paused-deleted-chromium/error-context.md"
-                    },
-                    {
-                      "name": "trace",
-                      "contentType": "application/zip",
-                      "path": "/mnt/hostshare/TheCommander/frontend/test-results/workflows-mobile-keyboard--470c1-an-be-edited-paused-deleted-chromium/trace.zip"
-                    }
-                  ]
+                  "attachments": []
                 }
               ],
-              "status": "unexpected"
+              "status": "expected"
             }
           ],
           "id": "26aa48cee8983222f549-1def9012388ffb9da11c",
@@ -213,11 +175,11 @@
   ],
   "errors": [],
   "stats": {
-    "startTime": "2026-10-23T01:14:21.322Z",
-    "duration": 77776.874,
-    "expected": 0,
+    "startTime": "2026-10-23T07:04:07.270Z",
+    "duration": 45070.472,
+    "expected": 2,
     "skipped": 0,
-    "unexpected": 2,
+    "unexpected": 0,
     "flaky": 0
   }
 }

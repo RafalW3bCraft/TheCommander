@@ -41,6 +41,9 @@ class Connections:
         row = self.db.one("SELECT * FROM connections WHERE owner_id=%s AND kind=%s", (owner, kind))
         if not row or row["status"] == "revoked":
             raise DomainError(f"Configure the {kind} connection first", 409, "disconnected")
+        expiry = row["config"].get("expires_at")
+        if expiry and datetime.fromisoformat(expiry) <= datetime.now(timezone.utc):
+            raise DomainError(f"The {kind} credential has expired; replace it", 409, "expired")
         return row
 
     def secret(self, row):
@@ -68,6 +71,14 @@ class Connections:
                     timezone.utc
                 ) - timedelta(days=1):
                     item["status"] = "stale"
+            if (
+                row
+                and row["status"] != "revoked"
+                and row["config"].get("expires_at")
+                and datetime.fromisoformat(row["config"]["expires_at"])
+                <= datetime.now(timezone.utc)
+            ):
+                item["status"] = "expired"
             if kind == "nebius":
                 item["config"] = {
                     **item["config"],
@@ -90,7 +101,12 @@ class Connections:
             secret = self.secret(current)
         if kind != "workspace" and not usable_secret(secret):
             raise DomainError("Enter a real provider credential", 422, "unconfigured")
-        config = {"repository": data.repository, "domains": data.domains, "enabled": data.enabled}
+        config = {
+            "repository": data.repository,
+            "domains": data.domains,
+            "enabled": data.enabled,
+            "expires_at": data.expires_at.isoformat() if data.expires_at else None,
+        }
         with owner_lock(self.db, owner):
             self.db.one(
                 """INSERT INTO connections(owner_id,kind,secret,config) VALUES (%s,%s,%s,%s)

@@ -1,7 +1,7 @@
 from pathlib import Path
 
 from cryptography.fernet import Fernet
-from pydantic import Field, model_validator
+from pydantic import AliasChoices, Field, model_validator
 from pydantic_settings import BaseSettings, SettingsConfigDict
 
 
@@ -16,7 +16,10 @@ class Settings(BaseSettings):
     workspace_root: Path = Path(".runtime/notes")
     nebius_api_key: str = ""
     nebius_base_url: str = "https://api.tokenfactory.nebius.com/v1"
-    nebius_model: str = "nvidia/nemotron-3-super-120b-a12b"
+    nebius_model: str = Field(
+        default="nvidia/nemotron-3-super-120b-a12b",
+        validation_alias=AliasChoices("NEBIUS_MODEL", "MODEL_ID", "nebius_model"),
+    )
     github_token: str = ""
     github_repository: str = ""
     tavily_api_key: str = ""

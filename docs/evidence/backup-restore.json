@@ -1,0 +1,9 @@
+{
+  "timestamp": "2026-10-23T07:04:47.818962+00:00",
+  "clean_initialization": true,
+  "custom_format_dump_restore": true,
+  "memory_and_revision_preserved": true,
+  "encrypted_connection_decrypts_with_original_key": true,
+  "migrations_after_restore": true,
+  "test_databases_removed": true
+}
