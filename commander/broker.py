@@ -80,7 +80,15 @@ class Broker:
                 connection = self.connections.get(run["owner_id"], "workspace")
                 if not connection["config"].get("enabled"):
                     raise DomainError("Workspace access is disabled", 403)
-                event(self.db, run["id"], "note_intent", {"name": data.name})
+                event(
+                    self.db,
+                    run["id"],
+                    "note_intent",
+                    {
+                        "name": data.name,
+                        "sha256": hashlib.sha256(data.content.encode()).hexdigest(),
+                    },
+                )
                 receipt = Workspace(self.settings.workspace_root, run["owner_id"]).write(
                     data.name, data.content
                 )
@@ -193,15 +201,19 @@ class Broker:
                 or run["status"] != "waiting_approval"
             ):
                 raise DomainError("Action authority is no longer valid", 409, "revoked")
-            self.db.one(
-                "UPDATE actions SET status='approved',approved_at=now() WHERE id=%s RETURNING id",
-                (action_id,),
-            )
-            self.db.one(
-                "UPDATE runs SET status='queued',available_at=now(),updated_at=now() WHERE id=%s RETURNING id",
-                (row["run_id"],),
-            )
-            event(self.db, row["run_id"], "approved", {"action_id": str(action_id)})
+            with self.db.connect() as transaction:
+                transaction.execute(
+                    "UPDATE actions SET status='approved',approved_at=now() WHERE id=%s",
+                    (action_id,),
+                )
+                transaction.execute(
+                    "UPDATE runs SET status='queued',available_at=now(),updated_at=now() WHERE id=%s",
+                    (row["run_id"],),
+                )
+                transaction.execute(
+                    "INSERT INTO events(run_id,kind,payload) VALUES (%s,'approved',%s)",
+                    (row["run_id"], json({"action_id": str(action_id)})),
+                )
         return self.action(owner, action_id)
 
     def edit(self, owner, action_id, data):
@@ -210,14 +222,19 @@ class Broker:
             if row["status"] not in ("pending", "approved"):
                 raise DomainError("Action can no longer be edited", 409)
             args = {**row["arguments"], **data.model_dump()}
-            self.db.one(
-                "UPDATE actions SET arguments=%s,args_hash=%s,status='pending',approved_at=NULL,expires_at=now()+interval '30 minutes' WHERE id=%s RETURNING id",
-                (json(args), args_hash(args), action_id),
-            )
-            self.db.one(
-                "UPDATE runs SET status='waiting_approval',updated_at=now() WHERE id=%s RETURNING id",
-                (row["run_id"],),
-            )
+            with self.db.connect() as transaction:
+                transaction.execute(
+                    "UPDATE actions SET arguments=%s,args_hash=%s,status='pending',approved_at=NULL,expires_at=now()+interval '30 minutes' WHERE id=%s",
+                    (json(args), args_hash(args), action_id),
+                )
+                transaction.execute(
+                    "UPDATE runs SET status='waiting_approval',updated_at=now() WHERE id=%s",
+                    (row["run_id"],),
+                )
+                transaction.execute(
+                    "INSERT INTO events(run_id,kind,payload) VALUES (%s,'approval_invalidated',%s)",
+                    (row["run_id"], json({"action_id": str(action_id)})),
+                )
         return self.action(owner, action_id)
 
     def execute(self, run, action):

@@ -16,3 +16,9 @@ else:
         stream.write("BOOTSTRAP_TOKEN=" + secrets.token_urlsafe(36) + "\n")
         stream.write("APP_ORIGIN=http://localhost:8000\n")
     print("Created .env.runtime with mode 0600. Use its bootstrap token on first sign-in.")
+
+existing = path.read_text()
+if "POSTGRES_PASSWORD=" not in existing:
+    with path.open("a") as stream:
+        stream.write("POSTGRES_PASSWORD=" + secrets.token_hex(24) + "\n")
+    print("Added a local Compose database password without changing existing settings.")

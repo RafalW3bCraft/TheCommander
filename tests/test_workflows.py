@@ -4,11 +4,13 @@ from concurrent.futures import ThreadPoolExecutor
 from datetime import datetime, timedelta, timezone
 
 import httpx
+import psycopg
 import pytest
 from fastapi.testclient import TestClient
 
 from commander.api import create_app
 from commander.auth import hasher
+from commander.broker import Broker
 from commander.contracts import MemoryInput, RunInput
 from commander.db import Database
 from commander.errors import DomainError
@@ -479,3 +481,119 @@ def test_unknown_spend_fails_closed(app, settings):
     result = run_task(app, settings)
     assert result["status"] == "failed"
     assert not [c for c in app[1].calls if c[1].endswith("/chat/completions")]
+
+
+@pytest.mark.parametrize(
+    "bad_confirmation",
+    [
+        [],
+        {
+            "number": 42,
+            "title": "Improve retries",
+            "body": "Unapproved body",
+            "html_url": "https://github.com/fictional/project/issues/42",
+        },
+    ],
+)
+def test_malformed_write_confirmation_stays_reconcilable(app, settings, bad_confirmation):
+    client, vendor, owner, db = app
+    proposal(vendor)
+    run = run_task(app, settings, "research-to-action")
+    action = run["actions"][0]
+    client.post(
+        "/api/actions/" + action["id"] + "/approve", json={"args_hash": action["args_hash"]}
+    )
+    original = vendor.handle
+
+    def broken(request):
+        if request.url.path.endswith("/issues/42"):
+            data = bad_confirmation
+            if isinstance(data, dict):
+                data = {
+                    **data,
+                    "body": data["body"] + "\n\n<!-- thecommander-action:" + action["id"] + " -->",
+                }
+            return httpx.Response(200, json=data)
+        return original(request)
+
+    Worker(settings, httpx.MockTransport(broken)).tick()
+    result = client.get("/api/runs/" + run["id"]).json()
+    assert result["status"] == "uncertain"
+    assert result["actions"][0]["status"] == "uncertain"
+    assert (
+        client.post("/api/actions/" + action["id"] + "/reconcile").json()["status"] == "succeeded"
+    )
+
+
+def test_validation_enforces_budget_and_accounts_usage(app, settings):
+    client, vendor, owner, db = app
+    settings.daily_spend_limit_usd = 0.001
+    rows = client.post("/api/connections/nebius/validate").json()
+    assert next(c for c in rows if c["kind"] == "nebius")["status"] == "unknown_cost"
+    assert not [c for c in vendor.calls if c[1].endswith("/chat/completions")]
+    settings.daily_spend_limit_usd = None
+    client.post("/api/connections/nebius/validate")
+    assert len(db.all("SELECT * FROM usage WHERE owner_id=%s", (owner,))) == 1
+
+
+def test_chunked_oversized_request_rejected(app):
+    client = app[0]
+    response = client.post(
+        "/api/auth/login",
+        content=iter([b'{"username":"' + b"x" * 70000 + b'"}']),
+        headers={"Content-Type": "application/json"},
+    )
+    assert response.status_code == 413
+
+
+def test_invalid_timezone_is_validation_error(app):
+    response = app[0].post(
+        "/api/schedules",
+        json={
+            "prompt": "test",
+            "next_at": datetime.now(timezone.utc).isoformat(),
+            "timezone": "Unknown/Fake",
+        },
+    )
+    assert response.status_code == 422
+
+
+def test_schedule_edit_pause_delete_and_conversation_delete(app, settings):
+    client, vendor, owner, db = app
+    payload = {
+        "prompt": "Future follow-up",
+        "next_at": (datetime.now(timezone.utc) + timedelta(hours=1)).isoformat(),
+        "timezone": "UTC",
+    }
+    schedule = client.post("/api/schedules", json=payload).json()
+    assert client.put(
+        "/api/schedules/" + schedule["id"], json={**payload, "paused": True, "revision": 1}
+    ).json()["paused"]
+    assert (
+        client.put("/api/schedules/" + schedule["id"], json={**payload, "revision": 1}).status_code
+        == 409
+    )
+    assert client.delete("/api/schedules/" + schedule["id"]).status_code == 200
+    assert client.get("/api/schedules").json() == []
+    run = run_task(app, settings)
+    conv = run["conversation_id"]
+    assert len(client.get("/api/conversations/" + conv + "/messages").json()) == 2
+    assert client.delete("/api/conversations/" + conv).status_code == 200
+    assert client.get("/api/conversations/" + conv + "/messages").status_code == 404
+
+
+def test_approval_transaction_rolls_back_on_queue_failure(app, settings):
+    client, vendor, owner, db = app
+    proposal(vendor)
+    run = run_task(app, settings, "research-to-action")
+    action = run["actions"][0]
+    with db.connect() as conn:
+        conn.execute(
+            "CREATE FUNCTION reject_queue() RETURNS trigger LANGUAGE plpgsql AS $$ BEGIN IF NEW.status='queued' THEN RAISE EXCEPTION 'forced test failure'; END IF; RETURN NEW; END $$"
+        )
+        conn.execute(
+            "CREATE TRIGGER reject_queue BEFORE UPDATE ON runs FOR EACH ROW EXECUTE FUNCTION reject_queue()"
+        )
+    with pytest.raises(psycopg.errors.RaiseException):
+        Broker(db, settings, vendor.transport()).approve(owner, action["id"], action["args_hash"])
+    assert db.one("SELECT status FROM actions WHERE id=%s", (action["id"],))["status"] == "pending"

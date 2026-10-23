@@ -105,7 +105,7 @@ class Worker:
                 "run_failure run=%s code=%s type=%s", run["id"], code, type(exc).__name__
             )
             self.db.one(
-                "UPDATE runs SET status='failed',error=%s,lease_until=NULL,updated_at=now() WHERE id=%s AND status='running' AND lease_token=%s RETURNING id",
+                "UPDATE runs SET status=CASE WHEN EXISTS(SELECT 1 FROM actions a WHERE a.run_id=runs.id AND a.status IN ('executing','uncertain')) THEN 'uncertain' ELSE 'failed' END,error=%s,lease_until=NULL,updated_at=now() WHERE id=%s AND status='running' AND lease_token=%s RETURNING id",
                 (message, run["id"], run["lease_token"]),
             )
             event(self.db, run["id"], "error", {"message": message, "code": code})

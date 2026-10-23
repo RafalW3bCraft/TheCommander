@@ -2,7 +2,15 @@
 name = "thecommander"
 version = "0.2.0"
 requires-python = ">=3.13,<3.14"
-dependencies = ["fastapi>=0.120,<1", "uvicorn>=0.38,<1", "psycopg[binary]>=3.2,<4", "pydantic-settings>=2.11,<3", "argon2-cffi>=25.1,<26", "cryptography>=46,<48", "httpx>=0.28,<1"]
+dependencies = [
+    "fastapi>=0.120,<1",
+    "uvicorn>=0.38,<1",
+    "psycopg[binary]>=3.2,<4",
+    "pydantic-settings>=2.11,<3",
+    "argon2-cffi>=25.1,<26",
+    "cryptography>=50,<51",
+    "httpx>=0.28,<1",
+]
 [dependency-groups]
 dev = ["pytest>=8,<10", "pytest-cov>=6,<8", "ruff>=0.14,<1", "mypy>=1.18,<2", "pip-audit>=2.9,<3"]
 [tool.pytest.ini_options]

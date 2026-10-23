@@ -1084,7 +1084,7 @@ function ConnectionCard({
             Repository
             <input
               name="repository"
-              defaultValue={c.config.repository}
+              defaultValue={c.config.repository ?? undefined}
               placeholder="owner/repository"
               required
             />

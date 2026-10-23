@@ -1,0 +1,57 @@
+name: thecommander
+x-app: &app
+  image: localhost/thecommander:0.2.0
+  env_file:
+    - path: .env
+      required: false
+    - path: .env.runtime
+      required: true
+  environment:
+    DATABASE_URL: postgresql://commander:${POSTGRES_PASSWORD:?Run scripts/setup_runtime.py first}@db:5432/commander
+    DATABASE_SCHEMA: commander
+    WORKSPACE_ROOT: /data/notes
+  restart: unless-stopped
+  volumes:
+    - notes:/data/notes
+  depends_on:
+    db:
+      condition: service_healthy
+  logging:
+    driver: json-file
+    options:
+      max-size: 10m
+      max-file: "3"
+services:
+  db:
+    image: docker.io/library/postgres:17-bookworm
+    environment:
+      POSTGRES_USER: commander
+      POSTGRES_DB: commander
+      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD:?Run scripts/setup_runtime.py first}
+    volumes:
+      - database:/var/lib/postgresql/data
+    restart: unless-stopped
+    healthcheck:
+      test: [CMD-SHELL, "pg_isready -U commander -d commander"]
+      interval: 5s
+      timeout: 3s
+      retries: 15
+    logging:
+      driver: json-file
+      options: {max-size: 10m, max-file: "3"}
+  api:
+    <<: *app
+    build: .
+    ports: ["127.0.0.1:${APP_PORT:-8000}:8000"]
+    healthcheck:
+      test: [CMD, python, -c, "import urllib.request; urllib.request.urlopen('http://127.0.0.1:8000/health/ready',timeout=3)"]
+      interval: 10s
+      timeout: 5s
+      retries: 10
+  worker:
+    <<: *app
+    command: [python, -m, commander.worker]
+    stop_grace_period: 4m
+volumes:
+  database:
+  notes:
