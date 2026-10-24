@@ -15,7 +15,8 @@ with `systemctl --user start podman.socket` first. There is no remote deployment
 
 For an existing PostgreSQL development database, use `./scripts/dev.sh` instead.
 It reads DATABASE_URL from the preserved `.env`; that server must be running.
-Do not run the legacy `main.py` as the release entry point.
+Root `main.py` now launches only the supported API; it does not start the worker
+or database. The original Flask entrypoint is archived in `legacy/main.py.txt`.
 
 Configure connections in the UI. “Import configured server credentials” imports
 real configured keys, not placeholders. GitHub needs a selected `owner/repository`;
@@ -109,3 +110,14 @@ invalid-credential response unless a known local expiry is present.
 Migration 002 invalidates old pending/approved issue proposals whose exact preview
 did not bind the correlation marker. Create a fresh proposal after upgrade; old
 executed receipts remain visible. No existing public-schema data is transformed.
+
+Migration 003 adds a nullable message-to-run association and an index. New context
+assembly excludes future queued prompts and orders earlier replies before the
+current prompt; historical messages retain their timestamp fallback. This is an
+additive forward migration, with no automatic data-deleting downgrade. Apply
+during a maintenance window: the transactional index creation is appropriate for
+this owner-scale database, but has not been benchmarked on a large messages table.
+
+ECC inventory and audit reproduction: `uv run python -m scripts.audit_repository`.
+See `ECC_APPLICATION.md` for catalog provenance, actual application and evidence
+limits. This command does not install or invoke the catalog's external tools.

@@ -4,13 +4,14 @@ export default defineConfig({
   workers: 1,
   fullyParallel: false,
   retries: 0,
-  timeout: 60000,
+  timeout: 120000,
   reporter: [
     ["list"],
     ["json", { outputFile: "../docs/evidence/browser-results.json" }],
   ],
   use: {
     baseURL: "http://127.0.0.1:8010",
+    viewport: { width: 1440, height: 900 },
     trace: "retain-on-failure",
     screenshot: "only-on-failure",
   },

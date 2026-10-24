@@ -29,19 +29,19 @@ function localInputTime(value: string | null | undefined) {
 type Job = (fn: () => Promise<unknown>) => Promise<void>;
 function useJob() {
   const [error, setError] = useState("");
-  const [busy, setBusy] = useState(false);
+  const [pending, setPending] = useState(0);
   const run: Job = useCallback(async (fn) => {
-    setBusy(true);
+    setPending((count) => count + 1);
     setError("");
     try {
       await fn();
     } catch (e) {
       setError(e instanceof Error ? e.message : "Request failed");
     } finally {
-      setBusy(false);
+      setPending((count) => count - 1);
     }
   }, []);
-  return { error, busy, run };
+  return { error, busy: pending > 0, run };
 }
 function ErrorBox({ error }: { error: string }) {
   return error ? (
@@ -233,21 +233,22 @@ function MemoryPage() {
   const [editing, setEditing] = useState<Memory | null>(null);
   const [loading, setLoading] = useState(true);
   const refreshVersion = useRef(0);
+  const queryRef = useRef("");
   const { run: runJob, ...job } = useJob();
   const refresh = useCallback(async () => {
     const version = ++refreshVersion.current;
     try {
       const result = await api<Memory[]>(
-        "/memory?q=" + encodeURIComponent(query),
+        "/memory?q=" + encodeURIComponent(queryRef.current),
       );
       if (version === refreshVersion.current) setItems(result);
     } finally {
       if (version === refreshVersion.current) setLoading(false);
     }
-  }, [query]);
+  }, []);
   useEffect(() => {
     void runJob(refresh);
-  }, [refresh, runJob]);
+  }, [query, refresh, runJob]);
   return (
     <>
       <p>
@@ -258,7 +259,14 @@ function MemoryPage() {
       <div className="toolbar">
         <label>
           Search memory
-          <input value={query} onChange={(e) => setQuery(e.target.value)} />
+          <input
+            value={query}
+            onChange={(e) => {
+              queryRef.current = e.target.value;
+              ++refreshVersion.current;
+              setQuery(e.target.value);
+            }}
+          />
         </label>
         <button
           className="secondary"
@@ -346,6 +354,7 @@ function MemoryPage() {
               <button
                 type="button"
                 className="quiet"
+                disabled={job.busy}
                 onClick={() => setEditing(null)}
               >
                 Cancel edit
@@ -373,14 +382,20 @@ function MemoryPage() {
               {item.revision}
             </small>
             <div className="actions">
-              <button className="quiet" onClick={() => setEditing(item)}>
+              <button
+                className="quiet"
+                disabled={job.busy}
+                onClick={() => setEditing(item)}
+              >
                 Edit {item.key}
               </button>
               <button
                 className="quiet danger"
+                disabled={job.busy}
                 onClick={() =>
                   void runJob(async () => {
                     await api("/memory/" + item.id, "DELETE");
+                    if (editing?.id === item.id) setEditing(null);
                     await refresh();
                   })
                 }
@@ -719,11 +734,13 @@ function ActionCard({
 }
 function RunDetail({ id, close }: { id: string; close: () => void }) {
   const [detail, setDetail] = useState<Detail | null>(null);
+  const requestVersion = useRef(0);
   const { run: runJob, ...job } = useJob();
-  const refresh = useCallback(
-    async () => setDetail(await api<Detail>("/runs/" + id)),
-    [id],
-  );
+  const refresh = useCallback(async () => {
+    const version = ++requestVersion.current;
+    const result = await api<Detail>("/runs/" + id);
+    if (version === requestVersion.current) setDetail(result);
+  }, [id]);
   useEffect(() => {
     void runJob(refresh);
     const timer = setInterval(
@@ -1280,6 +1297,8 @@ function ConnectionCard({
 function Notes() {
   const [notes, setNotes] = useState<{ name: string }[]>([]);
   const [content, setContent] = useState("");
+  const [selectedNote, setSelectedNote] = useState("");
+  const noteVersion = useRef(0);
   const { run: runJob, ...job } = useJob();
   return (
     <section>
@@ -1299,21 +1318,22 @@ function Notes() {
         <button
           className="note-link"
           key={n.name}
-          onClick={() =>
-            void runJob(async () =>
-              setContent(
-                (
-                  await api<{ content: string }>(
-                    "/notes/" + encodeURIComponent(n.name),
-                  )
-                ).content,
-              ),
-            )
-          }
+          onClick={() => {
+            const version = ++noteVersion.current;
+            setSelectedNote(n.name);
+            setContent("");
+            void runJob(async () => {
+              const result = await api<{ content: string }>(
+                "/notes/" + encodeURIComponent(n.name),
+              );
+              if (version === noteVersion.current) setContent(result.content);
+            });
+          }}
         >
           {n.name}
         </button>
       ))}
+      {selectedNote && <h3>{selectedNote}</h3>}
       {content && <p className="prose result">{content}</p>}
       <details>
         <summary>Create a note</summary>

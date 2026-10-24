@@ -4,6 +4,12 @@ Development guidance: ECC 2.2.3, Affaan Mustafa and contributors, MIT,
 https://github.com/affaan-m/ECC, pinned source 90606c8315ee09cafc303515c5f33024db6b9882.
 ECC is fetched locally and is not bundled in the application image.
 
+The owner also installed the ECC universal full Antigravity project catalog in
+.agents (receipt version 2.2.0, source commit unspecified). Its skill metadata,
+community-origin attributions, rules and workflows are preserved. This separate
+development catalog is inventoried in docs/evidence/ecc-catalog.json and excluded
+from the application image. See docs/ECC_SETUP.md for the two sources' provenance.
+
 Runtime dependencies and exact transitive versions are recorded in uv.lock and
 frontend/package-lock.json. Principal components: FastAPI (MIT), Starlette (BSD),
 Pydantic (MIT), psycopg (LGPL), Uvicorn (BSD), Argon2-cffi (MIT), cryptography

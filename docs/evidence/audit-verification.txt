@@ -1,0 +1,15 @@
+Checked 62 packages in 106ms
+All checks passed!
+36 files already formatted
+Success: no issues found in 21 source files
+============================= test session starts ==============================
+platform linux -- Python 3.13.5, pytest-9.1.1, pluggy-1.7.0
+rootdir: /mnt/hostshare/TheCommander
+configfile: pyproject.toml
+testpaths: tests
+plugins: platformdirs-4.13.5, anyio-4.15.1, cov-7.1.0
+collected 56 items
+
+tests/test_auth_memory.py .                                              [  1%]
+tests/test_workflows.py ................................................ [ 87%]
+..

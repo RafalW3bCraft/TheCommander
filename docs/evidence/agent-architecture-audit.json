@@ -1,0 +1,255 @@
+{
+  "schema_version": "ecc.agent-architecture-audit.report.v1",
+  "generated_at": "2026-10-24T05:37:36.249554+00:00",
+  "executive_verdict": {
+    "overall_health": "local_fixes_verified_live_github_pending",
+    "primary_failure_mode": "Context and asynchronous state could outlive their intended run or selection; fixes recorded without erasing historical findings.",
+    "most_urgent_fix": "Complete live GitHub read/approval/write/receipt verification when scoped credentials and write authority are available."
+  },
+  "scope": {
+    "target_name": "TheCommander 0.2.0",
+    "model_stack": [
+      "Nebius nvidia/nemotron-3-super-120b-a12b"
+    ],
+    "layers_to_audit": [
+      "System prompt",
+      "Session history",
+      "Long-term memory",
+      "Distillation",
+      "Active recall",
+      "Tool selection",
+      "Tool execution",
+      "Tool interpretation",
+      "Answer shaping",
+      "Platform rendering",
+      "Hidden repair loops",
+      "Persistence"
+    ]
+  },
+  "layers": [
+    {
+      "name": "System prompt",
+      "status": "Reviewed",
+      "observation": "One explicit system policy; retrieved content marked untrusted; broker authority is enforced in code.",
+      "evidence_refs": [
+        "commander/engine.py:SYSTEM",
+        "commander/broker.py:Broker.call"
+      ]
+    },
+    {
+      "name": "Session history",
+      "status": "Fixed",
+      "observation": "Run-linked history excludes future queued prompts and orders prior replies before current prompt.",
+      "evidence_refs": [
+        "commander/engine.py:Engine.context",
+        "commander/migrations/003_message_runs.sql",
+        "tests/test_workflows.py:test_queued_conversation_context_excludes_future_turns"
+      ]
+    },
+    {
+      "name": "Long-term memory",
+      "status": "Reviewed",
+      "observation": "Owner-scoped explicit/inferred/episodic records; explicit preference priority; revision/expiry/delete/export; live correction/deletion recall.",
+      "evidence_refs": [
+        "commander/memory.py",
+        "docs/evidence/live-evaluation.json"
+      ]
+    },
+    {
+      "name": "Distillation",
+      "status": "Not implemented",
+      "observation": "No automatic distillation layer or synthetic compressed facts are admitted to memory.",
+      "evidence_refs": [
+        "commander/engine.py:Engine.context"
+      ]
+    },
+    {
+      "name": "Active recall",
+      "status": "Reviewed",
+      "observation": "Single bounded preference retrieval plus recent conversation; no second summarizer.",
+      "evidence_refs": [
+        "commander/memory.py:recall",
+        "commander/inference.py:complete"
+      ]
+    },
+    {
+      "name": "Tool selection",
+      "status": "Fixed",
+      "observation": "Required research reads are code-gated; unknown and stale skills fail closed; per-skill tool allowlists.",
+      "evidence_refs": [
+        "commander/skills.py:definition",
+        "commander/engine.py:Engine.execute",
+        "commander/broker.py:tools_for"
+      ]
+    },
+    {
+      "name": "Tool execution",
+      "status": "Fixed",
+      "observation": "Enabled/scope/revision/expiry rechecked; exact approval; note intent and issue receipt persisted; uncertain effects reconciled without blind write retry.",
+      "evidence_refs": [
+        "commander/connections.py",
+        "commander/broker.py",
+        "commander/runs.py:reconcile_notes"
+      ]
+    },
+    {
+      "name": "Tool interpretation",
+      "status": "Fixed",
+      "observation": "Malformed provider shapes fail visibly; evidence URLs validated in proposals and answers; GitHub confirmation matches approved arguments.",
+      "evidence_refs": [
+        "commander/providers.py",
+        "commander/broker.py:Broker.validate_citations"
+      ]
+    },
+    {
+      "name": "Answer shaping",
+      "status": "Reviewed",
+      "observation": "Validated content rendered as escaped text; sources appended from persisted evidence; no hidden model rewrite.",
+      "evidence_refs": [
+        "commander/engine.py:Engine.execute",
+        "frontend/src/main.tsx"
+      ]
+    },
+    {
+      "name": "Platform rendering",
+      "status": "Fixed",
+      "observation": "Latest-request guards preserve current search/run/note state; expired sessions unmount private UI.",
+      "evidence_refs": [
+        "frontend/src/main.tsx",
+        "frontend/src/api.ts",
+        "docs/CLICK_PATH_AUDIT.md"
+      ]
+    },
+    {
+      "name": "Hidden repair loops",
+      "status": "Reviewed",
+      "observation": "No fallback model or silent answer repair. Limited read/search retries; bounded worker restart recovery is durable and visible.",
+      "evidence_refs": [
+        "commander/providers.py:Provider.request",
+        "commander/worker.py:Worker.recover"
+      ]
+    },
+    {
+      "name": "Persistence",
+      "status": "Fixed",
+      "observation": "Message migration, skill hashes, revision-bound approvals, leases, intent/receipt checkpoints and error clearing.",
+      "evidence_refs": [
+        "commander/migrations",
+        "commander/worker.py",
+        "tests/test_workflows.py"
+      ]
+    }
+  ],
+  "findings": [
+    {
+      "severity": "high",
+      "title": "Queued future prompt contamination",
+      "mechanism": "History was selected by conversation without the current run cutoff.",
+      "source_layer": "Session history",
+      "root_cause": "Messages lacked run association.",
+      "evidence_refs": [
+        "commander/engine.py:Engine.context",
+        "tests/test_workflows.py",
+        "docs/evidence/audit-verification.txt"
+      ],
+      "confidence": 1.0,
+      "recommended_fix": "Add nullable run association and temporal cutoff; preserve old messages.",
+      "resolution": "implemented; see linked regression evidence"
+    },
+    {
+      "severity": "high",
+      "title": "Unknown/stale skill authority",
+      "mechanism": "Unknown IDs fell back to conversation authority and queued definition hashes were not checked.",
+      "source_layer": "Tool selection",
+      "root_cause": "Fallback granted tools outside declared skill contract.",
+      "evidence_refs": [
+        "commander/skills.py:definition",
+        "tests/test_workflows.py",
+        "docs/evidence/audit-verification.txt"
+      ],
+      "confidence": 1.0,
+      "recommended_fix": "Reject unknown IDs and reject stale recorded hashes before dispatch.",
+      "resolution": "implemented; see linked regression evidence"
+    },
+    {
+      "severity": "high",
+      "title": "Uncertain local effect lost after subsequent failure",
+      "mechanism": "A note was persisted, then a later model failure marked run failed without recovery UI.",
+      "source_layer": "Persistence",
+      "root_cause": "Failure classification considered external actions but omitted note intents.",
+      "evidence_refs": [
+        "commander/worker.py:Worker.tick",
+        "tests/test_workflows.py",
+        "docs/evidence/audit-verification.txt"
+      ],
+      "confidence": 1.0,
+      "recommended_fix": "Classify note effects uncertain and allow read-only reconciliation after cancellation.",
+      "resolution": "implemented; see linked regression evidence"
+    },
+    {
+      "severity": "medium",
+      "title": "Unsupported citations in issue proposal",
+      "mechanism": "Proposal source URLs escaped the final-output validator.",
+      "source_layer": "Tool interpretation",
+      "root_cause": "Validation only covered final answer text.",
+      "evidence_refs": [
+        "commander/broker.py:Broker.validate_citations",
+        "tests/test_workflows.py",
+        "docs/evidence/audit-verification.txt"
+      ],
+      "confidence": 1.0,
+      "recommended_fix": "Share persisted-evidence validation for proposal and answer boundaries.",
+      "resolution": "implemented; see linked regression evidence"
+    },
+    {
+      "severity": "medium",
+      "title": "Stale responses overwrite current views",
+      "mechanism": "Older asynchronous reads replaced newer mutation/selection state.",
+      "source_layer": "Platform rendering",
+      "root_cause": "Request completion order was mistaken for user intent order.",
+      "evidence_refs": [
+        "frontend/src/main.tsx",
+        "tests/test_workflows.py",
+        "docs/evidence/audit-verification.txt"
+      ],
+      "confidence": 1.0,
+      "recommended_fix": "Sequence guards, current query reference and pending-operation count.",
+      "resolution": "implemented; see linked regression evidence"
+    }
+  ],
+  "ordered_fix_plan": [
+    {
+      "order": 1,
+      "goal": "Restore context and tool authority boundaries",
+      "why_now": "Wrong run data or widened tools affect operational behavior.",
+      "expected_effect": "Future context excluded, stale/unknown skills denied.",
+      "status": "implemented"
+    },
+    {
+      "order": 2,
+      "goal": "Preserve receipts and recoverable uncertainty",
+      "why_now": "A failed response is not evidence that an effect did not happen.",
+      "expected_effect": "Read-only reconciliation and no blind repeated writes.",
+      "status": "implemented"
+    },
+    {
+      "order": 3,
+      "goal": "Preserve current browser intent across delayed responses",
+      "why_now": "Stale UI can misrepresent persisted action state.",
+      "expected_effect": "Current selection and mutation state remain visible.",
+      "status": "implemented"
+    },
+    {
+      "order": 4,
+      "goal": "Verify full live GitHub-dependent workflows",
+      "why_now": "Controlled transport cannot certify real external permissions or writes.",
+      "expected_effect": "Actual repository reads and confirmed issue receipt.",
+      "status": "blocked: credentials/repository/write authority"
+    }
+  ],
+  "limits": [
+    "No independent penetration test or broad model-quality benchmark.",
+    "No hard wall-clock process kill; cancellation takes effect at authorized dispatch boundaries.",
+    "Live GitHub and remote deployment remain unverified."
+  ]
+}

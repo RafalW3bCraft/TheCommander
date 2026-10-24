@@ -813,3 +813,25 @@ def test_runtime_validation_errors_hide_private_values(settings):
         )
     assert "private-short-token" not in str(failure.value)
     assert "private-key-canary" not in str(failure.value)
+
+
+def test_retry_recovery_clears_old_failure_on_success(app, settings):
+    client, vendor, owner, db = app
+    run = client.post("/api/runs", json={"prompt": "Retry a harmless read"}).json()
+    worker = Worker(settings, vendor.transport())
+    worker.claim()
+    db.one(
+        "UPDATE runs SET lease_until=now()-interval '1 second' WHERE id=%s RETURNING id",
+        (run["id"],),
+    )
+    worker.recover()
+    db.one("UPDATE runs SET available_at=now() WHERE id=%s RETURNING id", (run["id"],))
+    worker.tick()
+    detail = client.get("/api/runs/" + run["id"]).json()
+    assert detail["status"] == "succeeded"
+    assert detail["error"] is None
+
+
+def test_release_has_no_legacy_command_routes(app):
+    for path in ["/execute", "/workflow", "/proxy-image", "/generate-image"]:
+        assert app[0].get(path).status_code == 404

@@ -11,3 +11,6 @@ rather than altering existing `public` records. Import is explicit and dry-run
 first. This adds a migration boundary but preserves the owner's work and avoids
 unverified data transformations. The new release uses only `uv.lock` and the
 frontend npm lock; old `requirements.txt` describes the unserved legacy app.
+
+The later recursive audit retired the ambiguous root executable while retaining
+its exact original source. See [ADR 002](002-retire-legacy-entrypoint.md).

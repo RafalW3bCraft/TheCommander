@@ -33,6 +33,8 @@ def main():
             if not raw:
                 continue
             relative = Path(os.fsdecode(raw))
+            if relative.parts[0] == ".agents":
+                continue  # Owner's development catalog is not a release dependency.
             original = source / relative
             if original.is_file() and not original.is_symlink():
                 target = root / relative
@@ -56,7 +58,7 @@ def main():
             report = json.loads((root / "docs/evidence/compose-smoke.json").read_text())
             report.update(
                 timestamp=datetime.now(timezone.utc).isoformat(),
-                source="tracked and unignored working-tree snapshot; no host dependencies or secrets",
+                source="tracked and unignored working-tree snapshot excluding .agents development catalog; no host dependencies or secrets",
                 startup="./scripts/start.sh",
                 external_credentials=False,
             )
