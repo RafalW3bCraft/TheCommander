@@ -1,6 +1,7 @@
 import hashlib
 import json as stdjson
 import re
+import time
 import uuid
 from datetime import datetime, timezone
 from typing import Any
@@ -52,10 +53,22 @@ def tools_for(skill):
 class Broker:
     def __init__(self, db, settings, transport=None):
         self.db, self.settings = db, settings
+        self.operator = settings
+        self.started_at: float | None = None
         self.connections = Connections(db, settings, transport)
         self.provider = self.connections.provider
 
     def active(self, run):
+        from commander.preferences import resolve
+
+        self.settings = resolve(
+            self.db, self.operator, run["owner_id"], run.get("settings_snapshot")
+        )
+        if self.started_at is not None and time.monotonic() - self.started_at >= min(
+            self.settings.max_run_seconds,
+            definition(run["skill"]).get("max_seconds", self.settings.max_run_seconds),
+        ):
+            raise DomainError("Run time limit reached; no further dispatch", 408, "budget_exceeded")
         current = owned_run(self.db, run["owner_id"], run["id"])
         if current["status"] != "running" or current["lease_token"] != run["lease_token"]:
             raise DomainError("Run is no longer active", 409, "cancelled")

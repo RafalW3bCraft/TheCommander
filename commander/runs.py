@@ -1,7 +1,7 @@
 from commander.connections import Connections, owner_lock
 from commander.db import json
 from commander.errors import DomainError
-from commander.skills import definition
+from commander.skills import SkillInput, definition
 
 
 def owned_run(db, owner, run_id):
@@ -19,6 +19,10 @@ def event(db, run_id, kind, payload=None):
 
 
 def enqueue(db, settings, owner, data):
+    from commander.preferences import resolve, values
+
+    SkillInput(prompt=data.prompt)
+    settings = resolve(db, settings, owner)
     with db.connect() as conn:
         conn.execute("SELECT pg_advisory_xact_lock(hashtextextended(%s, 720))", (str(owner),))
         count = conn.execute(
@@ -42,8 +46,15 @@ def enqueue(db, settings, owner, data):
                 (owner, data.prompt[:100]),
             ).fetchone()["id"]
         row = conn.execute(
-            "INSERT INTO runs(owner_id,conversation_id,skill,skill_version,prompt) VALUES (%s,%s,%s,%s,%s) RETURNING *",
-            (owner, conversation, data.skill, definition(data.skill)["hash"], data.prompt),
+            "INSERT INTO runs(owner_id,conversation_id,skill,skill_version,prompt,settings_snapshot) VALUES (%s,%s,%s,%s,%s,%s) RETURNING *",
+            (
+                owner,
+                conversation,
+                data.skill,
+                definition(data.skill)["hash"],
+                data.prompt,
+                json(values(settings)),
+            ),
         ).fetchone()
         conn.execute(
             "INSERT INTO messages(owner_id,conversation_id,run_id,role,content) VALUES (%s,%s,%s,'user',%s)",

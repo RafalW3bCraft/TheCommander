@@ -33,7 +33,10 @@ the test URL. Install browser binaries once using
 `cd frontend && npx playwright install chromium` (CI also installs OS dependencies).
 No provider keys are required for offline tests. Explicit live check:
 `uv run python -m scripts.live_smoke`. It sends only harmless fictional context,
-records sanitized metadata, and performs no GitHub write.
+records sanitized metadata, and performs no GitHub write. It exits 0 only when
+model discovery, the tool proposal and its continuation all pass; exit 2 means
+missing/placeholder credentials, and exit 1 means a failed provider/acceptance
+check. Read the JSON evidence for the specific failure.
 
 ## Production settings
 
@@ -121,3 +124,34 @@ this owner-scale database, but has not been benchmarked on a large messages tabl
 ECC inventory and audit reproduction: `uv run python -m scripts.audit_repository`.
 See `ECC_APPLICATION.md` for catalog provenance, actual application and evidence
 limits. This command does not install or invoke the catalog's external tools.
+
+## HTTPS overlay and final release upgrade (2026-10-25)
+
+Use `compose.yaml` plus `compose.https.yaml` on the authorized Linux host. Set
+`APP_DOMAIN` to the actual hostname in the operator environment. Point DNS to the
+host and allow incoming TCP 80/443. Caddy provisions certificates automatically;
+its data/config volumes must persist. The API remains loopback-bound for local
+health checks. The application requires Secure cookies and the exact HTTPS origin.
+
+```sh
+docker compose --env-file .env.runtime -f compose.yaml -f compose.https.yaml config --quiet
+docker compose --env-file .env.runtime -f compose.yaml -f compose.https.yaml up --build -d
+```
+
+Do not run deployment commands against a remote host until that deployment is
+explicitly authorized. Preserve existing project names, volumes and encryption
+keys. Before upgrading, back up database, notes, private environment and image
+identity. Migration 004 is additive; restore to a separate database/notes volume
+for a rollback drill and validate before switching traffic. Never delete volumes
+to resolve a migration failure. Do not roll back to an executable that can bypass
+new configuration policy without evaluating the policy/data compatibility.
+
+After startup check HTTPS login, Secure cookies, configured origin, database
+readiness, worker freshness, settings persistence, and the three workflows.
+Monitor readiness and worker heartbeat throughout judge availability; verify
+backups periodically. Maintain sufficient provider quota for judge evaluation.
+Do not put live credentials in the public README, video or evidence files.
+
+[Caddy reference](https://caddyserver.com/docs/quick-starts/reverse-proxy).
+The proxy image digest is pinned; remote DNS/TLS and uptime remain unverified
+until a real host is selected and tested. See SETTINGS.md for supported controls.

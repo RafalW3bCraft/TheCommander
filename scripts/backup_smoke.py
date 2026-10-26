@@ -55,6 +55,9 @@ def main():
         Connections(db, cfg).save(
             owner, "nebius", ConnectionInput(secret="fictional-backup-provider-secret")
         )
+        from commander.preferences import SettingsPatch, update, view
+
+        update(db, cfg, owner, SettingsPatch(revision=0, max_steps=2))
         notes = Workspace(directory / "source-notes", owner)
         original_note = notes.write("backup-note.md", "Fictional durable workspace note")
         with tarfile.open(directory / "notes.tar.gz", "w:gz") as archive:
@@ -86,6 +89,7 @@ def main():
         restored_cfg = cfg.model_copy(update={"database_url": target_url})
         restored = Database(restored_cfg)
         restored.migrate()
+        assert view(restored, restored_cfg, owner)["effective"]["max_steps"] == 2
         row = restored.one("SELECT * FROM memories WHERE id=%s", (memory["id"],))
         assert row["content"] == memory["content"] and row["revision"] == memory["revision"]
         connection = Connections(restored, restored_cfg)
@@ -97,6 +101,7 @@ def main():
             "clean_initialization": True,
             "custom_format_dump_restore": True,
             "memory_and_revision_preserved": True,
+            "owner_settings_preserved": True,
             "encrypted_connection_decrypts_with_original_key": True,
             "migrations_after_restore": True,
             "notes_archive_restore_preserves_content": True,

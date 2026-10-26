@@ -38,3 +38,22 @@ Outcome references are recorded in RELEASE_REPORT.md. The initial browser attemp
 failed a suite timeout and a test navigation error; these are retained in
 `audit-browser-initial-failures.txt`. They are not a green result. Unknown GitHub
 live behavior remains an explicit open edge even when local gates pass.
+
+## Settings and assistant release increment
+
+- Persistent typed settings: reload/restart, revision conflict, scope isolation,
+  model discovery/validation, secret replacement, schedule snapshots and lower limits.
+- Unknown usage cannot be discounted by lowering a later context/output setting.
+- Simultaneous connection edits have one winner; stale revoked forms cannot
+  restore encrypted credentials. Expired explicit memory permits active inference.
+- Delayed conversation A history cannot overwrite B or a cleared conversation;
+  old-handler reproduction fails immediately before polling can conceal it.
+- Unique cancellation status selector preserves the original stale-poll assertion.
+- Clean schema001–003 upgrade preserves memory and executes a legacy null snapshot.
+- Container recreation retains settings, memory and notes in isolated volumes.
+
+Evidence: release-verification.txt, release-upgrade-settings.txt,
+conversation-race-red.txt, usage-reservation-red.txt, usage-reservation-green.txt,
+release-clean-build.txt and backup-restore.json. Earlier iteration logs may include
+failed harness setup or incomplete gates; use the dated final release report as
+an index, not filenames containing 'green' as proof of success.

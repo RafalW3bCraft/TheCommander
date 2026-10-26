@@ -1,0 +1,182 @@
+Created .env.runtime with mode 0600. Use its bootstrap token on first sign-in.
+Added a local Compose database password without changing existing settings.
+Using CPython 3.13.5 interpreter at: /bin/python3
+Creating virtual environment at: .venv
+warning: Failed to hardlink files; falling back to full copy. This may lead to degraded performance.
+         If the cache and target directories are on different filesystems, hardlinking may not be supported.
+         If this is intentional, set `export UV_LINK_MODE=copy` or use `--link-mode=copy` to suppress this warning.
+Installed 62 packages in 1.23s
+ + annotated-doc==0.0.5
+ + annotated-types==0.8.0
+ + anyio==4.15.1
+ + argon2-cffi==25.1.0
+ + argon2-cffi-bindings==26.1.0
+ + boolean-py==5.0
+ + cachecontrol==0.14.4
+ + certifi==2026.10.19
+ + cffi==2.1.1
+ + charset-normalizer==3.5.2
+ + click==8.5.0
+ + coverage==7.16.2
+ + cryptography==50.0.2
+ + cyclonedx-python-lib==11.12.0
+ + defusedxml==0.7.1
+ + fastapi==0.159.1
+ + filelock==4.2.4
+ + h11==0.16.0
+ + httpcore==1.0.9
+ + httpx==0.28.1
+ + idna==3.20
+ + iniconfig==2.3.1
+ + librt==0.16.0
+ + license-expression==30.4.4
+ + markdown-it-py==4.2.0
+ + mdurl==0.1.2
+ + msgpack==1.2.3
+ + mypy==1.20.2
+ + mypy-extensions==1.1.0
+ + opentelemetry-api==1.45.1
+ + packageurl-python==0.17.6
+ + packaging==26.3
+ + pathspec==1.1.1
+ + pip==26.2.2
+ + pip-api==0.0.35
+ + pip-audit==2.10.1
+ + pip-requirements-parser==32.0.1
+ + platformdirs==4.13.5
+ + pluggy==1.7.0
+ + psycopg==3.3.6
+ + psycopg-binary==3.3.6
+ + py-serializable==2.1.0
+ + pycparser==3.11
+ + pydantic==2.14.1
+ + pydantic-core==2.50.1
+ + pydantic-settings==2.16.1
+ + pygments==2.21.0
+ + pyparsing==3.3.3
+ + pytest==9.1.1
+ + pytest-cov==7.1.0
+ + python-dotenv==1.2.4
+ + requests==2.34.2
+ + rich==15.0.0
+ + ruff==0.17.1
+ + sortedcontainers==2.4.0
+ + starlette==1.9.0
+ + tomli==2.5.0
+ + tomli-w==1.2.0
+ + typing-extensions==4.16.0
+ + typing-inspection==0.4.4
+ + urllib3==2.8.0
+ + uvicorn==0.54.0
+Existing .env.runtime preserved.
+Emulate Docker CLI using podman. Create /etc/containers/nodocker to quiet msg.
+>>>> Executing external compose provider "/usr/libexec/docker/cli-plugins/docker-compose". Please see podman-compose(1) for how to disable this message. <<<<
+
+Sending build context to Docker daemon  106.7kB
+
+[1/2] STEP 1/6: FROM docker.io/library/node:22-bookworm-slim@sha256:de170b39439eb0e5a3444ad7d60b015614a381e10fecae2e30ec9e735122f38d AS frontend
+[1/2] STEP 2/6: WORKDIR /build/frontend
+--> Using cache 0b190d8742f0fdf6d8c6d13d10f8353fe33d1f75d815e4aee063b56826d39ee5
+--> 0b190d8742f0
+[1/2] STEP 3/6: COPY frontend/package.json frontend/package-lock.json ./
+--> Using cache 47694af58c8bb2966db35ed7f3e527f295afc775a68ed8cf86e64c5733d3b68d
+--> 47694af58c8b
+[1/2] STEP 4/6: RUN npm ci
+--> Using cache 44517325657d382e1479b8e37a71d5ee5394acd94e8b269bd49e748054a17e4f
+--> 44517325657d
+[1/2] STEP 5/6: COPY frontend/ ./
+--> Using cache c2b0fbcfcc2bd246179348d2d3f9741a07762557157e7a32cbfa2a6b9ef7884c
+--> c2b0fbcfcc2b
+[1/2] STEP 6/6: RUN npm run build
+--> Using cache 903a250b785ded0bba5b43f0def17fde40eb550511371cd4593cd55532074c77
+--> 903a250b785d
+[2/2] STEP 1/14: FROM docker.io/library/python:3.13-slim-bookworm@sha256:4cea12ab7d78a3312c85f8cab19b6971d4fe9704da25443986c0bc20a6678850
+[2/2] STEP 2/14: ENV PYTHONDONTWRITEBYTECODE=1 PYTHONUNBUFFERED=1 UV_LINK_MODE=copy
+--> Using cache 1806103564a87fc135e0d3e65e29d08fb7d322a035512657237e3ae6f661c832
+--> 1806103564a8
+[2/2] STEP 3/14: WORKDIR /app
+--> Using cache 4c4d1fac577f435c6fe11b8422e16e91937d802c10f8990f460351d5d962afdc
+--> 4c4d1fac577f
+[2/2] STEP 4/14: RUN pip install --no-cache-dir uv==0.13.1 && groupadd --gid 10001 commander && useradd --uid 10001 --gid 10001 --create-home commander
+--> Using cache 9339ac4958e571f2450ecc2ea35bf295e48265c147f7dfc6d3c68eaea670cdb3
+--> 9339ac4958e5
+[2/2] STEP 5/14: COPY pyproject.toml uv.lock ./
+--> Using cache e16faa5a2c050697ddd70869572e3c1b83196c242c6ef5e4034ff1516fbd9a8d
+--> e16faa5a2c05
+[2/2] STEP 6/14: RUN uv sync --frozen --no-dev
+--> Using cache 6c826b70e34560547f50543afa4d106cef2758288249d4b47731a505efb3270d
+--> 6c826b70e345
+[2/2] STEP 7/14: COPY commander/ commander/
+--> Using cache e019c08e96b904b0b5d23132e78f315cb77d3adafb43ab6e94d70b04a643884f
+--> e019c08e96b9
+[2/2] STEP 8/14: COPY --from=frontend /build/frontend/dist frontend/dist
+--> Using cache 225f3376d6a79980c0400e0b14d186dd8a870ad5873db896ff3b36a70667c5f8
+--> 225f3376d6a7
+[2/2] STEP 9/14: RUN mkdir -p /data/notes && chown -R commander:commander /data /app
+--> Using cache 6f73016373a0527acaac644b187fbfa72f5a159d0895f0606206a0b6d1c6ebfa
+--> 6f73016373a0
+[2/2] STEP 10/14: USER commander
+--> Using cache 224a2c5893987368a452ccd10d5d12f3cb66ca83bb0d11d25ccd4c5cc55b2560
+--> 224a2c589398
+[2/2] STEP 11/14: ENV PATH="/app/.venv/bin:$PATH" WORKSPACE_ROOT=/data/notes
+--> Using cache 6d4aee3c0432a8e78eba8f200fd141fffb24126c86de9dd225d579ba6ae56509
+--> 6d4aee3c0432
+[2/2] STEP 12/14: EXPOSE 8000
+--> Using cache d412141fbe633fb0915fdbd2bd0d59d9ac588e8449b701289cba3d69f8bee86c
+--> d412141fbe63
+[2/2] STEP 13/14: CMD ["uvicorn", "commander.api:create_app", "--factory", "--host", "0.0.0.0", "--port", "8000", "--no-access-log"]
+--> Using cache e9fb91f5abb40bfdd72d99936c27a24886eb2840f10c6c50700a4891b8815d71
+--> e9fb91f5abb4
+[2/2] STEP 14/14: LABEL "com.docker.compose.image.builder"="classic"
+--> Using cache c38a809dfec287e2d8b7b9b0e729fe8f3566a05ef5523b688d6ffe044dced941
+[2/2] COMMIT localhost/thecommander:0.2.0
+--> c38a809dfec2
+Successfully tagged localhost/thecommander:0.2.0
+c38a809dfec287e2d8b7b9b0e729fe8f3566a05ef5523b688d6ffe044dced941
+Successfully built c38a809dfec2
+Successfully tagged localhost/thecommander:0.2.0
+ Network thecommander-cleancheck-fb281913a7_default  Creating
+ Network thecommander-cleancheck-fb281913a7_default  Created
+ Volume "thecommander-cleancheck-fb281913a7_notes"  Creating
+ Volume "thecommander-cleancheck-fb281913a7_notes"  Created
+ Volume "thecommander-cleancheck-fb281913a7_database"  Creating
+ Volume "thecommander-cleancheck-fb281913a7_database"  Created
+ Container thecommander-cleancheck-fb281913a7-db-1  Creating
+ Container thecommander-cleancheck-fb281913a7-db-1  Created
+ Container thecommander-cleancheck-fb281913a7-worker-1  Creating
+ Container thecommander-cleancheck-fb281913a7-api-1  Creating
+ Container thecommander-cleancheck-fb281913a7-api-1  Created
+ Container thecommander-cleancheck-fb281913a7-worker-1  Created
+ Container thecommander-cleancheck-fb281913a7-db-1  Starting
+ Container thecommander-cleancheck-fb281913a7-db-1  Started
+ Container thecommander-cleancheck-fb281913a7-db-1  Waiting
+ Container thecommander-cleancheck-fb281913a7-db-1  Waiting
+ Container thecommander-cleancheck-fb281913a7-db-1  Healthy
+ Container thecommander-cleancheck-fb281913a7-worker-1  Starting
+ Container thecommander-cleancheck-fb281913a7-db-1  Healthy
+ Container thecommander-cleancheck-fb281913a7-api-1  Starting
+ Container thecommander-cleancheck-fb281913a7-worker-1  Started
+ Container thecommander-cleancheck-fb281913a7-api-1  Started
+Open http://localhost:8002. Bootstrap token is in .env.runtime.
+{"timestamp": "2026-10-23T12:13:00.553280+00:00", "deployment": "thecommander-cleancheck-fb281913a7", "checks": ["database_readiness", "production_frontend_served", "secure_owner_login", "persisted_memory_export", "persistent_workspace_note", "separate_worker_heartbeat", "session_revocation"]}
+Emulate Docker CLI using podman. Create /etc/containers/nodocker to quiet msg.
+>>>> Executing external compose provider "/usr/libexec/docker/cli-plugins/docker-compose". Please see podman-compose(1) for how to disable this message. <<<<
+
+ Container thecommander-cleancheck-fb281913a7-api-1  Stopping
+ Container thecommander-cleancheck-fb281913a7-worker-1  Stopping
+ Container thecommander-cleancheck-fb281913a7-worker-1  Stopped
+ Container thecommander-cleancheck-fb281913a7-worker-1  Removing
+ Container thecommander-cleancheck-fb281913a7-worker-1  Removed
+ Container thecommander-cleancheck-fb281913a7-api-1  Stopped
+ Container thecommander-cleancheck-fb281913a7-api-1  Removing
+ Container thecommander-cleancheck-fb281913a7-api-1  Removed
+ Container thecommander-cleancheck-fb281913a7-db-1  Stopping
+ Container thecommander-cleancheck-fb281913a7-db-1  Stopped
+ Container thecommander-cleancheck-fb281913a7-db-1  Removing
+ Container thecommander-cleancheck-fb281913a7-db-1  Removed
+ Volume thecommander-cleancheck-fb281913a7_notes  Removing
+ Volume thecommander-cleancheck-fb281913a7_database  Removing
+ Volume thecommander-cleancheck-fb281913a7_notes  Removed
+ Network thecommander-cleancheck-fb281913a7_default  Removing
+ Network thecommander-cleancheck-fb281913a7_default  Removed
+ Volume thecommander-cleancheck-fb281913a7_database  Removed

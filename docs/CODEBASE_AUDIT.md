@@ -106,3 +106,26 @@ hard real-time process kill guarantee.
 Next dependent action: configure the selected GitHub repository and scoped token,
 then run the explicitly authorized approval → creation → GET-confirmed receipt
 path. Local code, reviewable artifacts and repeatable gates are prepared first.
+
+## Release increment — 2026-10-25
+
+The previous readiness score is historical. New implementation adds migration004,
+owner settings/model discovery/redacted health, per-run settings snapshots, typed
+settings UI and an HTTPS proxy overlay. Connection updates now require the current
+revision, read and merge under the owner lock, and reject stale updates after
+revocation. Expired explicit memories no longer suppress active inferred recall.
+Skills expose actual JSON schemas, validate inputs/output envelopes, and enforce
+step/time ceilings. The output envelope is recorded in a skill_output event.
+
+Conversation history ordering was a separate confirmed UI defect: a held response
+for A replaced B's messages after switching. The new browser regression checks the
+immediate rendered history, so later polling cannot conceal the defect. The
+cancellation scenario now uniquely targets the status badge and releases a held
+poll in finally. Recheck current release-verification.txt for final gate status.
+
+No speculative legacy deletion was warranted. New interfaces reuse the existing
+credentials, authentication, worker and persistence boundaries. No second agent
+runtime, scheduler, secret store or environment editor was introduced. Archive
+comparison remains blocked because no archive path was supplied/found. Remote
+branches still point to main 3dbfe43c and rebuild/personal-ai 25de359b; local source
+is based on 87dbaaaa plus this reviewable diff. No reset, merge or push occurred.

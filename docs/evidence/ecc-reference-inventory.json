@@ -1,5 +1,5 @@
 {
-  "generated_at": "2026-10-24T05:38:57.043523+00:00",
+  "generated_at": "2026-10-26T01:21:36.363030+00:00",
   "commit": "90606c8315ee09cafc303515c5f33024db6b9882",
   "scope": "Every tracked regular file in pinned ECC source; hash inventory, not code execution or per-file quality certification",
   "files": [
@@ -23707,7 +23707,7 @@
       "path": "skills/database-migrations/SKILL.md",
       "status": "applied-guidance",
       "artifacts": [
-        "commander/migrations/003_message_runs.sql",
+        "commander/migrations/004_owner_settings.sql",
         "docs/OPERATIONS.md"
       ],
       "installed_project_copy": true
@@ -25211,8 +25211,8 @@
       "path": "skills/tdd-workflow/SKILL.md",
       "status": "applied-guidance",
       "artifacts": [
-        "docs/evidence/audit-regressions-red.txt",
-        "tests/test_workflows.py"
+        "docs/evidence/release-settings-red.txt",
+        "tests/test_release_settings.py"
       ],
       "installed_project_copy": true
     },
@@ -25313,7 +25313,7 @@
       "status": "applied-guidance",
       "artifacts": [
         "scripts/verify.sh",
-        "docs/evidence/audit-verification.txt"
+        "docs/evidence/release-verification.txt"
       ],
       "installed_project_copy": true
     },

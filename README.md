@@ -6,8 +6,9 @@ GitHub writes. Release 0.2.0 rebuilds the application around FastAPI, React,
 PostgreSQL and a separate worker. The historical application is preserved;
 its instructions are in [LEGACY_README](docs/LEGACY_README.md).
 
-**IMPLEMENTATION COMPLETE — LIVE VERIFICATION PENDING.** Local workflows are
-implemented and tested. Nebius inference, Tavily search and workspace effects have live evidence.
+**LOCAL VERIFICATION PASSED — LIVE GITHUB / REMOTE DEPLOYMENT PENDING.**
+The complete gate passed: 74 automated tests, 91.14% coverage and six browser scenarios.
+Nebius inference, Tavily search and workspace effects have live evidence.
 GitHub still requires a real credential and scoped live checks.
 See [release evidence and limitations](docs/RELEASE_REPORT.md).
 
@@ -23,7 +24,11 @@ See [release evidence and limitations](docs/RELEASE_REPORT.md).
 | Follow-through and durable schedules | Yes | Separate worker + local note effects |
 | Cancel, lease recovery, uncertain-write reconciliation | Yes | Failure injection; no live GitHub timeout test |
 | Connections: scope, test, expiry, replace, revoke | Yes | Nebius/Tavily/workspace; GitHub pending |
-| Responsive Today, Memory, Skills, Connections, Activity | Yes | Chromium desktop/mobile and accessibility checks |
+| Responsive Assistant, Memory, Skills, Settings, Activity | Yes | Chromium desktop/tablet/mobile and accessibility checks |
+
+Owner model/limit settings persist in PostgreSQL, with revision checks and operator
+ceilings. See [settings contracts](docs/SETTINGS.md), [HTTPS operations](docs/OPERATIONS.md),
+and the [current verification and remaining work](docs/CONTINUATION_REPORT.md).
 
 ## Start locally
 
@@ -43,7 +48,7 @@ generates missing runtime secrets and starts the API, database and worker.
 On this host, Docker is a Podman wrapper; start its API socket with
 `systemctl --user start podman.socket` if necessary.
 
-In Connections, import configured server credentials or enter them directly.
+In Settings → Connections, import configured server credentials or enter them directly.
 Test Nebius, enable workspace, select one GitHub repository and set Tavily research
 domains. Save a preference in Memory, then run a skill. Unconfigured integrations
 show errors; the release never substitutes sample completions.
@@ -53,7 +58,7 @@ show errors; the release never substitutes sample completions.
   `nvidia/nemotron-3-super-120b-a12b`. Legacy `MODEL_ID` is supported.
 - `GITHUB_TOKEN` and `GITHUB_REPOSITORY=owner/repository`: selected repository
   metadata/issues read access, and Issues write for an explicitly approved issue.
-- `TAVILY_API_KEY`: real search key; choose approved domains in Connections.
+- `TAVILY_API_KEY`: real search key; choose approved domains in Settings → Connections.
 - `.env.runtime`: generated encryption key, bootstrap token and Compose database
   password. Keep this file private and backed up separately from the database.
 
@@ -115,3 +120,21 @@ No hosted demo, public video or submitted entry is claimed.
 Original project: https://github.com/RafalW3bCraft/TheCommander. MIT license and
 existing authorship are preserved; see [LICENSE](LICENSE) and
 [THIRD_PARTY_NOTICES](THIRD_PARTY_NOTICES).
+
+## Exported test build
+
+`uv run python -m scripts.package_release` writes a source archive under
+`.runtime/releases/` and a SHA256 manifest in `docs/evidence/release-manifest.json`.
+It excludes private environments, databases, notes, Git history, ECC catalogs and
+legacy runtime code. The archive starts with the same `./scripts/start.sh` path.
+For source-inventory and verification scripts in an extracted archive, initialize
+a local index **before creating private configuration**:
+
+```sh
+git init
+git add .
+```
+
+The archive includes `.gitignore` to keep later private configuration out of the
+index. This creates no remote repository and publishes nothing. Run the documented
+verification checks and keep live integration results separate from fixtures.

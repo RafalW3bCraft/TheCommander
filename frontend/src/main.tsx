@@ -19,6 +19,7 @@ import {
   type Message,
 } from "./api";
 import "./style.css";
+import { SettingsPage } from "./SettingsPage";
 function localInputTime(value: string | null | undefined) {
   if (!value) return "";
   const date = new Date(value);
@@ -58,7 +59,7 @@ function Status({ value }: { value: string }) {
 function App() {
   const [user, setUser] = useState<User | null>(null);
   const [ready, setReady] = useState(false);
-  const [page, setPage] = useState("Today");
+  const [page, setPage] = useState("Assistant");
   const [bootstrap, setBootstrap] = useState(false);
   useEffect(() => {
     const expired = () => {
@@ -176,19 +177,25 @@ function App() {
   return (
     <div className="shell">
       <aside>
-        <a className="brand" href="#today" onClick={() => setPage("Today")}>
+        <a
+          className="brand"
+          href="#assistant"
+          onClick={() => setPage("Assistant")}
+        >
           TheCommander<span>Personal engineering assistant</span>
         </a>
         <nav aria-label="Primary">
-          {["Today", "Memory", "Skills", "Connections", "Activity"].map((p) => (
-            <button
-              key={p}
-              aria-current={page === p ? "page" : undefined}
-              onClick={() => setPage(p)}
-            >
-              {p}
-            </button>
-          ))}
+          {["Assistant", "Memory", "Skills", "Settings", "Activity"].map(
+            (p) => (
+              <button
+                key={p}
+                aria-current={page === p ? "page" : undefined}
+                onClick={() => setPage(p)}
+              >
+                {p}
+              </button>
+            ),
+          )}
         </nav>
         <div className="owner">
           <span>{user.username}</span>
@@ -212,14 +219,17 @@ function App() {
           <p className="eyebrow">YOUR WORK, WITH CONTINUITY</p>
           <h1>{page}</h1>
         </header>
-        {page === "Today" ? (
+        {page === "Assistant" ? (
           <Today />
         ) : page === "Memory" ? (
           <MemoryPage />
         ) : page === "Skills" ? (
           <SkillsPage />
-        ) : page === "Connections" ? (
-          <ConnectionsPage />
+        ) : page === "Settings" ? (
+          <SettingsPage
+            connections={<ConnectionsPage />}
+            openMemory={() => setPage("Memory")}
+          />
         ) : (
           <Activity />
         )}
@@ -492,13 +502,18 @@ function Today() {
     return () => clearInterval(id);
   }, [refresh, runJob]);
   useEffect(() => {
+    let active = true;
+    setMessages([]);
     if (conversation)
-      void runJob(async () =>
-        setMessages(
-          await api<Message[]>("/conversations/" + conversation + "/messages"),
-        ),
-      );
-    else setMessages([]);
+      void runJob(async () => {
+        const history = await api<Message[]>(
+          "/conversations/" + conversation + "/messages",
+        );
+        if (active) setMessages(history);
+      });
+    return () => {
+      active = false;
+    };
   }, [conversation, runs, runJob]);
   return (
     <>
@@ -1172,6 +1187,15 @@ function ConnectionCard({
       {c.detail && <p>{c.detail}</p>}
       {c.validated_at && <small>Last checked {when(c.validated_at)}</small>}
       <ErrorBox error={job.error} />
+      {job.error && (
+        <button
+          type="button"
+          className="secondary"
+          onClick={() => void runJob(refresh)}
+        >
+          Reload connection
+        </button>
+      )}
       <form
         key={c.revision}
         onSubmit={(e) => {
@@ -1180,6 +1204,7 @@ function ConnectionCard({
           const form = e.currentTarget;
           void runJob(async () => {
             await api("/connections/" + c.kind, "PUT", {
+              revision: c.revision,
               secret: String(f.get("secret") || ""),
               repository: String(f.get("repository") || ""),
               domains: String(f.get("domains") || "")

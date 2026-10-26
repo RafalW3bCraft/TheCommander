@@ -1,6 +1,8 @@
 from datetime import datetime, timedelta, timezone
 
+from commander.db import json
 from commander.errors import DomainError
+from commander.preferences import resolve, values
 from commander.skills import definition
 
 
@@ -43,11 +45,12 @@ def dispatch_due(db, settings):
                 "SELECT count(*) AS n FROM runs WHERE owner_id=%s AND created_at>now()-interval '1 day'",
                 (row["owner_id"],),
             ).fetchone()["n"]
-            if count >= settings.max_daily_runs:
+            effective = resolve(db, settings, row["owner_id"])
+            if count >= effective.max_daily_runs:
                 continue
             conn.execute(
-                """INSERT INTO runs(owner_id,schedule_id,occurrence_at,skill,skill_version,prompt)
-               VALUES (%s,%s,%s,%s,%s,%s) ON CONFLICT(schedule_id,occurrence_at) DO NOTHING""",
+                """INSERT INTO runs(owner_id,schedule_id,occurrence_at,skill,skill_version,prompt,settings_snapshot)
+               VALUES (%s,%s,%s,%s,%s,%s,%s) ON CONFLICT(schedule_id,occurrence_at) DO NOTHING""",
                 (
                     row["owner_id"],
                     row["id"],
@@ -55,6 +58,7 @@ def dispatch_due(db, settings):
                     row["skill"],
                     definition(row["skill"])["hash"],
                     row["prompt"],
+                    json(values(effective)),
                 ),
             )
             next_at = None

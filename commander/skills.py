@@ -2,7 +2,21 @@ import hashlib
 import json
 from typing import Any
 
+from pydantic import Field
+
+from commander.contracts import Strict
 from commander.errors import DomainError
+
+
+class SkillInput(Strict):
+    prompt: str = Field(min_length=1, max_length=8000)
+
+
+class SkillOutput(Strict):
+    result: str = Field(min_length=1)
+    evidence: list[str]
+    receipts: list[dict]
+
 
 DEFINITIONS: list[dict[str, Any]] = [
     {
@@ -30,13 +44,9 @@ DEFINITIONS: list[dict[str, Any]] = [
 for item in DEFINITIONS:
     item.update(
         {
-            "version": "1.0.0",
-            "input_schema": {"prompt": "nonempty text, max 8000 characters"},
-            "output_schema": {
-                "result": "text",
-                "evidence": "source links",
-                "receipt": "note or approved issue",
-            },
+            "version": "1.1.0",
+            "input_schema": SkillInput.model_json_schema(),
+            "output_schema": SkillOutput.model_json_schema(),
             "source_restrictions": "Configured repository and connection domain allowlist only",
             "max_steps": 5,
             "max_seconds": 180,

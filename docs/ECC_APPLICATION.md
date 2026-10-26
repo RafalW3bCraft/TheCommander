@@ -55,3 +55,28 @@ The remaining catalog entries have explicit non-execution statuses:
 Development artifacts are separate from application memory, tool permissions and
 secrets. Neither ECC catalog is included in the production image. The user-owned
 Antigravity 2.2.0 installation and pinned 2.2.3 reference are recorded separately.
+
+## 2026-10-25 settings/release increment
+
+Applied tdd-workflow, api-design, security-review and verification-loop guidance:
+new PostgreSQL regression tests, explicit revision contracts, encrypted write-only
+credentials, schema-generated frontend types, browser race reproduction, and the
+complete release gate. The conversation regression was checked against the old
+handler to prove that delayed history overwrites the selected conversation; the
+fixed handler is then tested with the same assertion. See release-settings-red.txt,
+release-settings-green.txt, conversation-race-red.txt and release-verification.txt.
+Checkpoint evidence is recorded in artifacts; no automatic commits were made over
+user-owned working-tree changes. This is an adapted workflow, not a claim of every
+skill checklist or native hook execution. Review in this increment is self-review.
+All unrelated skills remain inventoried, not executed or certified.
+
+## 2026-10-26 continuation verification
+
+Read and applied verification-loop and security-review guidance, with separate
+self-review passes for authorization, scoped dispatch, persistent jobs, settings,
+provider constraints and public errors. The user-requested red/green process
+reproduced and repaired F15 (live probe process status). Evidence is
+live-probe-red.txt, live-probe-green.txt and continuation-verification.txt.
+The installed/pinned catalogs and all private configuration remain preserved;
+no unrelated skill execution, independent agent review or native hook activation
+is claimed. Prior evidence was copied before refresh; see continuation-baseline.json.

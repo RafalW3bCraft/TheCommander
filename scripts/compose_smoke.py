@@ -52,6 +52,28 @@ with httpx.Client(base_url=base, timeout=10) as client:
     auth.raise_for_status()
     client.headers["X-CSRF-Token"] = auth.json()["csrf"]
     report["checks"].append("secure_owner_login")
+    state_path = Path(".runtime/releasecheck-state.json")
+    if state_path.exists():
+        previous = json.loads(state_path.read_text())
+        assert any(
+            x["id"] == previous["memory_id"] for x in client.get("/api/memory/export").json()
+        )
+        assert (
+            client.get("/api/notes/" + previous["note"]).json()["content"]
+            == "Fictional Compose note"
+        )
+        assert client.get("/api/settings").json()["effective"]["max_steps"] == previous["max_steps"]
+        report["checks"].append("retained_volume_memory_note_settings_after_recreate")
+    settings = client.get("/api/settings").json()
+    saved = client.patch(
+        "/api/settings",
+        json={
+            "revision": settings["revision"],
+            "max_steps": min(2, settings["ceilings"]["max_steps"]),
+        },
+    )
+    saved.raise_for_status()
+    report["checks"].append("persistent_owner_settings")
     key = "releasecheck-" + secrets.token_hex(4)
     memory = client.post(
         "/api/memory", json={"key": key, "content": "Fictional Compose verification"}
@@ -59,13 +81,33 @@ with httpx.Client(base_url=base, timeout=10) as client:
     memory.raise_for_status()
     assert any(x["id"] == memory.json()["id"] for x in client.get("/api/memory/export").json())
     report["checks"].append("persisted_memory_export")
-    client.put("/api/connections/workspace", json={"enabled": True}).raise_for_status()
+    client.put(
+        "/api/connections/workspace",
+        json={
+            "enabled": True,
+            "revision": next(
+                c["revision"]
+                for c in client.get("/api/connections").json()
+                if c["kind"] == "workspace"
+            ),
+        },
+    ).raise_for_status()
     note = client.post(
         "/api/notes", json={"name": key + ".md", "content": "Fictional Compose note"}
     )
     note.raise_for_status()
     assert note.json()["verified"]
     report["checks"].append("persistent_workspace_note")
+    state_path.write_text(
+        json.dumps(
+            {
+                "memory_id": memory.json()["id"],
+                "note": key + ".md",
+                "max_steps": saved.json()["effective"]["max_steps"],
+            }
+        )
+    )
+    state_path.chmod(0o600)
     heartbeat = client.get("/api/worker").json()
     assert heartbeat["online"]
     report["checks"].append("separate_worker_heartbeat")

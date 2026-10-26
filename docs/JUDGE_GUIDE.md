@@ -10,7 +10,7 @@ There is no published deployment or judge credential in this repository.
    bullets and source links` in Memory.
 4. Run Engineering briefing with `Review retry-handling improvements`. Inspect
    timestamped evidence and the saved Markdown note.
-5. Schedule Follow-through for the next minute. Close the browser; reopen Today
+5. Schedule Follow-through for the next minute. Close the browser; reopen Assistant
    after the worker runs. Check status, result and note receipt in Activity.
 6. Start a new conversation and request your saved briefing format. Memory should
    be present in the actual model context after restarting API/worker as well.

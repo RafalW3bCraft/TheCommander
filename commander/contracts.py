@@ -31,6 +31,7 @@ class MemoryEdit(MemoryInput):
 
 
 class ConnectionInput(Strict):
+    revision: int = Field(default=0, ge=0)
     secret: str = Field(default="", max_length=4096)
     repository: str = Field(default="", pattern=r"^([A-Za-z0-9_.-]+/[A-Za-z0-9_.-]+)?$")
     domains: list[str] = Field(default_factory=list, max_length=10)

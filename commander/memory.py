@@ -13,7 +13,7 @@ def save_memory(db, owner, data, item_id=None):
         if (
             data.kind == "inferred"
             and conn.execute(
-                "SELECT 1 FROM memories WHERE owner_id=%s AND key=%s AND kind='explicit'",
+                "SELECT 1 FROM memories WHERE owner_id=%s AND key=%s AND kind='explicit' AND (expires_at IS NULL OR expires_at>now())",
                 (owner, data.key),
             ).fetchone()
         ):
@@ -39,7 +39,7 @@ def recall(db, owner):
     return db.all(
         """SELECT kind,key,content,source FROM memories m WHERE owner_id=%s
       AND (expires_at IS NULL OR expires_at>now()) AND kind IN ('explicit','inferred')
-      AND (kind='explicit' OR NOT EXISTS(SELECT 1 FROM memories e WHERE e.owner_id=m.owner_id AND e.key=m.key AND e.kind='explicit'))
+      AND (kind='explicit' OR NOT EXISTS(SELECT 1 FROM memories e WHERE e.owner_id=m.owner_id AND e.key=m.key AND e.kind='explicit' AND (e.expires_at IS NULL OR e.expires_at>now())))
       ORDER BY (kind='explicit') DESC,updated_at DESC LIMIT 30""",
         (owner,),
     )

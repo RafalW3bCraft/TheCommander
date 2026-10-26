@@ -1,0 +1,54 @@
+
+> thecommander-ui@0.2.0 test:e2e
+> playwright test
+
+[WebServer] INFO:     Started server process [14525]
+[WebServer] INFO:     Waiting for application startup.
+[WebServer] INFO:     Application startup complete.
+[WebServer] INFO:     Uvicorn running on http://127.0.0.1:8010 (Press CTRL+C to quit)
+
+Running 6 tests using 1 worker
+
+(node:14963) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+(Use `node --trace-warnings ...` to show where the warning was created)
+  ✓  1 [chromium] › e2e/workflows.spec.ts:14:1 › desktop owner memory connections three skills approvals and receipts (19.1s)
+  ✓  2 [chromium] › e2e/workflows.spec.ts:152:1 › mobile keyboard schedule survives closed page and can be edited paused deleted (9.5s)
+  ✘  3 [chromium] › e2e/workflows.spec.ts:243:1 › expired session returns to sign-in and tablet navigation remains usable (1.1m)
+
+
+  1) [chromium] › e2e/workflows.spec.ts:243:1 › expired session returns to sign-in and tablet navigation remains usable 
+
+    Test was interrupted.
+
+    Error: locator.click: Test ended.
+    Call log:
+      - waiting for getByRole('button', { name: 'Connections', exact: true })
+
+
+      256 |     "Assistant",
+      257 |   ]) {
+    > 258 |     await page.getByRole("button", { name: destination, exact: true }).click();
+          |                                                                        ^
+      259 |     await expect(
+      260 |       page.getByRole("heading", { name: destination, exact: true }),
+      261 |     ).toBeVisible();
+        at /mnt/hostshare/TheCommander/frontend/e2e/workflows.spec.ts:258:72
+
+    attachment #1: screenshot (image/png) ──────────────────────────────────────────────────────────
+    test-results/workflows-expired-session--80cb3-t-navigation-remains-usable-chromium/test-failed-1.png
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+
+    Error Context: test-results/workflows-expired-session--80cb3-t-navigation-remains-usable-chromium/error-context.md
+
+    attachment #3: trace (application/zip) ─────────────────────────────────────────────────────────
+    test-results/workflows-expired-session--80cb3-t-navigation-remains-usable-chromium/trace.zip
+    Usage:
+
+        npx playwright show-trace test-results/workflows-expired-session--80cb3-t-navigation-remains-usable-chromium/trace.zip
+
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+
+  1 interrupted
+    [chromium] › e2e/workflows.spec.ts:243:1 › expired session returns to sign-in and tablet navigation remains usable 
+  3 did not run
+  2 passed (1.7m)

@@ -19,8 +19,8 @@ ROOT = Path(__file__).resolve().parents[1]
 OUT = ROOT / "docs/evidence"
 APPLIED = {
     "configure-ecc": ["docs/ECC_SETUP.md", "scripts/setup_ecc.sh"],
-    "tdd-workflow": ["docs/evidence/audit-regressions-red.txt", "tests/test_workflows.py"],
-    "verification-loop": ["scripts/verify.sh", "docs/evidence/audit-verification.txt"],
+    "tdd-workflow": ["docs/evidence/release-settings-red.txt", "tests/test_release_settings.py"],
+    "verification-loop": ["scripts/verify.sh", "docs/evidence/release-verification.txt"],
     "fastapi-patterns": ["commander/api.py", "commander/contracts.py"],
     "postgres-patterns": ["commander/db.py", "commander/migrations/003_message_runs.sql"],
     "security-review": ["docs/FINDINGS.md", "docs/THREAT_MODEL.md"],
@@ -32,7 +32,7 @@ APPLIED = {
     "browser-qa": ["docs/CODEBASE_AUDIT.md", "docs/evidence/browser-results.json"],
     "production-audit": ["docs/CODEBASE_AUDIT.md", "docs/RELEASE_REPORT.md"],
     "contract-first": ["commander/contracts.py", "frontend/src/api-schema.d.ts"],
-    "database-migrations": ["commander/migrations/003_message_runs.sql", "docs/OPERATIONS.md"],
+    "database-migrations": ["commander/migrations/004_owner_settings.sql", "docs/OPERATIONS.md"],
     "eval-harness": ["scripts/evaluate_live.py", "docs/EVALUATION.md"],
     "ai-regression-testing": ["tests/test_workflows.py", "frontend/e2e/workflows.spec.ts"],
     "module-regression": ["docs/REGRESSION.md", "scripts/verify.sh"],

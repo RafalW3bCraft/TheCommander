@@ -1,6 +1,6 @@
 {
-  "generated_at": "2026-10-24T05:38:57.043523+00:00",
-  "head": "c69b86b9fcaacc243a31995f925b278e0cb2b74f",
+  "generated_at": "2026-10-26T01:21:36.363030+00:00",
+  "head": "87dbaaaa6242acd32b7ad9e23d6f1ab733a26e7c",
   "scope": "All tracked and unignored files recursively; first-party Python AST/imports/routes, complete ECC artifact hashes, dependency manifests",
   "limits": [
     "Metadata enumeration is not line-by-line semantic certification of every catalog or third-party dependency.",
@@ -10,14 +10,14 @@
   ],
   "counts": {
     "ecc-development-tooling": 693,
-    "release-build-and-configuration": 15,
-    "documentation": 32,
+    "release-build-and-configuration": 17,
+    "documentation": 34,
     "preserved-legacy": 28,
-    "release-backend": 25,
-    "verification-evidence": 40,
-    "verification-and-operations": 20,
-    "generated-contract": 1,
-    "release-frontend": 3
+    "release-backend": 28,
+    "verification-evidence": 142,
+    "verification-and-operations": 24,
+    "release-frontend": 4,
+    "generated-contract": 1
   },
   "files": [
     {
@@ -4217,8 +4217,8 @@
     {
       "path": "README.md",
       "category": "documentation",
-      "bytes": 6390,
-      "sha256": "907fe602c42716955a26218cf6934629552d1af5dde746f1f276199690752f4a"
+      "bytes": 7500,
+      "sha256": "6c49676b56115ac2005d1fd0b2c1602b49f7819ae7e3fa17b31f28b334566ab3"
     },
     {
       "path": "THIRD_PARTY_NOTICES",
@@ -4337,8 +4337,8 @@
     {
       "path": "commander/broker.py",
       "category": "release-backend",
-      "bytes": 17300,
-      "sha256": "7cdb8a536d9cfeefc316929a6f215abdb417903f7583d338f03a9005d1be6497"
+      "bytes": 17895,
+      "sha256": "10b152db1a1d60d6ece7ad39b205f3f14f4373d1066f3ac47ecdc6eb896aa22c"
     },
     {
       "path": "commander/cli.py",
@@ -4349,14 +4349,14 @@
     {
       "path": "commander/connections.py",
       "category": "release-backend",
-      "bytes": 10801,
-      "sha256": "7b5461a29ea6deca41340d76c9a63aa7293a0ea5b8df2a6173937eac804de888"
+      "bytes": 11850,
+      "sha256": "f76fd6b77afece874ffbb8c4be3a785a62d0f120d6e5d3e17d58838f29b15473"
     },
     {
       "path": "commander/contracts.py",
       "category": "release-backend",
-      "bytes": 6647,
-      "sha256": "bb56079103dd11351eb93d76b92c73a1673fa7d5a76451286867cc0d142ec39a"
+      "bytes": 6690,
+      "sha256": "3f7c94e19453e4a17bb99567c97c34220637d446e5926c7ebd460f765e1ea654"
     },
     {
       "path": "commander/db.py",
@@ -4367,8 +4367,8 @@
     {
       "path": "commander/engine.py",
       "category": "release-backend",
-      "bytes": 7972,
-      "sha256": "19a7f489a3430c51e6a5f6dc34a96a144e48a22645d590a2ce6b3dcc0edddc26"
+      "bytes": 11894,
+      "sha256": "75ad2b40bdc6b179b47238dfac68607840eb2f92189c17cd48dce1e01ddeb59b"
     },
     {
       "path": "commander/errors.py",
@@ -4385,14 +4385,14 @@
     {
       "path": "commander/inference.py",
       "category": "release-backend",
-      "bytes": 3106,
-      "sha256": "2b0ab93650625e6ce4cfe1cfe37dea11564c19f45440f2735d0ac5a2d1b3206c"
+      "bytes": 3270,
+      "sha256": "e32b7eae732ef7b331fbdcb8ed1de6b145497ea0cdea2adee532863e136a7cab"
     },
     {
       "path": "commander/memory.py",
       "category": "release-backend",
-      "bytes": 2028,
-      "sha256": "476c512e639ab92e764b32d26ffb35f7e9e726bdc136559740d26baada30003d"
+      "bytes": 2122,
+      "sha256": "75861cba62eef07cc31d72e1479bbf4042d2c5297e0df5b4785dbf1d436d38ca"
     },
     {
       "path": "commander/migrations/001_core.sql",
@@ -4413,6 +4413,24 @@
       "sha256": "01e14a91c91a2fcbfdec813143db5d28000cf249e2442d77b67729c4b30aa19a"
     },
     {
+      "path": "commander/migrations/004_owner_settings.sql",
+      "category": "release-backend",
+      "bytes": 281,
+      "sha256": "e3049d890ebdfe1a2c0aa9109357053d0d2d781cd7d4640876038a430b963295"
+    },
+    {
+      "path": "commander/migrations/005_usage_reservation.sql",
+      "category": "release-backend",
+      "bytes": 264,
+      "sha256": "674f7fa2772a18f7a025b224a7a9c017fa53233b2f5226f9a3833fe85223cd93"
+    },
+    {
+      "path": "commander/preferences.py",
+      "category": "release-backend",
+      "bytes": 7153,
+      "sha256": "94c3a3729ea5c0a25f9995b7481861ee9e6e2b9215fdac2402048725546a7ac4"
+    },
+    {
       "path": "commander/providers.py",
       "category": "release-backend",
       "bytes": 6511,
@@ -4421,20 +4439,20 @@
     {
       "path": "commander/routes.py",
       "category": "release-backend",
-      "bytes": 8630,
-      "sha256": "52d24cf172bc9ef568b831e6a041f34be2452d06b730d5852478b9ae24b1193a"
+      "bytes": 10783,
+      "sha256": "b9b6590320e4335e382e650ced4f9d04f055918802f6831adc0ef0362214ffd7"
     },
     {
       "path": "commander/runs.py",
       "category": "release-backend",
-      "bytes": 5743,
-      "sha256": "027c0a1f605c9bf9bcfe59457dd1c3f939b0013831c45e942a96ef7b99b2b79f"
+      "bytes": 6045,
+      "sha256": "3251f6d14ae389ea9759489cf19c73dedf592d2b39fe0824ea99c86e69e54b39"
     },
     {
       "path": "commander/schedules.py",
       "category": "release-backend",
-      "bytes": 2678,
-      "sha256": "51f71b2240df2cbbb3132f00dda26ebc67da512113be58a25027689d107d4529"
+      "bytes": 2888,
+      "sha256": "888ea94ddb4f300abee9bbceaebd190597fae9d9cceec6644f8a2d5e5dfad1a1"
     },
     {
       "path": "commander/settings.py",
@@ -4445,8 +4463,8 @@
     {
       "path": "commander/skills.py",
       "category": "release-backend",
-      "bytes": 2136,
-      "sha256": "73e323dba297964c976d016f5f65b8dabfc88e3c7dcc49c895ec38486f76cff5"
+      "bytes": 2270,
+      "sha256": "97ca1fd9f5d6c0f08db03b9679dbdf2d5c5e87342d455d2c5d07b1ab5d4cdd79"
     },
     {
       "path": "commander/worker.py",
@@ -4461,6 +4479,12 @@
       "sha256": "0fafb1874f7819b67aaa2cb3f6218dd17305535b7006872df90fe67e7e8fd1d2"
     },
     {
+      "path": "compose.https.yaml",
+      "category": "release-build-and-configuration",
+      "bytes": 909,
+      "sha256": "ddf3c02c0aac24b3906e704c2d6b40e4445500ae1564f85951c7e2844fb6813f"
+    },
+    {
       "path": "compose.yaml",
       "category": "release-build-and-configuration",
       "bytes": 1491,
@@ -4473,22 +4497,28 @@
       "sha256": "2f04b3e5548786d4e6267ef48bd0a266b82b93483158b264f8f80978aed6a4d5"
     },
     {
+      "path": "deploy/Caddyfile",
+      "category": "release-build-and-configuration",
+      "bytes": 60,
+      "sha256": "1c9fcdc50f4b2d855f132925171272889ea950f5d4ed1c1c4ede7d0d94c2fd40"
+    },
+    {
       "path": "docs/ARCHITECTURE.md",
       "category": "documentation",
-      "bytes": 2115,
-      "sha256": "4dbf65af021570aa3d8cef384062456711d9513351784a0a553a6925e27031b8"
+      "bytes": 2636,
+      "sha256": "3ccd1a5e6faf753029ded5c5963b2410211d09a2742e71dc2416462eef118118"
     },
     {
       "path": "docs/CLICK_PATH_AUDIT.md",
       "category": "documentation",
-      "bytes": 6325,
-      "sha256": "182d26fcc8ce2891db28ecfd62ef585ddd7dda81396f202046eea419d06ad168"
+      "bytes": 7241,
+      "sha256": "f95c505803f371bce845477dd4539758dcfd3fe23eda42eb6d1fb5aeaf50ebac"
     },
     {
       "path": "docs/CODEBASE_AUDIT.md",
       "category": "documentation",
-      "bytes": 8867,
-      "sha256": "f5b8ad743d0adaf5ca44397cb144e12ad1353cdd6d449122596c7b4f4b812a24"
+      "bytes": 10357,
+      "sha256": "79216c9dcf82b8ca22b44e96ea8f8addf81b3774a51dac33e4ece0fc02df7e0a"
     },
     {
       "path": "docs/DEMO_SCRIPT.md",
@@ -4499,8 +4529,8 @@
     {
       "path": "docs/ECC_APPLICATION.md",
       "category": "documentation",
-      "bytes": 4312,
-      "sha256": "01c9b3925e8f53fdab0c7b92e2267d10f7f6df96f3c2a4dc85fe0623b49b0855"
+      "bytes": 5914,
+      "sha256": "d66bf3238d5409f8c711b615dd8464c4a749edb402975023a4bb7ab03909db96"
     },
     {
       "path": "docs/ECC_SETUP.md",
@@ -4511,38 +4541,38 @@
     {
       "path": "docs/EVALUATION.md",
       "category": "documentation",
-      "bytes": 3206,
-      "sha256": "29e2f354d916bcfd3d58c4243216625b197aadd5b5583f61e4bb815ebed405e8"
+      "bytes": 3551,
+      "sha256": "c05739f921c1ab3ef76bfe585d292ed257143a0c062ffcccf2690bf1da41a182"
     },
     {
       "path": "docs/FEEDBACK.md",
       "category": "documentation",
-      "bytes": 1513,
-      "sha256": "aa12560ad5c729dec2695df83a96f860ac0319b168c60441db70fb4692f8cd88"
+      "bytes": 1818,
+      "sha256": "b92f67e58f3ba4f7663309b72202f3cd2bd742af18b4d972cdfae5daedf191eb"
     },
     {
       "path": "docs/FINDINGS.md",
       "category": "documentation",
-      "bytes": 3083,
-      "sha256": "002052addc64008595d86d84bda8b32913aea7e6ad8fc8c732157847b227d0b7"
+      "bytes": 4340,
+      "sha256": "444b38829fad84e54d243f5dba9ff1adf01697dfb8aac4e0e919d1b35c5413db"
     },
     {
       "path": "docs/HACKATHON_CHANGES.md",
       "category": "documentation",
-      "bytes": 1839,
-      "sha256": "5d601ff3bc82c1b24539c24357d50d35d1fa4cabd8216c21f686181c2eacbca5"
+      "bytes": 2357,
+      "sha256": "9b2f617642e3c4fed18b43d9e3dd7d65aa553c3c215a30c64aa88ff454c584f6"
     },
     {
       "path": "docs/IMPLEMENTATION_STATUS.md",
       "category": "documentation",
-      "bytes": 2786,
-      "sha256": "78ae8a4aad92b5846a71a1bcbfee1f172022edf51414929f608e582753628e73"
+      "bytes": 2175,
+      "sha256": "18db421bb5a8014ef62220a537a70d17eddd74ab63ec8bce8d9fbc3d2a8ea902"
     },
     {
       "path": "docs/JUDGE_GUIDE.md",
       "category": "documentation",
-      "bytes": 1593,
-      "sha256": "b63cd0b316b77f6fbd8dcbfe2b224866390a5e9b77a1f8a538f4e754e2d4390d"
+      "bytes": 1597,
+      "sha256": "f92477111a0f7c6c754724174f20f542cd90e345da930b03c540c67975a8ebba"
     },
     {
       "path": "docs/LEGACY_README.md",
@@ -4553,8 +4583,8 @@
     {
       "path": "docs/OPERATIONS.md",
       "category": "documentation",
-      "bytes": 7126,
-      "sha256": "5cd709b1d5d1da2c84ed4bf15d30134312439e6286ffa5875cece95f8b697df7"
+      "bytes": 9195,
+      "sha256": "fcf930fd8be885fd288c7476a84b04c52578a8964e8bc4ce3d7675b7f9076fa4"
     },
     {
       "path": "docs/PRD.md",
@@ -4571,26 +4601,32 @@
     {
       "path": "docs/REGRESSION.md",
       "category": "documentation",
-      "bytes": 3200,
-      "sha256": "7e205d93234b4afed09c413a7b88f8997fd0c2bd3b9d6b116dccb6857722c7b4"
+      "bytes": 4435,
+      "sha256": "43752feac4364b4d90721380b44ab76c30294b01f45179bd2fa129da5f8175c6"
     },
     {
       "path": "docs/RELEASE_CHECKLIST.md",
       "category": "documentation",
-      "bytes": 1748,
-      "sha256": "9a3155c881d56ddf66eb29fecb3c594ac3e024c412cbeac4e8e330eaa02e2a52"
+      "bytes": 1890,
+      "sha256": "2d0cd20d35280c0cbfc1e70869074a29b5b93977740dc5b8267e2b147f1dd96a"
     },
     {
       "path": "docs/RELEASE_REPORT.md",
       "category": "documentation",
-      "bytes": 9177,
-      "sha256": "8269f567346d259919f2cfecbc47fcb3490b56abe29c0862267d1f2278c4e118"
+      "bytes": 9601,
+      "sha256": "9ba303061323ec549cbe30c52d3c7fbfa20e01da53fc35fd7eeb04878072f19e"
     },
     {
       "path": "docs/SCOPE.md",
       "category": "documentation",
       "bytes": 725,
       "sha256": "c0694f5e909f0d7c1b0a63ec54867a14f78583c538f228c0600ac81fce30ca44"
+    },
+    {
+      "path": "docs/SETTINGS.md",
+      "category": "documentation",
+      "bytes": 2669,
+      "sha256": "7188dac49ff79979c0318b21e2e4f80517737ea23ad02b8d97982b113db78521"
     },
     {
       "path": "docs/SPEC.md",
@@ -4601,14 +4637,14 @@
     {
       "path": "docs/THREAT_MODEL.md",
       "category": "documentation",
-      "bytes": 1497,
-      "sha256": "bb05effb973bf314978c2449236c14e1ad5d7d9844b428dea1dc984d65e8c966"
+      "bytes": 2178,
+      "sha256": "6dce51371dcc53b1246ad5470f8216212db3cb10141e68f506babb5e8f708145"
     },
     {
       "path": "docs/TRACEABILITY.md",
       "category": "documentation",
-      "bytes": 2965,
-      "sha256": "959c8d22e68bcb5dd5ff7aa86b85e6e75e14c4c50c16fb7f3ba1751fe4493cbb"
+      "bytes": 4444,
+      "sha256": "e263ba2b903ba6a6b85a2f9e1b5fcfad16690ca9489ac0f7d6a20dff6e565bf1"
     },
     {
       "path": "docs/adr/001-preserve-legacy.md",
@@ -4621,6 +4657,18 @@
       "category": "documentation",
       "bytes": 1193,
       "sha256": "de047e9c198bddec3014c87623cf8e05477471aefcb525c4d1cbc60fb40d1bae"
+    },
+    {
+      "path": "docs/adr/003-owner-settings.md",
+      "category": "documentation",
+      "bytes": 1342,
+      "sha256": "7216f8614764fdfeadacdf44d5c60716897132acd91708852631db9c963d5222"
+    },
+    {
+      "path": "docs/evidence/.gitkeep",
+      "category": "verification-evidence",
+      "bytes": 0,
+      "hash_scope": "not hashed: mutable output, including this inventory"
     },
     {
       "path": "docs/evidence/01-red.txt",
@@ -4655,13 +4703,13 @@
     {
       "path": "docs/evidence/audit-compose-build.txt",
       "category": "verification-evidence",
-      "bytes": 4075,
+      "bytes": 4393,
       "hash_scope": "not hashed: mutable output, including this inventory"
     },
     {
       "path": "docs/evidence/audit-inventory-run.txt",
       "category": "verification-evidence",
-      "bytes": 0,
+      "bytes": 114,
       "hash_scope": "not hashed: mutable output, including this inventory"
     },
     {
@@ -4691,7 +4739,7 @@
     {
       "path": "docs/evidence/audit-verification.txt",
       "category": "verification-evidence",
-      "bytes": 533,
+      "bytes": 8368,
       "hash_scope": "not hashed: mutable output, including this inventory"
     },
     {
@@ -4703,25 +4751,439 @@
     {
       "path": "docs/evidence/backup-restore.json",
       "category": "verification-evidence",
-      "bytes": 345,
+      "bytes": 381,
+      "hash_scope": "not hashed: mutable output, including this inventory"
+    },
+    {
+      "path": "docs/evidence/baseline-2026-10-25/audit-verification.txt",
+      "category": "verification-evidence",
+      "bytes": 8368,
+      "hash_scope": "not hashed: mutable output, including this inventory"
+    },
+    {
+      "path": "docs/evidence/baseline-2026-10-25/browser-desktop.png",
+      "category": "verification-evidence",
+      "bytes": 58435,
+      "hash_scope": "not hashed: mutable output, including this inventory"
+    },
+    {
+      "path": "docs/evidence/baseline-2026-10-25/browser-mobile.png",
+      "category": "verification-evidence",
+      "bytes": 133348,
+      "hash_scope": "not hashed: mutable output, including this inventory"
+    },
+    {
+      "path": "docs/evidence/baseline-2026-10-25/browser-results.json",
+      "category": "verification-evidence",
+      "bytes": 14502,
+      "hash_scope": "not hashed: mutable output, including this inventory"
+    },
+    {
+      "path": "docs/evidence/baseline-2026-10-25/browser-tablet.png",
+      "category": "verification-evidence",
+      "bytes": 133034,
+      "hash_scope": "not hashed: mutable output, including this inventory"
+    },
+    {
+      "path": "docs/evidence/baseline-20261026T011648Z/.gitkeep",
+      "category": "verification-evidence",
+      "bytes": 0,
+      "hash_scope": "not hashed: mutable output, including this inventory"
+    },
+    {
+      "path": "docs/evidence/baseline-20261026T011648Z/01-red.txt",
+      "category": "verification-evidence",
+      "bytes": 214,
+      "hash_scope": "not hashed: mutable output, including this inventory"
+    },
+    {
+      "path": "docs/evidence/baseline-20261026T011648Z/agent-architecture-audit.json",
+      "category": "verification-evidence",
+      "bytes": 9921,
+      "hash_scope": "not hashed: mutable output, including this inventory"
+    },
+    {
+      "path": "docs/evidence/baseline-20261026T011648Z/audit-backup-run.txt",
+      "category": "verification-evidence",
+      "bytes": 327,
+      "hash_scope": "not hashed: mutable output, including this inventory"
+    },
+    {
+      "path": "docs/evidence/baseline-20261026T011648Z/audit-browser-initial-failures.txt",
+      "category": "verification-evidence",
+      "bytes": 6231,
+      "hash_scope": "not hashed: mutable output, including this inventory"
+    },
+    {
+      "path": "docs/evidence/baseline-20261026T011648Z/audit-browser.txt",
+      "category": "verification-evidence",
+      "bytes": 6231,
+      "hash_scope": "not hashed: mutable output, including this inventory"
+    },
+    {
+      "path": "docs/evidence/baseline-20261026T011648Z/audit-compose-build.txt",
+      "category": "verification-evidence",
+      "bytes": 4393,
+      "hash_scope": "not hashed: mutable output, including this inventory"
+    },
+    {
+      "path": "docs/evidence/baseline-20261026T011648Z/audit-inventory-run.txt",
+      "category": "verification-evidence",
+      "bytes": 114,
+      "hash_scope": "not hashed: mutable output, including this inventory"
+    },
+    {
+      "path": "docs/evidence/baseline-20261026T011648Z/audit-regressions-green.txt",
+      "category": "verification-evidence",
+      "bytes": 610,
+      "hash_scope": "not hashed: mutable output, including this inventory"
+    },
+    {
+      "path": "docs/evidence/baseline-20261026T011648Z/audit-regressions-red.txt",
+      "category": "verification-evidence",
+      "bytes": 24475,
+      "hash_scope": "not hashed: mutable output, including this inventory"
+    },
+    {
+      "path": "docs/evidence/baseline-20261026T011648Z/audit-safety-green.txt",
+      "category": "verification-evidence",
+      "bytes": 609,
+      "hash_scope": "not hashed: mutable output, including this inventory"
+    },
+    {
+      "path": "docs/evidence/baseline-20261026T011648Z/audit-safety-red.txt",
+      "category": "verification-evidence",
+      "bytes": 4731,
+      "hash_scope": "not hashed: mutable output, including this inventory"
+    },
+    {
+      "path": "docs/evidence/baseline-20261026T011648Z/audit-verification.txt",
+      "category": "verification-evidence",
+      "bytes": 8368,
+      "hash_scope": "not hashed: mutable output, including this inventory"
+    },
+    {
+      "path": "docs/evidence/baseline-20261026T011648Z/backend-tests.txt",
+      "category": "verification-evidence",
+      "bytes": 2370,
+      "hash_scope": "not hashed: mutable output, including this inventory"
+    },
+    {
+      "path": "docs/evidence/baseline-20261026T011648Z/backup-restore.json",
+      "category": "verification-evidence",
+      "bytes": 381,
+      "hash_scope": "not hashed: mutable output, including this inventory"
+    },
+    {
+      "path": "docs/evidence/baseline-20261026T011648Z/browser-desktop.png",
+      "category": "verification-evidence",
+      "bytes": 58631,
+      "hash_scope": "not hashed: mutable output, including this inventory"
+    },
+    {
+      "path": "docs/evidence/baseline-20261026T011648Z/browser-mobile.png",
+      "category": "verification-evidence",
+      "bytes": 135133,
+      "hash_scope": "not hashed: mutable output, including this inventory"
+    },
+    {
+      "path": "docs/evidence/baseline-20261026T011648Z/browser-results.json",
+      "category": "verification-evidence",
+      "bytes": 9467,
+      "hash_scope": "not hashed: mutable output, including this inventory"
+    },
+    {
+      "path": "docs/evidence/baseline-20261026T011648Z/browser-run.txt",
+      "category": "verification-evidence",
+      "bytes": 626,
+      "hash_scope": "not hashed: mutable output, including this inventory"
+    },
+    {
+      "path": "docs/evidence/baseline-20261026T011648Z/browser-settings.png",
+      "category": "verification-evidence",
+      "bytes": 99318,
+      "hash_scope": "not hashed: mutable output, including this inventory"
+    },
+    {
+      "path": "docs/evidence/baseline-20261026T011648Z/browser-tablet.png",
+      "category": "verification-evidence",
+      "bytes": 134420,
+      "hash_scope": "not hashed: mutable output, including this inventory"
+    },
+    {
+      "path": "docs/evidence/baseline-20261026T011648Z/clean-release-build.txt",
+      "category": "verification-evidence",
+      "bytes": 8717,
+      "hash_scope": "not hashed: mutable output, including this inventory"
+    },
+    {
+      "path": "docs/evidence/baseline-20261026T011648Z/clean-release-smoke.json",
+      "category": "verification-evidence",
+      "bytes": 663,
+      "hash_scope": "not hashed: mutable output, including this inventory"
+    },
+    {
+      "path": "docs/evidence/baseline-20261026T011648Z/compose-build.txt",
+      "category": "verification-evidence",
+      "bytes": 4863,
+      "hash_scope": "not hashed: mutable output, including this inventory"
+    },
+    {
+      "path": "docs/evidence/baseline-20261026T011648Z/compose-smoke.json",
+      "category": "verification-evidence",
+      "bytes": 326,
+      "hash_scope": "not hashed: mutable output, including this inventory"
+    },
+    {
+      "path": "docs/evidence/baseline-20261026T011648Z/compose-start.txt",
+      "category": "verification-evidence",
+      "bytes": 7152,
+      "hash_scope": "not hashed: mutable output, including this inventory"
+    },
+    {
+      "path": "docs/evidence/baseline-20261026T011648Z/conversation-race-red.txt",
+      "category": "verification-evidence",
+      "bytes": 3236,
+      "hash_scope": "not hashed: mutable output, including this inventory"
+    },
+    {
+      "path": "docs/evidence/baseline-20261026T011648Z/conversation-race-test-setup-failure.txt",
+      "category": "verification-evidence",
+      "bytes": 3698,
+      "hash_scope": "not hashed: mutable output, including this inventory"
+    },
+    {
+      "path": "docs/evidence/baseline-20261026T011648Z/ecc-catalog.json",
+      "category": "verification-evidence",
+      "bytes": 347906,
+      "hash_scope": "not hashed: mutable output, including this inventory"
+    },
+    {
+      "path": "docs/evidence/baseline-20261026T011648Z/ecc-full-plan.json",
+      "category": "verification-evidence",
+      "bytes": 136885,
+      "hash_scope": "not hashed: mutable output, including this inventory"
+    },
+    {
+      "path": "docs/evidence/baseline-20261026T011648Z/ecc-plugin-diagnostic.txt",
+      "category": "verification-evidence",
+      "bytes": 440,
+      "hash_scope": "not hashed: mutable output, including this inventory"
+    },
+    {
+      "path": "docs/evidence/baseline-20261026T011648Z/ecc-reference-inventory.json",
+      "category": "verification-evidence",
+      "bytes": 873365,
+      "hash_scope": "not hashed: mutable output, including this inventory"
+    },
+    {
+      "path": "docs/evidence/baseline-20261026T011648Z/final-verification.txt",
+      "category": "verification-evidence",
+      "bytes": 5388,
+      "hash_scope": "not hashed: mutable output, including this inventory"
+    },
+    {
+      "path": "docs/evidence/baseline-20261026T011648Z/live-evaluation-pre-audit.json",
+      "category": "verification-evidence",
+      "bytes": 29159,
+      "hash_scope": "not hashed: mutable output, including this inventory"
+    },
+    {
+      "path": "docs/evidence/baseline-20261026T011648Z/live-evaluation-run-pre-audit.txt",
+      "category": "verification-evidence",
+      "bytes": 1007,
+      "hash_scope": "not hashed: mutable output, including this inventory"
+    },
+    {
+      "path": "docs/evidence/baseline-20261026T011648Z/live-evaluation-run.txt",
+      "category": "verification-evidence",
+      "bytes": 1007,
+      "hash_scope": "not hashed: mutable output, including this inventory"
+    },
+    {
+      "path": "docs/evidence/baseline-20261026T011648Z/live-evaluation.json",
+      "category": "verification-evidence",
+      "bytes": 29191,
+      "hash_scope": "not hashed: mutable output, including this inventory"
+    },
+    {
+      "path": "docs/evidence/baseline-20261026T011648Z/live-research-run-pre-audit.txt",
+      "category": "verification-evidence",
+      "bytes": 1657,
+      "hash_scope": "not hashed: mutable output, including this inventory"
+    },
+    {
+      "path": "docs/evidence/baseline-20261026T011648Z/live-research-run.txt",
+      "category": "verification-evidence",
+      "bytes": 1651,
+      "hash_scope": "not hashed: mutable output, including this inventory"
+    },
+    {
+      "path": "docs/evidence/baseline-20261026T011648Z/live-research-smoke-pre-audit.json",
+      "category": "verification-evidence",
+      "bytes": 1569,
+      "hash_scope": "not hashed: mutable output, including this inventory"
+    },
+    {
+      "path": "docs/evidence/baseline-20261026T011648Z/live-research-smoke.json",
+      "category": "verification-evidence",
+      "bytes": 1563,
+      "hash_scope": "not hashed: mutable output, including this inventory"
+    },
+    {
+      "path": "docs/evidence/baseline-20261026T011648Z/live-smoke.json",
+      "category": "verification-evidence",
+      "bytes": 1726,
+      "hash_scope": "not hashed: mutable output, including this inventory"
+    },
+    {
+      "path": "docs/evidence/baseline-20261026T011648Z/npm-audit.txt",
+      "category": "verification-evidence",
+      "bytes": 24,
+      "hash_scope": "not hashed: mutable output, including this inventory"
+    },
+    {
+      "path": "docs/evidence/baseline-20261026T011648Z/packaged-release-verification.json",
+      "category": "verification-evidence",
+      "bytes": 1295,
+      "hash_scope": "not hashed: mutable output, including this inventory"
+    },
+    {
+      "path": "docs/evidence/baseline-20261026T011648Z/python-audit.txt",
+      "category": "verification-evidence",
+      "bytes": 31,
+      "hash_scope": "not hashed: mutable output, including this inventory"
+    },
+    {
+      "path": "docs/evidence/baseline-20261026T011648Z/recursive-inventory.json",
+      "category": "verification-evidence",
+      "bytes": 218596,
+      "hash_scope": "not hashed: mutable output, including this inventory"
+    },
+    {
+      "path": "docs/evidence/baseline-20261026T011648Z/release-backend.txt",
+      "category": "verification-evidence",
+      "bytes": 606,
+      "hash_scope": "not hashed: mutable output, including this inventory"
+    },
+    {
+      "path": "docs/evidence/baseline-20261026T011648Z/release-backup.txt",
+      "category": "verification-evidence",
+      "bytes": 361,
+      "hash_scope": "not hashed: mutable output, including this inventory"
+    },
+    {
+      "path": "docs/evidence/baseline-20261026T011648Z/release-browser.txt",
+      "category": "verification-evidence",
+      "bytes": 3295,
+      "hash_scope": "not hashed: mutable output, including this inventory"
+    },
+    {
+      "path": "docs/evidence/baseline-20261026T011648Z/release-clean-build.txt",
+      "category": "verification-evidence",
+      "bytes": 9548,
+      "hash_scope": "not hashed: mutable output, including this inventory"
+    },
+    {
+      "path": "docs/evidence/baseline-20261026T011648Z/release-dependency-audit.txt",
+      "category": "verification-evidence",
+      "bytes": 31,
+      "hash_scope": "not hashed: mutable output, including this inventory"
+    },
+    {
+      "path": "docs/evidence/baseline-20261026T011648Z/release-inventory.txt",
+      "category": "verification-evidence",
+      "bytes": 114,
+      "hash_scope": "not hashed: mutable output, including this inventory"
+    },
+    {
+      "path": "docs/evidence/baseline-20261026T011648Z/release-live-evaluation.txt",
+      "category": "verification-evidence",
+      "bytes": 1007,
+      "hash_scope": "not hashed: mutable output, including this inventory"
+    },
+    {
+      "path": "docs/evidence/baseline-20261026T011648Z/release-live-research.txt",
+      "category": "verification-evidence",
+      "bytes": 1651,
+      "hash_scope": "not hashed: mutable output, including this inventory"
+    },
+    {
+      "path": "docs/evidence/baseline-20261026T011648Z/release-manifest.json",
+      "category": "verification-evidence",
+      "bytes": 11129,
+      "hash_scope": "not hashed: mutable output, including this inventory"
+    },
+    {
+      "path": "docs/evidence/baseline-20261026T011648Z/release-packaged-build.txt",
+      "category": "verification-evidence",
+      "bytes": 12149,
+      "hash_scope": "not hashed: mutable output, including this inventory"
+    },
+    {
+      "path": "docs/evidence/baseline-20261026T011648Z/release-proxy-validation.txt",
+      "category": "verification-evidence",
+      "bytes": 1064,
+      "hash_scope": "not hashed: mutable output, including this inventory"
+    },
+    {
+      "path": "docs/evidence/baseline-20261026T011648Z/release-settings-green.txt",
+      "category": "verification-evidence",
+      "bytes": 595,
+      "hash_scope": "not hashed: mutable output, including this inventory"
+    },
+    {
+      "path": "docs/evidence/baseline-20261026T011648Z/release-settings-red.txt",
+      "category": "verification-evidence",
+      "bytes": 4290,
+      "hash_scope": "not hashed: mutable output, including this inventory"
+    },
+    {
+      "path": "docs/evidence/baseline-20261026T011648Z/release-upgrade-settings.txt",
+      "category": "verification-evidence",
+      "bytes": 596,
+      "hash_scope": "not hashed: mutable output, including this inventory"
+    },
+    {
+      "path": "docs/evidence/baseline-20261026T011648Z/release-verification-before-reservation.txt",
+      "category": "verification-evidence",
+      "bytes": 5931,
+      "hash_scope": "not hashed: mutable output, including this inventory"
+    },
+    {
+      "path": "docs/evidence/baseline-20261026T011648Z/release-verification.txt",
+      "category": "verification-evidence",
+      "bytes": 5925,
+      "hash_scope": "not hashed: mutable output, including this inventory"
+    },
+    {
+      "path": "docs/evidence/baseline-20261026T011648Z/usage-reservation-green.txt",
+      "category": "verification-evidence",
+      "bytes": 609,
+      "hash_scope": "not hashed: mutable output, including this inventory"
+    },
+    {
+      "path": "docs/evidence/baseline-20261026T011648Z/usage-reservation-red.txt",
+      "category": "verification-evidence",
+      "bytes": 2477,
       "hash_scope": "not hashed: mutable output, including this inventory"
     },
     {
       "path": "docs/evidence/browser-desktop.png",
       "category": "verification-evidence",
-      "bytes": 55929,
+      "bytes": 58284,
       "hash_scope": "not hashed: mutable output, including this inventory"
     },
     {
       "path": "docs/evidence/browser-mobile.png",
       "category": "verification-evidence",
-      "bytes": 133796,
+      "bytes": 134663,
       "hash_scope": "not hashed: mutable output, including this inventory"
     },
     {
       "path": "docs/evidence/browser-results.json",
       "category": "verification-evidence",
-      "bytes": 11989,
+      "bytes": 9476,
       "hash_scope": "not hashed: mutable output, including this inventory"
     },
     {
@@ -4731,9 +5193,15 @@
       "hash_scope": "not hashed: mutable output, including this inventory"
     },
     {
+      "path": "docs/evidence/browser-settings.png",
+      "category": "verification-evidence",
+      "bytes": 99318,
+      "hash_scope": "not hashed: mutable output, including this inventory"
+    },
+    {
       "path": "docs/evidence/browser-tablet.png",
       "category": "verification-evidence",
-      "bytes": 133234,
+      "bytes": 134129,
       "hash_scope": "not hashed: mutable output, including this inventory"
     },
     {
@@ -4745,7 +5213,7 @@
     {
       "path": "docs/evidence/clean-release-smoke.json",
       "category": "verification-evidence",
-      "bytes": 533,
+      "bytes": 663,
       "hash_scope": "not hashed: mutable output, including this inventory"
     },
     {
@@ -4767,9 +5235,63 @@
       "hash_scope": "not hashed: mutable output, including this inventory"
     },
     {
+      "path": "docs/evidence/continuation-backup.txt",
+      "category": "verification-evidence",
+      "bytes": 361,
+      "hash_scope": "not hashed: mutable output, including this inventory"
+    },
+    {
+      "path": "docs/evidence/continuation-baseline.json",
+      "category": "verification-evidence",
+      "bytes": 230,
+      "hash_scope": "not hashed: mutable output, including this inventory"
+    },
+    {
+      "path": "docs/evidence/continuation-before-probe-fix.txt",
+      "category": "verification-evidence",
+      "bytes": 5926,
+      "hash_scope": "not hashed: mutable output, including this inventory"
+    },
+    {
+      "path": "docs/evidence/continuation-clean-build.txt",
+      "category": "verification-evidence",
+      "bytes": 10196,
+      "hash_scope": "not hashed: mutable output, including this inventory"
+    },
+    {
+      "path": "docs/evidence/continuation-inventory.txt",
+      "category": "verification-evidence",
+      "bytes": 0,
+      "hash_scope": "not hashed: mutable output, including this inventory"
+    },
+    {
+      "path": "docs/evidence/continuation-live-smoke.txt",
+      "category": "verification-evidence",
+      "bytes": 1797,
+      "hash_scope": "not hashed: mutable output, including this inventory"
+    },
+    {
+      "path": "docs/evidence/continuation-verification.txt",
+      "category": "verification-evidence",
+      "bytes": 117,
+      "hash_scope": "not hashed: mutable output, including this inventory"
+    },
+    {
+      "path": "docs/evidence/conversation-race-red.txt",
+      "category": "verification-evidence",
+      "bytes": 3236,
+      "hash_scope": "not hashed: mutable output, including this inventory"
+    },
+    {
+      "path": "docs/evidence/conversation-race-test-setup-failure.txt",
+      "category": "verification-evidence",
+      "bytes": 3698,
+      "hash_scope": "not hashed: mutable output, including this inventory"
+    },
+    {
       "path": "docs/evidence/ecc-catalog.json",
       "category": "verification-evidence",
-      "bytes": 347896,
+      "bytes": 347906,
       "hash_scope": "not hashed: mutable output, including this inventory"
     },
     {
@@ -4782,6 +5304,12 @@
       "path": "docs/evidence/ecc-plugin-diagnostic.txt",
       "category": "verification-evidence",
       "bytes": 440,
+      "hash_scope": "not hashed: mutable output, including this inventory"
+    },
+    {
+      "path": "docs/evidence/ecc-reference-inventory.json",
+      "category": "verification-evidence",
+      "bytes": 873365,
       "hash_scope": "not hashed: mutable output, including this inventory"
     },
     {
@@ -4811,7 +5339,19 @@
     {
       "path": "docs/evidence/live-evaluation.json",
       "category": "verification-evidence",
-      "bytes": 29166,
+      "bytes": 29191,
+      "hash_scope": "not hashed: mutable output, including this inventory"
+    },
+    {
+      "path": "docs/evidence/live-probe-green.txt",
+      "category": "verification-evidence",
+      "bytes": 98,
+      "hash_scope": "not hashed: mutable output, including this inventory"
+    },
+    {
+      "path": "docs/evidence/live-probe-red.txt",
+      "category": "verification-evidence",
+      "bytes": 21536,
       "hash_scope": "not hashed: mutable output, including this inventory"
     },
     {
@@ -4841,13 +5381,19 @@
     {
       "path": "docs/evidence/live-smoke.json",
       "category": "verification-evidence",
-      "bytes": 1726,
+      "bytes": 1797,
       "hash_scope": "not hashed: mutable output, including this inventory"
     },
     {
       "path": "docs/evidence/npm-audit.txt",
       "category": "verification-evidence",
       "bytes": 24,
+      "hash_scope": "not hashed: mutable output, including this inventory"
+    },
+    {
+      "path": "docs/evidence/packaged-release-verification.json",
+      "category": "verification-evidence",
+      "bytes": 1295,
       "hash_scope": "not hashed: mutable output, including this inventory"
     },
     {
@@ -4859,14 +5405,122 @@
     {
       "path": "docs/evidence/recursive-inventory.json",
       "category": "verification-evidence",
-      "bytes": 205659,
+      "bytes": 218596,
+      "hash_scope": "not hashed: mutable output, including this inventory"
+    },
+    {
+      "path": "docs/evidence/release-backend.txt",
+      "category": "verification-evidence",
+      "bytes": 606,
+      "hash_scope": "not hashed: mutable output, including this inventory"
+    },
+    {
+      "path": "docs/evidence/release-backup.txt",
+      "category": "verification-evidence",
+      "bytes": 361,
+      "hash_scope": "not hashed: mutable output, including this inventory"
+    },
+    {
+      "path": "docs/evidence/release-browser.txt",
+      "category": "verification-evidence",
+      "bytes": 3295,
+      "hash_scope": "not hashed: mutable output, including this inventory"
+    },
+    {
+      "path": "docs/evidence/release-clean-build.txt",
+      "category": "verification-evidence",
+      "bytes": 9548,
+      "hash_scope": "not hashed: mutable output, including this inventory"
+    },
+    {
+      "path": "docs/evidence/release-dependency-audit.txt",
+      "category": "verification-evidence",
+      "bytes": 31,
+      "hash_scope": "not hashed: mutable output, including this inventory"
+    },
+    {
+      "path": "docs/evidence/release-inventory.txt",
+      "category": "verification-evidence",
+      "bytes": 114,
+      "hash_scope": "not hashed: mutable output, including this inventory"
+    },
+    {
+      "path": "docs/evidence/release-live-evaluation.txt",
+      "category": "verification-evidence",
+      "bytes": 1007,
+      "hash_scope": "not hashed: mutable output, including this inventory"
+    },
+    {
+      "path": "docs/evidence/release-live-research.txt",
+      "category": "verification-evidence",
+      "bytes": 1651,
+      "hash_scope": "not hashed: mutable output, including this inventory"
+    },
+    {
+      "path": "docs/evidence/release-manifest.json",
+      "category": "verification-evidence",
+      "bytes": 11129,
+      "hash_scope": "not hashed: mutable output, including this inventory"
+    },
+    {
+      "path": "docs/evidence/release-packaged-build.txt",
+      "category": "verification-evidence",
+      "bytes": 12149,
+      "hash_scope": "not hashed: mutable output, including this inventory"
+    },
+    {
+      "path": "docs/evidence/release-proxy-validation.txt",
+      "category": "verification-evidence",
+      "bytes": 1064,
+      "hash_scope": "not hashed: mutable output, including this inventory"
+    },
+    {
+      "path": "docs/evidence/release-settings-green.txt",
+      "category": "verification-evidence",
+      "bytes": 595,
+      "hash_scope": "not hashed: mutable output, including this inventory"
+    },
+    {
+      "path": "docs/evidence/release-settings-red.txt",
+      "category": "verification-evidence",
+      "bytes": 4290,
+      "hash_scope": "not hashed: mutable output, including this inventory"
+    },
+    {
+      "path": "docs/evidence/release-upgrade-settings.txt",
+      "category": "verification-evidence",
+      "bytes": 596,
+      "hash_scope": "not hashed: mutable output, including this inventory"
+    },
+    {
+      "path": "docs/evidence/release-verification-before-reservation.txt",
+      "category": "verification-evidence",
+      "bytes": 5931,
+      "hash_scope": "not hashed: mutable output, including this inventory"
+    },
+    {
+      "path": "docs/evidence/release-verification.txt",
+      "category": "verification-evidence",
+      "bytes": 5925,
+      "hash_scope": "not hashed: mutable output, including this inventory"
+    },
+    {
+      "path": "docs/evidence/usage-reservation-green.txt",
+      "category": "verification-evidence",
+      "bytes": 609,
+      "hash_scope": "not hashed: mutable output, including this inventory"
+    },
+    {
+      "path": "docs/evidence/usage-reservation-red.txt",
+      "category": "verification-evidence",
+      "bytes": 2477,
       "hash_scope": "not hashed: mutable output, including this inventory"
     },
     {
       "path": "docs/openapi.json",
       "category": "documentation",
-      "bytes": 170794,
-      "sha256": "c9329028b14c38eef25eceb54465a7ce4393bf8e53b04651e5ce7dc383aa9de2"
+      "bytes": 192941,
+      "sha256": "e5467e22447806f4542387dbbc7ba1213e0975b35ec5a4f30730453b353108f7"
     },
     {
       "path": "env.example",
@@ -4883,8 +5537,8 @@
     {
       "path": "frontend/e2e/workflows.spec.ts",
       "category": "verification-and-operations",
-      "bytes": 15748,
-      "sha256": "a808bd5e1dc7d5509be671895217707748e6e961ecaca769aed15fcd49e300c6"
+      "bytes": 20706,
+      "sha256": "93b9f1b070ba2d045b1f14f0f62620628bb6a743d6dfbc04c18e01c4cce004b1"
     },
     {
       "path": "frontend/eslint.config.js",
@@ -4917,10 +5571,16 @@
       "sha256": "50af8b693f0c3cb4c06e0c76f757a7f0ceb79a4b7520d36bd87af70af7141dbe"
     },
     {
+      "path": "frontend/src/SettingsPage.tsx",
+      "category": "release-frontend",
+      "bytes": 10247,
+      "sha256": "1765667c1780d888d4b092d5631f92ab2b51801515bd7022bb613ae3416a2bf8"
+    },
+    {
       "path": "frontend/src/api-schema.d.ts",
       "category": "generated-contract",
-      "bytes": 131664,
-      "sha256": "9552ef3f846b4f96fdea5ed1fe596df2362fa58835872bcd03273abed39fa80c"
+      "bytes": 146273,
+      "sha256": "0aa3271e21d6aa11c4120ca5dbca28b56a78ff057c9080c5cea71eb548e79525"
     },
     {
       "path": "frontend/src/api.ts",
@@ -4931,14 +5591,14 @@
     {
       "path": "frontend/src/main.tsx",
       "category": "release-frontend",
-      "bytes": 41336,
-      "sha256": "555c47980e39f6032810b5ca3829e650084fb0fcb7ce3901f6a372618ee2adde"
+      "bytes": 41935,
+      "sha256": "99bd17a2cb83dadfd020e35030e74e9d6633efb5ae2db63b56008c0aa56fd0cf"
     },
     {
       "path": "frontend/src/style.css",
       "category": "release-frontend",
-      "bytes": 6789,
-      "sha256": "aa3faaa1b42596ce99c533991960db7200fe3be8444591609d0e614cbed87e16"
+      "bytes": 6902,
+      "sha256": "1134751ce9fc9458baa52daf520879749f9b0833c4ec0dfc9a31a669aba53197"
     },
     {
       "path": "frontend/tsconfig.json",
@@ -4997,26 +5657,26 @@
     {
       "path": "scripts/audit_repository.py",
       "category": "verification-and-operations",
-      "bytes": 13341,
-      "sha256": "820dc737f192d2d660dc4ef6c5e8545270070ee04f20a162635e90720b83b6b6"
+      "bytes": 13351,
+      "sha256": "2f53d139c04e7c2bf747aa0cca0c1a1ecb2966a9bafa71a549a004c5a6af4851"
     },
     {
       "path": "scripts/backup_smoke.py",
       "category": "verification-and-operations",
-      "bytes": 4653,
-      "sha256": "9c32b74a7edcdd9ee64b7057289f7b44e3f8c610a2f46aacda508df5b57e3c92"
+      "bytes": 4923,
+      "sha256": "622c2215a04190678a0f99a31dc4425b7d3b4848b37f509210a2d4a95420fbff"
     },
     {
       "path": "scripts/clean_release_smoke.py",
       "category": "verification-and-operations",
-      "bytes": 3123,
-      "sha256": "3266bfe22a26eba91ae9286aba5358e9485a6f2a1cd21f9fddcc01db32fdfd70"
+      "bytes": 3568,
+      "sha256": "48899ff571e9d8f89b3350f8283e2e9f690393c8f03aa621bb76e15899408d1b"
     },
     {
       "path": "scripts/compose_smoke.py",
       "category": "verification-and-operations",
-      "bytes": 2977,
-      "sha256": "2b1d709e40421839960db7a55c3bdce73eb47a1d1b0b7f56a1f11d4bd6a4787d"
+      "bytes": 4407,
+      "sha256": "1bdc30833ebb510ba75c760fdd57a726d566a86c5d9126090fab6329c8b13e4c"
     },
     {
       "path": "scripts/dev.sh",
@@ -5051,8 +5711,14 @@
     {
       "path": "scripts/live_smoke.py",
       "category": "verification-and-operations",
-      "bytes": 3888,
-      "sha256": "678c4b6d9d5a8b680006d4f12e9188f819f08b70bbc20ecfceae5e19e41b5509"
+      "bytes": 4342,
+      "sha256": "b1b09ccaff40552d7dacf7ab421bdc9ba41c2374dbb534201e221c752fff15aa"
+    },
+    {
+      "path": "scripts/package_release.py",
+      "category": "verification-and-operations",
+      "bytes": 3197,
+      "sha256": "1af4439a6d263d0bd043db898f386c43d9d7afefed56e58cbcd66cd5198ab874"
     },
     {
       "path": "scripts/scan_secrets.py",
@@ -5087,8 +5753,8 @@
     {
       "path": "scripts/verify.sh",
       "category": "verification-and-operations",
-      "bytes": 630,
-      "sha256": "7ce9ee5476f7488c634056b091ac7e4d69eb9b087bfbea0ef0a792d4c5eda8a3"
+      "bytes": 643,
+      "sha256": "832e00e68fd92173270a2a619584e9fd1a0179a7d00156950f00417efa938430"
     },
     {
       "path": "static/css/style.css",
@@ -5139,10 +5805,28 @@
       "sha256": "d18fe39fa77ca8b129d90ed01d50c1a695b77b963c3c9e5e8a24b828e238db09"
     },
     {
+      "path": "tests/test_live_probe.py",
+      "category": "verification-and-operations",
+      "bytes": 2877,
+      "sha256": "7ef9cef8687c0b8f550694b9c1b6f073bc18634b2340b99ad80761acd0cd7343"
+    },
+    {
+      "path": "tests/test_release_settings.py",
+      "category": "verification-and-operations",
+      "bytes": 10084,
+      "sha256": "8f0cabd6c1b00fa883a10e47f7dabf0a7bd1c5e217ab259ab9d87065069199f9"
+    },
+    {
+      "path": "tests/test_upgrade.py",
+      "category": "verification-and-operations",
+      "bytes": 2333,
+      "sha256": "c037e260f9ca0a7d256f8a183c4c4471c7ccc7e7d28ca93adf4840fe5228bd2d"
+    },
+    {
       "path": "tests/test_workflows.py",
       "category": "verification-and-operations",
-      "bytes": 32542,
-      "sha256": "7e6950a7c4782613d199d1a82e3ac56a3011e9ffd7f19b552e5f3e664e3b77fa"
+      "bytes": 32642,
+      "sha256": "bace25249f21d66055cb2b925067ece31323e00c33c93ebea03d0147c2d86641"
     },
     {
       "path": "tools.py",
@@ -5410,6 +6094,7 @@
         "commander.contracts",
         "commander.db",
         "commander.errors",
+        "commander.preferences",
         "commander.runs",
         "commander.skills",
         "commander.workspace",
@@ -5418,6 +6103,7 @@
         "json",
         "pydantic",
         "re",
+        "time",
         "typing",
         "urllib.parse",
         "uuid"
@@ -5446,6 +6132,7 @@
         "commander.db",
         "commander.errors",
         "commander.inference",
+        "commander.preferences",
         "commander.providers",
         "commander.workspace",
         "contextlib",
@@ -5483,9 +6170,12 @@
       "imports": [
         "commander.broker",
         "commander.connections",
+        "commander.db",
         "commander.errors",
         "commander.inference",
         "commander.memory",
+        "commander.preferences",
+        "commander.providers",
         "commander.runs",
         "commander.skills",
         "json",
@@ -5522,6 +6212,20 @@
       "syntax": "parsed"
     },
     {
+      "path": "commander/preferences.py",
+      "imports": [
+        "commander.connections",
+        "commander.contracts",
+        "commander.db",
+        "commander.errors",
+        "commander.inference",
+        "commander.providers",
+        "pydantic",
+        "typing"
+      ],
+      "syntax": "parsed"
+    },
+    {
       "path": "commander/providers.py",
       "imports": [
         "commander.errors",
@@ -5540,6 +6244,7 @@
         "commander.connections",
         "commander.contracts",
         "commander.errors",
+        "commander.providers",
         "commander.skills",
         "commander.workspace",
         "fastapi",
@@ -5554,6 +6259,7 @@
         "commander.connections",
         "commander.db",
         "commander.errors",
+        "commander.preferences",
         "commander.skills",
         "commander.workspace",
         "hashlib"
@@ -5563,7 +6269,9 @@
     {
       "path": "commander/schedules.py",
       "imports": [
+        "commander.db",
         "commander.errors",
+        "commander.preferences",
         "commander.skills",
         "datetime"
       ],
@@ -5582,9 +6290,11 @@
     {
       "path": "commander/skills.py",
       "imports": [
+        "commander.contracts",
         "commander.errors",
         "hashlib",
         "json",
+        "pydantic",
         "typing"
       ],
       "syntax": "parsed"
@@ -5653,6 +6363,7 @@
         "commander.contracts",
         "commander.db",
         "commander.memory",
+        "commander.preferences",
         "commander.settings",
         "commander.workspace",
         "cryptography.fernet",
@@ -5782,6 +6493,18 @@
       "syntax": "parsed"
     },
     {
+      "path": "scripts/package_release.py",
+      "imports": [
+        "hashlib",
+        "io",
+        "json",
+        "pathlib",
+        "subprocess",
+        "tarfile"
+      ],
+      "syntax": "parsed"
+    },
+    {
       "path": "scripts/scan_secrets.py",
       "imports": [
         "dotenv",
@@ -5828,6 +6551,60 @@
       "imports": [
         "commander.api",
         "fastapi.testclient"
+      ],
+      "syntax": "parsed"
+    },
+    {
+      "path": "tests/test_live_probe.py",
+      "imports": [
+        "commander",
+        "commander.errors",
+        "json",
+        "pathlib",
+        "pytest",
+        "runpy",
+        "types"
+      ],
+      "syntax": "parsed"
+    },
+    {
+      "path": "tests/test_release_settings.py",
+      "imports": [
+        "commander.api",
+        "commander.auth",
+        "commander.broker",
+        "commander.connections",
+        "commander.contracts",
+        "commander.engine",
+        "commander.errors",
+        "commander.inference",
+        "commander.memory",
+        "commander.preferences",
+        "commander.providers",
+        "commander.runs",
+        "commander.schedules",
+        "commander.worker",
+        "concurrent.futures",
+        "datetime",
+        "fastapi.testclient",
+        "httpx",
+        "json",
+        "pytest"
+      ],
+      "syntax": "parsed"
+    },
+    {
+      "path": "tests/test_upgrade.py",
+      "imports": [
+        "commander.auth",
+        "commander.connections",
+        "commander.contracts",
+        "commander.db",
+        "commander.memory",
+        "commander.worker",
+        "pathlib",
+        "psycopg",
+        "test_workflows"
       ],
       "syntax": "parsed"
     },
@@ -5975,185 +6752,213 @@
     },
     {
       "method": "GET",
+      "route": "/api/settings",
+      "handler": "get_settings",
+      "source": "commander/routes.py",
+      "line": 43
+    },
+    {
+      "method": "PATCH",
+      "route": "/api/settings",
+      "handler": "patch_settings",
+      "source": "commander/routes.py",
+      "line": 47
+    },
+    {
+      "method": "GET",
+      "route": "/api/models",
+      "handler": "models",
+      "source": "commander/routes.py",
+      "line": 51
+    },
+    {
+      "method": "GET",
+      "route": "/api/system/status",
+      "handler": "system_status",
+      "source": "commander/routes.py",
+      "line": 67
+    },
+    {
+      "method": "GET",
       "route": "/api/connections",
       "handler": "list_connections",
       "source": "commander/routes.py",
-      "line": 43
+      "line": 94
     },
     {
       "method": "POST",
       "route": "/api/connections/import-environment",
       "handler": "import_environment",
       "source": "commander/routes.py",
-      "line": 47
+      "line": 98
     },
     {
       "method": "PUT",
       "route": "/api/connections/{kind}",
       "handler": "save_connection",
       "source": "commander/routes.py",
-      "line": 51
+      "line": 102
     },
     {
       "method": "POST",
       "route": "/api/connections/{kind}/validate",
       "handler": "validate_connection",
       "source": "commander/routes.py",
-      "line": 55
+      "line": 106
     },
     {
       "method": "DELETE",
       "route": "/api/connections/{kind}",
       "handler": "revoke_connection",
       "source": "commander/routes.py",
-      "line": 59
+      "line": 110
     },
     {
       "method": "GET",
       "route": "/api/skills",
       "handler": "skills",
       "source": "commander/routes.py",
-      "line": 63
+      "line": 114
     },
     {
       "method": "GET",
       "route": "/api/runs",
       "handler": "list_runs",
       "source": "commander/routes.py",
-      "line": 67
+      "line": 118
     },
     {
       "method": "POST",
       "route": "/api/runs",
       "handler": "create_run",
       "source": "commander/routes.py",
-      "line": 73
+      "line": 124
     },
     {
       "method": "GET",
       "route": "/api/runs/{run_id}",
       "handler": "run_detail",
       "source": "commander/routes.py",
-      "line": 77
+      "line": 128
     },
     {
       "method": "POST",
       "route": "/api/runs/{run_id}/cancel",
       "handler": "cancel_run",
       "source": "commander/routes.py",
-      "line": 81
+      "line": 132
     },
     {
       "method": "POST",
       "route": "/api/runs/{run_id}/reconcile-notes",
       "handler": "reconcile_notes",
       "source": "commander/routes.py",
-      "line": 85
+      "line": 136
     },
     {
       "method": "GET",
       "route": "/api/conversations",
       "handler": "conversations",
       "source": "commander/routes.py",
-      "line": 89
+      "line": 140
     },
     {
       "method": "GET",
       "route": "/api/conversations/{conversation_id}/messages",
       "handler": "messages",
       "source": "commander/routes.py",
-      "line": 96
+      "line": 147
     },
     {
       "method": "DELETE",
       "route": "/api/conversations/{conversation_id}",
       "handler": "delete_conversation",
       "source": "commander/routes.py",
-      "line": 107
+      "line": 158
     },
     {
       "method": "GET",
       "route": "/api/schedules",
       "handler": "list_schedules",
       "source": "commander/routes.py",
-      "line": 134
+      "line": 185
     },
     {
       "method": "POST",
       "route": "/api/schedules",
       "handler": "create_schedule",
       "source": "commander/routes.py",
-      "line": 140
+      "line": 191
     },
     {
       "method": "PUT",
       "route": "/api/schedules/{schedule_id}",
       "handler": "edit_schedule",
       "source": "commander/routes.py",
-      "line": 144
+      "line": 195
     },
     {
       "method": "DELETE",
       "route": "/api/schedules/{schedule_id}",
       "handler": "delete_schedule",
       "source": "commander/routes.py",
-      "line": 148
+      "line": 199
     },
     {
       "method": "POST",
       "route": "/api/actions/{action_id}/approve",
       "handler": "approve_action",
       "source": "commander/routes.py",
-      "line": 157
+      "line": 208
     },
     {
       "method": "PUT",
       "route": "/api/actions/{action_id}",
       "handler": "edit_action",
       "source": "commander/routes.py",
-      "line": 161
+      "line": 212
     },
     {
       "method": "POST",
       "route": "/api/actions/{action_id}/reconcile",
       "handler": "reconcile_action",
       "source": "commander/routes.py",
-      "line": 165
+      "line": 216
     },
     {
       "method": "GET",
       "route": "/api/worker",
       "handler": "worker_status",
       "source": "commander/routes.py",
-      "line": 169
+      "line": 220
     },
     {
       "method": "GET",
       "route": "/api/notes",
       "handler": "notes",
       "source": "commander/routes.py",
-      "line": 176
+      "line": 227
     },
     {
       "method": "GET",
       "route": "/api/notes/{name}",
       "handler": "read_note",
       "source": "commander/routes.py",
-      "line": 181
+      "line": 232
     },
     {
       "method": "POST",
       "route": "/api/notes",
       "handler": "create_note",
       "source": "commander/routes.py",
-      "line": 189
+      "line": 240
     },
     {
       "method": "GET",
       "route": "/api/budgets",
       "handler": "budgets",
       "source": "commander/routes.py",
-      "line": 196
+      "line": 247
     }
   ],
   "identical_nonempty_files": [],

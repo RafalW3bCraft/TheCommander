@@ -8,11 +8,11 @@ from commander.errors import DomainError
 
 def check_budget(db, settings, owner):
     rows = db.all(
-        "SELECT tokens,cost_usd FROM usage WHERE owner_id=%s AND created_at>now()-interval '1 day'",
+        "SELECT tokens,cost_usd,reserved_tokens FROM usage WHERE owner_id=%s AND created_at>now()-interval '1 day'",
         (owner,),
     )
     maximum = settings.max_context_chars + settings.max_output_tokens
-    tokens = sum((r["tokens"] or {}).get("total_tokens", maximum) for r in rows)
+    tokens = sum((r["tokens"] or {}).get("total_tokens", r["reserved_tokens"]) for r in rows)
     if tokens + maximum > settings.max_daily_tokens:
         raise DomainError("Daily token budget reached", 429, "budget_exceeded")
     if settings.daily_spend_limit_usd is not None:
@@ -41,8 +41,13 @@ def complete(db, settings, provider, owner, secret, messages, tools=None, run_id
     if len(stdjson.dumps(messages)) + len(stdjson.dumps(tools)) > settings.max_context_chars:
         raise DomainError("Context budget exceeded; shorten the task", 422, "budget_exceeded")
     record = db.one(
-        "INSERT INTO usage(owner_id,run_id,model,latency_ms) VALUES (%s,%s,%s,0) RETURNING id",
-        (owner, run_id, settings.nebius_model),
+        "INSERT INTO usage(owner_id,run_id,model,latency_ms,reserved_tokens) VALUES (%s,%s,%s,0,%s) RETURNING id",
+        (
+            owner,
+            run_id,
+            settings.nebius_model,
+            settings.max_context_chars + settings.max_output_tokens,
+        ),
     )
     message, usage, latency = provider.completion(secret, messages, tools, timeout)
     if usage is not None and (

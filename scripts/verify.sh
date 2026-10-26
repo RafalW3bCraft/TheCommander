@@ -13,6 +13,6 @@ npm --prefix frontend run format:check
 npm --prefix frontend run lint
 npm --prefix frontend run build
 npm --prefix frontend run test:e2e
-uv run pip-audit --local --skip-editable
+uv run pip-audit --local --skip-editable --timeout 60
 npm --prefix frontend audit --audit-level=high
 uv run python scripts/scan_secrets.py

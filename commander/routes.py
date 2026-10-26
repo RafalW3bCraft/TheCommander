@@ -3,7 +3,7 @@ from uuid import UUID
 
 from fastapi import Depends, Path
 
-from commander import runs, schedules
+from commander import preferences, runs, schedules
 from commander.broker import Broker
 from commander.connections import Connections
 from commander.contracts import (
@@ -38,6 +38,57 @@ from commander.workspace import Workspace
 def install_routes(app, db, settings, principal, transport):
     connections = Connections(db, settings, transport)
     broker = Broker(db, settings, transport)
+
+    @app.get("/api/settings", response_model=preferences.SettingsView)
+    def get_settings(owner=Depends(principal)):
+        return preferences.view(db, settings, owner)
+
+    @app.patch("/api/settings", response_model=preferences.SettingsView)
+    def patch_settings(data: preferences.SettingsPatch, owner=Depends(principal)):
+        return preferences.update(db, settings, owner, data, transport)
+
+    @app.get("/api/models", response_model=preferences.ModelsView)
+    def models(provider: str = "nebius", owner=Depends(principal)):
+        if provider != "nebius":
+            raise DomainError("Unsupported provider", 422)
+        from commander.connections import owner_lock
+        from commander.providers import Provider
+
+        with owner_lock(db, owner):
+            effective = preferences.resolve(db, settings, owner)
+            row = connections.get(owner, "nebius")
+            return {
+                "models": preferences.discover(
+                    Provider(effective, transport), effective, connections.secret(row)
+                )
+            }
+
+    @app.get("/api/system/status", response_model=preferences.SystemView)
+    def system_status(owner=Depends(principal)):
+        heartbeat = db.one(
+            "SELECT max(seen_at)>now()-interval '30 seconds' AS online FROM worker_heartbeats"
+        )
+        return {
+            "api": "ready",
+            "database": "ready",
+            "worker_online": bool(heartbeat["online"]),
+            "production": settings.production,
+            "configured": {
+                "DATABASE_URL": bool(settings.database_url),
+                "ENCRYPTION_KEY": bool(settings.encryption_key),
+                "BOOTSTRAP_TOKEN": bool(settings.bootstrap_token),
+            },
+            "restart_required": [
+                "DATABASE_URL",
+                "ENCRYPTION_KEY",
+                "BOOTSTRAP_TOKEN",
+                "APP_ORIGIN",
+                "PRODUCTION",
+                "WORKSPACE_ROOT",
+                "operator ceilings",
+                "provider pricing",
+            ],
+        }
 
     @app.get("/api/connections", response_model=list[ConnectionView])
     def list_connections(owner=Depends(principal)):
@@ -194,12 +245,13 @@ def install_routes(app, db, settings, principal, transport):
 
     @app.get("/api/budgets", response_model=BudgetView)
     def budgets(owner=Depends(principal)):
+        effective = preferences.resolve(db, settings, owner)
         return {
-            "max_steps": settings.max_steps,
-            "max_run_seconds": settings.max_run_seconds,
-            "max_daily_runs": settings.max_daily_runs,
-            "max_daily_tokens": settings.max_daily_tokens,
-            "daily_spend_limit_usd": settings.daily_spend_limit_usd,
+            "max_steps": effective.max_steps,
+            "max_run_seconds": effective.max_run_seconds,
+            "max_daily_runs": effective.max_daily_runs,
+            "max_daily_tokens": effective.max_daily_tokens,
+            "daily_spend_limit_usd": effective.daily_spend_limit_usd,
             "usage": db.all(
                 "SELECT model,tokens,cost_usd,latency_ms,created_at FROM usage WHERE owner_id=%s ORDER BY created_at DESC LIMIT 100",
                 (owner,),

@@ -90,6 +90,17 @@ else:
                 "message": getattr(exc, "message", "Request failed; no credential data recorded"),
             }
         )
-Path("docs/evidence").mkdir(exist_ok=True)
+expected = {
+    "model_list": "available",
+    "tool_proposal": "valid",
+    "tool_result_roundtrip": "nonempty_result",
+}
+report["passed"] = all(
+    any(row.get("check") == check and row.get(field) is True for row in report["checks"])
+    for check, field in expected.items()
+)
+report["status"] = "Live verified" if report["passed"] else "Blocked"
+Path("docs/evidence").mkdir(parents=True, exist_ok=True)
 Path("docs/evidence/live-smoke.json").write_text(json.dumps(report, indent=2) + "\n")
 print(json.dumps(report, indent=2))
+raise SystemExit(0 if report["passed"] else 1 if usable_secret(s.nebius_api_key) else 2)

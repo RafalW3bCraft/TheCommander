@@ -35,7 +35,7 @@
         "testMatch": [
           "**/*.@(spec|test).?(c|m)[jt]s?(x)"
         ],
-        "timeout": 60000
+        "timeout": 120000
       }
     ],
     "filteredProjects": [
@@ -53,9 +53,13 @@
         "snapshotDir": "/mnt/hostshare/TheCommander/frontend/e2e",
         "testIgnore": [],
         "testMatch": "**/*.@(spec|test).?(c|m)[jt]s?(x)",
-        "timeout": 60000,
+        "timeout": 120000,
         "use": {
           "baseURL": "http://127.0.0.1:8010",
+          "viewport": {
+            "width": 1440,
+            "height": 900
+          },
           "trace": "retain-on-failure",
           "screenshot": "only-on-failure",
           "browserName": "chromium"
@@ -104,11 +108,11 @@
       "specs": [
         {
           "title": "desktop owner memory connections three skills approvals and receipts",
-          "ok": false,
+          "ok": true,
           "tags": [],
           "tests": [
             {
-              "timeout": 60000,
+              "timeout": 120000,
               "annotations": [],
               "expectedStatus": "passed",
               "projectId": "chromium",
@@ -117,50 +121,18 @@
                 {
                   "workerIndex": 0,
                   "parallelIndex": 0,
-                  "status": "timedOut",
-                  "duration": 66023,
-                  "error": {
-                    "message": "\u001b[31mTest timeout of 60000ms exceeded.\u001b[39m",
-                    "stack": "\u001b[31mTest timeout of 60000ms exceeded.\u001b[39m"
-                  },
-                  "errors": [
-                    {
-                      "message": "\u001b[31mTest timeout of 60000ms exceeded.\u001b[39m"
-                    },
-                    {
-                      "location": {
-                        "file": "/mnt/hostshare/TheCommander/frontend/e2e/workflows.spec.ts",
-                        "column": 56,
-                        "line": 146
-                      },
-                      "message": "Error: locator.click: Test timeout of 60000ms exceeded.\nCall log:\n\u001b[2m  - waiting for getByRole('button', { name: 'Sign out' })\u001b[22m\n\u001b[2m    - locator resolved to <button class=\"quiet\">Sign out</button>\u001b[22m\n\u001b[2m  - attempting click action\u001b[22m\n\u001b[2m    - waiting for element to be visible, enabled and stable\u001b[22m\n\n\n  144 |     page.getByRole(\"heading\", { name: \"Browser preference\" }),\n  145 |   ).toHaveCount(0);\n> 146 |   await page.getByRole(\"button\", { name: \"Sign out\" }).click();\n      |                                                        ^\n  147 |   await expect(\n  148 |     page.getByRole(\"button\", { name: \"Sign in\", exact: true }),\n  149 |   ).toBeVisible();\n    at /mnt/hostshare/TheCommander/frontend/e2e/workflows.spec.ts:146:56"
-                    }
-                  ],
+                  "status": "passed",
+                  "duration": 18833,
+                  "errors": [],
                   "stdout": [],
                   "stderr": [],
                   "retry": 0,
-                  "startTime": "2026-10-24T05:34:12.380Z",
+                  "startTime": "2026-10-26T01:23:46.211Z",
                   "annotations": [],
-                  "attachments": [
-                    {
-                      "name": "screenshot",
-                      "contentType": "image/png",
-                      "path": "/mnt/hostshare/TheCommander/frontend/test-results/workflows-desktop-owner-me-d3c8b-ills-approvals-and-receipts-chromium/test-failed-1.png"
-                    },
-                    {
-                      "name": "error-context",
-                      "contentType": "text/markdown",
-                      "path": "/mnt/hostshare/TheCommander/frontend/test-results/workflows-desktop-owner-me-d3c8b-ills-approvals-and-receipts-chromium/error-context.md"
-                    },
-                    {
-                      "name": "trace",
-                      "contentType": "application/zip",
-                      "path": "/mnt/hostshare/TheCommander/frontend/test-results/workflows-desktop-owner-me-d3c8b-ills-approvals-and-receipts-chromium/trace.zip"
-                    }
-                  ]
+                  "attachments": []
                 }
               ],
-              "status": "unexpected"
+              "status": "expected"
             }
           ],
           "id": "26aa48cee8983222f549-4adce86fbf3b3ec59ded",
@@ -174,22 +146,22 @@
           "tags": [],
           "tests": [
             {
-              "timeout": 60000,
+              "timeout": 120000,
               "annotations": [],
               "expectedStatus": "passed",
               "projectId": "chromium",
               "projectName": "chromium",
               "results": [
                 {
-                  "workerIndex": 1,
+                  "workerIndex": 0,
                   "parallelIndex": 0,
                   "status": "passed",
-                  "duration": 18153,
+                  "duration": 9650,
                   "errors": [],
                   "stdout": [],
                   "stderr": [],
                   "retry": 0,
-                  "startTime": "2026-10-24T05:35:27.115Z",
+                  "startTime": "2026-10-26T01:24:05.221Z",
                   "annotations": [],
                   "attachments": []
                 }
@@ -208,22 +180,22 @@
           "tags": [],
           "tests": [
             {
-              "timeout": 60000,
+              "timeout": 120000,
               "annotations": [],
               "expectedStatus": "passed",
               "projectId": "chromium",
               "projectName": "chromium",
               "results": [
                 {
-                  "workerIndex": 1,
+                  "workerIndex": 0,
                   "parallelIndex": 0,
                   "status": "passed",
-                  "duration": 23652,
+                  "duration": 6184,
                   "errors": [],
                   "stdout": [],
                   "stderr": [],
                   "retry": 0,
-                  "startTime": "2026-10-24T05:35:46.081Z",
+                  "startTime": "2026-10-26T01:24:14.894Z",
                   "annotations": [],
                   "attachments": []
                 }
@@ -233,73 +205,109 @@
           ],
           "id": "26aa48cee8983222f549-0f23078745a73525703e",
           "file": "workflows.spec.ts",
-          "line": 237,
+          "line": 243,
           "column": 1
         },
         {
           "title": "delayed responses preserve memory search, edits, selected notes and cancelled runs",
-          "ok": false,
+          "ok": true,
           "tags": [],
           "tests": [
             {
-              "timeout": 60000,
+              "timeout": 120000,
               "annotations": [],
               "expectedStatus": "passed",
               "projectId": "chromium",
               "projectName": "chromium",
               "results": [
                 {
-                  "workerIndex": 1,
+                  "workerIndex": 0,
                   "parallelIndex": 0,
-                  "status": "timedOut",
-                  "duration": 61514,
-                  "error": {
-                    "message": "\u001b[31mTest timeout of 60000ms exceeded.\u001b[39m",
-                    "stack": "\u001b[31mTest timeout of 60000ms exceeded.\u001b[39m"
-                  },
-                  "errors": [
-                    {
-                      "message": "\u001b[31mTest timeout of 60000ms exceeded.\u001b[39m"
-                    },
-                    {
-                      "location": {
-                        "file": "/mnt/hostshare/TheCommander/frontend/e2e/workflows.spec.ts",
-                        "column": 64,
-                        "line": 364
-                      },
-                      "message": "Error: locator.click: Test timeout of 60000ms exceeded.\nCall log:\n\u001b[2m  - waiting for getByRole('button', { name: 'Load saved notes' })\u001b[22m\n\n\n  362 |     ).toBeTruthy();\n  363 |   await page.getByRole(\"button\", { name: \"Connections\", exact: true }).click();\n> 364 |   await page.getByRole(\"button\", { name: \"Load saved notes\" }).click();\n      |                                                                ^\n  365 |   let releaseNote!: () => void;\n  366 |   const noteGate = new Promise<void>((resolve) => {\n  367 |     releaseNote = resolve;\n    at /mnt/hostshare/TheCommander/frontend/e2e/workflows.spec.ts:364:64"
-                    }
-                  ],
+                  "status": "passed",
+                  "duration": 9252,
+                  "errors": [],
                   "stdout": [],
                   "stderr": [],
                   "retry": 0,
-                  "startTime": "2026-10-24T05:36:09.872Z",
+                  "startTime": "2026-10-26T01:24:21.108Z",
                   "annotations": [],
-                  "attachments": [
-                    {
-                      "name": "screenshot",
-                      "contentType": "image/png",
-                      "path": "/mnt/hostshare/TheCommander/frontend/test-results/workflows-delayed-response-71117-ed-notes-and-cancelled-runs-chromium/test-failed-1.png"
-                    },
-                    {
-                      "name": "error-context",
-                      "contentType": "text/markdown",
-                      "path": "/mnt/hostshare/TheCommander/frontend/test-results/workflows-delayed-response-71117-ed-notes-and-cancelled-runs-chromium/error-context.md"
-                    },
-                    {
-                      "name": "trace",
-                      "contentType": "application/zip",
-                      "path": "/mnt/hostshare/TheCommander/frontend/test-results/workflows-delayed-response-71117-ed-notes-and-cancelled-runs-chromium/trace.zip"
-                    }
-                  ]
+                  "attachments": []
                 }
               ],
-              "status": "unexpected"
+              "status": "expected"
             }
           ],
           "id": "26aa48cee8983222f549-d9fc84cb307b726280ac",
           "file": "workflows.spec.ts",
-          "line": 277,
+          "line": 283,
+          "column": 1
+        },
+        {
+          "title": "conversation switching ignores delayed history",
+          "ok": true,
+          "tags": [],
+          "tests": [
+            {
+              "timeout": 120000,
+              "annotations": [],
+              "expectedStatus": "passed",
+              "projectId": "chromium",
+              "projectName": "chromium",
+              "results": [
+                {
+                  "workerIndex": 0,
+                  "parallelIndex": 0,
+                  "status": "passed",
+                  "duration": 2137,
+                  "errors": [],
+                  "stdout": [],
+                  "stderr": [],
+                  "retry": 0,
+                  "startTime": "2026-10-26T01:24:30.383Z",
+                  "annotations": [],
+                  "attachments": []
+                }
+              ],
+              "status": "expected"
+            }
+          ],
+          "id": "26aa48cee8983222f549-f363aa8668782a4b157d",
+          "file": "workflows.spec.ts",
+          "line": 464,
+          "column": 1
+        },
+        {
+          "title": "settings persist and expose redacted health and privacy controls",
+          "ok": true,
+          "tags": [],
+          "tests": [
+            {
+              "timeout": 120000,
+              "annotations": [],
+              "expectedStatus": "passed",
+              "projectId": "chromium",
+              "projectName": "chromium",
+              "results": [
+                {
+                  "workerIndex": 0,
+                  "parallelIndex": 0,
+                  "status": "passed",
+                  "duration": 3440,
+                  "errors": [],
+                  "stdout": [],
+                  "stderr": [],
+                  "retry": 0,
+                  "startTime": "2026-10-26T01:24:32.549Z",
+                  "annotations": [],
+                  "attachments": []
+                }
+              ],
+              "status": "expected"
+            }
+          ],
+          "id": "26aa48cee8983222f549-219e87ebc7ee85b3e6a0",
+          "file": "workflows.spec.ts",
+          "line": 545,
           "column": 1
         }
       ]
@@ -307,11 +315,11 @@
   ],
   "errors": [],
   "stats": {
-    "startTime": "2026-10-24T05:33:52.081Z",
-    "duration": 200930.64,
-    "expected": 2,
+    "startTime": "2026-10-26T01:23:41.974Z",
+    "duration": 54222.746,
+    "expected": 6,
     "skipped": 0,
-    "unexpected": 2,
+    "unexpected": 0,
     "flaky": 0
   }
 }

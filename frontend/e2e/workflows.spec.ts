@@ -8,7 +8,7 @@ async function login(page: Page) {
     .fill("fictional-browser-password");
   await page.getByRole("button", { name: "Sign in", exact: true }).click();
   await expect(
-    page.getByRole("heading", { name: "Today", exact: true }),
+    page.getByRole("heading", { name: "Assistant", exact: true }),
   ).toBeVisible();
 }
 test("desktop owner memory connections three skills approvals and receipts", async ({
@@ -52,7 +52,7 @@ test("desktop owner memory connections three skills approvals and receipts", asy
   const download = page.waitForEvent("download");
   await page.getByRole("button", { name: "Export memory" }).click();
   expect((await download).suggestedFilename()).toBe("thecommander-memory.json");
-  await page.getByRole("button", { name: "Connections", exact: true }).click();
+  await page.getByRole("button", { name: "Settings", exact: true }).click();
   for (const name of [
     "Nebius · NVIDIA inference",
     "GitHub",
@@ -161,7 +161,13 @@ test("mobile keyboard schedule survives closed page and can be edited paused del
       (
         await page.request.put("/api/connections/" + kind, {
           headers: { "X-CSRF-Token": me.csrf },
-          data: { secret: "offline-fixture-secret", enabled: true },
+          data: {
+            secret: "offline-fixture-secret",
+            enabled: true,
+            revision: (
+              await (await page.request.get("/api/connections")).json()
+            ).find((c: { kind: string }) => c.kind === kind).revision,
+          },
         })
       ).ok(),
     ).toBeTruthy();
@@ -202,7 +208,7 @@ test("mobile keyboard schedule survives closed page and can be edited paused del
   await next.setViewportSize({ width: 375, height: 812 });
   await next.goto("/");
   await expect(
-    next.getByRole("heading", { name: "Today", exact: true }),
+    next.getByRole("heading", { name: "Assistant", exact: true }),
   ).toBeVisible();
   await expect(
     next
@@ -245,9 +251,9 @@ test("expired session returns to sign-in and tablet navigation remains usable", 
   for (const destination of [
     "Memory",
     "Skills",
-    "Connections",
+    "Settings",
     "Activity",
-    "Today",
+    "Assistant",
   ]) {
     await page.getByRole("button", { name: destination, exact: true }).click();
     await expect(
@@ -343,6 +349,9 @@ test("delayed responses preserve memory search, edits, selected notes and cancel
         await page.request.put("/api/connections/" + kind, {
           headers,
           data: {
+            revision: (
+              await (await page.request.get("/api/connections")).json()
+            ).find((c: { kind: string }) => c.kind === kind).revision,
             secret: "offline-fixture-secret",
             enabled: true,
             repository: "fictional/browser",
@@ -360,7 +369,7 @@ test("delayed responses preserve memory search, edits, selected notes and cancel
         })
       ).ok(),
     ).toBeTruthy();
-  await page.getByRole("button", { name: "Connections", exact: true }).click();
+  await page.getByRole("button", { name: "Settings", exact: true }).click();
   await page.getByRole("button", { name: "Load saved notes" }).click();
   let releaseNote!: () => void;
   const noteGate = new Promise<void>((resolve) => {
@@ -430,20 +439,144 @@ test("delayed responses preserve memory search, edits, selected notes and cancel
     await pollGate;
     await route.fulfill({ response });
   });
-  await pollSeen;
-  await details.getByRole("button", { name: "Cancel further work" }).click();
-  await expect(details.getByText("cancelled", { exact: true })).toBeVisible();
-  const deliveredPoll = page.waitForResponse(/\/api\/runs\/[^/]+$/);
-  releasePoll();
-  await (await deliveredPoll).finished();
-  await page.evaluate(
-    () =>
-      new Promise<void>((resolve) =>
-        requestAnimationFrame(() => requestAnimationFrame(() => resolve())),
-      ),
-  );
-  await expect(details.getByText("cancelled", { exact: true })).toBeVisible();
+  try {
+    await pollSeen;
+    await details.getByRole("button", { name: "Cancel further work" }).click();
+    await expect(details.locator(".status.cancelled")).toBeVisible();
+    const deliveredPoll = page.waitForResponse(/\/api\/runs\/[^/]+$/);
+    releasePoll();
+    await (await deliveredPoll).finished();
+    await page.evaluate(
+      () =>
+        new Promise<void>((resolve) =>
+          requestAnimationFrame(() => requestAnimationFrame(() => resolve())),
+        ),
+    );
+    await expect(details.locator(".status.cancelled")).toBeVisible();
+    await expect(
+      details.getByRole("button", { name: "Approve this exact issue" }),
+    ).toHaveCount(0);
+  } finally {
+    releasePoll();
+  }
+});
+
+test("conversation switching ignores delayed history", async ({ page }) => {
+  await login(page);
+  const me = await (await page.request.get("/api/auth/me")).json();
+  const headers = { "X-CSRF-Token": me.csrf };
+  const first = await (
+    await page.request.post("/api/runs", {
+      headers,
+      data: { prompt: "History race alpha" },
+    })
+  ).json();
+  const second = await (
+    await page.request.post("/api/runs", {
+      headers,
+      data: { prompt: "History race beta" },
+    })
+  ).json();
+  await page.reload();
   await expect(
-    details.getByRole("button", { name: "Approve this exact issue" }),
-  ).toHaveCount(0);
+    page
+      .getByRole("combobox", { name: "Conversation", exact: true })
+      .locator("option", { hasText: "History race alpha" }),
+  ).toHaveCount(1);
+  let release!: () => void;
+  let arrived!: () => void;
+  const gate = new Promise<void>((resolve) => {
+    release = resolve;
+  });
+  const seen = new Promise<void>((resolve) => {
+    arrived = resolve;
+  });
+  const path = "**/api/conversations/" + first.conversation_id + "/messages";
+  await page.route(path, async (route) => {
+    const response = await route.fetch();
+    arrived();
+    await gate;
+    await route.fulfill({ response });
+  });
+  try {
+    await page
+      .getByRole("combobox", { name: "Conversation", exact: true })
+      .selectOption(first.conversation_id);
+    await Promise.race([
+      seen,
+      new Promise((_, reject) =>
+        setTimeout(
+          () => reject(new Error("History request did not arrive")),
+          10000,
+        ),
+      ),
+    ]);
+    await page
+      .getByRole("combobox", { name: "Conversation", exact: true })
+      .selectOption(second.conversation_id);
+    await expect(
+      page.locator(".message").filter({ hasText: "History race beta" }),
+    ).toBeVisible();
+    const delivered = page.waitForResponse(path);
+    release();
+    await (await delivered).finished();
+    await page.evaluate(
+      () =>
+        new Promise<void>((resolve) =>
+          requestAnimationFrame(() => requestAnimationFrame(() => resolve())),
+        ),
+    );
+    const visibleHistory = await page.locator(".message").allTextContents();
+    expect(visibleHistory.join(" ")).not.toContain("History race alpha");
+    expect(visibleHistory.join(" ")).toContain("History race beta");
+    await expect(
+      page.locator(".message").filter({ hasText: "History race beta" }),
+    ).toBeVisible();
+    await page
+      .getByRole("combobox", { name: "Conversation", exact: true })
+      .selectOption("");
+    await expect(page.locator(".message")).toHaveCount(0);
+  } finally {
+    release();
+    if (!page.isClosed()) await page.unroute(path);
+  }
+});
+
+test("settings persist and expose redacted health and privacy controls", async ({
+  page,
+}) => {
+  await login(page);
+  await page.getByRole("button", { name: "Settings", exact: true }).click();
+  await page
+    .getByRole("button", { name: "Model and limits", exact: true })
+    .click();
+  await page.getByLabel("Response token limit").fill("512");
+  await page.getByRole("button", { name: "Save model and limits" }).click();
+  await expect(page.getByRole("status")).toContainText("Settings saved");
+  await page.reload();
+  await page.getByRole("button", { name: "Settings", exact: true }).click();
+  await page
+    .getByRole("button", { name: "Model and limits", exact: true })
+    .click();
+  await expect(page.getByLabel("Response token limit")).toHaveValue("512");
+  await page.getByRole("button", { name: "System", exact: true }).click();
+  await expect(
+    page.getByText("ENCRYPTION_KEY: configured", { exact: true }),
+  ).toBeVisible();
+  await page
+    .getByRole("button", { name: "Data and privacy", exact: true })
+    .click();
+  await page.getByRole("button", { name: "Manage memory" }).click();
+  await expect(
+    page.getByRole("heading", { name: "Memory", exact: true }),
+  ).toBeVisible();
+  await page.getByRole("button", { name: "Settings", exact: true }).click();
+  await page
+    .getByRole("button", { name: "Model and limits", exact: true })
+    .click();
+  expect((await new AxeBuilder({ page }).analyze()).violations).toEqual([]);
+  await page.screenshot({
+    path: "../docs/evidence/browser-settings.png",
+    fullPage: true,
+  });
 });

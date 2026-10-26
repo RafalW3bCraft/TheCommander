@@ -84,10 +84,13 @@ class Connections:
             if row and row["status"] != "revoked" and not row["config"].get("enabled", True):
                 item["status"] = "disabled"
             if kind == "nebius":
+                from commander.preferences import resolve
+
+                effective = resolve(self.db, self.settings, owner)
                 item["config"] = {
                     **item["config"],
-                    "model": self.settings.nebius_model,
-                    "endpoint": self.settings.nebius_base_url,
+                    "model": effective.nebius_model,
+                    "endpoint": effective.nebius_base_url,
                 }
             result.append(item)
         return result
@@ -97,21 +100,25 @@ class Connections:
             raise DomainError("Unknown connection", 404)
         if kind == "github" and not data.repository:
             raise DomainError("Select exactly one owner/repository", 422)
-        current = self.db.one(
-            "SELECT * FROM connections WHERE owner_id=%s AND kind=%s", (owner, kind)
-        )
-        secret = data.secret
-        if not secret and current and current["status"] != "revoked":
-            secret = self.secret(current)
-        if kind != "workspace" and not usable_secret(secret):
-            raise DomainError("Enter a real provider credential", 422, "unconfigured")
-        config = {
-            "repository": data.repository,
-            "domains": data.domains,
-            "enabled": data.enabled,
-            "expires_at": data.expires_at.isoformat() if data.expires_at else None,
-        }
         with owner_lock(self.db, owner):
+            current = self.db.one(
+                "SELECT * FROM connections WHERE owner_id=%s AND kind=%s", (owner, kind)
+            )
+            if data.revision != (current["revision"] if current else 0):
+                raise DomainError(
+                    "Connection changed; reload before saving", 409, "revision_conflict"
+                )
+            secret = data.secret
+            if not secret and current and current["status"] != "revoked":
+                secret = self.secret(current)
+            if kind != "workspace" and not usable_secret(secret):
+                raise DomainError("Enter a real provider credential", 422, "unconfigured")
+            config = {
+                "repository": data.repository,
+                "domains": data.domains,
+                "enabled": data.enabled,
+                "expires_at": data.expires_at.isoformat() if data.expires_at else None,
+            }
             self.db.one(
                 """INSERT INTO connections(owner_id,kind,secret,config) VALUES (%s,%s,%s,%s)
             ON CONFLICT(owner_id,kind) DO UPDATE SET secret=EXCLUDED.secret,config=EXCLUDED.config,status='configured',revision=connections.revision+1,validated_at=NULL,detail=NULL RETURNING kind""",
@@ -150,13 +157,17 @@ class Connections:
             return self._validate_locked(owner, kind)
 
     def _validate_locked(self, owner, kind):
+        from commander.preferences import resolve
+
+        effective = resolve(self.db, self.settings, owner)
+        provider = Provider(effective, self.provider.transport)
         row = self.get(owner, kind)
         status, detail = "validated", "Connection checked successfully"
         try:
             secret = self.secret(row)
             if kind == "nebius":
-                models = self.provider.request(
-                    "GET", self.settings.nebius_base_url.rstrip("/") + "/models", secret, retry=True
+                models = provider.request(
+                    "GET", effective.nebius_base_url.rstrip("/") + "/models", secret, retry=True
                 )
                 if (
                     not isinstance(models, dict)
@@ -169,7 +180,7 @@ class Connections:
                     raise ProviderError(
                         "Provider returned malformed model data", 502, "malformed_response"
                     )
-                if self.settings.nebius_model not in [m["id"] for m in models["data"]]:
+                if effective.nebius_model not in [m["id"] for m in models["data"]]:
                     raise ProviderError(
                         "Configured NVIDIA model is unavailable to this account",
                         502,
@@ -179,15 +190,27 @@ class Connections:
 
                 complete(
                     self.db,
-                    self.settings,
-                    self.provider,
+                    effective,
+                    provider,
                     owner,
                     secret,
                     [{"role": "user", "content": "Reply with OK only."}],
                 )
+                self.db.one(
+                    "UPDATE connections SET config=config || %s WHERE owner_id=%s AND kind='nebius' RETURNING kind",
+                    (
+                        json(
+                            {
+                                "validated_model": effective.nebius_model,
+                                "validated_endpoint": effective.nebius_base_url,
+                            }
+                        ),
+                        owner,
+                    ),
+                )
                 detail = "Model listed and harmless inference completed"
             elif kind == "github":
-                repository = self.provider.request(
+                repository = provider.request(
                     "GET",
                     "https://api.github.com/repos/" + row["config"]["repository"],
                     secret,

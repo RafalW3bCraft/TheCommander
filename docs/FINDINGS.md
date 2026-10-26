@@ -25,3 +25,23 @@ implementation/review/operational checks. No unresolved critical/high finding is
 known from these reviews. This is not an exhaustive security certification.
 
 Review limitation: absence of a reported defect is not a security guarantee.
+
+## F14 — Configuration changes could undercount unknown usage (2026-10-25)
+
+Reproducer: dispatch with a 32000-character context / 2048-token output allowance;
+lose the provider response; lower context to4000 and output to512. The previous
+budget check recomputed the unknown request at the new smaller reservation,
+allowing another request under a 20000-token daily cap. The new regression failed
+with DID NOT RAISE. Migration005 persists each original reservation; legacy unknown
+rows use the maximum supported bound. Retest: usage-reservation-green.txt.
+
+## F15 — live probe returned success on failed checks (medium; repaired)
+
+The standalone Nebius smoke command always exited zero, even for missing keys,
+unavailable models, provider errors or invalid tool responses. This could mislead
+automation using its process status. Reproduced with six controlled scenarios in
+tests/test_live_probe.py; red evidence is live-probe-red.txt. It now requires all
+three acceptance checks, records passed/status, and exits 0 only on success, 2
+for absent credentials and 1 for other failures. The same tests pass in
+live-probe-green.txt. The corrected probe was also run against actual Nebius;
+controlled regression results are separate from that live evidence.

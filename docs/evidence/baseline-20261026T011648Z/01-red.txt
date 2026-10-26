@@ -1,0 +1,4 @@
+ImportError while loading conftest '/mnt/hostshare/TheCommander/tests/conftest.py'.
+tests/conftest.py:7: in <module>
+    from commander.settings import Settings
+E   ModuleNotFoundError: No module named 'commander'

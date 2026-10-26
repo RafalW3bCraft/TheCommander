@@ -1501,6 +1501,498 @@
         }
       }
     },
+    "/api/settings": {
+      "get": {
+        "summary": "Get Settings",
+        "operationId": "get_settings_api_settings_get",
+        "responses": {
+          "200": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/SettingsView"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Bad Request",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Unauthorized",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            }
+          },
+          "403": {
+            "description": "Forbidden",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "Not Found",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            }
+          },
+          "409": {
+            "description": "Conflict",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            }
+          },
+          "413": {
+            "description": "Content Too Large",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            }
+          },
+          "422": {
+            "description": "Unprocessable Content",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            }
+          },
+          "429": {
+            "description": "Too Many Requests",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            }
+          },
+          "502": {
+            "description": "Bad Gateway",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            }
+          },
+          "503": {
+            "description": "Service Unavailable",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            }
+          }
+        }
+      },
+      "patch": {
+        "summary": "Patch Settings",
+        "operationId": "patch_settings_api_settings_patch",
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/SettingsPatch"
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "200": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/SettingsView"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Bad Request",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Unauthorized",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            }
+          },
+          "403": {
+            "description": "Forbidden",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "Not Found",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            }
+          },
+          "409": {
+            "description": "Conflict",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            }
+          },
+          "413": {
+            "description": "Content Too Large",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            }
+          },
+          "422": {
+            "description": "Unprocessable Content",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            }
+          },
+          "429": {
+            "description": "Too Many Requests",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            }
+          },
+          "502": {
+            "description": "Bad Gateway",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            }
+          },
+          "503": {
+            "description": "Service Unavailable",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/models": {
+      "get": {
+        "summary": "Models",
+        "operationId": "models_api_models_get",
+        "parameters": [
+          {
+            "name": "provider",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "type": "string",
+              "default": "nebius",
+              "title": "Provider"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ModelsView"
+                }
+              }
+            }
+          },
+          "400": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            },
+            "description": "Bad Request"
+          },
+          "401": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            },
+            "description": "Unauthorized"
+          },
+          "403": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            },
+            "description": "Forbidden"
+          },
+          "404": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            },
+            "description": "Not Found"
+          },
+          "409": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            },
+            "description": "Conflict"
+          },
+          "413": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            },
+            "description": "Content Too Large"
+          },
+          "422": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            },
+            "description": "Unprocessable Content"
+          },
+          "429": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            },
+            "description": "Too Many Requests"
+          },
+          "502": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            },
+            "description": "Bad Gateway"
+          },
+          "503": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            },
+            "description": "Service Unavailable"
+          }
+        }
+      }
+    },
+    "/api/system/status": {
+      "get": {
+        "summary": "System Status",
+        "operationId": "system_status_api_system_status_get",
+        "responses": {
+          "200": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/SystemView"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Bad Request",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Unauthorized",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            }
+          },
+          "403": {
+            "description": "Forbidden",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "Not Found",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            }
+          },
+          "409": {
+            "description": "Conflict",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            }
+          },
+          "413": {
+            "description": "Content Too Large",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            }
+          },
+          "422": {
+            "description": "Unprocessable Content",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            }
+          },
+          "429": {
+            "description": "Too Many Requests",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            }
+          },
+          "502": {
+            "description": "Bad Gateway",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            }
+          },
+          "503": {
+            "description": "Service Unavailable",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
     "/api/connections": {
       "get": {
         "summary": "List Connections",
@@ -5200,6 +5692,12 @@
       },
       "ConnectionInput": {
         "properties": {
+          "revision": {
+            "type": "integer",
+            "minimum": 0.0,
+            "title": "Revision",
+            "default": 0
+          },
           "secret": {
             "type": "string",
             "maxLength": 4096,
@@ -5749,6 +6247,23 @@
         ],
         "title": "MessageView"
       },
+      "ModelsView": {
+        "properties": {
+          "models": {
+            "items": {
+              "type": "string"
+            },
+            "type": "array",
+            "title": "Models"
+          }
+        },
+        "additionalProperties": false,
+        "type": "object",
+        "required": [
+          "models"
+        ],
+        "title": "ModelsView"
+      },
       "Note": {
         "properties": {
           "name": {
@@ -5824,6 +6339,130 @@
           "verified"
         ],
         "title": "NoteReceiptView"
+      },
+      "Preferences": {
+        "properties": {
+          "nebius_model": {
+            "anyOf": [
+              {
+                "type": "string",
+                "maxLength": 200,
+                "pattern": "^nvidia/[A-Za-z0-9_.-]+$"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Nebius Model"
+          },
+          "nebius_base_url": {
+            "anyOf": [
+              {
+                "type": "string",
+                "enum": [
+                  "https://api.tokenfactory.nebius.com/v1",
+                  "https://api.tokenfactory.us-central1.nebius.com/v1"
+                ]
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Nebius Base Url"
+          },
+          "max_steps": {
+            "anyOf": [
+              {
+                "type": "integer",
+                "maximum": 10.0,
+                "minimum": 1.0
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Max Steps"
+          },
+          "max_output_tokens": {
+            "anyOf": [
+              {
+                "type": "integer",
+                "maximum": 8192.0,
+                "minimum": 128.0
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Max Output Tokens"
+          },
+          "max_context_chars": {
+            "anyOf": [
+              {
+                "type": "integer",
+                "maximum": 100000.0,
+                "minimum": 4000.0
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Max Context Chars"
+          },
+          "max_run_seconds": {
+            "anyOf": [
+              {
+                "type": "integer",
+                "maximum": 600.0,
+                "minimum": 30.0
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Max Run Seconds"
+          },
+          "max_daily_runs": {
+            "anyOf": [
+              {
+                "type": "integer",
+                "maximum": 1000.0,
+                "minimum": 1.0
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Max Daily Runs"
+          },
+          "max_daily_tokens": {
+            "anyOf": [
+              {
+                "type": "integer",
+                "minimum": 1000.0
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Max Daily Tokens"
+          },
+          "daily_spend_limit_usd": {
+            "anyOf": [
+              {
+                "type": "number",
+                "exclusiveMinimum": 0.0
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Daily Spend Limit Usd"
+          }
+        },
+        "additionalProperties": false,
+        "type": "object",
+        "title": "Preferences"
       },
       "ReceiptView": {
         "properties": {
@@ -6291,6 +6930,164 @@
         ],
         "title": "ScheduleView"
       },
+      "SettingsPatch": {
+        "properties": {
+          "nebius_model": {
+            "anyOf": [
+              {
+                "type": "string",
+                "maxLength": 200,
+                "pattern": "^nvidia/[A-Za-z0-9_.-]+$"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Nebius Model"
+          },
+          "nebius_base_url": {
+            "anyOf": [
+              {
+                "type": "string",
+                "enum": [
+                  "https://api.tokenfactory.nebius.com/v1",
+                  "https://api.tokenfactory.us-central1.nebius.com/v1"
+                ]
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Nebius Base Url"
+          },
+          "max_steps": {
+            "anyOf": [
+              {
+                "type": "integer",
+                "maximum": 10.0,
+                "minimum": 1.0
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Max Steps"
+          },
+          "max_output_tokens": {
+            "anyOf": [
+              {
+                "type": "integer",
+                "maximum": 8192.0,
+                "minimum": 128.0
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Max Output Tokens"
+          },
+          "max_context_chars": {
+            "anyOf": [
+              {
+                "type": "integer",
+                "maximum": 100000.0,
+                "minimum": 4000.0
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Max Context Chars"
+          },
+          "max_run_seconds": {
+            "anyOf": [
+              {
+                "type": "integer",
+                "maximum": 600.0,
+                "minimum": 30.0
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Max Run Seconds"
+          },
+          "max_daily_runs": {
+            "anyOf": [
+              {
+                "type": "integer",
+                "maximum": 1000.0,
+                "minimum": 1.0
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Max Daily Runs"
+          },
+          "max_daily_tokens": {
+            "anyOf": [
+              {
+                "type": "integer",
+                "minimum": 1000.0
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Max Daily Tokens"
+          },
+          "daily_spend_limit_usd": {
+            "anyOf": [
+              {
+                "type": "number",
+                "exclusiveMinimum": 0.0
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Daily Spend Limit Usd"
+          },
+          "revision": {
+            "type": "integer",
+            "minimum": 0.0,
+            "title": "Revision"
+          }
+        },
+        "additionalProperties": false,
+        "type": "object",
+        "required": [
+          "revision"
+        ],
+        "title": "SettingsPatch"
+      },
+      "SettingsView": {
+        "properties": {
+          "revision": {
+            "type": "integer",
+            "title": "Revision"
+          },
+          "preferences": {
+            "$ref": "#/components/schemas/Preferences"
+          },
+          "effective": {
+            "$ref": "#/components/schemas/Preferences"
+          },
+          "ceilings": {
+            "$ref": "#/components/schemas/Preferences"
+          }
+        },
+        "additionalProperties": false,
+        "type": "object",
+        "required": [
+          "revision",
+          "preferences",
+          "effective",
+          "ceilings"
+        ],
+        "title": "SettingsView"
+      },
       "SkillView": {
         "properties": {
           "id": {
@@ -6376,6 +7173,53 @@
           "status"
         ],
         "title": "StatusView"
+      },
+      "SystemView": {
+        "properties": {
+          "api": {
+            "type": "string",
+            "const": "ready",
+            "title": "Api"
+          },
+          "database": {
+            "type": "string",
+            "const": "ready",
+            "title": "Database"
+          },
+          "worker_online": {
+            "type": "boolean",
+            "title": "Worker Online"
+          },
+          "production": {
+            "type": "boolean",
+            "title": "Production"
+          },
+          "configured": {
+            "additionalProperties": {
+              "type": "boolean"
+            },
+            "type": "object",
+            "title": "Configured"
+          },
+          "restart_required": {
+            "items": {
+              "type": "string"
+            },
+            "type": "array",
+            "title": "Restart Required"
+          }
+        },
+        "additionalProperties": false,
+        "type": "object",
+        "required": [
+          "api",
+          "database",
+          "worker_online",
+          "production",
+          "configured",
+          "restart_required"
+        ],
+        "title": "SystemView"
       },
       "UsageView": {
         "properties": {

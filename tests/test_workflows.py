@@ -639,6 +639,7 @@ def test_connection_expiry_is_distinct_and_blocks_dispatch(app, settings):
         "/api/connections/nebius",
         json={
             "secret": "fixture-secret",
+            "revision": 1,
             "expires_at": (datetime.now(timezone.utc) - timedelta(seconds=1)).isoformat(),
         },
     )
@@ -731,9 +732,11 @@ def test_environment_import_preserves_saved_and_revoked_connections(app, setting
 
 def test_disabled_connection_denies_reads_and_inference(app, settings):
     client = app[0]
-    client.put("/api/connections/workspace", json={"enabled": False}).raise_for_status()
+    client.put(
+        "/api/connections/workspace", json={"enabled": False, "revision": 1}
+    ).raise_for_status()
     assert client.get("/api/notes").status_code == 409
-    client.put("/api/connections/nebius", json={"enabled": False}).raise_for_status()
+    client.put("/api/connections/nebius", json={"enabled": False, "revision": 1}).raise_for_status()
     assert run_task(app, settings)["status"] == "failed"
     assert not app[1].calls
 
@@ -785,7 +788,9 @@ def test_note_effect_then_model_failure_remains_reconcilable_after_cancel(app, s
     assert client.post("/api/runs/" + run["id"] + "/cancel").json()["status"] == "cancelled"
     client.delete("/api/connections/workspace").raise_for_status()
     assert client.post("/api/runs/" + run["id"] + "/reconcile-notes").status_code == 409
-    client.put("/api/connections/workspace", json={"enabled": True}).raise_for_status()
+    client.put(
+        "/api/connections/workspace", json={"enabled": True, "revision": 2}
+    ).raise_for_status()
     recovered = client.post("/api/runs/" + run["id"] + "/reconcile-notes")
     assert recovered.status_code == 200
     assert recovered.json()["status"] == "cancelled"

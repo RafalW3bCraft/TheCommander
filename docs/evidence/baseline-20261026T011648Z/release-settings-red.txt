@@ -1,0 +1,68 @@
+FFFF                                                                     [100%]
+=================================== FAILURES ===================================
+___________ test_expired_explicit_does_not_suppress_active_inferred ____________
+
+app = (<starlette.testclient.TestClient object at 0x7f8795bf4050>, <test_workflows.Vendor object at 0x7f8795f8b0e0>, '623c2742-8d56-4663-a120-d5e34d3585fe', <commander.db.Database object at 0x7f8795be1bd0>)
+
+    def test_expired_explicit_does_not_suppress_active_inferred(app):
+        _, _, owner, db = app
+        save_memory(db, owner, MemoryInput(kind="inferred", key="format", content="short"))
+        save_memory(db, owner, MemoryInput(key="format", content="long", expires_at=datetime.now(timezone.utc)-timedelta(days=1)))
+>       assert [r["content"] for r in recall(db, owner)] == ["short"]
+E       AssertionError: assert [] == ['short']
+E         
+E         Right contains one more item: 'short'
+E         Use -v to get more diff
+
+tests/test_release_settings.py:16: AssertionError
+_____________ test_stale_connection_cannot_restore_revoked_secret ______________
+
+app = (<starlette.testclient.TestClient object at 0x7f8795a2d810>, <test_workflows.Vendor object at 0x7f8795be0690>, '05846066-cc23-4747-b2e7-b8bb0810d236', <commander.db.Database object at 0x7f8795def100>)
+
+    def test_stale_connection_cannot_restore_revoked_secret(app):
+        client, _, _, _ = app
+        row = client.get("/api/connections").json()[0]
+        client.delete("/api/connections/nebius")
+        response = client.put("/api/connections/nebius", json={"revision": row["revision"]})
+>       assert response.status_code == 409
+E       assert 422 == 409
+E        +  where 422 = <Response [422 Unprocessable Entity]>.status_code
+
+tests/test_release_settings.py:25: AssertionError
+______________ test_settings_revision_limits_restart_and_snapshot ______________
+
+app = (<starlette.testclient.TestClient object at 0x7f8795142c10>, <test_workflows.Vendor object at 0x7f8795a2de50>, '59e71a4a-1c0d-48ce-8532-84e5e37a9e9a', <commander.db.Database object at 0x7f87959b0710>)
+settings = Settings(database_url='postgresql://watcher@127.0.0.1:55432/postgres', database_schema='test_fb96429a1a7446a58187f07e1..._runs=50, max_daily_tokens=100000, daily_spend_limit_usd=None, input_usd_per_million=None, output_usd_per_million=None)
+
+    def test_settings_revision_limits_restart_and_snapshot(app, settings):
+        client, vendor, owner, db = app
+        response = client.get("/api/settings")
+>       assert response.status_code == 200
+E       assert 404 == 200
+E        +  where 404 = <Response [404 Not Found]>.status_code
+
+tests/test_release_settings.py:32: AssertionError
+______________ test_settings_model_validation_and_boundary_errors ______________
+
+app = (<starlette.testclient.TestClient object at 0x7f8795dee780>, <test_workflows.Vendor object at 0x7f8795deec40>, '4f7e69d6-fe51-4d2e-b5c4-4ab8c4d17db9', <commander.db.Database object at 0x7f879573bac0>)
+
+    def test_settings_model_validation_and_boundary_errors(app):
+        client, vendor, _, _ = app
+        models = client.get("/api/models?provider=nebius")
+>       assert models.status_code == 200
+E       assert 404 == 200
+E        +  where 404 = <Response [404 Not Found]>.status_code
+
+tests/test_release_settings.py:59: AssertionError
+=============================== warnings summary ===============================
+.venv/lib/python3.13/site-packages/fastapi/testclient.py:1
+  /mnt/hostshare/TheCommander/.venv/lib/python3.13/site-packages/fastapi/testclient.py:1: StarletteDeprecationWarning: Using `httpx` with `starlette.testclient` is deprecated; install `httpx2` instead.
+    from starlette.testclient import TestClient as TestClient  # noqa
+
+-- Docs: https://docs.pytest.org/en/stable/how-to/capture-warnings.html
+=========================== short test summary info ============================
+FAILED tests/test_release_settings.py::test_expired_explicit_does_not_suppress_active_inferred
+FAILED tests/test_release_settings.py::test_stale_connection_cannot_restore_revoked_secret
+FAILED tests/test_release_settings.py::test_settings_revision_limits_restart_and_snapshot
+FAILED tests/test_release_settings.py::test_settings_model_validation_and_boundary_errors
+4 failed, 1 warning in 4.53s

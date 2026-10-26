@@ -1,0 +1,29 @@
+# Optional production overlay. Supply APP_DOMAIN and matching HTTPS APP_ORIGIN.
+services:
+  api:
+    environment:
+      PRODUCTION: "true"
+      APP_ORIGIN: https://${APP_DOMAIN:?Set APP_DOMAIN to your host name}
+  worker:
+    environment:
+      PRODUCTION: "true"
+      APP_ORIGIN: https://${APP_DOMAIN:?Set APP_DOMAIN to your host name}
+  proxy:
+    image: docker.io/library/caddy:2-alpine@sha256:eb4d35b7452d1ab6171fbdbe8d9275b2301dad6dad92115d91e19fb9b24d510f
+    environment:
+      APP_DOMAIN: ${APP_DOMAIN:?Set APP_DOMAIN to your host name}
+    ports: ["80:80", "443:443"]
+    volumes:
+      - ./deploy/Caddyfile:/etc/caddy/Caddyfile:ro
+      - proxy_data:/data
+      - proxy_config:/config
+    depends_on:
+      api:
+        condition: service_healthy
+    restart: unless-stopped
+    logging:
+      driver: json-file
+      options: {max-size: 10m, max-file: "3"}
+volumes:
+  proxy_data:
+  proxy_config:

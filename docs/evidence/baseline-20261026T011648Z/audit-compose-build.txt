@@ -1,0 +1,94 @@
+Emulate Docker CLI using podman. Create /etc/containers/nodocker to quiet msg.
+[4m>>>> Executing external compose provider "/usr/libexec/docker/cli-plugins/docker-compose". Please see podman-compose(1) for how to disable this message. <<<<
+
+[0mSending build context to Docker daemon  109.7kB
+[1/2] STEP 1/6: FROM docker.io/library/node:22-bookworm-slim@sha256:de170b39439eb0e5a3444ad7d60b015614a381e10fecae2e30ec9e735122f38d AS frontend
+[1/2] STEP 2/6: WORKDIR /build/frontend
+--> Using cache 0b190d8742f0fdf6d8c6d13d10f8353fe33d1f75d815e4aee063b56826d39ee5
+--> 0b190d8742f0
+[1/2] STEP 3/6: COPY frontend/package.json frontend/package-lock.json ./
+--> 64d6ce88bf2d
+[1/2] STEP 4/6: RUN npm ci
+npm warn deprecated eslint@9.39.5: This version is no longer supported. Please see https://eslint.org/version-support for other options.
+
+added 204 packages, and audited 205 packages in 25s
+
+52 packages are looking for funding
+  run `npm fund` for details
+
+found 0 vulnerabilities
+npm notice
+npm notice New major version of npm available! 10.9.9 -> 12.2.1
+npm notice Changelog: https://github.com/npm/cli/releases/tag/v12.2.1
+npm notice To update run: npm install -g npm@12.2.1
+npm notice
+--> 51a5eb03ce56
+[1/2] STEP 5/6: COPY frontend/ ./
+--> d7a9b5272c6a
+[1/2] STEP 6/6: RUN npm run build
+
+> thecommander-ui@0.2.0 build
+> tsc --noEmit && vite build
+
+vite v6.4.5 building for production...
+transforming...
+✓ 29 modules transformed.
+rendering chunks...
+computing gzip size...
+dist/index.html                   0.36 kB │ gzip:  0.26 kB
+dist/assets/index-DwAhfI07.css    5.27 kB │ gzip:  1.87 kB
+dist/assets/index-Bq-7rcSF.js   249.19 kB │ gzip: 76.92 kB
+✓ built in 2.96s
+--> fcd8de4a9252
+[2/2] STEP 1/14: FROM docker.io/library/python:3.13-slim-bookworm@sha256:4cea12ab7d78a3312c85f8cab19b6971d4fe9704da25443986c0bc20a6678850
+[2/2] STEP 2/14: ENV PYTHONDONTWRITEBYTECODE=1 PYTHONUNBUFFERED=1 UV_LINK_MODE=copy
+--> Using cache 1806103564a87fc135e0d3e65e29d08fb7d322a035512657237e3ae6f661c832
+--> 1806103564a8
+[2/2] STEP 3/14: WORKDIR /app
+--> Using cache 4c4d1fac577f435c6fe11b8422e16e91937d802c10f8990f460351d5d962afdc
+--> 4c4d1fac577f
+[2/2] STEP 4/14: RUN pip install --no-cache-dir uv==0.13.1 && groupadd --gid 10001 commander && useradd --uid 10001 --gid 10001 --create-home commander
+--> Using cache 9339ac4958e571f2450ecc2ea35bf295e48265c147f7dfc6d3c68eaea670cdb3
+--> 9339ac4958e5
+[2/2] STEP 5/14: COPY pyproject.toml uv.lock ./
+--> Using cache e16faa5a2c050697ddd70869572e3c1b83196c242c6ef5e4034ff1516fbd9a8d
+--> e16faa5a2c05
+[2/2] STEP 6/14: RUN uv sync --frozen --no-dev
+--> Using cache 6c826b70e34560547f50543afa4d106cef2758288249d4b47731a505efb3270d
+--> 6c826b70e345
+[2/2] STEP 7/14: COPY commander/ commander/
+--> 8f5134a9290f
+[2/2] STEP 8/14: COPY --from=frontend /build/frontend/dist frontend/dist
+--> 2bdc3c33454a
+[2/2] STEP 9/14: RUN mkdir -p /data/notes && chown -R commander:commander /data /app
+--> 6e432e5df983
+[2/2] STEP 10/14: USER commander
+--> 1bab8dee3f22
+[2/2] STEP 11/14: ENV PATH="/app/.venv/bin:$PATH" WORKSPACE_ROOT=/data/notes
+--> 364e9911de30
+[2/2] STEP 12/14: EXPOSE 8000
+--> 1eb289da0a68
+[2/2] STEP 13/14: CMD ["uvicorn", "commander.api:create_app", "--factory", "--host", "0.0.0.0", "--port", "8000", "--no-access-log"]
+--> edf805331ba2
+[2/2] STEP 14/14: LABEL "com.docker.compose.image.builder"="classic"
+[2/2] COMMIT localhost/thecommander:0.2.0
+--> b1377e046ac2
+Successfully tagged localhost/thecommander:0.2.0
+b1377e046ac2bd612c413eff7c51bd13d05065b4d632be84ca35a5db99114062
+Successfully built b1377e046ac2
+Successfully tagged localhost/thecommander:0.2.0
+ Container thecommander-releasecheck-db-1  Created
+ Container thecommander-releasecheck-api-1  Recreate
+ Container thecommander-releasecheck-worker-1  Recreate
+ Container thecommander-releasecheck-api-1  Recreated
+ Container thecommander-releasecheck-worker-1  Recreated
+ Container thecommander-releasecheck-db-1  Starting
+ Container thecommander-releasecheck-db-1  Started
+ Container thecommander-releasecheck-db-1  Waiting
+ Container thecommander-releasecheck-db-1  Waiting
+ Container thecommander-releasecheck-db-1  Healthy
+ Container thecommander-releasecheck-worker-1  Starting
+ Container thecommander-releasecheck-db-1  Healthy
+ Container thecommander-releasecheck-api-1  Starting
+ Container thecommander-releasecheck-worker-1  Started
+ Container thecommander-releasecheck-api-1  Started

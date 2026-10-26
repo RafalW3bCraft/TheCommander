@@ -33,3 +33,12 @@ repeated.
 The `commander` schema is independent of the existing `public` draft schema.
 See ADR 001. Session and provider secrets never enter frontend storage or model
 parameters. Local storage is owner controlled; selected context leaves the host.
+
+## Configuration flow
+
+SettingsPage → authenticated settings/models/system routes → preferences resolver →
+owner_settings and connection validation. API enqueue and scheduler dispatch save
+non-secret execution snapshots on runs. Worker execution uses those choices while
+clamping against current limits and checking live connection authority. Usage
+records preserve the original reservation for unknown consumption. Migration004
+adds settings/snapshots; migration005 adds reservations. See ADR003 and SETTINGS.md.

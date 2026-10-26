@@ -55,6 +55,18 @@ def main():
                 env={**env, "COMPOSE_SMOKE_URL": "http://localhost:8002"},
                 check=True,
             )
+            subprocess.run(
+                compose + ["up", "--force-recreate", "--no-build", "-d", "api", "worker"],
+                cwd=root,
+                env=env,
+                check=True,
+            )
+            subprocess.run(
+                [sys.executable, "scripts/compose_smoke.py"],
+                cwd=root,
+                env={**env, "COMPOSE_SMOKE_URL": "http://localhost:8002"},
+                check=True,
+            )
             report = json.loads((root / "docs/evidence/compose-smoke.json").read_text())
             report.update(
                 timestamp=datetime.now(timezone.utc).isoformat(),

@@ -1,0 +1,116 @@
+Checked 62 packages in 8ms
+All checks passed!
+40 files already formatted
+Success: no issues found in 22 source files
+============================= test session starts ==============================
+platform linux -- Python 3.13.5, pytest-9.1.1, pluggy-1.7.0
+rootdir: /mnt/hostshare/TheCommander
+configfile: pyproject.toml
+testpaths: tests
+plugins: platformdirs-4.13.5, anyio-4.15.1, cov-7.1.0
+collected 68 items
+
+tests/test_auth_memory.py .                                              [  1%]
+tests/test_release_settings.py ...........                               [ 17%]
+tests/test_upgrade.py .                                                  [ 19%]
+tests/test_workflows.py ................................................ [ 89%]
+.......                                                                  [100%]
+
+=============================== warnings summary ===============================
+.venv/lib/python3.13/site-packages/fastapi/testclient.py:1
+  /mnt/hostshare/TheCommander/.venv/lib/python3.13/site-packages/fastapi/testclient.py:1: StarletteDeprecationWarning: Using `httpx` with `starlette.testclient` is deprecated; install `httpx2` instead.
+    from starlette.testclient import TestClient as TestClient  # noqa
+
+-- Docs: https://docs.pytest.org/en/stable/how-to/capture-warnings.html
+================================ tests coverage ================================
+_______________ coverage: platform linux, python 3.13.5-final-0 ________________
+
+Name                       Stmts   Miss  Cover   Missing
+--------------------------------------------------------
+commander/__init__.py          0      0   100%
+commander/api.py             116     11    91%   75, 82, 100, 122, 147, 151-152, 156, 171-172, 218
+commander/auth.py             45      5    89%   26, 35, 47-48, 50
+commander/broker.py          208     20    90%   71, 74, 97, 119, 123, 126, 141, 148, 156, 172, 213, 235, 255, 286, 305, 310, 369, 372, 384, 393
+commander/connections.py     131     10    92%   75, 100, 102, 115, 184, 226, 232, 267-276
+commander/contracts.py       222      3    99%   45, 54, 88
+commander/db.py               32      0   100%
+commander/engine.py          121     10    92%   33, 42, 47, 116-117, 182, 188, 201, 214, 217
+commander/errors.py            6      0   100%
+commander/healthcheck.py       7      7     0%   3-13
+commander/inference.py        28      6    79%   29-34, 42, 60, 69
+commander/memory.py           15      0   100%
+commander/preferences.py      93      2    98%   115, 140
+commander/providers.py        72     10    86%   50-51, 70, 79, 84-87, 108, 112, 115, 123
+commander/routes.py          132     13    90%   53, 115, 141, 164, 169, 181, 204, 241-244, 248-249
+commander/runs.py             68      7    90%   33, 112, 115, 121, 127-128, 132
+commander/schedules.py        29      1    97%   50
+commander/settings.py         38      3    92%   42, 47, 49
+commander/skills.py           23      0   100%
+commander/worker.py           90     24    73%   58, 125-147, 151-152
+commander/workspace.py        48      3    94%   17, 21, 56
+--------------------------------------------------------
+TOTAL                       1524    135    91%
+Required test coverage of 80.0% reached. Total coverage: 91.14%
+================== 68 passed, 1 warning in 115.57s (0:01:55) ===================
+npm warn deprecated eslint@9.39.5: This version is no longer supported. Please see https://eslint.org/version-support for other options.
+
+added 204 packages, and audited 205 packages in 8s
+
+52 packages are looking for funding
+  run `npm fund` for details
+
+found 0 vulnerabilities
+
+> thecommander-ui@0.2.0 api:types
+> openapi-typescript ../docs/openapi.json -o src/api-schema.d.ts && prettier --write src/api-schema.d.ts
+
+✨ openapi-typescript 7.13.0
+🚀 ../docs/openapi.json → src/api-schema.d.ts [370.7ms]
+src/api-schema.d.ts 741ms
+
+> thecommander-ui@0.2.0 format:check
+> prettier --check src e2e *.ts *.js package.json tsconfig.json
+
+Checking formatting...
+All matched files use Prettier code style!
+
+> thecommander-ui@0.2.0 lint
+> eslint src e2e *.ts *.js
+
+
+> thecommander-ui@0.2.0 build
+> tsc --noEmit && vite build
+
+vite v6.4.5 building for production...
+transforming...
+✓ 30 modules transformed.
+rendering chunks...
+computing gzip size...
+dist/index.html                   0.36 kB │ gzip:  0.26 kB
+dist/assets/index-CPPZbitf.css    5.36 kB │ gzip:  1.90 kB
+dist/assets/index-jxMkn6JU.js   255.23 kB │ gzip: 78.61 kB
+✓ built in 2.34s
+
+> thecommander-ui@0.2.0 test:e2e
+> playwright test
+
+[WebServer] INFO:     Started server process [103314]
+[WebServer] INFO:     Waiting for application startup.
+[WebServer] INFO:     Application startup complete.
+[WebServer] INFO:     Uvicorn running on http://127.0.0.1:8010 (Press CTRL+C to quit)
+
+Running 6 tests using 1 worker
+
+(node:103422) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+(Use `node --trace-warnings ...` to show where the warning was created)
+  ✓  1 [chromium] › e2e/workflows.spec.ts:14:1 › desktop owner memory connections three skills approvals and receipts (18.4s)
+  ✓  2 [chromium] › e2e/workflows.spec.ts:152:1 › mobile keyboard schedule survives closed page and can be edited paused deleted (8.9s)
+  ✓  3 [chromium] › e2e/workflows.spec.ts:243:1 › expired session returns to sign-in and tablet navigation remains usable (5.6s)
+  ✓  4 [chromium] › e2e/workflows.spec.ts:283:1 › delayed responses preserve memory search, edits, selected notes and cancelled runs (8.6s)
+  ✓  5 [chromium] › e2e/workflows.spec.ts:464:1 › conversation switching ignores delayed history (2.0s)
+  ✓  6 [chromium] › e2e/workflows.spec.ts:545:1 › settings persist and expose redacted health and privacy controls (3.5s)
+
+  6 passed (50.8s)
+No known vulnerabilities found
+found 0 vulnerabilities
+No configured private runtime values found in tracked/unignored release files or frontend bundle.

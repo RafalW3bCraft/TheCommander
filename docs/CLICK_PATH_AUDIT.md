@@ -63,3 +63,17 @@ Source review also checked revision remounts, preserved connection scopes,
 cross-page run selection, expired sessions, errors, empty collections and disabled
 controls. Browser coverage is representative and includes the identified races;
 it is not exhaustive testing of every possible interleaving or screen reader.
+
+## 2026-10-25 increment
+
+Assistant replaces the Today label; Settings replaces the Connections destination.
+Settings → Connections retains the existing scoped credential forms and notes.
+Settings → Model and limits discovers models, validates/saves typed settings and
+reloads conflicts. Data and privacy links to memory controls; System refreshes
+redacted API/database/worker health. A revision accompanies connection updates.
+Conversation history now ignores responses from superseded selections. Six browser
+scenarios cover the existing workflows plus delayed history and settings persistence.
+The settings screenshot and desktop/tablet/mobile screenshots were opened directly;
+controls are legible and primary actions remain within the viewport. Screenshots
+contain explicitly controlled vendor outputs, not live provider receipts. No
+approved visual baseline or full screen-reader certification is claimed.

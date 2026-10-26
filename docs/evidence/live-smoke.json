@@ -1,9 +1,9 @@
 {
-  "timestamp": "2026-10-22T13:38:34.595148+00:00",
+  "timestamp": "2026-10-26T01:20:30.891315+00:00",
   "endpoint_host": "api.tokenfactory.nebius.com",
   "model": "nvidia/nemotron-3-super-120b-a12b",
   "github": "not run: token/repository/write authorization required",
-  "tavily": "not run: real TAVILY_API_KEY required",
+  "tavily": "not run by this Nebius probe; use scripts.live_research_smoke",
   "checks": [
     {
       "check": "model_list",
@@ -31,19 +31,19 @@
         "prompt_cache_hit_tokens": 0,
         "prompt_cache_miss_tokens": 377
       },
-      "latency_ms": 1421
+      "latency_ms": 1431
     },
     {
       "check": "tool_result_roundtrip",
       "nonempty_result": true,
       "usage": {
-        "completion_tokens": 123,
+        "completion_tokens": 135,
         "prompt_tokens": 83,
-        "total_tokens": 206,
+        "total_tokens": 218,
         "completion_tokens_details": {
           "accepted_prediction_tokens": null,
           "audio_tokens": null,
-          "reasoning_tokens": 111,
+          "reasoning_tokens": 123,
           "rejected_prediction_tokens": null
         },
         "prompt_tokens_details": {
@@ -55,7 +55,9 @@
         "prompt_cache_hit_tokens": 0,
         "prompt_cache_miss_tokens": 83
       },
-      "latency_ms": 1894
+      "latency_ms": 2334
     }
-  ]
+  ],
+  "passed": true,
+  "status": "Live verified"
 }
