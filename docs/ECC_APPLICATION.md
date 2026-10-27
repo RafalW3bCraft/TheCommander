@@ -80,3 +80,13 @@ live-probe-red.txt, live-probe-green.txt and continuation-verification.txt.
 The installed/pinned catalogs and all private configuration remain preserved;
 no unrelated skill execution, independent agent review or native hook activation
 is claimed. Prior evidence was copied before refresh; see continuation-baseline.json.
+
+## 2026-10-26 release packaging recheck
+
+Continued the previously read verification-loop/security-review guidance with
+source-hash baseline comparison, archive reproducibility regression, constrained
+package verification, full release gate, live provider probes and actual Compose
+and restore drills. Evidence: release-recheck-baseline.json,
+package-reproducibility-red/green.txt, recheck-verification.txt and
+packaged-release-verification.json. Catalog inventory is refreshed without
+installing or executing unrelated workflows; review remained self-review.

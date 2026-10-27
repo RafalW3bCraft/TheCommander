@@ -1,7 +1,7 @@
 # Implementation status — 2026-10-26 UTC
 
 Local implementation and complete verification gate passed on rebuild/personal-ai,
-HEAD 87dbaaaa6242acd32b7ad9e23d6f1ab733a26e7c plus the current working-tree diff.
+HEAD 57b9dc21e45eb7d270c279a466ac9e9f674bcfdd plus the current working-tree diff.
 See RELEASE_REPORT.md and evidence/release-manifest.json for tested source identity,
 evidence scopes and external release blockers. Existing user edits/data are preserved.
 
@@ -19,7 +19,7 @@ evidence scopes and external release blockers. Existing user edits/data are pres
 | HTTPS overlay | Implemented | Caddy configuration locally validated; remote deployment Not run |
 | Publication, judge access, archive comparison, submission | Blocked | inputs/authorization listed in RELEASE_REPORT.md |
 
-Complete gate: 74 automated tests (68 backend plus six probe regressions), 91.14% coverage, 6 Chromium scenarios,
+Complete gate: 77 automated tests (68 backend, six probe and three packaging regressions), 91.14% coverage, 6 Chromium scenarios,
 Python/frontend static checks and production build, dependency audits and secret
 scan passed. The master documents were read completely; the rebuild plan adds
 recursive audit requirement 13. ECC catalog provenance/applicability is preserved;
@@ -28,4 +28,9 @@ not every skill or native hook was executed. No external writes were performed.
 Continuation: repaired F15 so a failed/blocked Nebius smoke command returns a
 nonzero exit code. Corrected stale handoff/navigation references and the duplicate
 skill-schema traceability ID. See CONTINUATION_REPORT.md and
-evidence/continuation-verification.txt for current checks and provider evidence.
+evidence/recheck-verification.txt for current checks and provider evidence.
+
+Latest continuation: repaired F16 (gzip timestamp made identical sources produce
+different archive digests), added three packaging regressions and a public
+`python -m scripts.verify_package` integrity/startup gate. Fresh Nebius and Tavily
+probes passed; the unchanged runtime retains its timestamped 30-case evaluation.

@@ -1,0 +1,13 @@
+{
+  "timestamp": "2026-10-23T12:11:58.897282+00:00",
+  "deployment": "thecommander-releasecheck",
+  "checks": [
+    "database_readiness",
+    "production_frontend_served",
+    "secure_owner_login",
+    "persisted_memory_export",
+    "persistent_workspace_note",
+    "separate_worker_heartbeat",
+    "session_revocation"
+  ]
+}

@@ -1,0 +1,76 @@
+F                                                                        [100%]
+=================================== FAILURES ===================================
+______________ test_identical_sources_produce_identical_archives _______________
+
+monkeypatch = <_pytest.monkeypatch.MonkeyPatch object at 0x7f81363bfbb0>
+tmp_path = PosixPath('/tmp/pytest-of-watcher/pytest-16/test_identical_sources_produce0')
+
+    def test_identical_sources_produce_identical_archives(monkeypatch, tmp_path):
+        (tmp_path / "docs/evidence").mkdir(parents=True)
+        (tmp_path / "scripts").mkdir()
+        (tmp_path / "README.md").write_text("Public release\n")
+        (tmp_path / "scripts/start.sh").write_text("#!/bin/sh\nexit 0\n")
+        (tmp_path / ".env").write_text("PRIVATE_KEY=fixture-private-value\n")
+        (tmp_path / "scripts/private-link.py").symlink_to(tmp_path / ".env")
+        monkeypatch.setattr(package_release, "ROOT", tmp_path)
+        monkeypatch.setattr(
+            package_release.subprocess,
+            "check_output",
+            lambda command, **kwargs: (
+                b"README.md\0scripts/start.sh\0.env\0scripts/private-link.py\0"
+                if command[1] == "ls-files"
+                else b"fixture-head\n"
+            ),
+        )
+        archives = []
+        manifests = []
+        for timestamp in (1700000000, 1700003600):
+            with monkeypatch.context() as clock:
+                clock.setattr("time.time", lambda: timestamp)
+                package_release.main()
+            manifest = json.loads((tmp_path / "docs/evidence/release-manifest.json").read_text())
+            archives.append((tmp_path / manifest["artifact"]).read_bytes())
+            manifests.append(manifest)
+        assert manifests[0]["source_sha256"] == manifests[1]["source_sha256"]
+>       assert archives[0] == archives[1], "Identical sources must retain the same archive digest"
+E       AssertionError: Identical sources must retain the same archive digest
+E       assert b'\x1f\x8b\x0...\x00(\x00\x00' == b'\x1f\x8b\x0...\x00(\x00\x00'
+E         
+E         At index 4 diff: b'\x00' != b'\x10'
+E         Use -v to get more diff
+
+tests/test_release_package.py:37: AssertionError
+----------------------------- Captured stdout call -----------------------------
+{
+  "head": "fixture-head",
+  "source": "working-tree release inputs, including uncommitted implementation",
+  "source_sha256": "9e5200eefca68eddb3e05a7210da75477fa4c507de81370b5dfd5f6ca748901f",
+  "artifact": ".runtime/releases/thecommander-9e5200eefca6.tar.gz",
+  "artifact_sha256": "63601494b15872a809a5ff4882d44d0bb40b9f9f585c32a9de98feb12cff83a2",
+  "excluded": [
+    "private environment",
+    "runtime data",
+    "development ECC catalogs",
+    "Git history",
+    "legacy runtime",
+    "generated evidence"
+  ]
+}
+{
+  "head": "fixture-head",
+  "source": "working-tree release inputs, including uncommitted implementation",
+  "source_sha256": "9e5200eefca68eddb3e05a7210da75477fa4c507de81370b5dfd5f6ca748901f",
+  "artifact": ".runtime/releases/thecommander-9e5200eefca6.tar.gz",
+  "artifact_sha256": "58458889a681c797014d93afeecce49aea72da515ec872334c778ee130279872",
+  "excluded": [
+    "private environment",
+    "runtime data",
+    "development ECC catalogs",
+    "Git history",
+    "legacy runtime",
+    "generated evidence"
+  ]
+}
+=========================== short test summary info ============================
+FAILED tests/test_release_package.py::test_identical_sources_produce_identical_archives
+1 failed in 0.13s

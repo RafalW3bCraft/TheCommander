@@ -1,0 +1,9 @@
+Emulate Docker CLI using podman. Create /etc/containers/nodocker to quiet msg.
+{"level":"info","ts":1792974632.0766356,"msg":"using config from file","file":"/etc/caddy/Caddyfile"}
+{"level":"info","ts":1792974632.0775974,"msg":"adapted config to JSON","adapter":"caddyfile"}
+{"level":"info","ts":1792974632.0779696,"logger":"http.auto_https","msg":"server is listening only on the HTTPS port but has no TLS connection policies; adding one to enable TLS","server_name":"srv0","https_port":443}
+{"level":"info","ts":1792974632.0780597,"logger":"tls.cache.maintenance","msg":"started background certificate maintenance","cache":"0x223a3d039180"}
+{"level":"info","ts":1792974632.0780008,"logger":"http.auto_https","msg":"enabling automatic HTTP->HTTPS redirects","server_name":"srv0"}
+{"level":"info","ts":1792974632.0785275,"logger":"http","msg":"servers shutting down with eternal grace period"}
+{"level":"info","ts":1792974632.0785806,"logger":"tls.cache.maintenance","msg":"stopped background certificate maintenance","cache":"0x223a3d039180"}
+Valid configuration

@@ -1,6 +1,6 @@
 {
-  "generated_at": "2026-10-26T01:21:36.363030+00:00",
-  "head": "87dbaaaa6242acd32b7ad9e23d6f1ab733a26e7c",
+  "generated_at": "2026-10-26T12:10:31.062391+00:00",
+  "head": "57b9dc21e45eb7d270c279a466ac9e9f674bcfdd",
   "scope": "All tracked and unignored files recursively; first-party Python AST/imports/routes, complete ECC artifact hashes, dependency manifests",
   "limits": [
     "Metadata enumeration is not line-by-line semantic certification of every catalog or third-party dependency.",
@@ -11,11 +11,11 @@
   "counts": {
     "ecc-development-tooling": 693,
     "release-build-and-configuration": 17,
-    "documentation": 34,
+    "documentation": 35,
     "preserved-legacy": 28,
     "release-backend": 28,
-    "verification-evidence": 142,
-    "verification-and-operations": 24,
+    "verification-evidence": 227,
+    "verification-and-operations": 26,
     "release-frontend": 4,
     "generated-contract": 1
   },
@@ -4217,8 +4217,8 @@
     {
       "path": "README.md",
       "category": "documentation",
-      "bytes": 7500,
-      "sha256": "6c49676b56115ac2005d1fd0b2c1602b49f7819ae7e3fa17b31f28b334566ab3"
+      "bytes": 7502,
+      "sha256": "cd291e4db9bd9b7e9e41e04ee2d19ba538b88b89cd2cf313c15c809943c2b4cd"
     },
     {
       "path": "THIRD_PARTY_NOTICES",
@@ -4521,6 +4521,12 @@
       "sha256": "79216c9dcf82b8ca22b44e96ea8f8addf81b3774a51dac33e4ece0fc02df7e0a"
     },
     {
+      "path": "docs/CONTINUATION_REPORT.md",
+      "category": "documentation",
+      "bytes": 8464,
+      "sha256": "ec523b5f2c0b250bf125d01329da210635548e3bd46b21aaaa3fc03b22cdfe32"
+    },
+    {
       "path": "docs/DEMO_SCRIPT.md",
       "category": "documentation",
       "bytes": 1321,
@@ -4529,8 +4535,8 @@
     {
       "path": "docs/ECC_APPLICATION.md",
       "category": "documentation",
-      "bytes": 5914,
-      "sha256": "d66bf3238d5409f8c711b615dd8464c4a749edb402975023a4bb7ab03909db96"
+      "bytes": 6474,
+      "sha256": "34da7cdc1c33f24413f0e8047cca3f6e4b477fff94c39290f45b11683cbaac5c"
     },
     {
       "path": "docs/ECC_SETUP.md",
@@ -4541,20 +4547,20 @@
     {
       "path": "docs/EVALUATION.md",
       "category": "documentation",
-      "bytes": 3551,
-      "sha256": "c05739f921c1ab3ef76bfe585d292ed257143a0c062ffcccf2690bf1da41a182"
+      "bytes": 3891,
+      "sha256": "09de399af03582ea1d9396f1db7bff945d9ddd97d7500d80d6636e39d8c63cca"
     },
     {
       "path": "docs/FEEDBACK.md",
       "category": "documentation",
-      "bytes": 1818,
-      "sha256": "b92f67e58f3ba4f7663309b72202f3cd2bd742af18b4d972cdfae5daedf191eb"
+      "bytes": 1823,
+      "sha256": "6a3c37b1078525cafe236b96c4bfaf34defc46f25aef6310e3014b9837cacc84"
     },
     {
       "path": "docs/FINDINGS.md",
       "category": "documentation",
-      "bytes": 4340,
-      "sha256": "444b38829fad84e54d243f5dba9ff1adf01697dfb8aac4e0e919d1b35c5413db"
+      "bytes": 5145,
+      "sha256": "04fe3874214c5c8cfc37bf2fc653a75f4d7d6e1c48b04014a493b453934999e6"
     },
     {
       "path": "docs/HACKATHON_CHANGES.md",
@@ -4565,8 +4571,8 @@
     {
       "path": "docs/IMPLEMENTATION_STATUS.md",
       "category": "documentation",
-      "bytes": 2175,
-      "sha256": "18db421bb5a8014ef62220a537a70d17eddd74ab63ec8bce8d9fbc3d2a8ea902"
+      "bytes": 2853,
+      "sha256": "2437c0041715fc324754d70487e2e5724ea384faa5b60fa03d7056627027b8ae"
     },
     {
       "path": "docs/JUDGE_GUIDE.md",
@@ -4583,8 +4589,8 @@
     {
       "path": "docs/OPERATIONS.md",
       "category": "documentation",
-      "bytes": 9195,
-      "sha256": "fcf930fd8be885fd288c7476a84b04c52578a8964e8bc4ce3d7675b7f9076fa4"
+      "bytes": 10303,
+      "sha256": "be8e445223124f8a2bfddd9c1b55933abf43a46273f4e8506223234704402410"
     },
     {
       "path": "docs/PRD.md",
@@ -4607,14 +4613,14 @@
     {
       "path": "docs/RELEASE_CHECKLIST.md",
       "category": "documentation",
-      "bytes": 1890,
-      "sha256": "2d0cd20d35280c0cbfc1e70869074a29b5b93977740dc5b8267e2b147f1dd96a"
+      "bytes": 2036,
+      "sha256": "446abd3f0c7623f4a389d8146622b6e055428742caae7b97b87ec6d52dfec092"
     },
     {
       "path": "docs/RELEASE_REPORT.md",
       "category": "documentation",
-      "bytes": 9601,
-      "sha256": "9ba303061323ec549cbe30c52d3c7fbfa20e01da53fc35fd7eeb04878072f19e"
+      "bytes": 10513,
+      "sha256": "eae40911f12f2b660a434805765c9e4eb43c740941cc36f2fb6aaf4d217af3a5"
     },
     {
       "path": "docs/SCOPE.md",
@@ -4643,8 +4649,8 @@
     {
       "path": "docs/TRACEABILITY.md",
       "category": "documentation",
-      "bytes": 4444,
-      "sha256": "e263ba2b903ba6a6b85a2f9e1b5fcfad16690ca9489ac0f7d6a20dff6e565bf1"
+      "bytes": 4889,
+      "sha256": "7d5f4fbe2f20ded453adb25575872446066055ad064667e0f3c8d5daed7503b5"
     },
     {
       "path": "docs/adr/001-preserve-legacy.md",
@@ -5169,15 +5175,465 @@
       "hash_scope": "not hashed: mutable output, including this inventory"
     },
     {
+      "path": "docs/evidence/baseline-20261026T115637Z/.gitkeep",
+      "category": "verification-evidence",
+      "bytes": 0,
+      "hash_scope": "not hashed: mutable output, including this inventory"
+    },
+    {
+      "path": "docs/evidence/baseline-20261026T115637Z/01-red.txt",
+      "category": "verification-evidence",
+      "bytes": 214,
+      "hash_scope": "not hashed: mutable output, including this inventory"
+    },
+    {
+      "path": "docs/evidence/baseline-20261026T115637Z/agent-architecture-audit.json",
+      "category": "verification-evidence",
+      "bytes": 9921,
+      "hash_scope": "not hashed: mutable output, including this inventory"
+    },
+    {
+      "path": "docs/evidence/baseline-20261026T115637Z/audit-backup-run.txt",
+      "category": "verification-evidence",
+      "bytes": 327,
+      "hash_scope": "not hashed: mutable output, including this inventory"
+    },
+    {
+      "path": "docs/evidence/baseline-20261026T115637Z/audit-browser-initial-failures.txt",
+      "category": "verification-evidence",
+      "bytes": 6231,
+      "hash_scope": "not hashed: mutable output, including this inventory"
+    },
+    {
+      "path": "docs/evidence/baseline-20261026T115637Z/audit-browser.txt",
+      "category": "verification-evidence",
+      "bytes": 6231,
+      "hash_scope": "not hashed: mutable output, including this inventory"
+    },
+    {
+      "path": "docs/evidence/baseline-20261026T115637Z/audit-compose-build.txt",
+      "category": "verification-evidence",
+      "bytes": 4393,
+      "hash_scope": "not hashed: mutable output, including this inventory"
+    },
+    {
+      "path": "docs/evidence/baseline-20261026T115637Z/audit-inventory-run.txt",
+      "category": "verification-evidence",
+      "bytes": 114,
+      "hash_scope": "not hashed: mutable output, including this inventory"
+    },
+    {
+      "path": "docs/evidence/baseline-20261026T115637Z/audit-regressions-green.txt",
+      "category": "verification-evidence",
+      "bytes": 610,
+      "hash_scope": "not hashed: mutable output, including this inventory"
+    },
+    {
+      "path": "docs/evidence/baseline-20261026T115637Z/audit-regressions-red.txt",
+      "category": "verification-evidence",
+      "bytes": 24475,
+      "hash_scope": "not hashed: mutable output, including this inventory"
+    },
+    {
+      "path": "docs/evidence/baseline-20261026T115637Z/audit-safety-green.txt",
+      "category": "verification-evidence",
+      "bytes": 609,
+      "hash_scope": "not hashed: mutable output, including this inventory"
+    },
+    {
+      "path": "docs/evidence/baseline-20261026T115637Z/audit-safety-red.txt",
+      "category": "verification-evidence",
+      "bytes": 4731,
+      "hash_scope": "not hashed: mutable output, including this inventory"
+    },
+    {
+      "path": "docs/evidence/baseline-20261026T115637Z/audit-verification.txt",
+      "category": "verification-evidence",
+      "bytes": 8368,
+      "hash_scope": "not hashed: mutable output, including this inventory"
+    },
+    {
+      "path": "docs/evidence/baseline-20261026T115637Z/backend-tests.txt",
+      "category": "verification-evidence",
+      "bytes": 2370,
+      "hash_scope": "not hashed: mutable output, including this inventory"
+    },
+    {
+      "path": "docs/evidence/baseline-20261026T115637Z/backup-restore.json",
+      "category": "verification-evidence",
+      "bytes": 381,
+      "hash_scope": "not hashed: mutable output, including this inventory"
+    },
+    {
+      "path": "docs/evidence/baseline-20261026T115637Z/browser-desktop.png",
+      "category": "verification-evidence",
+      "bytes": 58545,
+      "hash_scope": "not hashed: mutable output, including this inventory"
+    },
+    {
+      "path": "docs/evidence/baseline-20261026T115637Z/browser-mobile.png",
+      "category": "verification-evidence",
+      "bytes": 134922,
+      "hash_scope": "not hashed: mutable output, including this inventory"
+    },
+    {
+      "path": "docs/evidence/baseline-20261026T115637Z/browser-results.json",
+      "category": "verification-evidence",
+      "bytes": 9467,
+      "hash_scope": "not hashed: mutable output, including this inventory"
+    },
+    {
+      "path": "docs/evidence/baseline-20261026T115637Z/browser-run.txt",
+      "category": "verification-evidence",
+      "bytes": 626,
+      "hash_scope": "not hashed: mutable output, including this inventory"
+    },
+    {
+      "path": "docs/evidence/baseline-20261026T115637Z/browser-settings.png",
+      "category": "verification-evidence",
+      "bytes": 99318,
+      "hash_scope": "not hashed: mutable output, including this inventory"
+    },
+    {
+      "path": "docs/evidence/baseline-20261026T115637Z/browser-tablet.png",
+      "category": "verification-evidence",
+      "bytes": 134256,
+      "hash_scope": "not hashed: mutable output, including this inventory"
+    },
+    {
+      "path": "docs/evidence/baseline-20261026T115637Z/clean-release-build.txt",
+      "category": "verification-evidence",
+      "bytes": 8717,
+      "hash_scope": "not hashed: mutable output, including this inventory"
+    },
+    {
+      "path": "docs/evidence/baseline-20261026T115637Z/clean-release-smoke.json",
+      "category": "verification-evidence",
+      "bytes": 663,
+      "hash_scope": "not hashed: mutable output, including this inventory"
+    },
+    {
+      "path": "docs/evidence/baseline-20261026T115637Z/compose-build.txt",
+      "category": "verification-evidence",
+      "bytes": 4863,
+      "hash_scope": "not hashed: mutable output, including this inventory"
+    },
+    {
+      "path": "docs/evidence/baseline-20261026T115637Z/compose-smoke.json",
+      "category": "verification-evidence",
+      "bytes": 326,
+      "hash_scope": "not hashed: mutable output, including this inventory"
+    },
+    {
+      "path": "docs/evidence/baseline-20261026T115637Z/compose-start.txt",
+      "category": "verification-evidence",
+      "bytes": 7152,
+      "hash_scope": "not hashed: mutable output, including this inventory"
+    },
+    {
+      "path": "docs/evidence/baseline-20261026T115637Z/continuation-backup.txt",
+      "category": "verification-evidence",
+      "bytes": 361,
+      "hash_scope": "not hashed: mutable output, including this inventory"
+    },
+    {
+      "path": "docs/evidence/baseline-20261026T115637Z/continuation-baseline.json",
+      "category": "verification-evidence",
+      "bytes": 230,
+      "hash_scope": "not hashed: mutable output, including this inventory"
+    },
+    {
+      "path": "docs/evidence/baseline-20261026T115637Z/continuation-before-probe-fix.txt",
+      "category": "verification-evidence",
+      "bytes": 5926,
+      "hash_scope": "not hashed: mutable output, including this inventory"
+    },
+    {
+      "path": "docs/evidence/baseline-20261026T115637Z/continuation-clean-build.txt",
+      "category": "verification-evidence",
+      "bytes": 10196,
+      "hash_scope": "not hashed: mutable output, including this inventory"
+    },
+    {
+      "path": "docs/evidence/baseline-20261026T115637Z/continuation-inventory.txt",
+      "category": "verification-evidence",
+      "bytes": 114,
+      "hash_scope": "not hashed: mutable output, including this inventory"
+    },
+    {
+      "path": "docs/evidence/baseline-20261026T115637Z/continuation-live-smoke.txt",
+      "category": "verification-evidence",
+      "bytes": 1797,
+      "hash_scope": "not hashed: mutable output, including this inventory"
+    },
+    {
+      "path": "docs/evidence/baseline-20261026T115637Z/continuation-package.txt",
+      "category": "verification-evidence",
+      "bytes": 548,
+      "hash_scope": "not hashed: mutable output, including this inventory"
+    },
+    {
+      "path": "docs/evidence/baseline-20261026T115637Z/continuation-packaged-build.txt",
+      "category": "verification-evidence",
+      "bytes": 11491,
+      "hash_scope": "not hashed: mutable output, including this inventory"
+    },
+    {
+      "path": "docs/evidence/baseline-20261026T115637Z/continuation-verification.txt",
+      "category": "verification-evidence",
+      "bytes": 6003,
+      "hash_scope": "not hashed: mutable output, including this inventory"
+    },
+    {
+      "path": "docs/evidence/baseline-20261026T115637Z/conversation-race-red.txt",
+      "category": "verification-evidence",
+      "bytes": 3236,
+      "hash_scope": "not hashed: mutable output, including this inventory"
+    },
+    {
+      "path": "docs/evidence/baseline-20261026T115637Z/conversation-race-test-setup-failure.txt",
+      "category": "verification-evidence",
+      "bytes": 3698,
+      "hash_scope": "not hashed: mutable output, including this inventory"
+    },
+    {
+      "path": "docs/evidence/baseline-20261026T115637Z/ecc-catalog.json",
+      "category": "verification-evidence",
+      "bytes": 347906,
+      "hash_scope": "not hashed: mutable output, including this inventory"
+    },
+    {
+      "path": "docs/evidence/baseline-20261026T115637Z/ecc-full-plan.json",
+      "category": "verification-evidence",
+      "bytes": 136885,
+      "hash_scope": "not hashed: mutable output, including this inventory"
+    },
+    {
+      "path": "docs/evidence/baseline-20261026T115637Z/ecc-plugin-diagnostic.txt",
+      "category": "verification-evidence",
+      "bytes": 440,
+      "hash_scope": "not hashed: mutable output, including this inventory"
+    },
+    {
+      "path": "docs/evidence/baseline-20261026T115637Z/ecc-reference-inventory.json",
+      "category": "verification-evidence",
+      "bytes": 873365,
+      "hash_scope": "not hashed: mutable output, including this inventory"
+    },
+    {
+      "path": "docs/evidence/baseline-20261026T115637Z/final-verification.txt",
+      "category": "verification-evidence",
+      "bytes": 5388,
+      "hash_scope": "not hashed: mutable output, including this inventory"
+    },
+    {
+      "path": "docs/evidence/baseline-20261026T115637Z/live-evaluation-pre-audit.json",
+      "category": "verification-evidence",
+      "bytes": 29159,
+      "hash_scope": "not hashed: mutable output, including this inventory"
+    },
+    {
+      "path": "docs/evidence/baseline-20261026T115637Z/live-evaluation-run-pre-audit.txt",
+      "category": "verification-evidence",
+      "bytes": 1007,
+      "hash_scope": "not hashed: mutable output, including this inventory"
+    },
+    {
+      "path": "docs/evidence/baseline-20261026T115637Z/live-evaluation-run.txt",
+      "category": "verification-evidence",
+      "bytes": 1007,
+      "hash_scope": "not hashed: mutable output, including this inventory"
+    },
+    {
+      "path": "docs/evidence/baseline-20261026T115637Z/live-evaluation.json",
+      "category": "verification-evidence",
+      "bytes": 29191,
+      "hash_scope": "not hashed: mutable output, including this inventory"
+    },
+    {
+      "path": "docs/evidence/baseline-20261026T115637Z/live-probe-green.txt",
+      "category": "verification-evidence",
+      "bytes": 98,
+      "hash_scope": "not hashed: mutable output, including this inventory"
+    },
+    {
+      "path": "docs/evidence/baseline-20261026T115637Z/live-probe-red.txt",
+      "category": "verification-evidence",
+      "bytes": 21536,
+      "hash_scope": "not hashed: mutable output, including this inventory"
+    },
+    {
+      "path": "docs/evidence/baseline-20261026T115637Z/live-research-run-pre-audit.txt",
+      "category": "verification-evidence",
+      "bytes": 1657,
+      "hash_scope": "not hashed: mutable output, including this inventory"
+    },
+    {
+      "path": "docs/evidence/baseline-20261026T115637Z/live-research-run.txt",
+      "category": "verification-evidence",
+      "bytes": 1651,
+      "hash_scope": "not hashed: mutable output, including this inventory"
+    },
+    {
+      "path": "docs/evidence/baseline-20261026T115637Z/live-research-smoke-pre-audit.json",
+      "category": "verification-evidence",
+      "bytes": 1569,
+      "hash_scope": "not hashed: mutable output, including this inventory"
+    },
+    {
+      "path": "docs/evidence/baseline-20261026T115637Z/live-research-smoke.json",
+      "category": "verification-evidence",
+      "bytes": 1563,
+      "hash_scope": "not hashed: mutable output, including this inventory"
+    },
+    {
+      "path": "docs/evidence/baseline-20261026T115637Z/live-smoke.json",
+      "category": "verification-evidence",
+      "bytes": 1797,
+      "hash_scope": "not hashed: mutable output, including this inventory"
+    },
+    {
+      "path": "docs/evidence/baseline-20261026T115637Z/npm-audit.txt",
+      "category": "verification-evidence",
+      "bytes": 24,
+      "hash_scope": "not hashed: mutable output, including this inventory"
+    },
+    {
+      "path": "docs/evidence/baseline-20261026T115637Z/packaged-release-verification.json",
+      "category": "verification-evidence",
+      "bytes": 1295,
+      "hash_scope": "not hashed: mutable output, including this inventory"
+    },
+    {
+      "path": "docs/evidence/baseline-20261026T115637Z/python-audit.txt",
+      "category": "verification-evidence",
+      "bytes": 31,
+      "hash_scope": "not hashed: mutable output, including this inventory"
+    },
+    {
+      "path": "docs/evidence/baseline-20261026T115637Z/recursive-inventory.json",
+      "category": "verification-evidence",
+      "bytes": 236898,
+      "hash_scope": "not hashed: mutable output, including this inventory"
+    },
+    {
+      "path": "docs/evidence/baseline-20261026T115637Z/release-backend.txt",
+      "category": "verification-evidence",
+      "bytes": 606,
+      "hash_scope": "not hashed: mutable output, including this inventory"
+    },
+    {
+      "path": "docs/evidence/baseline-20261026T115637Z/release-backup.txt",
+      "category": "verification-evidence",
+      "bytes": 361,
+      "hash_scope": "not hashed: mutable output, including this inventory"
+    },
+    {
+      "path": "docs/evidence/baseline-20261026T115637Z/release-browser.txt",
+      "category": "verification-evidence",
+      "bytes": 3295,
+      "hash_scope": "not hashed: mutable output, including this inventory"
+    },
+    {
+      "path": "docs/evidence/baseline-20261026T115637Z/release-clean-build.txt",
+      "category": "verification-evidence",
+      "bytes": 9548,
+      "hash_scope": "not hashed: mutable output, including this inventory"
+    },
+    {
+      "path": "docs/evidence/baseline-20261026T115637Z/release-dependency-audit.txt",
+      "category": "verification-evidence",
+      "bytes": 31,
+      "hash_scope": "not hashed: mutable output, including this inventory"
+    },
+    {
+      "path": "docs/evidence/baseline-20261026T115637Z/release-inventory.txt",
+      "category": "verification-evidence",
+      "bytes": 114,
+      "hash_scope": "not hashed: mutable output, including this inventory"
+    },
+    {
+      "path": "docs/evidence/baseline-20261026T115637Z/release-live-evaluation.txt",
+      "category": "verification-evidence",
+      "bytes": 1007,
+      "hash_scope": "not hashed: mutable output, including this inventory"
+    },
+    {
+      "path": "docs/evidence/baseline-20261026T115637Z/release-live-research.txt",
+      "category": "verification-evidence",
+      "bytes": 1651,
+      "hash_scope": "not hashed: mutable output, including this inventory"
+    },
+    {
+      "path": "docs/evidence/baseline-20261026T115637Z/release-manifest.json",
+      "category": "verification-evidence",
+      "bytes": 11234,
+      "hash_scope": "not hashed: mutable output, including this inventory"
+    },
+    {
+      "path": "docs/evidence/baseline-20261026T115637Z/release-packaged-build.txt",
+      "category": "verification-evidence",
+      "bytes": 12149,
+      "hash_scope": "not hashed: mutable output, including this inventory"
+    },
+    {
+      "path": "docs/evidence/baseline-20261026T115637Z/release-proxy-validation.txt",
+      "category": "verification-evidence",
+      "bytes": 1064,
+      "hash_scope": "not hashed: mutable output, including this inventory"
+    },
+    {
+      "path": "docs/evidence/baseline-20261026T115637Z/release-settings-green.txt",
+      "category": "verification-evidence",
+      "bytes": 595,
+      "hash_scope": "not hashed: mutable output, including this inventory"
+    },
+    {
+      "path": "docs/evidence/baseline-20261026T115637Z/release-settings-red.txt",
+      "category": "verification-evidence",
+      "bytes": 4290,
+      "hash_scope": "not hashed: mutable output, including this inventory"
+    },
+    {
+      "path": "docs/evidence/baseline-20261026T115637Z/release-upgrade-settings.txt",
+      "category": "verification-evidence",
+      "bytes": 596,
+      "hash_scope": "not hashed: mutable output, including this inventory"
+    },
+    {
+      "path": "docs/evidence/baseline-20261026T115637Z/release-verification-before-reservation.txt",
+      "category": "verification-evidence",
+      "bytes": 5931,
+      "hash_scope": "not hashed: mutable output, including this inventory"
+    },
+    {
+      "path": "docs/evidence/baseline-20261026T115637Z/release-verification.txt",
+      "category": "verification-evidence",
+      "bytes": 5925,
+      "hash_scope": "not hashed: mutable output, including this inventory"
+    },
+    {
+      "path": "docs/evidence/baseline-20261026T115637Z/usage-reservation-green.txt",
+      "category": "verification-evidence",
+      "bytes": 609,
+      "hash_scope": "not hashed: mutable output, including this inventory"
+    },
+    {
+      "path": "docs/evidence/baseline-20261026T115637Z/usage-reservation-red.txt",
+      "category": "verification-evidence",
+      "bytes": 2477,
+      "hash_scope": "not hashed: mutable output, including this inventory"
+    },
+    {
       "path": "docs/evidence/browser-desktop.png",
       "category": "verification-evidence",
-      "bytes": 58284,
+      "bytes": 58841,
       "hash_scope": "not hashed: mutable output, including this inventory"
     },
     {
       "path": "docs/evidence/browser-mobile.png",
       "category": "verification-evidence",
-      "bytes": 134663,
+      "bytes": 135326,
       "hash_scope": "not hashed: mutable output, including this inventory"
     },
     {
@@ -5201,7 +5657,7 @@
     {
       "path": "docs/evidence/browser-tablet.png",
       "category": "verification-evidence",
-      "bytes": 134129,
+      "bytes": 134654,
       "hash_scope": "not hashed: mutable output, including this inventory"
     },
     {
@@ -5261,7 +5717,7 @@
     {
       "path": "docs/evidence/continuation-inventory.txt",
       "category": "verification-evidence",
-      "bytes": 0,
+      "bytes": 114,
       "hash_scope": "not hashed: mutable output, including this inventory"
     },
     {
@@ -5271,9 +5727,21 @@
       "hash_scope": "not hashed: mutable output, including this inventory"
     },
     {
+      "path": "docs/evidence/continuation-package.txt",
+      "category": "verification-evidence",
+      "bytes": 548,
+      "hash_scope": "not hashed: mutable output, including this inventory"
+    },
+    {
+      "path": "docs/evidence/continuation-packaged-build.txt",
+      "category": "verification-evidence",
+      "bytes": 11491,
+      "hash_scope": "not hashed: mutable output, including this inventory"
+    },
+    {
       "path": "docs/evidence/continuation-verification.txt",
       "category": "verification-evidence",
-      "bytes": 117,
+      "bytes": 6003,
       "hash_scope": "not hashed: mutable output, including this inventory"
     },
     {
@@ -5391,6 +5859,18 @@
       "hash_scope": "not hashed: mutable output, including this inventory"
     },
     {
+      "path": "docs/evidence/package-reproducibility-green.txt",
+      "category": "verification-evidence",
+      "bytes": 98,
+      "hash_scope": "not hashed: mutable output, including this inventory"
+    },
+    {
+      "path": "docs/evidence/package-reproducibility-red.txt",
+      "category": "verification-evidence",
+      "bytes": 3508,
+      "hash_scope": "not hashed: mutable output, including this inventory"
+    },
+    {
       "path": "docs/evidence/packaged-release-verification.json",
       "category": "verification-evidence",
       "bytes": 1295,
@@ -5403,9 +5883,39 @@
       "hash_scope": "not hashed: mutable output, including this inventory"
     },
     {
+      "path": "docs/evidence/recheck-backup.txt",
+      "category": "verification-evidence",
+      "bytes": 361,
+      "hash_scope": "not hashed: mutable output, including this inventory"
+    },
+    {
+      "path": "docs/evidence/recheck-inventory.txt",
+      "category": "verification-evidence",
+      "bytes": 0,
+      "hash_scope": "not hashed: mutable output, including this inventory"
+    },
+    {
+      "path": "docs/evidence/recheck-live-research.txt",
+      "category": "verification-evidence",
+      "bytes": 1651,
+      "hash_scope": "not hashed: mutable output, including this inventory"
+    },
+    {
+      "path": "docs/evidence/recheck-live-smoke.txt",
+      "category": "verification-evidence",
+      "bytes": 1797,
+      "hash_scope": "not hashed: mutable output, including this inventory"
+    },
+    {
+      "path": "docs/evidence/recheck-verification.txt",
+      "category": "verification-evidence",
+      "bytes": 6086,
+      "hash_scope": "not hashed: mutable output, including this inventory"
+    },
+    {
       "path": "docs/evidence/recursive-inventory.json",
       "category": "verification-evidence",
-      "bytes": 218596,
+      "bytes": 236898,
       "hash_scope": "not hashed: mutable output, including this inventory"
     },
     {
@@ -5459,7 +5969,7 @@
     {
       "path": "docs/evidence/release-manifest.json",
       "category": "verification-evidence",
-      "bytes": 11129,
+      "bytes": 11234,
       "hash_scope": "not hashed: mutable output, including this inventory"
     },
     {
@@ -5472,6 +5982,12 @@
       "path": "docs/evidence/release-proxy-validation.txt",
       "category": "verification-evidence",
       "bytes": 1064,
+      "hash_scope": "not hashed: mutable output, including this inventory"
+    },
+    {
+      "path": "docs/evidence/release-recheck-baseline.json",
+      "category": "verification-evidence",
+      "bytes": 278,
       "hash_scope": "not hashed: mutable output, including this inventory"
     },
     {
@@ -5717,8 +6233,8 @@
     {
       "path": "scripts/package_release.py",
       "category": "verification-and-operations",
-      "bytes": 3197,
-      "sha256": "1af4439a6d263d0bd043db898f386c43d9d7afefed56e58cbcd66cd5198ab874"
+      "bytes": 3368,
+      "sha256": "ecd5db17452798022cee79259e429a6ecf246913a0594ea6cf95d2cfafdc43c5"
     },
     {
       "path": "scripts/scan_secrets.py",
@@ -5755,6 +6271,12 @@
       "category": "verification-and-operations",
       "bytes": 643,
       "sha256": "832e00e68fd92173270a2a619584e9fd1a0179a7d00156950f00417efa938430"
+    },
+    {
+      "path": "scripts/verify_package.py",
+      "category": "verification-and-operations",
+      "bytes": 5320,
+      "sha256": "49d6c35a88c228ec9294303604c8472e960e9a99d8a93ef36a7cb21e47900179"
     },
     {
       "path": "static/css/style.css",
@@ -5809,6 +6331,12 @@
       "category": "verification-and-operations",
       "bytes": 2877,
       "sha256": "7ef9cef8687c0b8f550694b9c1b6f073bc18634b2340b99ad80761acd0cd7343"
+    },
+    {
+      "path": "tests/test_release_package.py",
+      "category": "verification-and-operations",
+      "bytes": 4790,
+      "sha256": "91b29e5f35139a3820380f222c30a65b256893fd1ec165613ead86f5be242a14"
     },
     {
       "path": "tests/test_release_settings.py",
@@ -6495,6 +7023,7 @@
     {
       "path": "scripts/package_release.py",
       "imports": [
+        "gzip",
         "hashlib",
         "io",
         "json",
@@ -6520,6 +7049,22 @@
         "os",
         "pathlib",
         "secrets"
+      ],
+      "syntax": "parsed"
+    },
+    {
+      "path": "scripts/verify_package.py",
+      "imports": [
+        "datetime",
+        "dotenv",
+        "hashlib",
+        "io",
+        "json",
+        "pathlib",
+        "subprocess",
+        "sys",
+        "tarfile",
+        "tempfile"
       ],
       "syntax": "parsed"
     },
@@ -6564,6 +7109,19 @@
         "pytest",
         "runpy",
         "types"
+      ],
+      "syntax": "parsed"
+    },
+    {
+      "path": "tests/test_release_package.py",
+      "imports": [
+        "hashlib",
+        "io",
+        "json",
+        "pytest",
+        "scripts",
+        "scripts.verify_package",
+        "tarfile"
       ],
       "syntax": "parsed"
     },

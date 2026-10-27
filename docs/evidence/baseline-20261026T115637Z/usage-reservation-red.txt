@@ -1,0 +1,42 @@
+F                                                                        [100%]
+=================================== FAILURES ===================================
+_______ test_unknown_usage_keeps_original_reservation_after_limits_lower _______
+
+app = (<starlette.testclient.TestClient object at 0x7fe1400442f0>, <test_workflows.Vendor object at 0x7fe1405baf90>, '90c918de-02c1-4a28-bcc0-1ad5ff826075', <commander.db.Database object at 0x7fe140031e50>)
+settings = Settings(database_url='postgresql://watcher@127.0.0.1:55432/postgres', database_schema='test_e3666deda1fc4ce0b71ebc976..._runs=50, max_daily_tokens=100000, daily_spend_limit_usd=None, input_usd_per_million=None, output_usd_per_million=None)
+
+    def test_unknown_usage_keeps_original_reservation_after_limits_lower(app, settings):
+        import pytest
+    
+        from commander.errors import DomainError
+        from commander.inference import check_budget, complete
+        from commander.providers import Provider
+    
+        _, vendor, owner, db = app
+        vendor.mode = "outage"
+        with pytest.raises(DomainError):
+            complete(
+                db,
+                settings,
+                Provider(settings, vendor.transport()),
+                owner,
+                "fictional-key",
+                [{"role": "user", "content": "Fictional request with a lost response"}],
+            )
+        reduced = settings.model_copy(
+            update={"max_context_chars": 4000, "max_output_tokens": 512, "max_daily_tokens": 20000}
+        )
+>       with pytest.raises(DomainError, match="Daily token budget reached"):
+             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+E       Failed: DID NOT RAISE DomainError
+
+tests/test_release_settings.py:251: Failed
+=============================== warnings summary ===============================
+.venv/lib/python3.13/site-packages/fastapi/testclient.py:1
+  /mnt/hostshare/TheCommander/.venv/lib/python3.13/site-packages/fastapi/testclient.py:1: StarletteDeprecationWarning: Using `httpx` with `starlette.testclient` is deprecated; install `httpx2` instead.
+    from starlette.testclient import TestClient as TestClient  # noqa
+
+-- Docs: https://docs.pytest.org/en/stable/how-to/capture-warnings.html
+=========================== short test summary info ============================
+FAILED tests/test_release_settings.py::test_unknown_usage_keeps_original_reservation_after_limits_lower
+1 failed, 10 deselected, 1 warning in 2.11s

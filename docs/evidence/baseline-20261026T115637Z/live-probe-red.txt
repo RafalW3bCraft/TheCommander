@@ -1,0 +1,539 @@
+FFFFFF                                                                   [100%]
+=================================== FAILURES ===================================
+___________ test_live_probe_exit_matches_evidence[missing-2-Blocked] ___________
+
+monkeypatch = <_pytest.monkeypatch.MonkeyPatch object at 0x7f38c53ee8b0>
+tmp_path = PosixPath('/tmp/pytest-of-watcher/pytest-13/test_live_probe_exit_matches_e0')
+mode = 'missing', exit_code = 2, status = 'Blocked'
+
+    @pytest.mark.parametrize(
+        ("mode", "exit_code", "status"),
+        [
+            ("missing", 2, "Blocked"),
+            ("unavailable_model", 1, "Blocked"),
+            ("provider_error", 1, "Blocked"),
+            ("invalid_tool", 1, "Blocked"),
+            ("empty_final", 1, "Blocked"),
+            ("success", 0, "Live verified"),
+        ],
+    )
+    def test_live_probe_exit_matches_evidence(monkeypatch, tmp_path, mode, exit_code, status):
+        monkeypatch.chdir(tmp_path)
+        (tmp_path / "docs").mkdir()
+        monkeypatch.setattr(
+            settings,
+            "Settings",
+            lambda: SimpleNamespace(
+                nebius_api_key="" if mode == "missing" else "test-probe-credential",
+                nebius_model="nvidia/test-model",
+                nebius_base_url="https://api.tokenfactory.nebius.com/v1",
+            ),
+        )
+    
+        class ControlledProvider:
+            def __init__(self, config):
+                self.config = config
+    
+            def request(self, *args, **kwargs):
+                if mode == "provider_error":
+                    raise DomainError("Provider unavailable", 502, "provider_error")
+                return {"data": [] if mode == "unavailable_model" else [{"id": "nvidia/test-model"}]}
+    
+            def completion(self, secret, messages, tools=None, timeout=30):
+                if tools:
+                    return (
+                        {
+                            "tool_calls": [
+                                {
+                                    "id": "probe-call",
+                                    "type": "function",
+                                    "function": {
+                                        "name": "echo_check",
+                                        "arguments": json.dumps(
+                                            {"word": "wrong" if mode == "invalid_tool" else "verified"}
+                                        ),
+                                    },
+                                }
+                            ]
+                        },
+                        {"total_tokens": 10},
+                        1,
+                    )
+                return {"content": "" if mode == "empty_final" else "verified"}, {"total_tokens": 5}, 1
+    
+        monkeypatch.setattr(providers, "Provider", ControlledProvider)
+>       with pytest.raises(SystemExit) as result:
+             ^^^^^^^^^^^^^^^^^^^^^^^^^
+E       Failed: DID NOT RAISE SystemExit
+
+/mnt/hostshare/TheCommander/tests/test_live_probe.py:72: Failed
+----------------------------- Captured stdout call -----------------------------
+{
+  "timestamp": "2026-10-26T01:20:12.426758+00:00",
+  "endpoint_host": "api.tokenfactory.nebius.com",
+  "model": "nvidia/test-model",
+  "github": "not run: token/repository/write authorization required",
+  "tavily": "not run by this Nebius probe; use scripts.live_research_smoke",
+  "checks": [
+    {
+      "check": "nebius",
+      "status": "blocked",
+      "reason": "NEBIUS_API_KEY missing/placeholder"
+    }
+  ]
+}
+______ test_live_probe_exit_matches_evidence[unavailable_model-1-Blocked] ______
+
+monkeypatch = <_pytest.monkeypatch.MonkeyPatch object at 0x7f38c53ee650>
+tmp_path = PosixPath('/tmp/pytest-of-watcher/pytest-13/test_live_probe_exit_matches_e1')
+mode = 'unavailable_model', exit_code = 1, status = 'Blocked'
+
+    @pytest.mark.parametrize(
+        ("mode", "exit_code", "status"),
+        [
+            ("missing", 2, "Blocked"),
+            ("unavailable_model", 1, "Blocked"),
+            ("provider_error", 1, "Blocked"),
+            ("invalid_tool", 1, "Blocked"),
+            ("empty_final", 1, "Blocked"),
+            ("success", 0, "Live verified"),
+        ],
+    )
+    def test_live_probe_exit_matches_evidence(monkeypatch, tmp_path, mode, exit_code, status):
+        monkeypatch.chdir(tmp_path)
+        (tmp_path / "docs").mkdir()
+        monkeypatch.setattr(
+            settings,
+            "Settings",
+            lambda: SimpleNamespace(
+                nebius_api_key="" if mode == "missing" else "test-probe-credential",
+                nebius_model="nvidia/test-model",
+                nebius_base_url="https://api.tokenfactory.nebius.com/v1",
+            ),
+        )
+    
+        class ControlledProvider:
+            def __init__(self, config):
+                self.config = config
+    
+            def request(self, *args, **kwargs):
+                if mode == "provider_error":
+                    raise DomainError("Provider unavailable", 502, "provider_error")
+                return {"data": [] if mode == "unavailable_model" else [{"id": "nvidia/test-model"}]}
+    
+            def completion(self, secret, messages, tools=None, timeout=30):
+                if tools:
+                    return (
+                        {
+                            "tool_calls": [
+                                {
+                                    "id": "probe-call",
+                                    "type": "function",
+                                    "function": {
+                                        "name": "echo_check",
+                                        "arguments": json.dumps(
+                                            {"word": "wrong" if mode == "invalid_tool" else "verified"}
+                                        ),
+                                    },
+                                }
+                            ]
+                        },
+                        {"total_tokens": 10},
+                        1,
+                    )
+                return {"content": "" if mode == "empty_final" else "verified"}, {"total_tokens": 5}, 1
+    
+        monkeypatch.setattr(providers, "Provider", ControlledProvider)
+>       with pytest.raises(SystemExit) as result:
+             ^^^^^^^^^^^^^^^^^^^^^^^^^
+E       Failed: DID NOT RAISE SystemExit
+
+/mnt/hostshare/TheCommander/tests/test_live_probe.py:72: Failed
+----------------------------- Captured stdout call -----------------------------
+{
+  "timestamp": "2026-10-26T01:20:12.469191+00:00",
+  "endpoint_host": "api.tokenfactory.nebius.com",
+  "model": "nvidia/test-model",
+  "github": "not run: token/repository/write authorization required",
+  "tavily": "not run by this Nebius probe; use scripts.live_research_smoke",
+  "checks": [
+    {
+      "check": "model_list",
+      "available": false
+    }
+  ]
+}
+_______ test_live_probe_exit_matches_evidence[provider_error-1-Blocked] ________
+
+monkeypatch = <_pytest.monkeypatch.MonkeyPatch object at 0x7f38c52e8710>
+tmp_path = PosixPath('/tmp/pytest-of-watcher/pytest-13/test_live_probe_exit_matches_e2')
+mode = 'provider_error', exit_code = 1, status = 'Blocked'
+
+    @pytest.mark.parametrize(
+        ("mode", "exit_code", "status"),
+        [
+            ("missing", 2, "Blocked"),
+            ("unavailable_model", 1, "Blocked"),
+            ("provider_error", 1, "Blocked"),
+            ("invalid_tool", 1, "Blocked"),
+            ("empty_final", 1, "Blocked"),
+            ("success", 0, "Live verified"),
+        ],
+    )
+    def test_live_probe_exit_matches_evidence(monkeypatch, tmp_path, mode, exit_code, status):
+        monkeypatch.chdir(tmp_path)
+        (tmp_path / "docs").mkdir()
+        monkeypatch.setattr(
+            settings,
+            "Settings",
+            lambda: SimpleNamespace(
+                nebius_api_key="" if mode == "missing" else "test-probe-credential",
+                nebius_model="nvidia/test-model",
+                nebius_base_url="https://api.tokenfactory.nebius.com/v1",
+            ),
+        )
+    
+        class ControlledProvider:
+            def __init__(self, config):
+                self.config = config
+    
+            def request(self, *args, **kwargs):
+                if mode == "provider_error":
+                    raise DomainError("Provider unavailable", 502, "provider_error")
+                return {"data": [] if mode == "unavailable_model" else [{"id": "nvidia/test-model"}]}
+    
+            def completion(self, secret, messages, tools=None, timeout=30):
+                if tools:
+                    return (
+                        {
+                            "tool_calls": [
+                                {
+                                    "id": "probe-call",
+                                    "type": "function",
+                                    "function": {
+                                        "name": "echo_check",
+                                        "arguments": json.dumps(
+                                            {"word": "wrong" if mode == "invalid_tool" else "verified"}
+                                        ),
+                                    },
+                                }
+                            ]
+                        },
+                        {"total_tokens": 10},
+                        1,
+                    )
+                return {"content": "" if mode == "empty_final" else "verified"}, {"total_tokens": 5}, 1
+    
+        monkeypatch.setattr(providers, "Provider", ControlledProvider)
+>       with pytest.raises(SystemExit) as result:
+             ^^^^^^^^^^^^^^^^^^^^^^^^^
+E       Failed: DID NOT RAISE SystemExit
+
+/mnt/hostshare/TheCommander/tests/test_live_probe.py:72: Failed
+----------------------------- Captured stdout call -----------------------------
+{
+  "timestamp": "2026-10-26T01:20:12.479183+00:00",
+  "endpoint_host": "api.tokenfactory.nebius.com",
+  "model": "nvidia/test-model",
+  "github": "not run: token/repository/write authorization required",
+  "tavily": "not run by this Nebius probe; use scripts.live_research_smoke",
+  "checks": [
+    {
+      "check": "nebius_request",
+      "status": "failed",
+      "error_code": "provider_error",
+      "message": "Provider unavailable"
+    }
+  ]
+}
+________ test_live_probe_exit_matches_evidence[invalid_tool-1-Blocked] _________
+
+monkeypatch = <_pytest.monkeypatch.MonkeyPatch object at 0x7f38c522e250>
+tmp_path = PosixPath('/tmp/pytest-of-watcher/pytest-13/test_live_probe_exit_matches_e3')
+mode = 'invalid_tool', exit_code = 1, status = 'Blocked'
+
+    @pytest.mark.parametrize(
+        ("mode", "exit_code", "status"),
+        [
+            ("missing", 2, "Blocked"),
+            ("unavailable_model", 1, "Blocked"),
+            ("provider_error", 1, "Blocked"),
+            ("invalid_tool", 1, "Blocked"),
+            ("empty_final", 1, "Blocked"),
+            ("success", 0, "Live verified"),
+        ],
+    )
+    def test_live_probe_exit_matches_evidence(monkeypatch, tmp_path, mode, exit_code, status):
+        monkeypatch.chdir(tmp_path)
+        (tmp_path / "docs").mkdir()
+        monkeypatch.setattr(
+            settings,
+            "Settings",
+            lambda: SimpleNamespace(
+                nebius_api_key="" if mode == "missing" else "test-probe-credential",
+                nebius_model="nvidia/test-model",
+                nebius_base_url="https://api.tokenfactory.nebius.com/v1",
+            ),
+        )
+    
+        class ControlledProvider:
+            def __init__(self, config):
+                self.config = config
+    
+            def request(self, *args, **kwargs):
+                if mode == "provider_error":
+                    raise DomainError("Provider unavailable", 502, "provider_error")
+                return {"data": [] if mode == "unavailable_model" else [{"id": "nvidia/test-model"}]}
+    
+            def completion(self, secret, messages, tools=None, timeout=30):
+                if tools:
+                    return (
+                        {
+                            "tool_calls": [
+                                {
+                                    "id": "probe-call",
+                                    "type": "function",
+                                    "function": {
+                                        "name": "echo_check",
+                                        "arguments": json.dumps(
+                                            {"word": "wrong" if mode == "invalid_tool" else "verified"}
+                                        ),
+                                    },
+                                }
+                            ]
+                        },
+                        {"total_tokens": 10},
+                        1,
+                    )
+                return {"content": "" if mode == "empty_final" else "verified"}, {"total_tokens": 5}, 1
+    
+        monkeypatch.setattr(providers, "Provider", ControlledProvider)
+>       with pytest.raises(SystemExit) as result:
+             ^^^^^^^^^^^^^^^^^^^^^^^^^
+E       Failed: DID NOT RAISE SystemExit
+
+/mnt/hostshare/TheCommander/tests/test_live_probe.py:72: Failed
+----------------------------- Captured stdout call -----------------------------
+{
+  "timestamp": "2026-10-26T01:20:12.488268+00:00",
+  "endpoint_host": "api.tokenfactory.nebius.com",
+  "model": "nvidia/test-model",
+  "github": "not run: token/repository/write authorization required",
+  "tavily": "not run by this Nebius probe; use scripts.live_research_smoke",
+  "checks": [
+    {
+      "check": "model_list",
+      "available": true
+    },
+    {
+      "check": "tool_proposal",
+      "valid": false,
+      "usage": {
+        "total_tokens": 10
+      },
+      "latency_ms": 1
+    }
+  ]
+}
+_________ test_live_probe_exit_matches_evidence[empty_final-1-Blocked] _________
+
+monkeypatch = <_pytest.monkeypatch.MonkeyPatch object at 0x7f38c522ead0>
+tmp_path = PosixPath('/tmp/pytest-of-watcher/pytest-13/test_live_probe_exit_matches_e4')
+mode = 'empty_final', exit_code = 1, status = 'Blocked'
+
+    @pytest.mark.parametrize(
+        ("mode", "exit_code", "status"),
+        [
+            ("missing", 2, "Blocked"),
+            ("unavailable_model", 1, "Blocked"),
+            ("provider_error", 1, "Blocked"),
+            ("invalid_tool", 1, "Blocked"),
+            ("empty_final", 1, "Blocked"),
+            ("success", 0, "Live verified"),
+        ],
+    )
+    def test_live_probe_exit_matches_evidence(monkeypatch, tmp_path, mode, exit_code, status):
+        monkeypatch.chdir(tmp_path)
+        (tmp_path / "docs").mkdir()
+        monkeypatch.setattr(
+            settings,
+            "Settings",
+            lambda: SimpleNamespace(
+                nebius_api_key="" if mode == "missing" else "test-probe-credential",
+                nebius_model="nvidia/test-model",
+                nebius_base_url="https://api.tokenfactory.nebius.com/v1",
+            ),
+        )
+    
+        class ControlledProvider:
+            def __init__(self, config):
+                self.config = config
+    
+            def request(self, *args, **kwargs):
+                if mode == "provider_error":
+                    raise DomainError("Provider unavailable", 502, "provider_error")
+                return {"data": [] if mode == "unavailable_model" else [{"id": "nvidia/test-model"}]}
+    
+            def completion(self, secret, messages, tools=None, timeout=30):
+                if tools:
+                    return (
+                        {
+                            "tool_calls": [
+                                {
+                                    "id": "probe-call",
+                                    "type": "function",
+                                    "function": {
+                                        "name": "echo_check",
+                                        "arguments": json.dumps(
+                                            {"word": "wrong" if mode == "invalid_tool" else "verified"}
+                                        ),
+                                    },
+                                }
+                            ]
+                        },
+                        {"total_tokens": 10},
+                        1,
+                    )
+                return {"content": "" if mode == "empty_final" else "verified"}, {"total_tokens": 5}, 1
+    
+        monkeypatch.setattr(providers, "Provider", ControlledProvider)
+>       with pytest.raises(SystemExit) as result:
+             ^^^^^^^^^^^^^^^^^^^^^^^^^
+E       Failed: DID NOT RAISE SystemExit
+
+/mnt/hostshare/TheCommander/tests/test_live_probe.py:72: Failed
+----------------------------- Captured stdout call -----------------------------
+{
+  "timestamp": "2026-10-26T01:20:12.496403+00:00",
+  "endpoint_host": "api.tokenfactory.nebius.com",
+  "model": "nvidia/test-model",
+  "github": "not run: token/repository/write authorization required",
+  "tavily": "not run by this Nebius probe; use scripts.live_research_smoke",
+  "checks": [
+    {
+      "check": "model_list",
+      "available": true
+    },
+    {
+      "check": "tool_proposal",
+      "valid": true,
+      "usage": {
+        "total_tokens": 10
+      },
+      "latency_ms": 1
+    },
+    {
+      "check": "tool_result_roundtrip",
+      "nonempty_result": false,
+      "usage": {
+        "total_tokens": 5
+      },
+      "latency_ms": 1
+    }
+  ]
+}
+________ test_live_probe_exit_matches_evidence[success-0-Live verified] ________
+
+monkeypatch = <_pytest.monkeypatch.MonkeyPatch object at 0x7f38c527eb50>
+tmp_path = PosixPath('/tmp/pytest-of-watcher/pytest-13/test_live_probe_exit_matches_e5')
+mode = 'success', exit_code = 0, status = 'Live verified'
+
+    @pytest.mark.parametrize(
+        ("mode", "exit_code", "status"),
+        [
+            ("missing", 2, "Blocked"),
+            ("unavailable_model", 1, "Blocked"),
+            ("provider_error", 1, "Blocked"),
+            ("invalid_tool", 1, "Blocked"),
+            ("empty_final", 1, "Blocked"),
+            ("success", 0, "Live verified"),
+        ],
+    )
+    def test_live_probe_exit_matches_evidence(monkeypatch, tmp_path, mode, exit_code, status):
+        monkeypatch.chdir(tmp_path)
+        (tmp_path / "docs").mkdir()
+        monkeypatch.setattr(
+            settings,
+            "Settings",
+            lambda: SimpleNamespace(
+                nebius_api_key="" if mode == "missing" else "test-probe-credential",
+                nebius_model="nvidia/test-model",
+                nebius_base_url="https://api.tokenfactory.nebius.com/v1",
+            ),
+        )
+    
+        class ControlledProvider:
+            def __init__(self, config):
+                self.config = config
+    
+            def request(self, *args, **kwargs):
+                if mode == "provider_error":
+                    raise DomainError("Provider unavailable", 502, "provider_error")
+                return {"data": [] if mode == "unavailable_model" else [{"id": "nvidia/test-model"}]}
+    
+            def completion(self, secret, messages, tools=None, timeout=30):
+                if tools:
+                    return (
+                        {
+                            "tool_calls": [
+                                {
+                                    "id": "probe-call",
+                                    "type": "function",
+                                    "function": {
+                                        "name": "echo_check",
+                                        "arguments": json.dumps(
+                                            {"word": "wrong" if mode == "invalid_tool" else "verified"}
+                                        ),
+                                    },
+                                }
+                            ]
+                        },
+                        {"total_tokens": 10},
+                        1,
+                    )
+                return {"content": "" if mode == "empty_final" else "verified"}, {"total_tokens": 5}, 1
+    
+        monkeypatch.setattr(providers, "Provider", ControlledProvider)
+>       with pytest.raises(SystemExit) as result:
+             ^^^^^^^^^^^^^^^^^^^^^^^^^
+E       Failed: DID NOT RAISE SystemExit
+
+/mnt/hostshare/TheCommander/tests/test_live_probe.py:72: Failed
+----------------------------- Captured stdout call -----------------------------
+{
+  "timestamp": "2026-10-26T01:20:12.506359+00:00",
+  "endpoint_host": "api.tokenfactory.nebius.com",
+  "model": "nvidia/test-model",
+  "github": "not run: token/repository/write authorization required",
+  "tavily": "not run by this Nebius probe; use scripts.live_research_smoke",
+  "checks": [
+    {
+      "check": "model_list",
+      "available": true
+    },
+    {
+      "check": "tool_proposal",
+      "valid": true,
+      "usage": {
+        "total_tokens": 10
+      },
+      "latency_ms": 1
+    },
+    {
+      "check": "tool_result_roundtrip",
+      "nonempty_result": true,
+      "usage": {
+        "total_tokens": 5
+      },
+      "latency_ms": 1
+    }
+  ]
+}
+=========================== short test summary info ============================
+FAILED tests/test_live_probe.py::test_live_probe_exit_matches_evidence[missing-2-Blocked]
+FAILED tests/test_live_probe.py::test_live_probe_exit_matches_evidence[unavailable_model-1-Blocked]
+FAILED tests/test_live_probe.py::test_live_probe_exit_matches_evidence[provider_error-1-Blocked]
+FAILED tests/test_live_probe.py::test_live_probe_exit_matches_evidence[invalid_tool-1-Blocked]
+FAILED tests/test_live_probe.py::test_live_probe_exit_matches_evidence[empty_final-1-Blocked]
+FAILED tests/test_live_probe.py::test_live_probe_exit_matches_evidence[success-0-Live verified]
+6 failed in 0.34s

@@ -1,5 +1,6 @@
 """Package public release inputs only; never includes private environments or runtime data."""
 
+import gzip
 import hashlib
 import io
 import json
@@ -71,8 +72,12 @@ def main():
     release = ROOT / ".runtime/releases"
     release.mkdir(parents=True, exist_ok=True)
     target = release / ("thecommander-" + identifier[:12] + ".tar.gz")
-    # Stable tar metadata; gzip header time is not used as source identity.
-    with tarfile.open(target, "w:gz") as archive:
+    # Both tar and gzip metadata must be stable for repeatable artifact digests.
+    with (
+        target.open("wb") as output,
+        gzip.GzipFile(filename="", mode="wb", fileobj=output, mtime=0) as compressed,
+        tarfile.open(fileobj=compressed, mode="w") as archive,
+    ):
         for relative, data in content.items():
             info = tarfile.TarInfo("TheCommander/" + relative)
             info.size = len(data)

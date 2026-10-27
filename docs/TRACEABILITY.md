@@ -44,7 +44,7 @@ RELEASE_REPORT.md; live scope must not be inferred from the implementation colum
 | SKILL-SCHEMA-01 | Schema definitions → validated input/output → enforced ceilings | skill ceiling regression; persisted skill_output event |
 | JOB-02 | Enqueue/schedule dispatch → settings_snapshot → effective execution | schedule and tighter-current-limit regressions |
 | OPS-02 | Compose HTTPS overlay → reverse proxy → Secure production sessions | config validation; remote HTTPS remains Blocked |
-
 | VERIFY-01 | CLI live smoke → provider checks → persisted evidence and process exit | test_live_probe.py; live-probe-red/green.txt; live-smoke.json |
+| PACKAGE-01 | package_release → fixed archive metadata → verify_package integrity → clean Compose/persistence | test_release_package.py; package-reproducibility-red/green.txt; packaged-release-verification.json |
 
-Latest results: CONTINUATION_REPORT.md and continuation-verification.txt.
+Latest results: CONTINUATION_REPORT.md and recheck-verification.txt.

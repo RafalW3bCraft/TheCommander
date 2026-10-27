@@ -45,3 +45,15 @@ three acceptance checks, records passed/status, and exits 0 only on success, 2
 for absent credentials and 1 for other failures. The same tests pass in
 live-probe-green.txt. The corrected probe was also run against actual Nebius;
 controlled regression results are separate from that live evidence.
+
+## F16 — release archive bytes varied for identical source (low; repaired)
+
+The packager used gzip's current timestamp, so identical source fingerprints could
+produce different archive digests at the same artifact path. A deterministic clock
+regression reproduced this: package-reproducibility-red.txt. Tar and gzip metadata
+are now fixed. Repeated builds are byte-identical in the tested runtime. The public
+verify_package script replaces reliance on a private session helper and verifies
+exact current source before extracting/executing the generated test build.
+Controlled regressions reject stale content, digest tampering, unsafe entries,
+symlinks, duplicates, missing and extra files; package-reproducibility-green.txt.
+No generic safety certification for arbitrary supplied archives is claimed.

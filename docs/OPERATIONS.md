@@ -155,3 +155,22 @@ Do not put live credentials in the public README, video or evidence files.
 [Caddy reference](https://caddyserver.com/docs/quick-starts/reverse-proxy).
 The proxy image digest is pinned; remote DNS/TLS and uptime remain unverified
 until a real host is selected and tested. See SETTINGS.md for supported controls.
+
+## Reproduce and verify a release package
+
+Run `uv run python -m scripts.package_release`, then
+`uv run python -m scripts.verify_package`. Packaging fixes both tar metadata and
+gzip header time/name, so identical source inputs produce identical archive bytes
+with the same pinned Python/compression runtime. The manifest records source and
+archive SHA-256 values. Old source packages remain under `.runtime/releases`.
+
+The verifier checks archive integrity, file membership, safe paths, absence of
+links/duplicates, current checkout content and configured-secret exclusion before
+executing anything. It then runs clean_release_smoke against the extracted source:
+fresh local Compose build/start, API/worker recreation and persistence checks.
+Only its disposable test project/volumes are removed. Port 8002 must be free;
+inspect existing Compose projects before running. Repackage after source changes.
+
+This command verifies our generated package only. Do not use it to execute an
+unreviewed user-supplied archive. Archive comparison remains an isolated read-only
+exercise after its local path is provided.

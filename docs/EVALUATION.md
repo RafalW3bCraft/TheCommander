@@ -47,18 +47,18 @@ Browser scenarios and operational drills separately exercise the frontend,
 separate worker, clean container startup and database/notes restore.
 
 Additional Tavily evidence: [live-research-smoke.json](evidence/live-research-smoke.json),
-2026-10-25 15:29 UTC. Validation plus one broker search used `docs.python.org`.
-The search took 3,141 ms and persisted five timestamped results. It checks the
+2026-10-26 12:01 UTC. Validation plus one broker search used `docs.python.org`.
+The search took 3,934 ms and persisted five timestamped results. It checks the
 connector and evidence path, not a completed GitHub-dependent skill. Results span
 versions/languages, so source selection remains a quality consideration; domain
 restrictions alone do not guarantee the most relevant result.
 
 Current deterministic release gate: 68 PostgreSQL/backend tests plus six probe
-exit-contract cases, 91.14% first-party
+exit-contract cases and three packaging cases, 91.14% first-party
 Python coverage. Settings limits, revision conflicts, legacy-schema upgrade and
-unknown-usage reservations are included. See continuation-verification.txt for the
+unknown-usage reservations are included. See recheck-verification.txt for the
 complete gate and RELEASE_REPORT.md for source identity and browser results.
 
-The continuation reran the standalone real Nebius smoke at 01:20:30 UTC on
-October 26 (two calls, 629 tokens). The 30-case evaluation above and Tavily smoke
-retain their stated timestamps; model, context and application tools did not change.
+The continuation reran the standalone real Nebius smoke at 12:01:35 UTC on
+October 26 (two calls, 667 tokens). The 30-case evaluation above retains its earlier timestamp; model, context and
+application tools did not change. Tavily was freshly checked separately as noted above.

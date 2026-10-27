@@ -1,0 +1,15 @@
+{
+  "head": "57b9dc21e45eb7d270c279a466ac9e9f674bcfdd",
+  "source": "working-tree release inputs, including uncommitted implementation",
+  "source_sha256": "7e0a2030bd4939c3f7217a452ac433f1aa1c10e01b6b25864eae8d9903274326",
+  "artifact": ".runtime/releases/thecommander-7e0a2030bd49.tar.gz",
+  "artifact_sha256": "b0849476b9aaa4cee1915f42c643a6995a58e711c86be893e4229025ccb66524",
+  "excluded": [
+    "private environment",
+    "runtime data",
+    "development ECC catalogs",
+    "Git history",
+    "legacy runtime",
+    "generated evidence"
+  ]
+}

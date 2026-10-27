@@ -9,9 +9,9 @@ features are supported. Missing/truncated/malformed results fail visibly.
 NVIDIA model: nvidia/nemotron-3-super-120b-a12b was exercised for tool proposal and
 continuation. No broad model-quality benchmark or training claim is made.
 
-Tavily: a newly configured key passed live validation on 2026-10-25. An authorized
+Tavily: the existing configured key passed live validation on 2026-10-26. An authorized
 broker search restricted to docs.python.org returned five persisted evidence items
-in 3,141 ms. Results included different documentation versions/languages, so domain
+in 3,934 ms. Results included different documentation versions/languages, so domain
 filtering alone does not ensure relevance. No currency cost is claimed.
 
 GitHub: adapter and controlled failure contracts implemented. Live provider

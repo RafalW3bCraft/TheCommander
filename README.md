@@ -7,7 +7,7 @@ PostgreSQL and a separate worker. The historical application is preserved;
 its instructions are in [LEGACY_README](docs/LEGACY_README.md).
 
 **LOCAL VERIFICATION PASSED — LIVE GITHUB / REMOTE DEPLOYMENT PENDING.**
-The complete gate passed: 74 automated tests, 91.14% coverage and six browser scenarios.
+The complete gate passed: 77 automated tests, 91.14% coverage and six browser scenarios.
 Nebius inference, Tavily search and workspace effects have live evidence.
 GitHub still requires a real credential and scoped live checks.
 See [release evidence and limitations](docs/RELEASE_REPORT.md).

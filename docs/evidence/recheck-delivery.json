@@ -1,0 +1,39 @@
+{
+  "timestamp": "2026-10-27T04:07:20.666472+00:00",
+  "status": "Locally verified",
+  "head": "57b9dc21e45eb7d270c279a466ac9e9f674bcfdd",
+  "source_sha256": "7e0a2030bd4939c3f7217a452ac433f1aa1c10e01b6b25864eae8d9903274326",
+  "artifact_sha256": "b0849476b9aaa4cee1915f42c643a6995a58e711c86be893e4229025ccb66524",
+  "current_source_matches_tested_package": true,
+  "verified_files": 111,
+  "diff_check": "passed",
+  "configured_secret_scan": "No configured private runtime values found in tracked/unignored release files or frontend bundle.",
+  "full_gate": "recheck-verification.txt: 77 passed; 91.14% coverage; 6 browser scenarios; all checks passed",
+  "packaged_compose": "9 operational checks passed; disposable project removed",
+  "backup_restore": "passed; backup-restore.json",
+  "live_evidence": [
+    "live-smoke.json: 2 Nebius calls, 667 reported tokens",
+    "live-research-smoke.json: 5 persisted Tavily results"
+  ],
+  "retained_evaluation": "live-evaluation.json: 2026-10-26 00:27:03 UTC; not rerun because model/context/tools unchanged",
+  "locally_ready": "yes, within implemented controlled scope",
+  "deployment_verified": "local Compose only",
+  "submission_ready": false,
+  "blocked": [
+    "application GITHUB_TOKEN placeholder",
+    "GITHUB_REPOSITORY missing",
+    "explicit GitHub issue creation authority",
+    "supplied archive path",
+    "authorized production host/domain/access",
+    "judge access and availability arrangements",
+    "entrant eligibility confirmation",
+    "publication/video/submission authority"
+  ],
+  "not_run": [
+    "live GitHub-dependent workflows",
+    "supplied archive comparison",
+    "remote deployment and DNS/TLS validation",
+    "publication/video upload/Devpost submission",
+    "cross-browser/load/endurance/remote uptime verification"
+  ]
+}

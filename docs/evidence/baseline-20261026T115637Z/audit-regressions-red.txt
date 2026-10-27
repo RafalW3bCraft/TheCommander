@@ -1,0 +1,419 @@
+FFFFFFFFF                                                                [100%]
+=================================== FAILURES ===================================
+____________ test_queued_conversation_context_excludes_future_turns ____________
+
+app = (<starlette.testclient.TestClient object at 0x7fd8282e01a0>, <test_workflows.Vendor object at 0x7fd8286830e0>, '6b96a59f-9561-458b-a517-ebe71030451b', <commander.db.Database object at 0x7fd8282ed810>)
+settings = Settings(database_url='postgresql://watcher@127.0.0.1:55432/postgres', database_schema='test_e0952630ec054080a051f6b8b..._runs=50, max_daily_tokens=100000, daily_spend_limit_usd=None, input_usd_per_million=None, output_usd_per_million=None)
+
+    def test_queued_conversation_context_excludes_future_turns(app, settings):
+        client, vendor, owner, db = app
+        first = client.post("/api/runs", json={"prompt": "FIRST pending prompt"}).json()
+        second = client.post("/api/runs", json={"prompt": "SECOND future prompt", "conversation_id": first["conversation_id"]}).json()
+        Worker(settings, vendor.transport()).tick()
+        calls = [call[2]["messages"] for call in vendor.calls if call[1].endswith("/chat/completions")]
+        assert "FIRST pending prompt" in json.dumps(calls[0])
+>       assert "SECOND future prompt" not in json.dumps(calls[0])
+E       assert 'SECOND future prompt' not in '[{"role": "...re prompt"}]'
+E         
+E         'SECOND future prompt' is contained here:
+E           ontent": "SECOND future prompt"}]
+
+tests/test_workflows.py:693: AssertionError
+________ test_malformed_validation_never_marks_connection_valid[nebius] ________
+
+app = (<starlette.testclient.TestClient object at 0x7fd827084f50>, <test_workflows.Vendor object at 0x7fd8282ec2d0>, '5aaa0362-26e2-4efb-8f82-252016d56cc3', <commander.db.Database object at 0x7fd8284efa80>)
+kind = 'nebius'
+
+    @pytest.mark.parametrize("kind", ["nebius", "github", "tavily"])
+    def test_malformed_validation_never_marks_connection_valid(app, kind):
+        client, vendor, *_ = app
+        vendor.mode = "malformed_validation"
+>       response = client.post("/api/connections/" + kind + "/validate")
+                   ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+tests/test_workflows.py:705: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+.venv/lib/python3.13/site-packages/httpx/_client.py:1144: in post
+    return self.request(
+.venv/lib/python3.13/site-packages/starlette/testclient.py:518: in request
+    return super().request(
+.venv/lib/python3.13/site-packages/httpx/_client.py:825: in request
+    return self.send(request, auth=auth, follow_redirects=follow_redirects)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+.venv/lib/python3.13/site-packages/httpx/_client.py:928: in send
+    raise exc
+.venv/lib/python3.13/site-packages/httpx/_client.py:922: in send
+    response.read()
+.venv/lib/python3.13/site-packages/httpx/_models.py:881: in read
+    self._content = b"".join(self.iter_bytes())
+                    ^^^^^^^^^^^^^^^^^^^^^^^^^^^
+.venv/lib/python3.13/site-packages/httpx/_models.py:897: in iter_bytes
+    for raw_bytes in self.iter_raw():
+                     ^^^^^^^^^^^^^^^
+.venv/lib/python3.13/site-packages/httpx/_models.py:951: in iter_raw
+    for raw_stream_bytes in self.stream:
+                            ^^^^^^^^^^^
+.venv/lib/python3.13/site-packages/httpx/_client.py:153: in __iter__
+    for chunk in self._stream:
+                 ^^^^^^^^^^^^
+.venv/lib/python3.13/site-packages/starlette/testclient.py:384: in iter_body
+    exit_stack.close()
+/usr/lib/python3.13/contextlib.py:627: in close
+    self.__exit__(None, None, None)
+/usr/lib/python3.13/contextlib.py:619: in __exit__
+    raise exc
+/usr/lib/python3.13/contextlib.py:604: in __exit__
+    if cb(*exc_details):
+       ^^^^^^^^^^^^^^^^
+.venv/lib/python3.13/site-packages/starlette/testclient.py:399: in close_app
+    raise exception
+.venv/lib/python3.13/site-packages/anyio/from_thread.py:265: in _call_func
+    retval = await retval_or_awaitable
+             ^^^^^^^^^^^^^^^^^^^^^^^^^
+.venv/lib/python3.13/site-packages/starlette/testclient.py:366: in run_app
+    await self.app(scope, receive, send)
+.venv/lib/python3.13/site-packages/fastapi/applications.py:1194: in __call__
+    await super().__call__(scope, receive, send)
+.venv/lib/python3.13/site-packages/starlette/applications.py:96: in __call__
+    await self.middleware_stack(scope, receive, send)
+.venv/lib/python3.13/site-packages/starlette/middleware/errors.py:186: in __call__
+    raise exc
+.venv/lib/python3.13/site-packages/starlette/middleware/errors.py:164: in __call__
+    await self.app(scope, receive, _send)
+.venv/lib/python3.13/site-packages/fastapi/telemetry/_asgi.py:151: in __call__
+    await self.app(scope, receive, send)
+.venv/lib/python3.13/site-packages/starlette/middleware/base.py:203: in __call__
+    response = await self.dispatch_func(request, call_next)
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+commander/api.py:114: in boundaries
+    response = await call_next(request)
+               ^^^^^^^^^^^^^^^^^^^^^^^^
+.venv/lib/python3.13/site-packages/starlette/middleware/base.py:179: in call_next
+    raise app_exc from app_exc.__cause__ or app_exc.__context__
+.venv/lib/python3.13/site-packages/starlette/middleware/base.py:149: in coro
+    await self.app(scope, receive_or_disconnect, send_no_error)
+.venv/lib/python3.13/site-packages/starlette/middleware/exceptions.py:63: in __call__
+    await wrap_app_handling_exceptions(self.app, conn)(scope, receive, send)
+.venv/lib/python3.13/site-packages/starlette/_exception_handler.py:53: in wrapped_app
+    raise exc
+.venv/lib/python3.13/site-packages/starlette/_exception_handler.py:42: in wrapped_app
+    await app(scope, receive, sender)
+.venv/lib/python3.13/site-packages/fastapi/middleware/asyncexitstack.py:18: in __call__
+    await self.app(scope, receive, send)
+.venv/lib/python3.13/site-packages/starlette/routing.py:678: in __call__
+    await self.middleware_stack(scope, receive, send)
+.venv/lib/python3.13/site-packages/fastapi/routing.py:2813: in app
+    await route.handle(scope, receive, send)
+.venv/lib/python3.13/site-packages/fastapi/routing.py:1332: in handle
+    await super().handle(scope, receive, send)
+.venv/lib/python3.13/site-packages/starlette/routing.py:284: in handle
+    await self.app(scope, receive, send)
+.venv/lib/python3.13/site-packages/fastapi/routing.py:167: in app
+    await wrap_app_handling_exceptions(app, request)(scope, receive, send)
+.venv/lib/python3.13/site-packages/starlette/_exception_handler.py:53: in wrapped_app
+    raise exc
+.venv/lib/python3.13/site-packages/starlette/_exception_handler.py:42: in wrapped_app
+    await app(scope, receive, sender)
+.venv/lib/python3.13/site-packages/fastapi/routing.py:153: in app
+    response = await f(request)
+               ^^^^^^^^^^^^^^^^
+.venv/lib/python3.13/site-packages/fastapi/routing.py:746: in app
+    raw_response = await run_endpoint_function(
+.venv/lib/python3.13/site-packages/fastapi/routing.py:375: in run_endpoint_function
+    return await run_in_threadpool(
+.venv/lib/python3.13/site-packages/starlette/concurrency.py:34: in run_in_threadpool
+    return await anyio.to_thread.run_sync(func)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+.venv/lib/python3.13/site-packages/anyio/to_thread.py:65: in run_sync
+    return await get_async_backend().run_sync_in_worker_thread(
+.venv/lib/python3.13/site-packages/anyio/_backends/_asyncio.py:2706: in run_sync_in_worker_thread
+    return await future
+           ^^^^^^^^^^^^
+.venv/lib/python3.13/site-packages/anyio/_backends/_asyncio.py:1100: in run
+    result = context.run(func, *args)
+             ^^^^^^^^^^^^^^^^^^^^^^^^
+.venv/lib/python3.13/site-packages/fastapi/telemetry/_api.py:244: in _run_sync_endpoint
+    return function(**arguments)
+           ^^^^^^^^^^^^^^^^^^^^^
+commander/routes.py:48: in validate_connection
+    return connections.validate(owner, kind)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+commander/connections.py:146: in validate
+    return self._validate_locked(owner, kind)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+self = <commander.connections.Connections object at 0x7fd8284edcd0>
+owner = UUID('5aaa0362-26e2-4efb-8f82-252016d56cc3'), kind = 'nebius'
+
+    def _validate_locked(self, owner, kind):
+        row = self.get(owner, kind)
+        status, detail = "validated", "Connection checked successfully"
+        try:
+            secret = self.secret(row)
+            if kind == "nebius":
+                models = self.provider.request(
+                    "GET", self.settings.nebius_base_url.rstrip("/") + "/models", secret, retry=True
+                )
+>               if self.settings.nebius_model not in [m["id"] for m in models.get("data", [])]:
+                                                                       ^^^^^^^^^^
+E               AttributeError: 'list' object has no attribute 'get'
+
+commander/connections.py:157: AttributeError
+________ test_malformed_validation_never_marks_connection_valid[github] ________
+
+app = (<starlette.testclient.TestClient object at 0x7fd825fde710>, <test_workflows.Vendor object at 0x7fd8270874d0>, 'f1701e27-8962-448d-bfc9-e76314018d30', <commander.db.Database object at 0x7fd826762cf0>)
+kind = 'github'
+
+    @pytest.mark.parametrize("kind", ["nebius", "github", "tavily"])
+    def test_malformed_validation_never_marks_connection_valid(app, kind):
+        client, vendor, *_ = app
+        vendor.mode = "malformed_validation"
+        response = client.post("/api/connections/" + kind + "/validate")
+        assert response.status_code == 200
+        connection = next(row for row in response.json() if row["kind"] == kind)
+>       assert connection["status"] == "malformed_response"
+E       AssertionError: assert 'validated' == 'malformed_response'
+E         
+E         - malformed_response
+E         + validated
+
+tests/test_workflows.py:708: AssertionError
+________ test_malformed_validation_never_marks_connection_valid[tavily] ________
+
+app = (<starlette.testclient.TestClient object at 0x7fd827128050>, <test_workflows.Vendor object at 0x7fd827129220>, 'e14ac6dc-427f-4007-adda-08e6382b126a', <commander.db.Database object at 0x7fd828314f50>)
+kind = 'tavily'
+
+    @pytest.mark.parametrize("kind", ["nebius", "github", "tavily"])
+    def test_malformed_validation_never_marks_connection_valid(app, kind):
+        client, vendor, *_ = app
+        vendor.mode = "malformed_validation"
+        response = client.post("/api/connections/" + kind + "/validate")
+        assert response.status_code == 200
+        connection = next(row for row in response.json() if row["kind"] == kind)
+>       assert connection["status"] == "malformed_response"
+E       AssertionError: assert 'validated' == 'malformed_response'
+E         
+E         - malformed_response
+E         + validated
+
+tests/test_workflows.py:708: AssertionError
+_______ test_environment_import_preserves_saved_and_revoked_connections ________
+
+app = (<starlette.testclient.TestClient object at 0x7fd8284ee520>, <test_workflows.Vendor object at 0x7fd827128d60>, '06cf8d8d-64fe-47d4-b0bd-0780f2435bfb', <commander.db.Database object at 0x7fd828306b70>)
+settings = Settings(database_url='postgresql://watcher@127.0.0.1:55432/postgres', database_schema='test_4e20d781f8404b9fb2e3416f8..._runs=50, max_daily_tokens=100000, daily_spend_limit_usd=None, input_usd_per_million=None, output_usd_per_million=None)
+
+    def test_environment_import_preserves_saved_and_revoked_connections(app, settings):
+        client, vendor, owner, db = app
+        settings.github_token = "another-server-credential"
+        settings.github_repository = "different/repository"
+        settings.nebius_api_key = "another-nebius-credential"
+        before = db.one("SELECT * FROM connections WHERE owner_id=%s AND kind='github'", (owner,))
+        client.delete("/api/connections/nebius").raise_for_status()
+        result = client.post("/api/connections/import-environment")
+        result.raise_for_status()
+        after = db.one("SELECT * FROM connections WHERE owner_id=%s AND kind='github'", (owner,))
+>       assert after["config"] == before["config"]
+E       AssertionError: assert {'domains': [...t/repository'} == {'domains': [...onal/project'}
+E         
+E         Omitting 3 identical items, use -vv to show
+E         Differing items:
+E         {'repository': 'different/repository'} != {'repository': 'fictional/project'}
+E         Use -v to get more diff
+
+tests/test_workflows.py:721: AssertionError
+_____________ test_disabled_connection_denies_reads_and_inference ______________
+
+app = (<starlette.testclient.TestClient object at 0x7fd82849fe30>, <test_workflows.Vendor object at 0x7fd827209250>, '7d6e58e4-c4de-4ec6-90bc-0a2b91e28f07', <commander.db.Database object at 0x7fd8270674d0>)
+settings = Settings(database_url='postgresql://watcher@127.0.0.1:55432/postgres', database_schema='test_60070c437016417388923fd2d..._runs=50, max_daily_tokens=100000, daily_spend_limit_usd=None, input_usd_per_million=None, output_usd_per_million=None)
+
+    def test_disabled_connection_denies_reads_and_inference(app, settings):
+        client = app[0]
+        client.put("/api/connections/workspace", json={"enabled": False}).raise_for_status()
+>       assert client.get("/api/notes").status_code == 409
+E       AssertionError: assert 200 == 409
+E        +  where 200 = <Response [200 OK]>.status_code
+E        +    where <Response [200 OK]> = get('/api/notes')
+E        +      where get = <starlette.testclient.TestClient object at 0x7fd82849fe30>.get
+
+tests/test_workflows.py:729: AssertionError
+_____________ test_invalid_note_name_is_a_client_validation_error ______________
+
+app = (<starlette.testclient.TestClient object at 0x7fd8271d85a0>, <test_workflows.Vendor object at 0x7fd827039590>, 'ec679234-767b-4ef5-9709-f9e783bbae90', <commander.db.Database object at 0x7fd8271dd570>)
+
+    def test_invalid_note_name_is_a_client_validation_error(app):
+>       assert app[0].get("/api/notes/invalid.txt").status_code == 422
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+tests/test_workflows.py:736: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+.venv/lib/python3.13/site-packages/httpx/_client.py:1053: in get
+    return self.request(
+.venv/lib/python3.13/site-packages/starlette/testclient.py:518: in request
+    return super().request(
+.venv/lib/python3.13/site-packages/httpx/_client.py:825: in request
+    return self.send(request, auth=auth, follow_redirects=follow_redirects)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+.venv/lib/python3.13/site-packages/httpx/_client.py:928: in send
+    raise exc
+.venv/lib/python3.13/site-packages/httpx/_client.py:922: in send
+    response.read()
+.venv/lib/python3.13/site-packages/httpx/_models.py:881: in read
+    self._content = b"".join(self.iter_bytes())
+                    ^^^^^^^^^^^^^^^^^^^^^^^^^^^
+.venv/lib/python3.13/site-packages/httpx/_models.py:897: in iter_bytes
+    for raw_bytes in self.iter_raw():
+                     ^^^^^^^^^^^^^^^
+.venv/lib/python3.13/site-packages/httpx/_models.py:951: in iter_raw
+    for raw_stream_bytes in self.stream:
+                            ^^^^^^^^^^^
+.venv/lib/python3.13/site-packages/httpx/_client.py:153: in __iter__
+    for chunk in self._stream:
+                 ^^^^^^^^^^^^
+.venv/lib/python3.13/site-packages/starlette/testclient.py:384: in iter_body
+    exit_stack.close()
+/usr/lib/python3.13/contextlib.py:627: in close
+    self.__exit__(None, None, None)
+/usr/lib/python3.13/contextlib.py:619: in __exit__
+    raise exc
+/usr/lib/python3.13/contextlib.py:604: in __exit__
+    if cb(*exc_details):
+       ^^^^^^^^^^^^^^^^
+.venv/lib/python3.13/site-packages/starlette/testclient.py:399: in close_app
+    raise exception
+.venv/lib/python3.13/site-packages/anyio/from_thread.py:265: in _call_func
+    retval = await retval_or_awaitable
+             ^^^^^^^^^^^^^^^^^^^^^^^^^
+.venv/lib/python3.13/site-packages/starlette/testclient.py:366: in run_app
+    await self.app(scope, receive, send)
+.venv/lib/python3.13/site-packages/fastapi/applications.py:1194: in __call__
+    await super().__call__(scope, receive, send)
+.venv/lib/python3.13/site-packages/starlette/applications.py:96: in __call__
+    await self.middleware_stack(scope, receive, send)
+.venv/lib/python3.13/site-packages/starlette/middleware/errors.py:186: in __call__
+    raise exc
+.venv/lib/python3.13/site-packages/starlette/middleware/errors.py:164: in __call__
+    await self.app(scope, receive, _send)
+.venv/lib/python3.13/site-packages/fastapi/telemetry/_asgi.py:151: in __call__
+    await self.app(scope, receive, send)
+.venv/lib/python3.13/site-packages/starlette/middleware/base.py:203: in __call__
+    response = await self.dispatch_func(request, call_next)
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+commander/api.py:114: in boundaries
+    response = await call_next(request)
+               ^^^^^^^^^^^^^^^^^^^^^^^^
+.venv/lib/python3.13/site-packages/starlette/middleware/base.py:179: in call_next
+    raise app_exc from app_exc.__cause__ or app_exc.__context__
+.venv/lib/python3.13/site-packages/starlette/middleware/base.py:149: in coro
+    await self.app(scope, receive_or_disconnect, send_no_error)
+.venv/lib/python3.13/site-packages/starlette/middleware/exceptions.py:63: in __call__
+    await wrap_app_handling_exceptions(self.app, conn)(scope, receive, send)
+.venv/lib/python3.13/site-packages/starlette/_exception_handler.py:53: in wrapped_app
+    raise exc
+.venv/lib/python3.13/site-packages/starlette/_exception_handler.py:42: in wrapped_app
+    await app(scope, receive, sender)
+.venv/lib/python3.13/site-packages/fastapi/middleware/asyncexitstack.py:18: in __call__
+    await self.app(scope, receive, send)
+.venv/lib/python3.13/site-packages/starlette/routing.py:678: in __call__
+    await self.middleware_stack(scope, receive, send)
+.venv/lib/python3.13/site-packages/fastapi/routing.py:2813: in app
+    await route.handle(scope, receive, send)
+.venv/lib/python3.13/site-packages/fastapi/routing.py:1332: in handle
+    await super().handle(scope, receive, send)
+.venv/lib/python3.13/site-packages/starlette/routing.py:284: in handle
+    await self.app(scope, receive, send)
+.venv/lib/python3.13/site-packages/fastapi/routing.py:167: in app
+    await wrap_app_handling_exceptions(app, request)(scope, receive, send)
+.venv/lib/python3.13/site-packages/starlette/_exception_handler.py:53: in wrapped_app
+    raise exc
+.venv/lib/python3.13/site-packages/starlette/_exception_handler.py:42: in wrapped_app
+    await app(scope, receive, sender)
+.venv/lib/python3.13/site-packages/fastapi/routing.py:153: in app
+    response = await f(request)
+               ^^^^^^^^^^^^^^^^
+.venv/lib/python3.13/site-packages/fastapi/routing.py:746: in app
+    raw_response = await run_endpoint_function(
+.venv/lib/python3.13/site-packages/fastapi/routing.py:375: in run_endpoint_function
+    return await run_in_threadpool(
+.venv/lib/python3.13/site-packages/starlette/concurrency.py:34: in run_in_threadpool
+    return await anyio.to_thread.run_sync(func)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+.venv/lib/python3.13/site-packages/anyio/to_thread.py:65: in run_sync
+    return await get_async_backend().run_sync_in_worker_thread(
+.venv/lib/python3.13/site-packages/anyio/_backends/_asyncio.py:2706: in run_sync_in_worker_thread
+    return await future
+           ^^^^^^^^^^^^
+.venv/lib/python3.13/site-packages/anyio/_backends/_asyncio.py:1100: in run
+    result = context.run(func, *args)
+             ^^^^^^^^^^^^^^^^^^^^^^^^
+.venv/lib/python3.13/site-packages/fastapi/telemetry/_api.py:244: in _run_sync_endpoint
+    return function(**arguments)
+           ^^^^^^^^^^^^^^^^^^^^^
+commander/routes.py:170: in read_note
+    return {"name": name, "content": Workspace(settings.workspace_root, owner).read(name)}
+                                     ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+self = <commander.workspace.Workspace object at 0x7fd825fdf9d0>
+name = 'invalid.txt'
+
+    def read(self, name):
+>       Note(name=name, content="validation")
+E       pydantic_core._pydantic_core.ValidationError: 1 validation error for Note
+E       name
+E         String should match pattern '^[A-Za-z0-9][A-Za-z0-9_-]{0,79}\.md$' [type=string_pattern_mismatch, input_value='invalid.txt', input_type=str]
+E           For further information visit https://errors.pydantic.dev/2.14/v/string_pattern_mismatch
+
+commander/workspace.py:48: ValidationError
+_______ test_stale_skill_definition_fails_before_tool_or_model_dispatch ________
+
+app = (<starlette.testclient.TestClient object at 0x7fd8263cbac0>, <test_workflows.Vendor object at 0x7fd8270398c0>, 'd4e58608-724f-4533-b86b-09029f65c023', <commander.db.Database object at 0x7fd826523dd0>)
+settings = Settings(database_url='postgresql://watcher@127.0.0.1:55432/postgres', database_schema='test_e7681f7563864b549a88af227..._runs=50, max_daily_tokens=100000, daily_spend_limit_usd=None, input_usd_per_million=None, output_usd_per_million=None)
+
+    def test_stale_skill_definition_fails_before_tool_or_model_dispatch(app, settings):
+        client, vendor, owner, db = app
+        run = client.post("/api/runs", json={"skill": "follow-through", "prompt": "Next step"}).json()
+        db.one("UPDATE runs SET skill_version='old-definition' WHERE id=%s RETURNING id", (run["id"],))
+        Worker(settings, vendor.transport()).tick()
+        result = client.get("/api/runs/" + run["id"]).json()
+>       assert result["status"] == "failed"
+E       AssertionError: assert 'succeeded' == 'failed'
+E         
+E         - failed
+E         + succeeded
+
+tests/test_workflows.py:745: AssertionError
+__________ test_unknown_skill_does_not_inherit_conversation_authority __________
+
+app = (<starlette.testclient.TestClient object at 0x7fd826e2de10>, <test_workflows.Vendor object at 0x7fd828315350>, 'b0427dad-9872-4ddb-bd48-d8e3552d04ad', <commander.db.Database object at 0x7fd8263f1770>)
+settings = Settings(database_url='postgresql://watcher@127.0.0.1:55432/postgres', database_schema='test_af958629ed5747d2a59406a75..._runs=50, max_daily_tokens=100000, daily_spend_limit_usd=None, input_usd_per_million=None, output_usd_per_million=None)
+
+    def test_unknown_skill_does_not_inherit_conversation_authority(app, settings):
+        client, vendor, owner, db = app
+        run = client.post("/api/runs", json={"prompt": "Next step"}).json()
+        db.one("UPDATE runs SET skill='removed-skill' WHERE id=%s RETURNING id", (run["id"],))
+        Worker(settings, vendor.transport()).tick()
+>       assert client.get("/api/runs/" + run["id"]).json()["status"] == "failed"
+E       AssertionError: assert 'succeeded' == 'failed'
+E         
+E         - failed
+E         + succeeded
+
+tests/test_workflows.py:755: AssertionError
+=============================== warnings summary ===============================
+.venv/lib/python3.13/site-packages/fastapi/testclient.py:1
+  /mnt/hostshare/TheCommander/.venv/lib/python3.13/site-packages/fastapi/testclient.py:1: StarletteDeprecationWarning: Using `httpx` with `starlette.testclient` is deprecated; install `httpx2` instead.
+    from starlette.testclient import TestClient as TestClient  # noqa
+
+-- Docs: https://docs.pytest.org/en/stable/how-to/capture-warnings.html
+=========================== short test summary info ============================
+FAILED tests/test_workflows.py::test_queued_conversation_context_excludes_future_turns
+FAILED tests/test_workflows.py::test_malformed_validation_never_marks_connection_valid[nebius]
+FAILED tests/test_workflows.py::test_malformed_validation_never_marks_connection_valid[github]
+FAILED tests/test_workflows.py::test_malformed_validation_never_marks_connection_valid[tavily]
+FAILED tests/test_workflows.py::test_environment_import_preserves_saved_and_revoked_connections
+FAILED tests/test_workflows.py::test_disabled_connection_denies_reads_and_inference
+FAILED tests/test_workflows.py::test_invalid_note_name_is_a_client_validation_error
+FAILED tests/test_workflows.py::test_stale_skill_definition_fails_before_tool_or_model_dispatch
+FAILED tests/test_workflows.py::test_unknown_skill_does_not_inherit_conversation_authority
+9 failed, 41 deselected, 1 warning in 11.80s

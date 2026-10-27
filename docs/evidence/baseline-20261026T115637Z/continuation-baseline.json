@@ -1,0 +1,8 @@
+{
+  "timestamp": "20261026T011648Z",
+  "head": "87dbaaaa6242acd32b7ad9e23d6f1ab733a26e7c",
+  "changes_since_packaged_source": [
+    "docs/HERMES_HANDOFF.md"
+  ],
+  "preserved_evidence": "docs/evidence/baseline-20261026T011648Z"
+}

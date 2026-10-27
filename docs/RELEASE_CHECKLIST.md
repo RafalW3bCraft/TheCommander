@@ -5,11 +5,12 @@
 - [x] Implement Assistant/Memory/Skills/Settings/Activity with typed authenticated APIs.
 - [x] Persist settings, enforce operator/skill limits and revision conflicts.
 - [x] Repair conversation, credential revocation, memory expiry and usage-reservation regressions.
-- [x] Pass 74 automated tests (including six probe regressions), 91.14% coverage, static checks and frontend build.
+- [x] Pass 77 automated tests (including six probe and three packaging regressions), 91.14% coverage, static checks and frontend build.
 - [x] Pass six browser scenarios and checked-screen axe; inspect desktop/tablet/mobile/Settings screenshots.
 - [x] Complete self-review, dependency audits and configured-secret scan.
 - [x] Verify live Nebius 30-case acceptance and Tavily scoped evidence persistence.
 - [x] Verify schema upgrade, retained-volume API/worker recreation and settings-aware backup/restore.
+- [x] Reproduce and repair package nondeterminism; add checked archive verification.
 - [x] Prepare HTTPS configuration, source packaging, operations and continuation report.
 - [x] Reconcile release report, evaluation, judge guide, demo script and technology feedback.
 - [ ] Obtain archive path and compare supplied archive in isolation.

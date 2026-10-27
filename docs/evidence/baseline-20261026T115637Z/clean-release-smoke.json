@@ -1,0 +1,19 @@
+{
+  "timestamp": "2026-10-26T01:18:17.665360+00:00",
+  "deployment": "thecommander-cleancheck-d96725225a",
+  "checks": [
+    "database_readiness",
+    "production_frontend_served",
+    "secure_owner_login",
+    "retained_volume_memory_note_settings_after_recreate",
+    "persistent_owner_settings",
+    "persisted_memory_export",
+    "persistent_workspace_note",
+    "separate_worker_heartbeat",
+    "session_revocation"
+  ],
+  "source": "tracked and unignored working-tree snapshot excluding .agents development catalog; no host dependencies or secrets",
+  "startup": "./scripts/start.sh",
+  "external_credentials": false,
+  "disposable_project_removed": true
+}
