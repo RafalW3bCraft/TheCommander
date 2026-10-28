@@ -1,0 +1,14 @@
+{
+  "timestamp": "2026-10-27T15:49:05.578155+00:00",
+  "command": [
+    "uv",
+    "run",
+    "python",
+    "-m",
+    "scripts.verify_package"
+  ],
+  "returncode": 0,
+  "prior_session_returncode": 143,
+  "prior_operational_report_completed": true,
+  "prior_status_cause": "unconfirmed; preserved first log and report"
+}

@@ -1,0 +1,31 @@
+{
+  "timestamp": "2026-10-27T15:47:21.393286+00:00",
+  "status": "Locally verified",
+  "head": "1294bfa8733a5ae7057cf2152f057a418db3c67b",
+  "source_sha256": "8bff26529a03f859a6ef767923e25b5763fece43836bd4de67a9ad3802fe403c",
+  "artifact": ".runtime/releases/thecommander-8bff26529a03.tar.gz",
+  "artifact_sha256": "5e1e80432c1db0ea9aced91a25b5368f1c725e5c8c62f751c5eb03f645691bde",
+  "verified_files": 112,
+  "archive_paths_links_hashes_and_configured_secret_scan": "passed",
+  "clean_build_start_and_retained_volume_checks": {
+    "timestamp": "2026-10-27T15:47:16.846978+00:00",
+    "deployment": "thecommander-cleancheck-edb779f89d",
+    "checks": [
+      "database_readiness",
+      "production_frontend_served",
+      "secure_owner_login",
+      "retained_volume_memory_note_settings_after_recreate",
+      "persistent_owner_settings",
+      "persisted_memory_export",
+      "persistent_workspace_note",
+      "separate_worker_heartbeat",
+      "session_revocation"
+    ],
+    "source": "tracked and unignored working-tree snapshot excluding .agents development catalog; no host dependencies or secrets",
+    "startup": "./scripts/start.sh",
+    "external_credentials": false,
+    "disposable_project_removed": true
+  },
+  "external_credentials": false,
+  "remote_deployment": "Not run"
+}

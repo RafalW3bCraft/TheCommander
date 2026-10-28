@@ -21,7 +21,7 @@ Residual risks: model reasoning can be wrong; citations demonstrate provenance,
 not truth. An interrupted external request may remain uncertain if no unique
 marker is found in the bounded recent-issue scan. Successful cancellation cannot
 roll back an already-dispatched request. Backups retain deleted data until rotated.
-See FINDINGS.md for concrete review findings and regression tests.
+See RELEASE_REPORT.md for concrete review findings and regression tests.
 
 ## Settings boundary (2026-10-25)
 

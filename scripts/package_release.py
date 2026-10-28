@@ -21,8 +21,6 @@ TOP = {
     "LICENSE",
     "THIRD_PARTY_NOTICES",
     "main.py",
-    "Codex_TheCommander_Master_Implementation_Prompt.md",
-    "TheCommander_Personal_AI_Rebuild_Plan.md",
     "docs/openapi.json",
     "docs/evidence/.gitkeep",
     ".gitignore",
@@ -44,6 +42,25 @@ FRONTEND = {
     "frontend/playwright.config.ts",
     "frontend/eslint.config.js",
     "frontend/index.html",
+}
+REQUIRED = (TOP | FRONTEND) - {"docs/evidence/.gitkeep"} | {
+    "commander/api.py",
+    "commander/worker.py",
+    "frontend/src/main.tsx",
+    "frontend/src/SettingsPage.tsx",
+    "frontend/src/api.ts",
+    "frontend/src/api-schema.d.ts",
+    "frontend/src/style.css",
+    "scripts/start.sh",
+    "scripts/setup_runtime.py",
+    "scripts/verify.sh",
+    "scripts/verify_package.py",
+    "deploy/Caddyfile",
+    "commander/migrations/001_core.sql",
+    "commander/migrations/002_exact_preview.sql",
+    "commander/migrations/003_message_runs.sql",
+    "commander/migrations/004_owner_settings.sql",
+    "commander/migrations/005_usage_reservation.sql",
 }
 
 
@@ -67,6 +84,9 @@ def main():
         path = ROOT / relative
         if path.is_file() and not path.is_symlink():
             content[relative] = path.read_bytes()
+    missing = REQUIRED - content.keys()
+    if missing:
+        raise ValueError("Required release inputs missing or unsafe: " + ", ".join(sorted(missing)))
     hashes = {p: hashlib.sha256(data).hexdigest() for p, data in content.items()}
     identifier = hashlib.sha256(json.dumps(hashes, sort_keys=True).encode()).hexdigest()
     release = ROOT / ".runtime/releases"

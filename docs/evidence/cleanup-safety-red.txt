@@ -1,0 +1,208 @@
+FFFF...                                                                  [100%]
+=================================== FAILURES ===================================
+_________ test_unsafe_smoke_invocation_has_no_effects[configuration0] __________
+
+monkeypatch = <_pytest.monkeypatch.MonkeyPatch object at 0x7fedb6fc7ce0>
+tmp_path = PosixPath('/tmp/pytest-of-watcher/pytest-0/test_unsafe_smoke_invocation_h0')
+configuration = {}
+
+    @pytest.mark.parametrize(
+        "configuration",
+        [
+            {},
+            {"COMPOSE_SMOKE_URL": "http://localhost:8000"},
+            {
+                "COMPOSE_SMOKE_URL": "http://localhost:8002",
+                "COMPOSE_PROJECT_NAME": "thecommander-cleancheck-0123456789",
+            },
+        ],
+    )
+    def test_unsafe_smoke_invocation_has_no_effects(monkeypatch, tmp_path, configuration):
+        monkeypatch.chdir(tmp_path)
+        for name in ("COMPOSE_SMOKE_URL", "COMPOSE_PROJECT_NAME", "COMPOSE_SMOKE_ROOT"):
+            monkeypatch.delenv(name, raising=False)
+        for name, value in configuration.items():
+            monkeypatch.setenv(name, value)
+        effects = []
+    
+        def forbidden(*args, **kwargs):
+            effects.append("write or network client")
+            raise AssertionError("Unsafe invocation reached a side effect")
+    
+        monkeypatch.setattr(Path, "mkdir", forbidden)
+        monkeypatch.setattr(Path, "write_text", forbidden)
+        monkeypatch.setattr("httpx.Client", forbidden)
+        with pytest.raises(SystemExit, match="isolated clean-release runner"):
+>           runpy.run_path(str(SCRIPT), run_name="__main__")
+
+/mnt/hostshare/TheCommander/tests/test_smoke_isolation.py:38: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+<frozen runpy>:287: in run_path
+    ???
+<frozen runpy>:98: in _run_module_code
+    ???
+<frozen runpy>:88: in _run_code
+    ???
+/mnt/hostshare/TheCommander/scripts/compose_smoke.py:14: in <module>
+    Path(".runtime").mkdir(exist_ok=True)
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+args = (PosixPath('.runtime'),), kwargs = {'exist_ok': True}
+
+    def forbidden(*args, **kwargs):
+        effects.append("write or network client")
+>       raise AssertionError("Unsafe invocation reached a side effect")
+E       AssertionError: Unsafe invocation reached a side effect
+
+/mnt/hostshare/TheCommander/tests/test_smoke_isolation.py:32: AssertionError
+_________ test_unsafe_smoke_invocation_has_no_effects[configuration1] __________
+
+monkeypatch = <_pytest.monkeypatch.MonkeyPatch object at 0x7fedb6fc7950>
+tmp_path = PosixPath('/tmp/pytest-of-watcher/pytest-0/test_unsafe_smoke_invocation_h1')
+configuration = {'COMPOSE_SMOKE_URL': 'http://localhost:8000'}
+
+    @pytest.mark.parametrize(
+        "configuration",
+        [
+            {},
+            {"COMPOSE_SMOKE_URL": "http://localhost:8000"},
+            {
+                "COMPOSE_SMOKE_URL": "http://localhost:8002",
+                "COMPOSE_PROJECT_NAME": "thecommander-cleancheck-0123456789",
+            },
+        ],
+    )
+    def test_unsafe_smoke_invocation_has_no_effects(monkeypatch, tmp_path, configuration):
+        monkeypatch.chdir(tmp_path)
+        for name in ("COMPOSE_SMOKE_URL", "COMPOSE_PROJECT_NAME", "COMPOSE_SMOKE_ROOT"):
+            monkeypatch.delenv(name, raising=False)
+        for name, value in configuration.items():
+            monkeypatch.setenv(name, value)
+        effects = []
+    
+        def forbidden(*args, **kwargs):
+            effects.append("write or network client")
+            raise AssertionError("Unsafe invocation reached a side effect")
+    
+        monkeypatch.setattr(Path, "mkdir", forbidden)
+        monkeypatch.setattr(Path, "write_text", forbidden)
+        monkeypatch.setattr("httpx.Client", forbidden)
+        with pytest.raises(SystemExit, match="isolated clean-release runner"):
+>           runpy.run_path(str(SCRIPT), run_name="__main__")
+
+/mnt/hostshare/TheCommander/tests/test_smoke_isolation.py:38: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+<frozen runpy>:287: in run_path
+    ???
+<frozen runpy>:98: in _run_module_code
+    ???
+<frozen runpy>:88: in _run_code
+    ???
+/mnt/hostshare/TheCommander/scripts/compose_smoke.py:14: in <module>
+    Path(".runtime").mkdir(exist_ok=True)
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+args = (PosixPath('.runtime'),), kwargs = {'exist_ok': True}
+
+    def forbidden(*args, **kwargs):
+        effects.append("write or network client")
+>       raise AssertionError("Unsafe invocation reached a side effect")
+E       AssertionError: Unsafe invocation reached a side effect
+
+/mnt/hostshare/TheCommander/tests/test_smoke_isolation.py:32: AssertionError
+_________ test_unsafe_smoke_invocation_has_no_effects[configuration2] __________
+
+monkeypatch = <_pytest.monkeypatch.MonkeyPatch object at 0x7fedb4eed010>
+tmp_path = PosixPath('/tmp/pytest-of-watcher/pytest-0/test_unsafe_smoke_invocation_h2')
+configuration = {'COMPOSE_SMOKE_URL': 'http://localhost:8002', 'COMPOSE_PROJECT_NAME': 'thecommander-cleancheck-0123456789'}
+
+    @pytest.mark.parametrize(
+        "configuration",
+        [
+            {},
+            {"COMPOSE_SMOKE_URL": "http://localhost:8000"},
+            {
+                "COMPOSE_SMOKE_URL": "http://localhost:8002",
+                "COMPOSE_PROJECT_NAME": "thecommander-cleancheck-0123456789",
+            },
+        ],
+    )
+    def test_unsafe_smoke_invocation_has_no_effects(monkeypatch, tmp_path, configuration):
+        monkeypatch.chdir(tmp_path)
+        for name in ("COMPOSE_SMOKE_URL", "COMPOSE_PROJECT_NAME", "COMPOSE_SMOKE_ROOT"):
+            monkeypatch.delenv(name, raising=False)
+        for name, value in configuration.items():
+            monkeypatch.setenv(name, value)
+        effects = []
+    
+        def forbidden(*args, **kwargs):
+            effects.append("write or network client")
+            raise AssertionError("Unsafe invocation reached a side effect")
+    
+        monkeypatch.setattr(Path, "mkdir", forbidden)
+        monkeypatch.setattr(Path, "write_text", forbidden)
+        monkeypatch.setattr("httpx.Client", forbidden)
+        with pytest.raises(SystemExit, match="isolated clean-release runner"):
+>           runpy.run_path(str(SCRIPT), run_name="__main__")
+
+/mnt/hostshare/TheCommander/tests/test_smoke_isolation.py:38: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+<frozen runpy>:287: in run_path
+    ???
+<frozen runpy>:98: in _run_module_code
+    ???
+<frozen runpy>:88: in _run_code
+    ???
+/mnt/hostshare/TheCommander/scripts/compose_smoke.py:14: in <module>
+    Path(".runtime").mkdir(exist_ok=True)
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+args = (PosixPath('.runtime'),), kwargs = {'exist_ok': True}
+
+    def forbidden(*args, **kwargs):
+        effects.append("write or network client")
+>       raise AssertionError("Unsafe invocation reached a side effect")
+E       AssertionError: Unsafe invocation reached a side effect
+
+/mnt/hostshare/TheCommander/tests/test_smoke_isolation.py:32: AssertionError
+_________ test_missing_required_input_does_not_publish_partial_package _________
+
+monkeypatch = <_pytest.monkeypatch.MonkeyPatch object at 0x7fedb51e78a0>
+tmp_path = PosixPath('/tmp/pytest-of-watcher/pytest-0/test_missing_required_input_do0')
+
+    def test_missing_required_input_does_not_publish_partial_package(monkeypatch, tmp_path):
+        (tmp_path / "docs/evidence").mkdir(parents=True)
+        (tmp_path / "README.md").write_text("public")
+        monkeypatch.setattr(package_release, "ROOT", tmp_path)
+        monkeypatch.setattr(
+            package_release.subprocess,
+            "check_output",
+            lambda command, **kwargs: b"README.md\0" if command[1] == "ls-files" else b"head",
+        )
+>       with pytest.raises(ValueError, match="Required release inputs"):
+             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+E       Failed: DID NOT RAISE ValueError
+
+tests/test_release_package.py:21: Failed
+----------------------------- Captured stdout call -----------------------------
+{
+  "head": "head",
+  "source": "working-tree release inputs, including uncommitted implementation",
+  "source_sha256": "a7cddd9b3129a99496341c329d08a641c58bc57a1b564f8626def7f711413c21",
+  "artifact": ".runtime/releases/thecommander-a7cddd9b3129.tar.gz",
+  "artifact_sha256": "b08f39e0310faecb28f7a2f9991e7b27a97dcd8390c0021cfbba93b69f3c8761",
+  "excluded": [
+    "private environment",
+    "runtime data",
+    "development ECC catalogs",
+    "Git history",
+    "legacy runtime",
+    "generated evidence"
+  ]
+}
+=========================== short test summary info ============================
+FAILED tests/test_smoke_isolation.py::test_unsafe_smoke_invocation_has_no_effects[configuration0]
+FAILED tests/test_smoke_isolation.py::test_unsafe_smoke_invocation_has_no_effects[configuration1]
+FAILED tests/test_smoke_isolation.py::test_unsafe_smoke_invocation_has_no_effects[configuration2]
+FAILED tests/test_release_package.py::test_missing_required_input_does_not_publish_partial_package
+4 failed, 3 passed in 0.36s

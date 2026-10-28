@@ -1,0 +1,1696 @@
+{
+  "head": "1294bfa8733a5ae7057cf2152f057a418db3c67b",
+  "archive_sha256": "8ef28a556c07b82f2698539637cae849433a016693372a7fb74c1773db559e83",
+  "archive": ".runtime/cleanup-20261028/baseline.tar.gz",
+  "files": [
+    {
+      "path": "agent.py",
+      "sha256": "425f8aa1b1cd1cceb8cd6e52f6907c4dec73c39d1a301320e7c06cb59933421c",
+      "reason": "unsupported legacy surface",
+      "preserved_in": ".runtime/cleanup-20261028/baseline.tar.gz",
+      "replacement": "commander/, frontend/, uv.lock and env.release.example"
+    },
+    {
+      "path": "agents/__init__.py",
+      "sha256": "0222dba48ad0070f87c7af164c9ae279710627a7700eda11ea2aad8e976f0c6f",
+      "reason": "unsupported legacy surface",
+      "preserved_in": ".runtime/cleanup-20261028/baseline.tar.gz",
+      "replacement": "commander/, frontend/, uv.lock and env.release.example"
+    },
+    {
+      "path": "agents/base_agent.py",
+      "sha256": "155d739d8b145004271e9057d9d4b849967bd79c8b85a9b3382f50b08a17db71",
+      "reason": "unsupported legacy surface",
+      "preserved_in": ".runtime/cleanup-20261028/baseline.tar.gz",
+      "replacement": "commander/, frontend/, uv.lock and env.release.example"
+    },
+    {
+      "path": "agents/coder_agent.py",
+      "sha256": "73b6740aa1a6f11b19860e83a86f196e6da6ececef5a17504a7bda4a0923e27f",
+      "reason": "unsupported legacy surface",
+      "preserved_in": ".runtime/cleanup-20261028/baseline.tar.gz",
+      "replacement": "commander/, frontend/, uv.lock and env.release.example"
+    },
+    {
+      "path": "agents/database_agent.py",
+      "sha256": "857f60a8cc6b39d226ff842ae4e78f4835763d71c1aeab3c0a67c501f89210a6",
+      "reason": "unsupported legacy surface",
+      "preserved_in": ".runtime/cleanup-20261028/baseline.tar.gz",
+      "replacement": "commander/, frontend/, uv.lock and env.release.example"
+    },
+    {
+      "path": "agents/devops_agent.py",
+      "sha256": "eb4e075eb3fe861300a6f831e2c7f8e4c84380f2f217a93ea8929b28acd77305",
+      "reason": "unsupported legacy surface",
+      "preserved_in": ".runtime/cleanup-20261028/baseline.tar.gz",
+      "replacement": "commander/, frontend/, uv.lock and env.release.example"
+    },
+    {
+      "path": "agents/learning_agent.py",
+      "sha256": "d3adeaccf5e807b2e0bda9d48702dd3d36f83acaf67eea4c337b63f4966ad037",
+      "reason": "unsupported legacy surface",
+      "preserved_in": ".runtime/cleanup-20261028/baseline.tar.gz",
+      "replacement": "commander/, frontend/, uv.lock and env.release.example"
+    },
+    {
+      "path": "agents/memorykeeper_agent.py",
+      "sha256": "69b585deb029c9e725f5fe52e63e4af2fc1a11b07904d6e591470a7651e0a8df",
+      "reason": "unsupported legacy surface",
+      "preserved_in": ".runtime/cleanup-20261028/baseline.tar.gz",
+      "replacement": "commander/, frontend/, uv.lock and env.release.example"
+    },
+    {
+      "path": "agents/researcher_agent.py",
+      "sha256": "e89613325f9fe3b8e294188e4d2ce01d2f43462cc54b1f00a581cd18700e698f",
+      "reason": "unsupported legacy surface",
+      "preserved_in": ".runtime/cleanup-20261028/baseline.tar.gz",
+      "replacement": "commander/, frontend/, uv.lock and env.release.example"
+    },
+    {
+      "path": "agents/security_agent.py",
+      "sha256": "0773d09e2aa98a7d07e2f1a7880d0e51b6ac3e5fb62ddbad2c266ab4e826572e",
+      "reason": "unsupported legacy surface",
+      "preserved_in": ".runtime/cleanup-20261028/baseline.tar.gz",
+      "replacement": "commander/, frontend/, uv.lock and env.release.example"
+    },
+    {
+      "path": "agents/sysadmin_agent.py",
+      "sha256": "3a9d84f0bb0d843d83d95d2f635e237da5103e70a9d20b080ccc57293e7ffdc0",
+      "reason": "unsupported legacy surface",
+      "preserved_in": ".runtime/cleanup-20261028/baseline.tar.gz",
+      "replacement": "commander/, frontend/, uv.lock and env.release.example"
+    },
+    {
+      "path": "agents/vscode_agent.py",
+      "sha256": "d8d6d6db04a226122094bbfad7e39f97af77d18b70db17bc6a8bd5b563ac7c9c",
+      "reason": "unsupported legacy surface",
+      "preserved_in": ".runtime/cleanup-20261028/baseline.tar.gz",
+      "replacement": "commander/, frontend/, uv.lock and env.release.example"
+    },
+    {
+      "path": "ai_service.py",
+      "sha256": "5f9986019309fd188651e5106e8e373c8088dc4694b4ce2a46c17270f72948ee",
+      "reason": "unsupported legacy surface",
+      "preserved_in": ".runtime/cleanup-20261028/baseline.tar.gz",
+      "replacement": "commander/, frontend/, uv.lock and env.release.example"
+    },
+    {
+      "path": "command_center.py",
+      "sha256": "d707fbff286f2a120ad8651f6569fb02dbb128403d5203736f5214d6f9cae49d",
+      "reason": "unsupported legacy surface",
+      "preserved_in": ".runtime/cleanup-20261028/baseline.tar.gz",
+      "replacement": "commander/, frontend/, uv.lock and env.release.example"
+    },
+    {
+      "path": "config.py",
+      "sha256": "2f04b3e5548786d4e6267ef48bd0a266b82b93483158b264f8f80978aed6a4d5",
+      "reason": "unsupported legacy surface",
+      "preserved_in": ".runtime/cleanup-20261028/baseline.tar.gz",
+      "replacement": "commander/, frontend/, uv.lock and env.release.example"
+    },
+    {
+      "path": "docs/CLICK_PATH_AUDIT.md",
+      "sha256": "f95c505803f371bce845477dd4539758dcfd3fe23eda42eb6d1fb5aeaf50ebac",
+      "reason": "consolidated documentation",
+      "preserved_in": ".runtime/cleanup-20261028/baseline.tar.gz",
+      "replacement": "docs/RELEASE_REPORT.md and evidence index"
+    },
+    {
+      "path": "docs/CODEBASE_AUDIT.md",
+      "sha256": "79216c9dcf82b8ca22b44e96ea8f8addf81b3774a51dac33e4ece0fc02df7e0a",
+      "reason": "consolidated documentation",
+      "preserved_in": ".runtime/cleanup-20261028/baseline.tar.gz",
+      "replacement": "docs/RELEASE_REPORT.md and evidence index"
+    },
+    {
+      "path": "docs/CONTINUATION_REPORT.md",
+      "sha256": "7e4322b0367b4df5de63d4a1e6c3e619d9b411a81e99d28dd2d8922cb60fc07f",
+      "reason": "consolidated documentation",
+      "preserved_in": ".runtime/cleanup-20261028/baseline.tar.gz",
+      "replacement": "docs/RELEASE_REPORT.md and evidence index"
+    },
+    {
+      "path": "docs/ECC_APPLICATION.md",
+      "sha256": "94b7ba4d35208bc708f21bbf109dc2110850bb9b712181d94c8970d1e58f8d57",
+      "reason": "consolidated documentation",
+      "preserved_in": ".runtime/cleanup-20261028/baseline.tar.gz",
+      "replacement": "docs/RELEASE_REPORT.md and evidence index"
+    },
+    {
+      "path": "docs/EVALUATION.md",
+      "sha256": "e237e6f143a906e1b604a2ad8003fa43b39a8a2f095f33925eeb07a708f80f4e",
+      "reason": "consolidated documentation",
+      "preserved_in": ".runtime/cleanup-20261028/baseline.tar.gz",
+      "replacement": "docs/RELEASE_REPORT.md and evidence index"
+    },
+    {
+      "path": "docs/FINDINGS.md",
+      "sha256": "ddf731db28545a76cd7ea34ca6b1206d53800d9871984bb282bd5ffdbdf4b480",
+      "reason": "consolidated documentation",
+      "preserved_in": ".runtime/cleanup-20261028/baseline.tar.gz",
+      "replacement": "docs/RELEASE_REPORT.md and evidence index"
+    },
+    {
+      "path": "docs/IMPLEMENTATION_STATUS.md",
+      "sha256": "d19a2051a49546bad1f52287cb6279738f5a84ae58a7dfaa96ec4be23d57c46c",
+      "reason": "consolidated documentation",
+      "preserved_in": ".runtime/cleanup-20261028/baseline.tar.gz",
+      "replacement": "docs/RELEASE_REPORT.md and evidence index"
+    },
+    {
+      "path": "docs/LEGACY_README.md",
+      "sha256": "73d2ea157ba171fe4614eab43565b2bad819e3c57cf0533895ed97204727f835",
+      "reason": "consolidated documentation",
+      "preserved_in": ".runtime/cleanup-20261028/baseline.tar.gz",
+      "replacement": "docs/RELEASE_REPORT.md and evidence index"
+    },
+    {
+      "path": "docs/PRD.md",
+      "sha256": "f020e76c8fc166e9aa9100659dc15ff04424f1294bb4bfcd87b7ceec19afc582",
+      "reason": "consolidated documentation",
+      "preserved_in": ".runtime/cleanup-20261028/baseline.tar.gz",
+      "replacement": "docs/RELEASE_REPORT.md and evidence index"
+    },
+    {
+      "path": "docs/REGRESSION.md",
+      "sha256": "43752feac4364b4d90721380b44ab76c30294b01f45179bd2fa129da5f8175c6",
+      "reason": "consolidated documentation",
+      "preserved_in": ".runtime/cleanup-20261028/baseline.tar.gz",
+      "replacement": "docs/RELEASE_REPORT.md and evidence index"
+    },
+    {
+      "path": "docs/RELEASE_CHECKLIST.md",
+      "sha256": "2e5fe1528f27a299d3b7dbd2aa480a43c96032811ba99aac9e06fba47cd8adf0",
+      "reason": "consolidated documentation",
+      "preserved_in": ".runtime/cleanup-20261028/baseline.tar.gz",
+      "replacement": "docs/RELEASE_REPORT.md and evidence index"
+    },
+    {
+      "path": "docs/SCOPE.md",
+      "sha256": "c0694f5e909f0d7c1b0a63ec54867a14f78583c538f228c0600ac81fce30ca44",
+      "reason": "consolidated documentation",
+      "preserved_in": ".runtime/cleanup-20261028/baseline.tar.gz",
+      "replacement": "docs/RELEASE_REPORT.md and evidence index"
+    },
+    {
+      "path": "docs/SPEC.md",
+      "sha256": "77353c2e28c9379c8ccb6a5ece1ba087715a66fc0a35ca735712296b995c3f5b",
+      "reason": "consolidated documentation",
+      "preserved_in": ".runtime/cleanup-20261028/baseline.tar.gz",
+      "replacement": "docs/RELEASE_REPORT.md and evidence index"
+    },
+    {
+      "path": "docs/evidence/audit-backup-run.txt",
+      "sha256": "cbed884e99ad23808b01312f46cdfc340e2fce3f644b73a8d36b244c3dbef1dc",
+      "reason": "superseded evidence",
+      "preserved_in": ".runtime/cleanup-20261028/baseline.tar.gz",
+      "replacement": "docs/RELEASE_REPORT.md and evidence index"
+    },
+    {
+      "path": "docs/evidence/audit-browser.txt",
+      "sha256": "9b1f79a65eca7858bc8883df52eba9322022177072b5feb27bffbc9eca9f9a5a",
+      "reason": "superseded evidence",
+      "preserved_in": ".runtime/cleanup-20261028/baseline.tar.gz",
+      "replacement": "docs/RELEASE_REPORT.md and evidence index"
+    },
+    {
+      "path": "docs/evidence/audit-compose-build.txt",
+      "sha256": "9b7b0644dfd4b7a8a7e019ee5befa1db7eb08361be29c5ebf60090e62a3dd528",
+      "reason": "superseded evidence",
+      "preserved_in": ".runtime/cleanup-20261028/baseline.tar.gz",
+      "replacement": "docs/RELEASE_REPORT.md and evidence index"
+    },
+    {
+      "path": "docs/evidence/audit-inventory-run.txt",
+      "sha256": "6777f8fc325f9c7856196981038ac79f2df9951613b2ca013caffcc4b755b6e0",
+      "reason": "superseded evidence",
+      "preserved_in": ".runtime/cleanup-20261028/baseline.tar.gz",
+      "replacement": "docs/RELEASE_REPORT.md and evidence index"
+    },
+    {
+      "path": "docs/evidence/audit-verification.txt",
+      "sha256": "0c0c03ab63917a2c6b30a9b9c4b9ef556892ad1bb5da41c249791eb65f626b1d",
+      "reason": "superseded evidence",
+      "preserved_in": ".runtime/cleanup-20261028/baseline.tar.gz",
+      "replacement": "docs/RELEASE_REPORT.md and evidence index"
+    },
+    {
+      "path": "docs/evidence/backend-tests.txt",
+      "sha256": "78f005fe1ceaa2f9b629cf19ed3c65e735d2eb2a587b9293f76d405d65941409",
+      "reason": "superseded evidence",
+      "preserved_in": ".runtime/cleanup-20261028/baseline.tar.gz",
+      "replacement": "docs/RELEASE_REPORT.md and evidence index"
+    },
+    {
+      "path": "docs/evidence/baseline-2026-10-25/audit-verification.txt",
+      "sha256": "0c0c03ab63917a2c6b30a9b9c4b9ef556892ad1bb5da41c249791eb65f626b1d",
+      "reason": "superseded evidence",
+      "preserved_in": ".runtime/cleanup-20261028/baseline.tar.gz",
+      "replacement": "docs/RELEASE_REPORT.md and evidence index"
+    },
+    {
+      "path": "docs/evidence/baseline-2026-10-25/browser-desktop.png",
+      "sha256": "0d235f07ff0a86ce2bd59bb1e8ec152f8479190f99c63d8d193aae17c2383387",
+      "reason": "superseded evidence",
+      "preserved_in": ".runtime/cleanup-20261028/baseline.tar.gz",
+      "replacement": "docs/RELEASE_REPORT.md and evidence index"
+    },
+    {
+      "path": "docs/evidence/baseline-2026-10-25/browser-mobile.png",
+      "sha256": "72066b1f65e61f7a34f270020fab5f7e9ab61da3461034e5cf1ec084be0135be",
+      "reason": "superseded evidence",
+      "preserved_in": ".runtime/cleanup-20261028/baseline.tar.gz",
+      "replacement": "docs/RELEASE_REPORT.md and evidence index"
+    },
+    {
+      "path": "docs/evidence/baseline-2026-10-25/browser-results.json",
+      "sha256": "dbf8b4ddeedee5c75543c9e7440f3a515102db13b1e27adb1c7f5d495fba5b92",
+      "reason": "superseded evidence",
+      "preserved_in": ".runtime/cleanup-20261028/baseline.tar.gz",
+      "replacement": "docs/RELEASE_REPORT.md and evidence index"
+    },
+    {
+      "path": "docs/evidence/baseline-2026-10-25/browser-tablet.png",
+      "sha256": "48f66300805262bb86a65beb52e5c8cafe2319c4998546c3b081f8451bc5445c",
+      "reason": "superseded evidence",
+      "preserved_in": ".runtime/cleanup-20261028/baseline.tar.gz",
+      "replacement": "docs/RELEASE_REPORT.md and evidence index"
+    },
+    {
+      "path": "docs/evidence/baseline-20261026T011648Z/.gitkeep",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "reason": "superseded evidence",
+      "preserved_in": ".runtime/cleanup-20261028/baseline.tar.gz",
+      "replacement": "docs/RELEASE_REPORT.md and evidence index"
+    },
+    {
+      "path": "docs/evidence/baseline-20261026T011648Z/01-red.txt",
+      "sha256": "e7a12c7b232a6f3fc4af8e555a3630a84342fdbe92d6166d7c0b06a82495fce1",
+      "reason": "superseded evidence",
+      "preserved_in": ".runtime/cleanup-20261028/baseline.tar.gz",
+      "replacement": "docs/RELEASE_REPORT.md and evidence index"
+    },
+    {
+      "path": "docs/evidence/baseline-20261026T011648Z/agent-architecture-audit.json",
+      "sha256": "42bc182eb4cec871943ddc096bc1864605ec521cff88f12f1e2c5246daf01b93",
+      "reason": "superseded evidence",
+      "preserved_in": ".runtime/cleanup-20261028/baseline.tar.gz",
+      "replacement": "docs/RELEASE_REPORT.md and evidence index"
+    },
+    {
+      "path": "docs/evidence/baseline-20261026T011648Z/audit-backup-run.txt",
+      "sha256": "cbed884e99ad23808b01312f46cdfc340e2fce3f644b73a8d36b244c3dbef1dc",
+      "reason": "superseded evidence",
+      "preserved_in": ".runtime/cleanup-20261028/baseline.tar.gz",
+      "replacement": "docs/RELEASE_REPORT.md and evidence index"
+    },
+    {
+      "path": "docs/evidence/baseline-20261026T011648Z/audit-browser-initial-failures.txt",
+      "sha256": "9b1f79a65eca7858bc8883df52eba9322022177072b5feb27bffbc9eca9f9a5a",
+      "reason": "superseded evidence",
+      "preserved_in": ".runtime/cleanup-20261028/baseline.tar.gz",
+      "replacement": "docs/RELEASE_REPORT.md and evidence index"
+    },
+    {
+      "path": "docs/evidence/baseline-20261026T011648Z/audit-browser.txt",
+      "sha256": "9b1f79a65eca7858bc8883df52eba9322022177072b5feb27bffbc9eca9f9a5a",
+      "reason": "superseded evidence",
+      "preserved_in": ".runtime/cleanup-20261028/baseline.tar.gz",
+      "replacement": "docs/RELEASE_REPORT.md and evidence index"
+    },
+    {
+      "path": "docs/evidence/baseline-20261026T011648Z/audit-compose-build.txt",
+      "sha256": "9b7b0644dfd4b7a8a7e019ee5befa1db7eb08361be29c5ebf60090e62a3dd528",
+      "reason": "superseded evidence",
+      "preserved_in": ".runtime/cleanup-20261028/baseline.tar.gz",
+      "replacement": "docs/RELEASE_REPORT.md and evidence index"
+    },
+    {
+      "path": "docs/evidence/baseline-20261026T011648Z/audit-inventory-run.txt",
+      "sha256": "6777f8fc325f9c7856196981038ac79f2df9951613b2ca013caffcc4b755b6e0",
+      "reason": "superseded evidence",
+      "preserved_in": ".runtime/cleanup-20261028/baseline.tar.gz",
+      "replacement": "docs/RELEASE_REPORT.md and evidence index"
+    },
+    {
+      "path": "docs/evidence/baseline-20261026T011648Z/audit-regressions-green.txt",
+      "sha256": "ef073d7836ac24d9b82a4e4d96d7e14a86c42435d96d62f0e1b74313578e141b",
+      "reason": "superseded evidence",
+      "preserved_in": ".runtime/cleanup-20261028/baseline.tar.gz",
+      "replacement": "docs/RELEASE_REPORT.md and evidence index"
+    },
+    {
+      "path": "docs/evidence/baseline-20261026T011648Z/audit-regressions-red.txt",
+      "sha256": "a58c120ae46630ce31b5388d5e30c59185818098938085d5f6d01685bbac297d",
+      "reason": "superseded evidence",
+      "preserved_in": ".runtime/cleanup-20261028/baseline.tar.gz",
+      "replacement": "docs/RELEASE_REPORT.md and evidence index"
+    },
+    {
+      "path": "docs/evidence/baseline-20261026T011648Z/audit-safety-green.txt",
+      "sha256": "bb369e9c032f8db3b75de2affa1755768bdfe29c0687ba6d1f7e5771d23e2201",
+      "reason": "superseded evidence",
+      "preserved_in": ".runtime/cleanup-20261028/baseline.tar.gz",
+      "replacement": "docs/RELEASE_REPORT.md and evidence index"
+    },
+    {
+      "path": "docs/evidence/baseline-20261026T011648Z/audit-safety-red.txt",
+      "sha256": "c13fb0125614a3d82489851875cd00613b33bf67ad832920405a12a8dd6f0b8a",
+      "reason": "superseded evidence",
+      "preserved_in": ".runtime/cleanup-20261028/baseline.tar.gz",
+      "replacement": "docs/RELEASE_REPORT.md and evidence index"
+    },
+    {
+      "path": "docs/evidence/baseline-20261026T011648Z/audit-verification.txt",
+      "sha256": "0c0c03ab63917a2c6b30a9b9c4b9ef556892ad1bb5da41c249791eb65f626b1d",
+      "reason": "superseded evidence",
+      "preserved_in": ".runtime/cleanup-20261028/baseline.tar.gz",
+      "replacement": "docs/RELEASE_REPORT.md and evidence index"
+    },
+    {
+      "path": "docs/evidence/baseline-20261026T011648Z/backend-tests.txt",
+      "sha256": "78f005fe1ceaa2f9b629cf19ed3c65e735d2eb2a587b9293f76d405d65941409",
+      "reason": "superseded evidence",
+      "preserved_in": ".runtime/cleanup-20261028/baseline.tar.gz",
+      "replacement": "docs/RELEASE_REPORT.md and evidence index"
+    },
+    {
+      "path": "docs/evidence/baseline-20261026T011648Z/backup-restore.json",
+      "sha256": "c5a577a3b01b21ebf96d93c306858bd2c3a5484fee0a05403498e27497054bbc",
+      "reason": "superseded evidence",
+      "preserved_in": ".runtime/cleanup-20261028/baseline.tar.gz",
+      "replacement": "docs/RELEASE_REPORT.md and evidence index"
+    },
+    {
+      "path": "docs/evidence/baseline-20261026T011648Z/browser-desktop.png",
+      "sha256": "c2897e8ae9d19a5d22d9bdebf02cd4dce90ed5e26c67c43667c952aaa577fdf0",
+      "reason": "superseded evidence",
+      "preserved_in": ".runtime/cleanup-20261028/baseline.tar.gz",
+      "replacement": "docs/RELEASE_REPORT.md and evidence index"
+    },
+    {
+      "path": "docs/evidence/baseline-20261026T011648Z/browser-mobile.png",
+      "sha256": "d36939efb700dfae0e2d961b5e6e00e0be0e03d544e3f30b6cb886961769e9a8",
+      "reason": "superseded evidence",
+      "preserved_in": ".runtime/cleanup-20261028/baseline.tar.gz",
+      "replacement": "docs/RELEASE_REPORT.md and evidence index"
+    },
+    {
+      "path": "docs/evidence/baseline-20261026T011648Z/browser-results.json",
+      "sha256": "05b14e2b5f3b6d06f8f79619e30a0c318f87a2a3f5066bbb6715bd6d51548868",
+      "reason": "superseded evidence",
+      "preserved_in": ".runtime/cleanup-20261028/baseline.tar.gz",
+      "replacement": "docs/RELEASE_REPORT.md and evidence index"
+    },
+    {
+      "path": "docs/evidence/baseline-20261026T011648Z/browser-run.txt",
+      "sha256": "f3e01bcbe64c94de0a3ae98ae55751d4c772e3728b9dc8d494db6b9d82c35d89",
+      "reason": "superseded evidence",
+      "preserved_in": ".runtime/cleanup-20261028/baseline.tar.gz",
+      "replacement": "docs/RELEASE_REPORT.md and evidence index"
+    },
+    {
+      "path": "docs/evidence/baseline-20261026T011648Z/browser-settings.png",
+      "sha256": "2ffb353493631098a0cec4873cc7607e3674414199bc01de3e8b3f4777bc634b",
+      "reason": "superseded evidence",
+      "preserved_in": ".runtime/cleanup-20261028/baseline.tar.gz",
+      "replacement": "docs/RELEASE_REPORT.md and evidence index"
+    },
+    {
+      "path": "docs/evidence/baseline-20261026T011648Z/browser-tablet.png",
+      "sha256": "6f96b895f830f6a9503d8f63115325e00e4c0ad6c68f264870aa50ad0b4c5770",
+      "reason": "superseded evidence",
+      "preserved_in": ".runtime/cleanup-20261028/baseline.tar.gz",
+      "replacement": "docs/RELEASE_REPORT.md and evidence index"
+    },
+    {
+      "path": "docs/evidence/baseline-20261026T011648Z/clean-release-build.txt",
+      "sha256": "bb153b2fe26932aaeae715b7f128b77fbb57ee89c3e5b3445630c5fddd19b40c",
+      "reason": "superseded evidence",
+      "preserved_in": ".runtime/cleanup-20261028/baseline.tar.gz",
+      "replacement": "docs/RELEASE_REPORT.md and evidence index"
+    },
+    {
+      "path": "docs/evidence/baseline-20261026T011648Z/clean-release-smoke.json",
+      "sha256": "d26f879770fef96cbcf52ce9ab292fadccfdd8c257cd80a8f2818a640ff5c763",
+      "reason": "superseded evidence",
+      "preserved_in": ".runtime/cleanup-20261028/baseline.tar.gz",
+      "replacement": "docs/RELEASE_REPORT.md and evidence index"
+    },
+    {
+      "path": "docs/evidence/baseline-20261026T011648Z/compose-build.txt",
+      "sha256": "acc2c20c8fa5e44091835d8b777deffc41ebc3955236e0c0c665a4734e37883e",
+      "reason": "superseded evidence",
+      "preserved_in": ".runtime/cleanup-20261028/baseline.tar.gz",
+      "replacement": "docs/RELEASE_REPORT.md and evidence index"
+    },
+    {
+      "path": "docs/evidence/baseline-20261026T011648Z/compose-smoke.json",
+      "sha256": "be636331e4ded52860453fb374d6148538825c49b274d5a237deeb18c89ad7e5",
+      "reason": "superseded evidence",
+      "preserved_in": ".runtime/cleanup-20261028/baseline.tar.gz",
+      "replacement": "docs/RELEASE_REPORT.md and evidence index"
+    },
+    {
+      "path": "docs/evidence/baseline-20261026T011648Z/compose-start.txt",
+      "sha256": "5b57b209089f0e1d0329ebaa6428caf8d3d7a116f77cc1f00ea7200459fbac91",
+      "reason": "superseded evidence",
+      "preserved_in": ".runtime/cleanup-20261028/baseline.tar.gz",
+      "replacement": "docs/RELEASE_REPORT.md and evidence index"
+    },
+    {
+      "path": "docs/evidence/baseline-20261026T011648Z/conversation-race-red.txt",
+      "sha256": "821c08432eee84491b7cb1c4e33b4f8098cc0fc352c8145a54153fb57639f2ad",
+      "reason": "superseded evidence",
+      "preserved_in": ".runtime/cleanup-20261028/baseline.tar.gz",
+      "replacement": "docs/RELEASE_REPORT.md and evidence index"
+    },
+    {
+      "path": "docs/evidence/baseline-20261026T011648Z/conversation-race-test-setup-failure.txt",
+      "sha256": "8d2384f97eda661c32f1f7c36d258ee2c20ed0c8afc13076ab46bfc257e4d879",
+      "reason": "superseded evidence",
+      "preserved_in": ".runtime/cleanup-20261028/baseline.tar.gz",
+      "replacement": "docs/RELEASE_REPORT.md and evidence index"
+    },
+    {
+      "path": "docs/evidence/baseline-20261026T011648Z/ecc-catalog.json",
+      "sha256": "16376d802dface48a8d770138e1655084f9301d9a0b1535e3ebd97b19eae417d",
+      "reason": "superseded evidence",
+      "preserved_in": ".runtime/cleanup-20261028/baseline.tar.gz",
+      "replacement": "docs/RELEASE_REPORT.md and evidence index"
+    },
+    {
+      "path": "docs/evidence/baseline-20261026T011648Z/ecc-full-plan.json",
+      "sha256": "24b7dddca8b51951428ffcdb27d7e31ac65b95e57107ccbbf9f1c3ca1d091244",
+      "reason": "superseded evidence",
+      "preserved_in": ".runtime/cleanup-20261028/baseline.tar.gz",
+      "replacement": "docs/RELEASE_REPORT.md and evidence index"
+    },
+    {
+      "path": "docs/evidence/baseline-20261026T011648Z/ecc-plugin-diagnostic.txt",
+      "sha256": "3552afbbd1d63703167f9b0ef5a07bf3f5c6c11383c810d696153511294d0108",
+      "reason": "superseded evidence",
+      "preserved_in": ".runtime/cleanup-20261028/baseline.tar.gz",
+      "replacement": "docs/RELEASE_REPORT.md and evidence index"
+    },
+    {
+      "path": "docs/evidence/baseline-20261026T011648Z/ecc-reference-inventory.json",
+      "sha256": "920cb966eb934c72674b560402a1cb112ba5e8c7eb1fcd30d68f219c0e0618f4",
+      "reason": "superseded evidence",
+      "preserved_in": ".runtime/cleanup-20261028/baseline.tar.gz",
+      "replacement": "docs/RELEASE_REPORT.md and evidence index"
+    },
+    {
+      "path": "docs/evidence/baseline-20261026T011648Z/final-verification.txt",
+      "sha256": "9d01d40d01f2e389e384475ce887a71f2149e775384391538d38deb0f3883057",
+      "reason": "superseded evidence",
+      "preserved_in": ".runtime/cleanup-20261028/baseline.tar.gz",
+      "replacement": "docs/RELEASE_REPORT.md and evidence index"
+    },
+    {
+      "path": "docs/evidence/baseline-20261026T011648Z/live-evaluation-pre-audit.json",
+      "sha256": "30003a7f2aa038e710989c7b7b253d74946e88131d6625988a25ea144c3d7774",
+      "reason": "superseded evidence",
+      "preserved_in": ".runtime/cleanup-20261028/baseline.tar.gz",
+      "replacement": "docs/RELEASE_REPORT.md and evidence index"
+    },
+    {
+      "path": "docs/evidence/baseline-20261026T011648Z/live-evaluation-run-pre-audit.txt",
+      "sha256": "c6817432d8fd5b3ba51c6b578a6a47a5acabc39fd7ff2c517fd6aee888c3eaa6",
+      "reason": "superseded evidence",
+      "preserved_in": ".runtime/cleanup-20261028/baseline.tar.gz",
+      "replacement": "docs/RELEASE_REPORT.md and evidence index"
+    },
+    {
+      "path": "docs/evidence/baseline-20261026T011648Z/live-evaluation-run.txt",
+      "sha256": "c6817432d8fd5b3ba51c6b578a6a47a5acabc39fd7ff2c517fd6aee888c3eaa6",
+      "reason": "superseded evidence",
+      "preserved_in": ".runtime/cleanup-20261028/baseline.tar.gz",
+      "replacement": "docs/RELEASE_REPORT.md and evidence index"
+    },
+    {
+      "path": "docs/evidence/baseline-20261026T011648Z/live-evaluation.json",
+      "sha256": "d5c33f50c9460704de291cba3e25cb896c68e8db6f81ecea088a658e0bbb11f6",
+      "reason": "superseded evidence",
+      "preserved_in": ".runtime/cleanup-20261028/baseline.tar.gz",
+      "replacement": "docs/RELEASE_REPORT.md and evidence index"
+    },
+    {
+      "path": "docs/evidence/baseline-20261026T011648Z/live-research-run-pre-audit.txt",
+      "sha256": "4d82aabb33559fb8ec66ae934555da2389c6516f6cc07abf27c29573485fa2e1",
+      "reason": "superseded evidence",
+      "preserved_in": ".runtime/cleanup-20261028/baseline.tar.gz",
+      "replacement": "docs/RELEASE_REPORT.md and evidence index"
+    },
+    {
+      "path": "docs/evidence/baseline-20261026T011648Z/live-research-run.txt",
+      "sha256": "e040b460b15b39c78c083abb79929d2ebabbcd5001511458aadca5a7a40f4771",
+      "reason": "superseded evidence",
+      "preserved_in": ".runtime/cleanup-20261028/baseline.tar.gz",
+      "replacement": "docs/RELEASE_REPORT.md and evidence index"
+    },
+    {
+      "path": "docs/evidence/baseline-20261026T011648Z/live-research-smoke-pre-audit.json",
+      "sha256": "6aa457e99d96fffae1547cc6867fd76b012545ba405c8b1668f9ccf2b4e9c78c",
+      "reason": "superseded evidence",
+      "preserved_in": ".runtime/cleanup-20261028/baseline.tar.gz",
+      "replacement": "docs/RELEASE_REPORT.md and evidence index"
+    },
+    {
+      "path": "docs/evidence/baseline-20261026T011648Z/live-research-smoke.json",
+      "sha256": "81de413fd96225f2d5b797f38457a583df2f42a42351555d33ff3606eee9a71c",
+      "reason": "superseded evidence",
+      "preserved_in": ".runtime/cleanup-20261028/baseline.tar.gz",
+      "replacement": "docs/RELEASE_REPORT.md and evidence index"
+    },
+    {
+      "path": "docs/evidence/baseline-20261026T011648Z/live-smoke.json",
+      "sha256": "a125e720346f5cf8f77a69492deb89b02d03823437346c46cce494bce6854742",
+      "reason": "superseded evidence",
+      "preserved_in": ".runtime/cleanup-20261028/baseline.tar.gz",
+      "replacement": "docs/RELEASE_REPORT.md and evidence index"
+    },
+    {
+      "path": "docs/evidence/baseline-20261026T011648Z/npm-audit.txt",
+      "sha256": "6d8c5c8f3d7684adb070417bd608d01ae90aa3dc26a65af03ffda4955f38d9a3",
+      "reason": "superseded evidence",
+      "preserved_in": ".runtime/cleanup-20261028/baseline.tar.gz",
+      "replacement": "docs/RELEASE_REPORT.md and evidence index"
+    },
+    {
+      "path": "docs/evidence/baseline-20261026T011648Z/packaged-release-verification.json",
+      "sha256": "93d5c87d36ef11ffa621cb380d9214931cdcc74514b73265e0d56ea33c09dce3",
+      "reason": "superseded evidence",
+      "preserved_in": ".runtime/cleanup-20261028/baseline.tar.gz",
+      "replacement": "docs/RELEASE_REPORT.md and evidence index"
+    },
+    {
+      "path": "docs/evidence/baseline-20261026T011648Z/python-audit.txt",
+      "sha256": "15950a68a7ed99c59779717acefdceb3f69cfd31bde67d2c954f2a3cea4d7955",
+      "reason": "superseded evidence",
+      "preserved_in": ".runtime/cleanup-20261028/baseline.tar.gz",
+      "replacement": "docs/RELEASE_REPORT.md and evidence index"
+    },
+    {
+      "path": "docs/evidence/baseline-20261026T011648Z/recursive-inventory.json",
+      "sha256": "a8ebf56b7dda3f26abb7962f6ef2069fe1b3a212b46bc0a733368962bb1b8a63",
+      "reason": "superseded evidence",
+      "preserved_in": ".runtime/cleanup-20261028/baseline.tar.gz",
+      "replacement": "docs/RELEASE_REPORT.md and evidence index"
+    },
+    {
+      "path": "docs/evidence/baseline-20261026T011648Z/release-backend.txt",
+      "sha256": "e868ce7c92d40f2241c12fba6da4edf75964ef0ac8700c294bfb7b25845c9fe1",
+      "reason": "superseded evidence",
+      "preserved_in": ".runtime/cleanup-20261028/baseline.tar.gz",
+      "replacement": "docs/RELEASE_REPORT.md and evidence index"
+    },
+    {
+      "path": "docs/evidence/baseline-20261026T011648Z/release-backup.txt",
+      "sha256": "630e67c6e738b39999b51c9142697cc9eb3b9552005d6239f790cb5649e64667",
+      "reason": "superseded evidence",
+      "preserved_in": ".runtime/cleanup-20261028/baseline.tar.gz",
+      "replacement": "docs/RELEASE_REPORT.md and evidence index"
+    },
+    {
+      "path": "docs/evidence/baseline-20261026T011648Z/release-browser.txt",
+      "sha256": "98e103c3ed64bc6dc08ac4d707ecfe2b6ac22fa596466ab36001c82a62f89ff5",
+      "reason": "superseded evidence",
+      "preserved_in": ".runtime/cleanup-20261028/baseline.tar.gz",
+      "replacement": "docs/RELEASE_REPORT.md and evidence index"
+    },
+    {
+      "path": "docs/evidence/baseline-20261026T011648Z/release-clean-build.txt",
+      "sha256": "68dba5000333e7db22579bbc8e48faef535e4994ce791b21cb74c385313f4ed5",
+      "reason": "superseded evidence",
+      "preserved_in": ".runtime/cleanup-20261028/baseline.tar.gz",
+      "replacement": "docs/RELEASE_REPORT.md and evidence index"
+    },
+    {
+      "path": "docs/evidence/baseline-20261026T011648Z/release-dependency-audit.txt",
+      "sha256": "15950a68a7ed99c59779717acefdceb3f69cfd31bde67d2c954f2a3cea4d7955",
+      "reason": "superseded evidence",
+      "preserved_in": ".runtime/cleanup-20261028/baseline.tar.gz",
+      "replacement": "docs/RELEASE_REPORT.md and evidence index"
+    },
+    {
+      "path": "docs/evidence/baseline-20261026T011648Z/release-inventory.txt",
+      "sha256": "7d3bdd82317803f61a825747edda11ae1b5375e0a3f3846f8865c467c3d6b420",
+      "reason": "superseded evidence",
+      "preserved_in": ".runtime/cleanup-20261028/baseline.tar.gz",
+      "replacement": "docs/RELEASE_REPORT.md and evidence index"
+    },
+    {
+      "path": "docs/evidence/baseline-20261026T011648Z/release-live-evaluation.txt",
+      "sha256": "c6817432d8fd5b3ba51c6b578a6a47a5acabc39fd7ff2c517fd6aee888c3eaa6",
+      "reason": "superseded evidence",
+      "preserved_in": ".runtime/cleanup-20261028/baseline.tar.gz",
+      "replacement": "docs/RELEASE_REPORT.md and evidence index"
+    },
+    {
+      "path": "docs/evidence/baseline-20261026T011648Z/release-live-research.txt",
+      "sha256": "81e4f82e85d539dd3fd0c49bbbfe54b09a46c09ba6b28772d341c55e248ef3ef",
+      "reason": "superseded evidence",
+      "preserved_in": ".runtime/cleanup-20261028/baseline.tar.gz",
+      "replacement": "docs/RELEASE_REPORT.md and evidence index"
+    },
+    {
+      "path": "docs/evidence/baseline-20261026T011648Z/release-manifest.json",
+      "sha256": "afb27cf2ae1c6c64941d9dd9dca4e8e97d7829f77b8ad0da0b06fd5b1bdeb9b2",
+      "reason": "superseded evidence",
+      "preserved_in": ".runtime/cleanup-20261028/baseline.tar.gz",
+      "replacement": "docs/RELEASE_REPORT.md and evidence index"
+    },
+    {
+      "path": "docs/evidence/baseline-20261026T011648Z/release-packaged-build.txt",
+      "sha256": "10a02258544da362fde6bc7ea0db3783c127beea5fcb4bf2ab3cf37cb1a83bbe",
+      "reason": "superseded evidence",
+      "preserved_in": ".runtime/cleanup-20261028/baseline.tar.gz",
+      "replacement": "docs/RELEASE_REPORT.md and evidence index"
+    },
+    {
+      "path": "docs/evidence/baseline-20261026T011648Z/release-proxy-validation.txt",
+      "sha256": "6a96a365f78c5e49f38c7cc8560bf06ccf0289eebf8d3ce6c1a2dccd0c1436e5",
+      "reason": "superseded evidence",
+      "preserved_in": ".runtime/cleanup-20261028/baseline.tar.gz",
+      "replacement": "docs/RELEASE_REPORT.md and evidence index"
+    },
+    {
+      "path": "docs/evidence/baseline-20261026T011648Z/release-settings-green.txt",
+      "sha256": "29307657f7d67282c0f725c7a74fb0e60ff82d5af6bef3213107cb1b198b84cc",
+      "reason": "superseded evidence",
+      "preserved_in": ".runtime/cleanup-20261028/baseline.tar.gz",
+      "replacement": "docs/RELEASE_REPORT.md and evidence index"
+    },
+    {
+      "path": "docs/evidence/baseline-20261026T011648Z/release-settings-red.txt",
+      "sha256": "27aa9b44e8d27e68fb7dc26e4662065254f592259d0157d1e17a0eb6d3b4866d",
+      "reason": "superseded evidence",
+      "preserved_in": ".runtime/cleanup-20261028/baseline.tar.gz",
+      "replacement": "docs/RELEASE_REPORT.md and evidence index"
+    },
+    {
+      "path": "docs/evidence/baseline-20261026T011648Z/release-upgrade-settings.txt",
+      "sha256": "f60cd07985f2697ed7ed1b0fa79eb6bdf01902a2f70ba701b191344c42634ad8",
+      "reason": "superseded evidence",
+      "preserved_in": ".runtime/cleanup-20261028/baseline.tar.gz",
+      "replacement": "docs/RELEASE_REPORT.md and evidence index"
+    },
+    {
+      "path": "docs/evidence/baseline-20261026T011648Z/release-verification-before-reservation.txt",
+      "sha256": "3d66cf5ed846f93e4f383f443f40c07eea4feee2f86d7453f075af5530068899",
+      "reason": "superseded evidence",
+      "preserved_in": ".runtime/cleanup-20261028/baseline.tar.gz",
+      "replacement": "docs/RELEASE_REPORT.md and evidence index"
+    },
+    {
+      "path": "docs/evidence/baseline-20261026T011648Z/release-verification.txt",
+      "sha256": "2f970edba3b08e0a72b7d88e38048a46a2bb863c169324da196fc1ed14edd36d",
+      "reason": "superseded evidence",
+      "preserved_in": ".runtime/cleanup-20261028/baseline.tar.gz",
+      "replacement": "docs/RELEASE_REPORT.md and evidence index"
+    },
+    {
+      "path": "docs/evidence/baseline-20261026T011648Z/usage-reservation-green.txt",
+      "sha256": "e4f4b9c60bab877af1865a293e1ef3f027cda9da5573b0f4c9c73ce0a5b95c77",
+      "reason": "superseded evidence",
+      "preserved_in": ".runtime/cleanup-20261028/baseline.tar.gz",
+      "replacement": "docs/RELEASE_REPORT.md and evidence index"
+    },
+    {
+      "path": "docs/evidence/baseline-20261026T011648Z/usage-reservation-red.txt",
+      "sha256": "8a568839aac80ae8f039221f722c776477b5189e937f72c02c837e57a0da1c53",
+      "reason": "superseded evidence",
+      "preserved_in": ".runtime/cleanup-20261028/baseline.tar.gz",
+      "replacement": "docs/RELEASE_REPORT.md and evidence index"
+    },
+    {
+      "path": "docs/evidence/baseline-20261026T115637Z/.gitkeep",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "reason": "superseded evidence",
+      "preserved_in": ".runtime/cleanup-20261028/baseline.tar.gz",
+      "replacement": "docs/RELEASE_REPORT.md and evidence index"
+    },
+    {
+      "path": "docs/evidence/baseline-20261026T115637Z/01-red.txt",
+      "sha256": "e7a12c7b232a6f3fc4af8e555a3630a84342fdbe92d6166d7c0b06a82495fce1",
+      "reason": "superseded evidence",
+      "preserved_in": ".runtime/cleanup-20261028/baseline.tar.gz",
+      "replacement": "docs/RELEASE_REPORT.md and evidence index"
+    },
+    {
+      "path": "docs/evidence/baseline-20261026T115637Z/agent-architecture-audit.json",
+      "sha256": "42bc182eb4cec871943ddc096bc1864605ec521cff88f12f1e2c5246daf01b93",
+      "reason": "superseded evidence",
+      "preserved_in": ".runtime/cleanup-20261028/baseline.tar.gz",
+      "replacement": "docs/RELEASE_REPORT.md and evidence index"
+    },
+    {
+      "path": "docs/evidence/baseline-20261026T115637Z/audit-backup-run.txt",
+      "sha256": "cbed884e99ad23808b01312f46cdfc340e2fce3f644b73a8d36b244c3dbef1dc",
+      "reason": "superseded evidence",
+      "preserved_in": ".runtime/cleanup-20261028/baseline.tar.gz",
+      "replacement": "docs/RELEASE_REPORT.md and evidence index"
+    },
+    {
+      "path": "docs/evidence/baseline-20261026T115637Z/audit-browser-initial-failures.txt",
+      "sha256": "9b1f79a65eca7858bc8883df52eba9322022177072b5feb27bffbc9eca9f9a5a",
+      "reason": "superseded evidence",
+      "preserved_in": ".runtime/cleanup-20261028/baseline.tar.gz",
+      "replacement": "docs/RELEASE_REPORT.md and evidence index"
+    },
+    {
+      "path": "docs/evidence/baseline-20261026T115637Z/audit-browser.txt",
+      "sha256": "9b1f79a65eca7858bc8883df52eba9322022177072b5feb27bffbc9eca9f9a5a",
+      "reason": "superseded evidence",
+      "preserved_in": ".runtime/cleanup-20261028/baseline.tar.gz",
+      "replacement": "docs/RELEASE_REPORT.md and evidence index"
+    },
+    {
+      "path": "docs/evidence/baseline-20261026T115637Z/audit-compose-build.txt",
+      "sha256": "9b7b0644dfd4b7a8a7e019ee5befa1db7eb08361be29c5ebf60090e62a3dd528",
+      "reason": "superseded evidence",
+      "preserved_in": ".runtime/cleanup-20261028/baseline.tar.gz",
+      "replacement": "docs/RELEASE_REPORT.md and evidence index"
+    },
+    {
+      "path": "docs/evidence/baseline-20261026T115637Z/audit-inventory-run.txt",
+      "sha256": "6777f8fc325f9c7856196981038ac79f2df9951613b2ca013caffcc4b755b6e0",
+      "reason": "superseded evidence",
+      "preserved_in": ".runtime/cleanup-20261028/baseline.tar.gz",
+      "replacement": "docs/RELEASE_REPORT.md and evidence index"
+    },
+    {
+      "path": "docs/evidence/baseline-20261026T115637Z/audit-regressions-green.txt",
+      "sha256": "ef073d7836ac24d9b82a4e4d96d7e14a86c42435d96d62f0e1b74313578e141b",
+      "reason": "superseded evidence",
+      "preserved_in": ".runtime/cleanup-20261028/baseline.tar.gz",
+      "replacement": "docs/RELEASE_REPORT.md and evidence index"
+    },
+    {
+      "path": "docs/evidence/baseline-20261026T115637Z/audit-regressions-red.txt",
+      "sha256": "a58c120ae46630ce31b5388d5e30c59185818098938085d5f6d01685bbac297d",
+      "reason": "superseded evidence",
+      "preserved_in": ".runtime/cleanup-20261028/baseline.tar.gz",
+      "replacement": "docs/RELEASE_REPORT.md and evidence index"
+    },
+    {
+      "path": "docs/evidence/baseline-20261026T115637Z/audit-safety-green.txt",
+      "sha256": "bb369e9c032f8db3b75de2affa1755768bdfe29c0687ba6d1f7e5771d23e2201",
+      "reason": "superseded evidence",
+      "preserved_in": ".runtime/cleanup-20261028/baseline.tar.gz",
+      "replacement": "docs/RELEASE_REPORT.md and evidence index"
+    },
+    {
+      "path": "docs/evidence/baseline-20261026T115637Z/audit-safety-red.txt",
+      "sha256": "c13fb0125614a3d82489851875cd00613b33bf67ad832920405a12a8dd6f0b8a",
+      "reason": "superseded evidence",
+      "preserved_in": ".runtime/cleanup-20261028/baseline.tar.gz",
+      "replacement": "docs/RELEASE_REPORT.md and evidence index"
+    },
+    {
+      "path": "docs/evidence/baseline-20261026T115637Z/audit-verification.txt",
+      "sha256": "0c0c03ab63917a2c6b30a9b9c4b9ef556892ad1bb5da41c249791eb65f626b1d",
+      "reason": "superseded evidence",
+      "preserved_in": ".runtime/cleanup-20261028/baseline.tar.gz",
+      "replacement": "docs/RELEASE_REPORT.md and evidence index"
+    },
+    {
+      "path": "docs/evidence/baseline-20261026T115637Z/backend-tests.txt",
+      "sha256": "78f005fe1ceaa2f9b629cf19ed3c65e735d2eb2a587b9293f76d405d65941409",
+      "reason": "superseded evidence",
+      "preserved_in": ".runtime/cleanup-20261028/baseline.tar.gz",
+      "replacement": "docs/RELEASE_REPORT.md and evidence index"
+    },
+    {
+      "path": "docs/evidence/baseline-20261026T115637Z/backup-restore.json",
+      "sha256": "d5a53902a9a9fe1e2c892207f3c2a0c1a169120d3f37b9e300414aa69d8ff625",
+      "reason": "superseded evidence",
+      "preserved_in": ".runtime/cleanup-20261028/baseline.tar.gz",
+      "replacement": "docs/RELEASE_REPORT.md and evidence index"
+    },
+    {
+      "path": "docs/evidence/baseline-20261026T115637Z/browser-desktop.png",
+      "sha256": "605d6c50725284f2c65e594fc9a9ddd8d8fc89d2efd8b2f9c16485a918c84855",
+      "reason": "superseded evidence",
+      "preserved_in": ".runtime/cleanup-20261028/baseline.tar.gz",
+      "replacement": "docs/RELEASE_REPORT.md and evidence index"
+    },
+    {
+      "path": "docs/evidence/baseline-20261026T115637Z/browser-mobile.png",
+      "sha256": "9f769ae384e5de2b0f245054c1da067b736d56ac37cfa12dad987b03209725ca",
+      "reason": "superseded evidence",
+      "preserved_in": ".runtime/cleanup-20261028/baseline.tar.gz",
+      "replacement": "docs/RELEASE_REPORT.md and evidence index"
+    },
+    {
+      "path": "docs/evidence/baseline-20261026T115637Z/browser-results.json",
+      "sha256": "9bd366833820c3ac4b5fbf70e1c9832a95e09ab5b5d1d53677e3c4ecf898094b",
+      "reason": "superseded evidence",
+      "preserved_in": ".runtime/cleanup-20261028/baseline.tar.gz",
+      "replacement": "docs/RELEASE_REPORT.md and evidence index"
+    },
+    {
+      "path": "docs/evidence/baseline-20261026T115637Z/browser-run.txt",
+      "sha256": "f3e01bcbe64c94de0a3ae98ae55751d4c772e3728b9dc8d494db6b9d82c35d89",
+      "reason": "superseded evidence",
+      "preserved_in": ".runtime/cleanup-20261028/baseline.tar.gz",
+      "replacement": "docs/RELEASE_REPORT.md and evidence index"
+    },
+    {
+      "path": "docs/evidence/baseline-20261026T115637Z/browser-settings.png",
+      "sha256": "2ffb353493631098a0cec4873cc7607e3674414199bc01de3e8b3f4777bc634b",
+      "reason": "superseded evidence",
+      "preserved_in": ".runtime/cleanup-20261028/baseline.tar.gz",
+      "replacement": "docs/RELEASE_REPORT.md and evidence index"
+    },
+    {
+      "path": "docs/evidence/baseline-20261026T115637Z/browser-tablet.png",
+      "sha256": "340f52b41f0f7a5e3c9f706023ed27ac2b9dd3331ddda1f50bb1faf4bf106001",
+      "reason": "superseded evidence",
+      "preserved_in": ".runtime/cleanup-20261028/baseline.tar.gz",
+      "replacement": "docs/RELEASE_REPORT.md and evidence index"
+    },
+    {
+      "path": "docs/evidence/baseline-20261026T115637Z/clean-release-build.txt",
+      "sha256": "bb153b2fe26932aaeae715b7f128b77fbb57ee89c3e5b3445630c5fddd19b40c",
+      "reason": "superseded evidence",
+      "preserved_in": ".runtime/cleanup-20261028/baseline.tar.gz",
+      "replacement": "docs/RELEASE_REPORT.md and evidence index"
+    },
+    {
+      "path": "docs/evidence/baseline-20261026T115637Z/clean-release-smoke.json",
+      "sha256": "f58efce6759783b04ecd7c0add4b37181ca1f1733c27b95ee4231c07e28cbeec",
+      "reason": "superseded evidence",
+      "preserved_in": ".runtime/cleanup-20261028/baseline.tar.gz",
+      "replacement": "docs/RELEASE_REPORT.md and evidence index"
+    },
+    {
+      "path": "docs/evidence/baseline-20261026T115637Z/compose-build.txt",
+      "sha256": "acc2c20c8fa5e44091835d8b777deffc41ebc3955236e0c0c665a4734e37883e",
+      "reason": "superseded evidence",
+      "preserved_in": ".runtime/cleanup-20261028/baseline.tar.gz",
+      "replacement": "docs/RELEASE_REPORT.md and evidence index"
+    },
+    {
+      "path": "docs/evidence/baseline-20261026T115637Z/compose-smoke.json",
+      "sha256": "be636331e4ded52860453fb374d6148538825c49b274d5a237deeb18c89ad7e5",
+      "reason": "superseded evidence",
+      "preserved_in": ".runtime/cleanup-20261028/baseline.tar.gz",
+      "replacement": "docs/RELEASE_REPORT.md and evidence index"
+    },
+    {
+      "path": "docs/evidence/baseline-20261026T115637Z/compose-start.txt",
+      "sha256": "5b57b209089f0e1d0329ebaa6428caf8d3d7a116f77cc1f00ea7200459fbac91",
+      "reason": "superseded evidence",
+      "preserved_in": ".runtime/cleanup-20261028/baseline.tar.gz",
+      "replacement": "docs/RELEASE_REPORT.md and evidence index"
+    },
+    {
+      "path": "docs/evidence/baseline-20261026T115637Z/continuation-backup.txt",
+      "sha256": "b44be0b5e1fa1ff91c486630a2df0615455b185ded7bc050e2c17715d5107c4f",
+      "reason": "superseded evidence",
+      "preserved_in": ".runtime/cleanup-20261028/baseline.tar.gz",
+      "replacement": "docs/RELEASE_REPORT.md and evidence index"
+    },
+    {
+      "path": "docs/evidence/baseline-20261026T115637Z/continuation-baseline.json",
+      "sha256": "98e5e541f8066840207c215149e1ad5398b68291da4476129f6a7545a5dd2f7b",
+      "reason": "superseded evidence",
+      "preserved_in": ".runtime/cleanup-20261028/baseline.tar.gz",
+      "replacement": "docs/RELEASE_REPORT.md and evidence index"
+    },
+    {
+      "path": "docs/evidence/baseline-20261026T115637Z/continuation-before-probe-fix.txt",
+      "sha256": "660ae65aa80eedba2762a531d9fe74362e2df2dbc4b28186de5d85388c63b030",
+      "reason": "superseded evidence",
+      "preserved_in": ".runtime/cleanup-20261028/baseline.tar.gz",
+      "replacement": "docs/RELEASE_REPORT.md and evidence index"
+    },
+    {
+      "path": "docs/evidence/baseline-20261026T115637Z/continuation-clean-build.txt",
+      "sha256": "0f53f5f301bd15d0d065338c3f05b3a768a539b2047341ed3e00c3b64e414771",
+      "reason": "superseded evidence",
+      "preserved_in": ".runtime/cleanup-20261028/baseline.tar.gz",
+      "replacement": "docs/RELEASE_REPORT.md and evidence index"
+    },
+    {
+      "path": "docs/evidence/baseline-20261026T115637Z/continuation-inventory.txt",
+      "sha256": "c2497e83cbfd2d8e3cef9dd42872f204702427b884f178d9b837352286e807d8",
+      "reason": "superseded evidence",
+      "preserved_in": ".runtime/cleanup-20261028/baseline.tar.gz",
+      "replacement": "docs/RELEASE_REPORT.md and evidence index"
+    },
+    {
+      "path": "docs/evidence/baseline-20261026T115637Z/continuation-live-smoke.txt",
+      "sha256": "b27c47d78d052a3bffc3833fd7f7bd971cde1e53752d999994dc71e3ba389a70",
+      "reason": "superseded evidence",
+      "preserved_in": ".runtime/cleanup-20261028/baseline.tar.gz",
+      "replacement": "docs/RELEASE_REPORT.md and evidence index"
+    },
+    {
+      "path": "docs/evidence/baseline-20261026T115637Z/continuation-package.txt",
+      "sha256": "829541ebb8c1ce6f1eb8c958666131b8e20090cc48420d266856d76d4ef8d5b5",
+      "reason": "superseded evidence",
+      "preserved_in": ".runtime/cleanup-20261028/baseline.tar.gz",
+      "replacement": "docs/RELEASE_REPORT.md and evidence index"
+    },
+    {
+      "path": "docs/evidence/baseline-20261026T115637Z/continuation-packaged-build.txt",
+      "sha256": "af37be96785b450f82616ddcdf2b7f955fc5016a26c05cbadb524618b681a26f",
+      "reason": "superseded evidence",
+      "preserved_in": ".runtime/cleanup-20261028/baseline.tar.gz",
+      "replacement": "docs/RELEASE_REPORT.md and evidence index"
+    },
+    {
+      "path": "docs/evidence/baseline-20261026T115637Z/continuation-verification.txt",
+      "sha256": "f555d53b19b331ecfdfcb21c3dcd6c2790d933979a43e341ec1f9a6b55cdf2f5",
+      "reason": "superseded evidence",
+      "preserved_in": ".runtime/cleanup-20261028/baseline.tar.gz",
+      "replacement": "docs/RELEASE_REPORT.md and evidence index"
+    },
+    {
+      "path": "docs/evidence/baseline-20261026T115637Z/conversation-race-red.txt",
+      "sha256": "821c08432eee84491b7cb1c4e33b4f8098cc0fc352c8145a54153fb57639f2ad",
+      "reason": "superseded evidence",
+      "preserved_in": ".runtime/cleanup-20261028/baseline.tar.gz",
+      "replacement": "docs/RELEASE_REPORT.md and evidence index"
+    },
+    {
+      "path": "docs/evidence/baseline-20261026T115637Z/conversation-race-test-setup-failure.txt",
+      "sha256": "8d2384f97eda661c32f1f7c36d258ee2c20ed0c8afc13076ab46bfc257e4d879",
+      "reason": "superseded evidence",
+      "preserved_in": ".runtime/cleanup-20261028/baseline.tar.gz",
+      "replacement": "docs/RELEASE_REPORT.md and evidence index"
+    },
+    {
+      "path": "docs/evidence/baseline-20261026T115637Z/ecc-catalog.json",
+      "sha256": "3a6ee78fb293f1802ddd7d25f1e9078fb37c55d64583d25840d69580e74dd267",
+      "reason": "superseded evidence",
+      "preserved_in": ".runtime/cleanup-20261028/baseline.tar.gz",
+      "replacement": "docs/RELEASE_REPORT.md and evidence index"
+    },
+    {
+      "path": "docs/evidence/baseline-20261026T115637Z/ecc-full-plan.json",
+      "sha256": "24b7dddca8b51951428ffcdb27d7e31ac65b95e57107ccbbf9f1c3ca1d091244",
+      "reason": "superseded evidence",
+      "preserved_in": ".runtime/cleanup-20261028/baseline.tar.gz",
+      "replacement": "docs/RELEASE_REPORT.md and evidence index"
+    },
+    {
+      "path": "docs/evidence/baseline-20261026T115637Z/ecc-plugin-diagnostic.txt",
+      "sha256": "3552afbbd1d63703167f9b0ef5a07bf3f5c6c11383c810d696153511294d0108",
+      "reason": "superseded evidence",
+      "preserved_in": ".runtime/cleanup-20261028/baseline.tar.gz",
+      "replacement": "docs/RELEASE_REPORT.md and evidence index"
+    },
+    {
+      "path": "docs/evidence/baseline-20261026T115637Z/ecc-reference-inventory.json",
+      "sha256": "89c05d8f8b90f9bd5a6f039a800c9df0d5652c4e8bff2dd2d7ed914298ff460e",
+      "reason": "superseded evidence",
+      "preserved_in": ".runtime/cleanup-20261028/baseline.tar.gz",
+      "replacement": "docs/RELEASE_REPORT.md and evidence index"
+    },
+    {
+      "path": "docs/evidence/baseline-20261026T115637Z/final-verification.txt",
+      "sha256": "9d01d40d01f2e389e384475ce887a71f2149e775384391538d38deb0f3883057",
+      "reason": "superseded evidence",
+      "preserved_in": ".runtime/cleanup-20261028/baseline.tar.gz",
+      "replacement": "docs/RELEASE_REPORT.md and evidence index"
+    },
+    {
+      "path": "docs/evidence/baseline-20261026T115637Z/live-evaluation-pre-audit.json",
+      "sha256": "30003a7f2aa038e710989c7b7b253d74946e88131d6625988a25ea144c3d7774",
+      "reason": "superseded evidence",
+      "preserved_in": ".runtime/cleanup-20261028/baseline.tar.gz",
+      "replacement": "docs/RELEASE_REPORT.md and evidence index"
+    },
+    {
+      "path": "docs/evidence/baseline-20261026T115637Z/live-evaluation-run-pre-audit.txt",
+      "sha256": "c6817432d8fd5b3ba51c6b578a6a47a5acabc39fd7ff2c517fd6aee888c3eaa6",
+      "reason": "superseded evidence",
+      "preserved_in": ".runtime/cleanup-20261028/baseline.tar.gz",
+      "replacement": "docs/RELEASE_REPORT.md and evidence index"
+    },
+    {
+      "path": "docs/evidence/baseline-20261026T115637Z/live-evaluation-run.txt",
+      "sha256": "c6817432d8fd5b3ba51c6b578a6a47a5acabc39fd7ff2c517fd6aee888c3eaa6",
+      "reason": "superseded evidence",
+      "preserved_in": ".runtime/cleanup-20261028/baseline.tar.gz",
+      "replacement": "docs/RELEASE_REPORT.md and evidence index"
+    },
+    {
+      "path": "docs/evidence/baseline-20261026T115637Z/live-evaluation.json",
+      "sha256": "d5c33f50c9460704de291cba3e25cb896c68e8db6f81ecea088a658e0bbb11f6",
+      "reason": "superseded evidence",
+      "preserved_in": ".runtime/cleanup-20261028/baseline.tar.gz",
+      "replacement": "docs/RELEASE_REPORT.md and evidence index"
+    },
+    {
+      "path": "docs/evidence/baseline-20261026T115637Z/live-probe-green.txt",
+      "sha256": "4bc723534368cae7a98c3a48888f5bdd267d42c722661a186fe9dc9679cec951",
+      "reason": "superseded evidence",
+      "preserved_in": ".runtime/cleanup-20261028/baseline.tar.gz",
+      "replacement": "docs/RELEASE_REPORT.md and evidence index"
+    },
+    {
+      "path": "docs/evidence/baseline-20261026T115637Z/live-probe-red.txt",
+      "sha256": "f469cd813959ee6e7b7025e2b51d1cc56d8828a3bdab60ba742535a74b01e662",
+      "reason": "superseded evidence",
+      "preserved_in": ".runtime/cleanup-20261028/baseline.tar.gz",
+      "replacement": "docs/RELEASE_REPORT.md and evidence index"
+    },
+    {
+      "path": "docs/evidence/baseline-20261026T115637Z/live-research-run-pre-audit.txt",
+      "sha256": "4d82aabb33559fb8ec66ae934555da2389c6516f6cc07abf27c29573485fa2e1",
+      "reason": "superseded evidence",
+      "preserved_in": ".runtime/cleanup-20261028/baseline.tar.gz",
+      "replacement": "docs/RELEASE_REPORT.md and evidence index"
+    },
+    {
+      "path": "docs/evidence/baseline-20261026T115637Z/live-research-run.txt",
+      "sha256": "e040b460b15b39c78c083abb79929d2ebabbcd5001511458aadca5a7a40f4771",
+      "reason": "superseded evidence",
+      "preserved_in": ".runtime/cleanup-20261028/baseline.tar.gz",
+      "replacement": "docs/RELEASE_REPORT.md and evidence index"
+    },
+    {
+      "path": "docs/evidence/baseline-20261026T115637Z/live-research-smoke-pre-audit.json",
+      "sha256": "6aa457e99d96fffae1547cc6867fd76b012545ba405c8b1668f9ccf2b4e9c78c",
+      "reason": "superseded evidence",
+      "preserved_in": ".runtime/cleanup-20261028/baseline.tar.gz",
+      "replacement": "docs/RELEASE_REPORT.md and evidence index"
+    },
+    {
+      "path": "docs/evidence/baseline-20261026T115637Z/live-research-smoke.json",
+      "sha256": "81de413fd96225f2d5b797f38457a583df2f42a42351555d33ff3606eee9a71c",
+      "reason": "superseded evidence",
+      "preserved_in": ".runtime/cleanup-20261028/baseline.tar.gz",
+      "replacement": "docs/RELEASE_REPORT.md and evidence index"
+    },
+    {
+      "path": "docs/evidence/baseline-20261026T115637Z/live-smoke.json",
+      "sha256": "b27c47d78d052a3bffc3833fd7f7bd971cde1e53752d999994dc71e3ba389a70",
+      "reason": "superseded evidence",
+      "preserved_in": ".runtime/cleanup-20261028/baseline.tar.gz",
+      "replacement": "docs/RELEASE_REPORT.md and evidence index"
+    },
+    {
+      "path": "docs/evidence/baseline-20261026T115637Z/npm-audit.txt",
+      "sha256": "6d8c5c8f3d7684adb070417bd608d01ae90aa3dc26a65af03ffda4955f38d9a3",
+      "reason": "superseded evidence",
+      "preserved_in": ".runtime/cleanup-20261028/baseline.tar.gz",
+      "replacement": "docs/RELEASE_REPORT.md and evidence index"
+    },
+    {
+      "path": "docs/evidence/baseline-20261026T115637Z/packaged-release-verification.json",
+      "sha256": "6c943d3cbcf234ee47fd313b7293b6b30e25ab9cf54f92a5e6e09c3a2551ead3",
+      "reason": "superseded evidence",
+      "preserved_in": ".runtime/cleanup-20261028/baseline.tar.gz",
+      "replacement": "docs/RELEASE_REPORT.md and evidence index"
+    },
+    {
+      "path": "docs/evidence/baseline-20261026T115637Z/python-audit.txt",
+      "sha256": "15950a68a7ed99c59779717acefdceb3f69cfd31bde67d2c954f2a3cea4d7955",
+      "reason": "superseded evidence",
+      "preserved_in": ".runtime/cleanup-20261028/baseline.tar.gz",
+      "replacement": "docs/RELEASE_REPORT.md and evidence index"
+    },
+    {
+      "path": "docs/evidence/baseline-20261026T115637Z/recursive-inventory.json",
+      "sha256": "26cc9b35a0103f7f2c4d8bf17598f8e8edffe74fb3addb875d3d56b571dcd951",
+      "reason": "superseded evidence",
+      "preserved_in": ".runtime/cleanup-20261028/baseline.tar.gz",
+      "replacement": "docs/RELEASE_REPORT.md and evidence index"
+    },
+    {
+      "path": "docs/evidence/baseline-20261026T115637Z/release-backend.txt",
+      "sha256": "e868ce7c92d40f2241c12fba6da4edf75964ef0ac8700c294bfb7b25845c9fe1",
+      "reason": "superseded evidence",
+      "preserved_in": ".runtime/cleanup-20261028/baseline.tar.gz",
+      "replacement": "docs/RELEASE_REPORT.md and evidence index"
+    },
+    {
+      "path": "docs/evidence/baseline-20261026T115637Z/release-backup.txt",
+      "sha256": "630e67c6e738b39999b51c9142697cc9eb3b9552005d6239f790cb5649e64667",
+      "reason": "superseded evidence",
+      "preserved_in": ".runtime/cleanup-20261028/baseline.tar.gz",
+      "replacement": "docs/RELEASE_REPORT.md and evidence index"
+    },
+    {
+      "path": "docs/evidence/baseline-20261026T115637Z/release-browser.txt",
+      "sha256": "98e103c3ed64bc6dc08ac4d707ecfe2b6ac22fa596466ab36001c82a62f89ff5",
+      "reason": "superseded evidence",
+      "preserved_in": ".runtime/cleanup-20261028/baseline.tar.gz",
+      "replacement": "docs/RELEASE_REPORT.md and evidence index"
+    },
+    {
+      "path": "docs/evidence/baseline-20261026T115637Z/release-clean-build.txt",
+      "sha256": "68dba5000333e7db22579bbc8e48faef535e4994ce791b21cb74c385313f4ed5",
+      "reason": "superseded evidence",
+      "preserved_in": ".runtime/cleanup-20261028/baseline.tar.gz",
+      "replacement": "docs/RELEASE_REPORT.md and evidence index"
+    },
+    {
+      "path": "docs/evidence/baseline-20261026T115637Z/release-dependency-audit.txt",
+      "sha256": "15950a68a7ed99c59779717acefdceb3f69cfd31bde67d2c954f2a3cea4d7955",
+      "reason": "superseded evidence",
+      "preserved_in": ".runtime/cleanup-20261028/baseline.tar.gz",
+      "replacement": "docs/RELEASE_REPORT.md and evidence index"
+    },
+    {
+      "path": "docs/evidence/baseline-20261026T115637Z/release-inventory.txt",
+      "sha256": "7d3bdd82317803f61a825747edda11ae1b5375e0a3f3846f8865c467c3d6b420",
+      "reason": "superseded evidence",
+      "preserved_in": ".runtime/cleanup-20261028/baseline.tar.gz",
+      "replacement": "docs/RELEASE_REPORT.md and evidence index"
+    },
+    {
+      "path": "docs/evidence/baseline-20261026T115637Z/release-live-evaluation.txt",
+      "sha256": "c6817432d8fd5b3ba51c6b578a6a47a5acabc39fd7ff2c517fd6aee888c3eaa6",
+      "reason": "superseded evidence",
+      "preserved_in": ".runtime/cleanup-20261028/baseline.tar.gz",
+      "replacement": "docs/RELEASE_REPORT.md and evidence index"
+    },
+    {
+      "path": "docs/evidence/baseline-20261026T115637Z/release-live-research.txt",
+      "sha256": "81e4f82e85d539dd3fd0c49bbbfe54b09a46c09ba6b28772d341c55e248ef3ef",
+      "reason": "superseded evidence",
+      "preserved_in": ".runtime/cleanup-20261028/baseline.tar.gz",
+      "replacement": "docs/RELEASE_REPORT.md and evidence index"
+    },
+    {
+      "path": "docs/evidence/baseline-20261026T115637Z/release-manifest.json",
+      "sha256": "51e302e726be0b3c55461513e6fff93a40b1f527d7a1ff0fbc8d3a673b71e7c4",
+      "reason": "superseded evidence",
+      "preserved_in": ".runtime/cleanup-20261028/baseline.tar.gz",
+      "replacement": "docs/RELEASE_REPORT.md and evidence index"
+    },
+    {
+      "path": "docs/evidence/baseline-20261026T115637Z/release-packaged-build.txt",
+      "sha256": "10a02258544da362fde6bc7ea0db3783c127beea5fcb4bf2ab3cf37cb1a83bbe",
+      "reason": "superseded evidence",
+      "preserved_in": ".runtime/cleanup-20261028/baseline.tar.gz",
+      "replacement": "docs/RELEASE_REPORT.md and evidence index"
+    },
+    {
+      "path": "docs/evidence/baseline-20261026T115637Z/release-proxy-validation.txt",
+      "sha256": "6a96a365f78c5e49f38c7cc8560bf06ccf0289eebf8d3ce6c1a2dccd0c1436e5",
+      "reason": "superseded evidence",
+      "preserved_in": ".runtime/cleanup-20261028/baseline.tar.gz",
+      "replacement": "docs/RELEASE_REPORT.md and evidence index"
+    },
+    {
+      "path": "docs/evidence/baseline-20261026T115637Z/release-settings-green.txt",
+      "sha256": "29307657f7d67282c0f725c7a74fb0e60ff82d5af6bef3213107cb1b198b84cc",
+      "reason": "superseded evidence",
+      "preserved_in": ".runtime/cleanup-20261028/baseline.tar.gz",
+      "replacement": "docs/RELEASE_REPORT.md and evidence index"
+    },
+    {
+      "path": "docs/evidence/baseline-20261026T115637Z/release-settings-red.txt",
+      "sha256": "27aa9b44e8d27e68fb7dc26e4662065254f592259d0157d1e17a0eb6d3b4866d",
+      "reason": "superseded evidence",
+      "preserved_in": ".runtime/cleanup-20261028/baseline.tar.gz",
+      "replacement": "docs/RELEASE_REPORT.md and evidence index"
+    },
+    {
+      "path": "docs/evidence/baseline-20261026T115637Z/release-upgrade-settings.txt",
+      "sha256": "f60cd07985f2697ed7ed1b0fa79eb6bdf01902a2f70ba701b191344c42634ad8",
+      "reason": "superseded evidence",
+      "preserved_in": ".runtime/cleanup-20261028/baseline.tar.gz",
+      "replacement": "docs/RELEASE_REPORT.md and evidence index"
+    },
+    {
+      "path": "docs/evidence/baseline-20261026T115637Z/release-verification-before-reservation.txt",
+      "sha256": "3d66cf5ed846f93e4f383f443f40c07eea4feee2f86d7453f075af5530068899",
+      "reason": "superseded evidence",
+      "preserved_in": ".runtime/cleanup-20261028/baseline.tar.gz",
+      "replacement": "docs/RELEASE_REPORT.md and evidence index"
+    },
+    {
+      "path": "docs/evidence/baseline-20261026T115637Z/release-verification.txt",
+      "sha256": "2f970edba3b08e0a72b7d88e38048a46a2bb863c169324da196fc1ed14edd36d",
+      "reason": "superseded evidence",
+      "preserved_in": ".runtime/cleanup-20261028/baseline.tar.gz",
+      "replacement": "docs/RELEASE_REPORT.md and evidence index"
+    },
+    {
+      "path": "docs/evidence/baseline-20261026T115637Z/usage-reservation-green.txt",
+      "sha256": "e4f4b9c60bab877af1865a293e1ef3f027cda9da5573b0f4c9c73ce0a5b95c77",
+      "reason": "superseded evidence",
+      "preserved_in": ".runtime/cleanup-20261028/baseline.tar.gz",
+      "replacement": "docs/RELEASE_REPORT.md and evidence index"
+    },
+    {
+      "path": "docs/evidence/baseline-20261026T115637Z/usage-reservation-red.txt",
+      "sha256": "8a568839aac80ae8f039221f722c776477b5189e937f72c02c837e57a0da1c53",
+      "reason": "superseded evidence",
+      "preserved_in": ".runtime/cleanup-20261028/baseline.tar.gz",
+      "replacement": "docs/RELEASE_REPORT.md and evidence index"
+    },
+    {
+      "path": "docs/evidence/browser-run.txt",
+      "sha256": "f3e01bcbe64c94de0a3ae98ae55751d4c772e3728b9dc8d494db6b9d82c35d89",
+      "reason": "superseded evidence",
+      "preserved_in": ".runtime/cleanup-20261028/baseline.tar.gz",
+      "replacement": "docs/RELEASE_REPORT.md and evidence index"
+    },
+    {
+      "path": "docs/evidence/clean-release-build.txt",
+      "sha256": "bb153b2fe26932aaeae715b7f128b77fbb57ee89c3e5b3445630c5fddd19b40c",
+      "reason": "superseded evidence",
+      "preserved_in": ".runtime/cleanup-20261028/baseline.tar.gz",
+      "replacement": "docs/RELEASE_REPORT.md and evidence index"
+    },
+    {
+      "path": "docs/evidence/compose-start.txt",
+      "sha256": "5b57b209089f0e1d0329ebaa6428caf8d3d7a116f77cc1f00ea7200459fbac91",
+      "reason": "superseded evidence",
+      "preserved_in": ".runtime/cleanup-20261028/baseline.tar.gz",
+      "replacement": "docs/RELEASE_REPORT.md and evidence index"
+    },
+    {
+      "path": "docs/evidence/continuation-backup.txt",
+      "sha256": "b44be0b5e1fa1ff91c486630a2df0615455b185ded7bc050e2c17715d5107c4f",
+      "reason": "superseded evidence",
+      "preserved_in": ".runtime/cleanup-20261028/baseline.tar.gz",
+      "replacement": "docs/RELEASE_REPORT.md and evidence index"
+    },
+    {
+      "path": "docs/evidence/continuation-baseline.json",
+      "sha256": "98e5e541f8066840207c215149e1ad5398b68291da4476129f6a7545a5dd2f7b",
+      "reason": "superseded evidence",
+      "preserved_in": ".runtime/cleanup-20261028/baseline.tar.gz",
+      "replacement": "docs/RELEASE_REPORT.md and evidence index"
+    },
+    {
+      "path": "docs/evidence/continuation-before-probe-fix.txt",
+      "sha256": "660ae65aa80eedba2762a531d9fe74362e2df2dbc4b28186de5d85388c63b030",
+      "reason": "superseded evidence",
+      "preserved_in": ".runtime/cleanup-20261028/baseline.tar.gz",
+      "replacement": "docs/RELEASE_REPORT.md and evidence index"
+    },
+    {
+      "path": "docs/evidence/continuation-clean-build.txt",
+      "sha256": "0f53f5f301bd15d0d065338c3f05b3a768a539b2047341ed3e00c3b64e414771",
+      "reason": "superseded evidence",
+      "preserved_in": ".runtime/cleanup-20261028/baseline.tar.gz",
+      "replacement": "docs/RELEASE_REPORT.md and evidence index"
+    },
+    {
+      "path": "docs/evidence/continuation-inventory.txt",
+      "sha256": "c2497e83cbfd2d8e3cef9dd42872f204702427b884f178d9b837352286e807d8",
+      "reason": "superseded evidence",
+      "preserved_in": ".runtime/cleanup-20261028/baseline.tar.gz",
+      "replacement": "docs/RELEASE_REPORT.md and evidence index"
+    },
+    {
+      "path": "docs/evidence/continuation-live-smoke.txt",
+      "sha256": "b27c47d78d052a3bffc3833fd7f7bd971cde1e53752d999994dc71e3ba389a70",
+      "reason": "superseded evidence",
+      "preserved_in": ".runtime/cleanup-20261028/baseline.tar.gz",
+      "replacement": "docs/RELEASE_REPORT.md and evidence index"
+    },
+    {
+      "path": "docs/evidence/continuation-package.txt",
+      "sha256": "829541ebb8c1ce6f1eb8c958666131b8e20090cc48420d266856d76d4ef8d5b5",
+      "reason": "superseded evidence",
+      "preserved_in": ".runtime/cleanup-20261028/baseline.tar.gz",
+      "replacement": "docs/RELEASE_REPORT.md and evidence index"
+    },
+    {
+      "path": "docs/evidence/continuation-packaged-build.txt",
+      "sha256": "af37be96785b450f82616ddcdf2b7f955fc5016a26c05cbadb524618b681a26f",
+      "reason": "superseded evidence",
+      "preserved_in": ".runtime/cleanup-20261028/baseline.tar.gz",
+      "replacement": "docs/RELEASE_REPORT.md and evidence index"
+    },
+    {
+      "path": "docs/evidence/continuation-verification.txt",
+      "sha256": "f555d53b19b331ecfdfcb21c3dcd6c2790d933979a43e341ec1f9a6b55cdf2f5",
+      "reason": "superseded evidence",
+      "preserved_in": ".runtime/cleanup-20261028/baseline.tar.gz",
+      "replacement": "docs/RELEASE_REPORT.md and evidence index"
+    },
+    {
+      "path": "docs/evidence/conversation-race-test-setup-failure.txt",
+      "sha256": "8d2384f97eda661c32f1f7c36d258ee2c20ed0c8afc13076ab46bfc257e4d879",
+      "reason": "superseded evidence",
+      "preserved_in": ".runtime/cleanup-20261028/baseline.tar.gz",
+      "replacement": "docs/RELEASE_REPORT.md and evidence index"
+    },
+    {
+      "path": "docs/evidence/final-verification.txt",
+      "sha256": "9d01d40d01f2e389e384475ce887a71f2149e775384391538d38deb0f3883057",
+      "reason": "superseded evidence",
+      "preserved_in": ".runtime/cleanup-20261028/baseline.tar.gz",
+      "replacement": "docs/RELEASE_REPORT.md and evidence index"
+    },
+    {
+      "path": "docs/evidence/live-evaluation-pre-audit.json",
+      "sha256": "30003a7f2aa038e710989c7b7b253d74946e88131d6625988a25ea144c3d7774",
+      "reason": "superseded evidence",
+      "preserved_in": ".runtime/cleanup-20261028/baseline.tar.gz",
+      "replacement": "docs/RELEASE_REPORT.md and evidence index"
+    },
+    {
+      "path": "docs/evidence/live-evaluation-run-pre-audit.txt",
+      "sha256": "c6817432d8fd5b3ba51c6b578a6a47a5acabc39fd7ff2c517fd6aee888c3eaa6",
+      "reason": "superseded evidence",
+      "preserved_in": ".runtime/cleanup-20261028/baseline.tar.gz",
+      "replacement": "docs/RELEASE_REPORT.md and evidence index"
+    },
+    {
+      "path": "docs/evidence/live-evaluation-run.txt",
+      "sha256": "c6817432d8fd5b3ba51c6b578a6a47a5acabc39fd7ff2c517fd6aee888c3eaa6",
+      "reason": "superseded evidence",
+      "preserved_in": ".runtime/cleanup-20261028/baseline.tar.gz",
+      "replacement": "docs/RELEASE_REPORT.md and evidence index"
+    },
+    {
+      "path": "docs/evidence/live-research-run-pre-audit.txt",
+      "sha256": "4d82aabb33559fb8ec66ae934555da2389c6516f6cc07abf27c29573485fa2e1",
+      "reason": "superseded evidence",
+      "preserved_in": ".runtime/cleanup-20261028/baseline.tar.gz",
+      "replacement": "docs/RELEASE_REPORT.md and evidence index"
+    },
+    {
+      "path": "docs/evidence/live-research-run.txt",
+      "sha256": "e040b460b15b39c78c083abb79929d2ebabbcd5001511458aadca5a7a40f4771",
+      "reason": "superseded evidence",
+      "preserved_in": ".runtime/cleanup-20261028/baseline.tar.gz",
+      "replacement": "docs/RELEASE_REPORT.md and evidence index"
+    },
+    {
+      "path": "docs/evidence/live-research-smoke-pre-audit.json",
+      "sha256": "6aa457e99d96fffae1547cc6867fd76b012545ba405c8b1668f9ccf2b4e9c78c",
+      "reason": "superseded evidence",
+      "preserved_in": ".runtime/cleanup-20261028/baseline.tar.gz",
+      "replacement": "docs/RELEASE_REPORT.md and evidence index"
+    },
+    {
+      "path": "docs/evidence/npm-audit.txt",
+      "sha256": "6d8c5c8f3d7684adb070417bd608d01ae90aa3dc26a65af03ffda4955f38d9a3",
+      "reason": "superseded evidence",
+      "preserved_in": ".runtime/cleanup-20261028/baseline.tar.gz",
+      "replacement": "docs/RELEASE_REPORT.md and evidence index"
+    },
+    {
+      "path": "docs/evidence/oct27-backup.txt",
+      "sha256": "d917b3fb91c0f501d4f95816ad5d00f94b18dec63f27712f71ab56e8a0515cb2",
+      "reason": "superseded evidence",
+      "preserved_in": ".runtime/cleanup-20261028/baseline.tar.gz",
+      "replacement": "docs/RELEASE_REPORT.md and evidence index"
+    },
+    {
+      "path": "docs/evidence/oct27-baseline.json",
+      "sha256": "dfffde244d62d53e2e00489951489195c6ebc20acb9cb4161060538b5c5fe7be",
+      "reason": "superseded evidence",
+      "preserved_in": ".runtime/cleanup-20261028/baseline.tar.gz",
+      "replacement": "docs/RELEASE_REPORT.md and evidence index"
+    },
+    {
+      "path": "docs/evidence/oct27-before-evaluation-fix.txt",
+      "sha256": "e20349c41471e7bcc84bf66b338005f03743cca90b43b20d2109c7de831455c9",
+      "reason": "superseded evidence",
+      "preserved_in": ".runtime/cleanup-20261028/baseline.tar.gz",
+      "replacement": "docs/RELEASE_REPORT.md and evidence index"
+    },
+    {
+      "path": "docs/evidence/oct27-inventory.txt",
+      "sha256": "ab110d3499f4d9d270cb69ee2293a5c19829d9bcdbe440789738d012bafe626f",
+      "reason": "superseded evidence",
+      "preserved_in": ".runtime/cleanup-20261028/baseline.tar.gz",
+      "replacement": "docs/RELEASE_REPORT.md and evidence index"
+    },
+    {
+      "path": "docs/evidence/oct27-live-research.txt",
+      "sha256": "9b319b6ccfcb956650056330c8e4a88fa36e36bab0fc6f94c31a74fec4872ddd",
+      "reason": "superseded evidence",
+      "preserved_in": ".runtime/cleanup-20261028/baseline.tar.gz",
+      "replacement": "docs/RELEASE_REPORT.md and evidence index"
+    },
+    {
+      "path": "docs/evidence/oct27-package.txt",
+      "sha256": "8b2da29bed2c10ffcdab7849c40d3e3e25fb9c690737e867ed31f7ec3a01dc38",
+      "reason": "superseded evidence",
+      "preserved_in": ".runtime/cleanup-20261028/baseline.tar.gz",
+      "replacement": "docs/RELEASE_REPORT.md and evidence index"
+    },
+    {
+      "path": "docs/evidence/oct27-public-heads.txt",
+      "sha256": "ed488ee7531201e28597b918663e3c3efdcfeb759945776b960d43ed1c2484a7",
+      "reason": "superseded evidence",
+      "preserved_in": ".runtime/cleanup-20261028/baseline.tar.gz",
+      "replacement": "docs/RELEASE_REPORT.md and evidence index"
+    },
+    {
+      "path": "docs/evidence/recheck-backup.txt",
+      "sha256": "57bf9e82cab47d38e1d5ad2d00a4daf0a9db835e1d563564fde231f7e21926fe",
+      "reason": "superseded evidence",
+      "preserved_in": ".runtime/cleanup-20261028/baseline.tar.gz",
+      "replacement": "docs/RELEASE_REPORT.md and evidence index"
+    },
+    {
+      "path": "docs/evidence/recheck-delivery.json",
+      "sha256": "18a3f2945d560a731ebf662d6c63b722d8e65e9015fd24c5a955bec62ac8aab4",
+      "reason": "superseded evidence",
+      "preserved_in": ".runtime/cleanup-20261028/baseline.tar.gz",
+      "replacement": "docs/RELEASE_REPORT.md and evidence index"
+    },
+    {
+      "path": "docs/evidence/recheck-inventory.txt",
+      "sha256": "7f4f38bce581a30d29ba1692c71d993e8db11677f9ce521141f6b491205f5c66",
+      "reason": "superseded evidence",
+      "preserved_in": ".runtime/cleanup-20261028/baseline.tar.gz",
+      "replacement": "docs/RELEASE_REPORT.md and evidence index"
+    },
+    {
+      "path": "docs/evidence/recheck-live-research.txt",
+      "sha256": "5d78b0ef3f787360117c5057eb6aed5c94fcd55fb41b50db0cd29d941c9fff4e",
+      "reason": "superseded evidence",
+      "preserved_in": ".runtime/cleanup-20261028/baseline.tar.gz",
+      "replacement": "docs/RELEASE_REPORT.md and evidence index"
+    },
+    {
+      "path": "docs/evidence/recheck-live-smoke.txt",
+      "sha256": "934d40cae9a9dd1b2f82bab28db15c3260ab5c888637c086858a0e4f3f4c587b",
+      "reason": "superseded evidence",
+      "preserved_in": ".runtime/cleanup-20261028/baseline.tar.gz",
+      "replacement": "docs/RELEASE_REPORT.md and evidence index"
+    },
+    {
+      "path": "docs/evidence/recheck-package.txt",
+      "sha256": "42da4209b7534c9c45d0bbd3e32d7993c9ac5a08a8fa3dfdd96cd8fdb1fceb2e",
+      "reason": "superseded evidence",
+      "preserved_in": ".runtime/cleanup-20261028/baseline.tar.gz",
+      "replacement": "docs/RELEASE_REPORT.md and evidence index"
+    },
+    {
+      "path": "docs/evidence/recheck-packaged-build.txt",
+      "sha256": "962c25065c71451c245172d45464d3ec35776f61fda57a5200fe9c3bfe987cbf",
+      "reason": "superseded evidence",
+      "preserved_in": ".runtime/cleanup-20261028/baseline.tar.gz",
+      "replacement": "docs/RELEASE_REPORT.md and evidence index"
+    },
+    {
+      "path": "docs/evidence/recheck-verification.txt",
+      "sha256": "204cc461a384273080bc53b115594e3c142736f48fcdc896952aa44b00ebc841",
+      "reason": "superseded evidence",
+      "preserved_in": ".runtime/cleanup-20261028/baseline.tar.gz",
+      "replacement": "docs/RELEASE_REPORT.md and evidence index"
+    },
+    {
+      "path": "docs/evidence/release-backend.txt",
+      "sha256": "e868ce7c92d40f2241c12fba6da4edf75964ef0ac8700c294bfb7b25845c9fe1",
+      "reason": "superseded evidence",
+      "preserved_in": ".runtime/cleanup-20261028/baseline.tar.gz",
+      "replacement": "docs/RELEASE_REPORT.md and evidence index"
+    },
+    {
+      "path": "docs/evidence/release-backup.txt",
+      "sha256": "630e67c6e738b39999b51c9142697cc9eb3b9552005d6239f790cb5649e64667",
+      "reason": "superseded evidence",
+      "preserved_in": ".runtime/cleanup-20261028/baseline.tar.gz",
+      "replacement": "docs/RELEASE_REPORT.md and evidence index"
+    },
+    {
+      "path": "docs/evidence/release-browser.txt",
+      "sha256": "98e103c3ed64bc6dc08ac4d707ecfe2b6ac22fa596466ab36001c82a62f89ff5",
+      "reason": "superseded evidence",
+      "preserved_in": ".runtime/cleanup-20261028/baseline.tar.gz",
+      "replacement": "docs/RELEASE_REPORT.md and evidence index"
+    },
+    {
+      "path": "docs/evidence/release-clean-build.txt",
+      "sha256": "68dba5000333e7db22579bbc8e48faef535e4994ce791b21cb74c385313f4ed5",
+      "reason": "superseded evidence",
+      "preserved_in": ".runtime/cleanup-20261028/baseline.tar.gz",
+      "replacement": "docs/RELEASE_REPORT.md and evidence index"
+    },
+    {
+      "path": "docs/evidence/release-dependency-audit.txt",
+      "sha256": "15950a68a7ed99c59779717acefdceb3f69cfd31bde67d2c954f2a3cea4d7955",
+      "reason": "superseded evidence",
+      "preserved_in": ".runtime/cleanup-20261028/baseline.tar.gz",
+      "replacement": "docs/RELEASE_REPORT.md and evidence index"
+    },
+    {
+      "path": "docs/evidence/release-inventory.txt",
+      "sha256": "7d3bdd82317803f61a825747edda11ae1b5375e0a3f3846f8865c467c3d6b420",
+      "reason": "superseded evidence",
+      "preserved_in": ".runtime/cleanup-20261028/baseline.tar.gz",
+      "replacement": "docs/RELEASE_REPORT.md and evidence index"
+    },
+    {
+      "path": "docs/evidence/release-live-evaluation.txt",
+      "sha256": "c6817432d8fd5b3ba51c6b578a6a47a5acabc39fd7ff2c517fd6aee888c3eaa6",
+      "reason": "superseded evidence",
+      "preserved_in": ".runtime/cleanup-20261028/baseline.tar.gz",
+      "replacement": "docs/RELEASE_REPORT.md and evidence index"
+    },
+    {
+      "path": "docs/evidence/release-live-research.txt",
+      "sha256": "81e4f82e85d539dd3fd0c49bbbfe54b09a46c09ba6b28772d341c55e248ef3ef",
+      "reason": "superseded evidence",
+      "preserved_in": ".runtime/cleanup-20261028/baseline.tar.gz",
+      "replacement": "docs/RELEASE_REPORT.md and evidence index"
+    },
+    {
+      "path": "docs/evidence/release-packaged-build.txt",
+      "sha256": "10a02258544da362fde6bc7ea0db3783c127beea5fcb4bf2ab3cf37cb1a83bbe",
+      "reason": "superseded evidence",
+      "preserved_in": ".runtime/cleanup-20261028/baseline.tar.gz",
+      "replacement": "docs/RELEASE_REPORT.md and evidence index"
+    },
+    {
+      "path": "docs/evidence/release-recheck-baseline.json",
+      "sha256": "a6166c773727a52ab7c4ca82eaaa6d44ee69bf40d060e9ed7dbbe74da65d5ab0",
+      "reason": "superseded evidence",
+      "preserved_in": ".runtime/cleanup-20261028/baseline.tar.gz",
+      "replacement": "docs/RELEASE_REPORT.md and evidence index"
+    },
+    {
+      "path": "docs/evidence/release-upgrade-settings.txt",
+      "sha256": "f60cd07985f2697ed7ed1b0fa79eb6bdf01902a2f70ba701b191344c42634ad8",
+      "reason": "superseded evidence",
+      "preserved_in": ".runtime/cleanup-20261028/baseline.tar.gz",
+      "replacement": "docs/RELEASE_REPORT.md and evidence index"
+    },
+    {
+      "path": "docs/evidence/release-verification-before-reservation.txt",
+      "sha256": "3d66cf5ed846f93e4f383f443f40c07eea4feee2f86d7453f075af5530068899",
+      "reason": "superseded evidence",
+      "preserved_in": ".runtime/cleanup-20261028/baseline.tar.gz",
+      "replacement": "docs/RELEASE_REPORT.md and evidence index"
+    },
+    {
+      "path": "docs/evidence/release-verification.txt",
+      "sha256": "2f970edba3b08e0a72b7d88e38048a46a2bb863c169324da196fc1ed14edd36d",
+      "reason": "superseded evidence",
+      "preserved_in": ".runtime/cleanup-20261028/baseline.tar.gz",
+      "replacement": "docs/RELEASE_REPORT.md and evidence index"
+    },
+    {
+      "path": "env.example",
+      "sha256": "d303e8e156a30ad26997c43dd023a2a85dd3e40e136d6908f9dfb7801d3f132d",
+      "reason": "unsupported legacy surface",
+      "preserved_in": ".runtime/cleanup-20261028/baseline.tar.gz",
+      "replacement": "commander/, frontend/, uv.lock and env.release.example"
+    },
+    {
+      "path": "generated-icon.png",
+      "sha256": "e9d8b451390c5c56e09139e9921c292e6e5f4c8fe78d4d3b595fae42e8b7ed92",
+      "reason": "unsupported legacy surface",
+      "preserved_in": ".runtime/cleanup-20261028/baseline.tar.gz",
+      "replacement": "commander/, frontend/, uv.lock and env.release.example"
+    },
+    {
+      "path": "legacy/README.md",
+      "sha256": "c4de188abff6c6e9c1e2a8115ceb639b53219b71f618d98eca732fb0104ea7d0",
+      "reason": "unsupported legacy surface",
+      "preserved_in": ".runtime/cleanup-20261028/baseline.tar.gz",
+      "replacement": "commander/, frontend/, uv.lock and env.release.example"
+    },
+    {
+      "path": "legacy/main.py.txt",
+      "sha256": "c02392b1ecdc6703056323dd7c801bff4c6937e92517ae8e0911481f3480c806",
+      "reason": "unsupported legacy surface",
+      "preserved_in": ".runtime/cleanup-20261028/baseline.tar.gz",
+      "replacement": "commander/, frontend/, uv.lock and env.release.example"
+    },
+    {
+      "path": "requirements.txt",
+      "sha256": "f5c85acddd8c50ef37d02390fadec3aa262103a34bb674e313de5cf3aa68605e",
+      "reason": "unsupported legacy surface",
+      "preserved_in": ".runtime/cleanup-20261028/baseline.tar.gz",
+      "replacement": "commander/, frontend/, uv.lock and env.release.example"
+    },
+    {
+      "path": "schema.sql",
+      "sha256": "ea9916e44ea2afd74aa9179095e30fe41051127a8b7279e4368e97ce9df2286d",
+      "reason": "unsupported legacy surface",
+      "preserved_in": ".runtime/cleanup-20261028/baseline.tar.gz",
+      "replacement": "commander/, frontend/, uv.lock and env.release.example"
+    },
+    {
+      "path": "static/css/style.css",
+      "sha256": "3ce0522112a53ca4ac31b2f2ba66b6cc3f1dde0d7dade339f307ac5868699586",
+      "reason": "unsupported legacy surface",
+      "preserved_in": ".runtime/cleanup-20261028/baseline.tar.gz",
+      "replacement": "commander/, frontend/, uv.lock and env.release.example"
+    },
+    {
+      "path": "task_service.py",
+      "sha256": "fa4f10957084da9967a80a9a53d4739d5c83db2f483dc05a6083fa37c0eda8de",
+      "reason": "unsupported legacy surface",
+      "preserved_in": ".runtime/cleanup-20261028/baseline.tar.gz",
+      "replacement": "commander/, frontend/, uv.lock and env.release.example"
+    },
+    {
+      "path": "templates/help.html",
+      "sha256": "9777694a69a4e64f9f43c04c31c92f4f16ea95cddfa264d650bf713abb731000",
+      "reason": "unsupported legacy surface",
+      "preserved_in": ".runtime/cleanup-20261028/baseline.tar.gz",
+      "replacement": "commander/, frontend/, uv.lock and env.release.example"
+    },
+    {
+      "path": "templates/index.html",
+      "sha256": "8e8387926dfa086f82e0bd770cdb5549a6c842d9d04b946fdf27bdeb072f06cb",
+      "reason": "unsupported legacy surface",
+      "preserved_in": ".runtime/cleanup-20261028/baseline.tar.gz",
+      "replacement": "commander/, frontend/, uv.lock and env.release.example"
+    },
+    {
+      "path": "templates/task_templates.json",
+      "sha256": "5a14977270d5458283c657078aac9d7d83526607e7452773aa042130c8077022",
+      "reason": "unsupported legacy surface",
+      "preserved_in": ".runtime/cleanup-20261028/baseline.tar.gz",
+      "replacement": "commander/, frontend/, uv.lock and env.release.example"
+    },
+    {
+      "path": "templates/tasks.html",
+      "sha256": "3f1e2c2b1916b9d07f21e02c3480866a12b70471f28e31761adb91000a7b28a6",
+      "reason": "unsupported legacy surface",
+      "preserved_in": ".runtime/cleanup-20261028/baseline.tar.gz",
+      "replacement": "commander/, frontend/, uv.lock and env.release.example"
+    },
+    {
+      "path": "tools.py",
+      "sha256": "2919023baead2805de69a43d3199d0388e7e2554ce473d81f9d25c88c578099f",
+      "reason": "unsupported legacy surface",
+      "preserved_in": ".runtime/cleanup-20261028/baseline.tar.gz",
+      "replacement": "commander/, frontend/, uv.lock and env.release.example"
+    },
+    {
+      "path": "utils.py",
+      "sha256": "0a2d0dc7d1395d9474702c2ac8d2943da259e4fbfe254bd3b2ea3b0f20fa11bb",
+      "reason": "unsupported legacy surface",
+      "preserved_in": ".runtime/cleanup-20261028/baseline.tar.gz",
+      "replacement": "commander/, frontend/, uv.lock and env.release.example"
+    }
+  ],
+  "private_state_excluded": true,
+  "ecc_retained": true
+}

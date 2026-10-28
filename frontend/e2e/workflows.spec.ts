@@ -580,3 +580,68 @@ test("settings persist and expose redacted health and privacy controls", async (
     fullPage: true,
   });
 });
+
+test("empty memory and revoked inference show recoverable persisted states", async ({
+  page,
+}) => {
+  await login(page);
+  await page.getByRole("button", { name: "Memory", exact: true }).click();
+  await page.getByLabel("Search memory").fill("no-match-disconnection-check");
+  await expect(page.locator(".empty")).toContainText("No memories match");
+
+  await page.getByRole("button", { name: "Settings", exact: true }).click();
+  const nebius = page.locator("section").filter({
+    has: page.getByRole("heading", {
+      name: "Nebius · NVIDIA inference",
+      exact: true,
+    }),
+  });
+  await nebius.locator('input[type="password"]').fill("offline-fixture-secret");
+  await nebius
+    .getByRole("button", { name: "Save connection", exact: true })
+    .click();
+  await nebius.getByRole("button", { name: "Revoke", exact: true }).click();
+  await expect(nebius.getByText("revoked", { exact: true })).toBeVisible();
+  await nebius
+    .getByRole("button", { name: "Save connection", exact: true })
+    .click();
+  await expect(nebius.getByRole("alert")).toContainText(
+    "Enter a real provider credential",
+  );
+  await expect(nebius.getByText("revoked", { exact: true })).toBeVisible();
+
+  await page.getByRole("button", { name: "Assistant", exact: true }).click();
+  const prompt = "Do not infer after the owner revoked the connection";
+  await page
+    .getByLabel("What needs your attention?", { exact: true })
+    .fill(prompt);
+  const created = page.waitForResponse(
+    (response) =>
+      response.url().endsWith("/api/runs") &&
+      response.request().method() === "POST",
+  );
+  await page.getByRole("button", { name: "Run task", exact: true }).click();
+  const run = await (await created).json();
+  const details = page.getByRole("region", { name: "Run details" });
+  await expect(details.getByRole("alert")).toContainText(
+    "Configure the nebius connection first",
+  );
+  const persisted = await (
+    await page.request.get("/api/runs/" + run.id)
+  ).json();
+  expect(persisted.status).toBe("failed");
+  expect(
+    persisted.events.some(
+      (event: { kind: string }) => event.kind === "inference",
+    ),
+  ).toBe(false);
+  await page.reload();
+  await page.getByRole("button").filter({ hasText: prompt }).click();
+  await expect(details.getByRole("alert")).toContainText(
+    "Configure the nebius connection first",
+  );
+  await page.screenshot({
+    path: "../docs/evidence/browser-disconnected.png",
+    fullPage: true,
+  });
+});

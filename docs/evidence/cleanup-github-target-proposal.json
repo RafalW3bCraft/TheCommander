@@ -1,0 +1,18 @@
+{
+  "status": "Blocked",
+  "action": "Create dedicated private acceptance repository, then one owner-approved test issue",
+  "repository": "AetherSilva/thecommander-acceptance",
+  "request": {
+    "method": "POST",
+    "path": "/user/repos",
+    "body": {
+      "name": "thecommander-acceptance",
+      "description": "Disposable acceptance repository for TheCommander personal AI workflows",
+      "private": true,
+      "auto_init": true,
+      "has_issues": true
+    }
+  },
+  "writes_performed": false,
+  "authority_required": "Explicit approval to create this new repository; issue creation remains exact-content approved through the application"
+}

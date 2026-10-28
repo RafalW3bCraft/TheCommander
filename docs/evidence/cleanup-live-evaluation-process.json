@@ -1,0 +1,14 @@
+{
+  "command": [
+    "uv",
+    "run",
+    "python",
+    "-m",
+    "scripts.evaluate_live"
+  ],
+  "started_at": "2026-10-28T05:27:30.283618+00:00",
+  "finished_at": "2026-10-28T05:29:50.761563+00:00",
+  "returncode": 0,
+  "elapsed_seconds": 140.478,
+  "status": "Locally verified"
+}

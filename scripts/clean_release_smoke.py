@@ -29,6 +29,7 @@ def main():
     )
     with tempfile.TemporaryDirectory(prefix="thecommander-cleancheck-") as tmp:
         root = Path(tmp)
+        env["COMPOSE_SMOKE_ROOT"] = str(root.resolve())
         for raw in set(paths):
             if not raw:
                 continue
@@ -46,6 +47,12 @@ def main():
         subprocess.run([sys.executable, "scripts/setup_runtime.py"], cwd=root, env=env, check=True)
         runtime = root / ".env.runtime"
         runtime.write_text(runtime.read_text().replace("localhost:8000", "localhost:8002"))
+        (root / ".runtime").mkdir(exist_ok=True)
+        (root / ".runtime/compose-smoke-isolation.json").write_text(
+            json.dumps(
+                {"root": str(root.resolve()), "project": project, "url": "http://localhost:8002"}
+            )
+        )
         compose = ["docker", "compose", "--env-file", ".env.runtime"]
         try:
             subprocess.run(["bash", "scripts/start.sh"], cwd=root, env=env, check=True)

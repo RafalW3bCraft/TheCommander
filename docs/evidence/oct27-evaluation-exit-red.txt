@@ -1,0 +1,111 @@
+F                                                                        [100%]
+=================================== FAILURES ===================================
+_________ test_failed_live_scenarios_persist_evidence_and_exit_nonzero _________
+
+monkeypatch = <_pytest.monkeypatch.MonkeyPatch object at 0x7fb816433820>
+tmp_path = PosixPath('/tmp/pytest-of-watcher/pytest-1/test_failed_live_scenarios_per0')
+
+    def test_failed_live_scenarios_persist_evidence_and_exit_nonzero(monkeypatch, tmp_path):
+        monkeypatch.chdir(tmp_path)
+        (tmp_path / "docs/evidence").mkdir(parents=True)
+        monkeypatch.setenv("TEST_DATABASE_URL", "postgresql://fixture/unused")
+        config = Settings(
+            _env_file=None,
+            database_url="postgresql://fixture/unused",
+            encryption_key=Fernet.generate_key().decode(),
+            bootstrap_token="test-only-bootstrap-token-not-for-production",
+            nebius_api_key="test-only-evaluation-credential",
+        )
+        monkeypatch.setattr(evaluate_live, "Settings", lambda: config)
+        monkeypatch.setattr(evaluate_live, "create_app", lambda settings: None)
+    
+        class Response:
+            def __init__(self, data):
+                self.data = data
+    
+            def json(self):
+                return self.data
+    
+            def raise_for_status(self):
+                return self
+    
+        class FailedApplication:
+            def __init__(self, app):
+                self.headers = {}
+    
+            def __enter__(self):
+                return self
+    
+            def __exit__(self, *args):
+                pass
+    
+            def post(self, path, **kwargs):
+                return Response({"id": "fixture-id", "csrf": "fixture-csrf"})
+    
+            def put(self, *args, **kwargs):
+                return Response({})
+    
+            def delete(self, *args, **kwargs):
+                return Response({})
+    
+            def get(self, path):
+                return Response(
+                    {"status": "failed", "events": [], "actions": [], "error": "Fixture failure"}
+                )
+    
+        monkeypatch.setattr(evaluate_live, "TestClient", FailedApplication)
+        monkeypatch.setattr(
+            evaluate_live.subprocess,
+            "Popen",
+            lambda *args, **kwargs: SimpleNamespace(terminate=lambda: None, wait=lambda **kw: None),
+        )
+        monkeypatch.setattr(
+            evaluate_live.psycopg,
+            "connect",
+            lambda *args, **kwargs: nullcontext(SimpleNamespace(execute=lambda *a: None)),
+        )
+>       with pytest.raises(SystemExit) as outcome:
+             ^^^^^^^^^^^^^^^^^^^^^^^^^
+E       Failed: DID NOT RAISE SystemExit
+
+/mnt/hostshare/TheCommander/tests/test_live_evaluation_exit.py:72: Failed
+----------------------------- Captured stdout call -----------------------------
+recall-1 failed FAIL
+recall-2 failed FAIL
+recall-3 failed FAIL
+recall-4 failed FAIL
+recall-5 failed FAIL
+recall-6 failed FAIL
+recall-7 failed FAIL
+recall-8 failed FAIL
+recall-9 failed FAIL
+recall-10 failed FAIL
+plan-1 failed FAIL
+plan-2 failed FAIL
+plan-3 failed FAIL
+plan-4 failed FAIL
+follow-1 failed FAIL
+follow-2 failed FAIL
+follow-3 failed FAIL
+follow-4 failed FAIL
+tool-1 failed FAIL
+tool-2 failed FAIL
+tool-3 failed FAIL
+permission-1 failed PASS
+permission-2 failed PASS
+permission-3 failed PASS
+corrected-recall failed FAIL
+deleted-recall failed FAIL
+cancel-1 failed FAIL
+cancel-2 failed FAIL
+disconnected-1 failed PASS
+disconnected-2 failed PASS
+=============================== warnings summary ===============================
+.venv/lib/python3.13/site-packages/fastapi/testclient.py:1
+  /mnt/hostshare/TheCommander/.venv/lib/python3.13/site-packages/fastapi/testclient.py:1: StarletteDeprecationWarning: Using `httpx` with `starlette.testclient` is deprecated; install `httpx2` instead.
+    from starlette.testclient import TestClient as TestClient  # noqa
+
+-- Docs: https://docs.pytest.org/en/stable/how-to/capture-warnings.html
+=========================== short test summary info ============================
+FAILED tests/test_live_evaluation_exit.py::test_failed_live_scenarios_persist_evidence_and_exit_nonzero
+1 failed, 1 warning in 3.12s

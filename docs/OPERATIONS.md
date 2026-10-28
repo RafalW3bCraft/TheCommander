@@ -16,7 +16,7 @@ with `systemctl --user start podman.socket` first. There is no remote deployment
 For an existing PostgreSQL development database, use `./scripts/dev.sh` instead.
 It reads DATABASE_URL from the preserved `.env`; that server must be running.
 Root `main.py` now launches only the supported API; it does not start the worker
-or database. The original Flask entrypoint is archived in `legacy/main.py.txt`.
+or database. The original Flask entrypoint is retained in Git history; ADR004 records its retirement.
 
 Configure connections in the UI. “Import configured server credentials” imports
 real configured keys, not placeholders. GitHub needs a selected `owner/repository`;
@@ -122,7 +122,7 @@ during a maintenance window: the transactional index creation is appropriate for
 this owner-scale database, but has not been benchmarked on a large messages table.
 
 ECC inventory and audit reproduction: `uv run python -m scripts.audit_repository`.
-See `ECC_APPLICATION.md` for catalog provenance, actual application and evidence
+See `ECC_SETUP.md` for catalog provenance, actual application and evidence
 limits. This command does not install or invoke the catalog's external tools.
 
 ## HTTPS overlay and final release upgrade (2026-10-25)
@@ -174,3 +174,25 @@ inspect existing Compose projects before running. Repackage after source changes
 This command verifies our generated package only. Do not use it to execute an
 unreviewed user-supplied archive. Archive comparison remains an isolated read-only
 exercise after its local path is provided.
+
+The 30-task evaluator now exits 1 when any required scenario fails and writes
+`Blocked` to its evidence status. Success requires every expected scenario and
+writes `Live verified`. Inspect per-case results and usage; a failed provider
+response is not a simulated success. Preserve a failed report before explicitly
+repeating a read-only probe. Never apply this retry approach to uncertain writes.
+
+## Isolated probes and cleanup preservation
+
+Do not invoke compose_smoke directly against an owner deployment. Only
+clean_release_smoke supplies its explicit loopback URL, unique project, scratch
+root and matching isolation marker. The helper refuses missing/mismatched values
+before any writes or HTTP requests. This prevents accidental targeting; it is not
+an authentication boundary against someone who deliberately forges local markers.
+
+The October 28 cleanup preserved pre-change public files in
+`.runtime/cleanup-20261028/baseline.tar.gz`. The public cleanup-removals.json records
+its digest and removed-file hashes. Keep this archive until the final source and
+historical provenance are safely published. Private environments, data, backups
+and ECC installation were not removed. To recover an individual archived file,
+inspect its path and hash first, and extract it into a separate temporary directory;
+do not overwrite the current checkout or execute archived code automatically.

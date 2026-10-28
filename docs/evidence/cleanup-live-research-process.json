@@ -1,0 +1,14 @@
+{
+  "command": [
+    "uv",
+    "run",
+    "python",
+    "-m",
+    "scripts.live_research_smoke"
+  ],
+  "started_at": "2026-10-28T05:27:30.259585+00:00",
+  "finished_at": "2026-10-28T05:27:44.514440+00:00",
+  "returncode": 0,
+  "elapsed_seconds": 14.255,
+  "status": "Locally verified"
+}

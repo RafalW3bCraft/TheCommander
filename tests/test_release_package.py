@@ -4,10 +4,28 @@ import hashlib
 import json
 import tarfile
 
+import pytest
+
 from scripts import package_release
 
 
+def test_missing_required_input_does_not_publish_partial_package(monkeypatch, tmp_path):
+    (tmp_path / "docs/evidence").mkdir(parents=True)
+    (tmp_path / "README.md").write_text("public")
+    monkeypatch.setattr(package_release, "ROOT", tmp_path)
+    monkeypatch.setattr(
+        package_release.subprocess,
+        "check_output",
+        lambda command, **kwargs: b"README.md\0" if command[1] == "ls-files" else b"head",
+    )
+    with pytest.raises(ValueError, match="Required release inputs"):
+        package_release.main()
+    assert not (tmp_path / ".runtime/releases").exists()
+    assert not (tmp_path / "docs/evidence/release-manifest.json").exists()
+
+
 def test_identical_sources_produce_identical_archives(monkeypatch, tmp_path):
+    monkeypatch.setattr(package_release, "REQUIRED", {"README.md", "scripts/start.sh"})
     (tmp_path / "docs/evidence").mkdir(parents=True)
     (tmp_path / "scripts").mkdir()
     (tmp_path / "README.md").write_text("Public release\n")

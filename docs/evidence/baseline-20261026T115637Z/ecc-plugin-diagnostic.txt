@@ -1,7 +1,0 @@
-[ecc-codex] Codex plugin cache check
-[ecc-codex] Codex home: /home/watcher/.codex
-[ecc-codex] Plugin cache: /home/watcher/.codex/plugins/cache/ecc/ecc/2.2.3
-[ecc-codex] [FAIL] Cached plugin manifest missing: /home/watcher/.codex/plugins/cache/ecc/ecc/2.2.3/.codex-plugin/plugin.json
-[ecc-codex] No installed cache entries found for ecc/ecc.
-[ecc-codex] Run: codex plugin marketplace add affaan-m/ECC
-[ecc-codex] Then run: codex plugin list

@@ -1,0 +1,72 @@
+[
+  {
+    "latency_ms": 1756,
+    "response_type": "dict",
+    "usage": {
+      "completion_tokens": 34,
+      "prompt_tokens": 377,
+      "total_tokens": 411,
+      "completion_tokens_details": {
+        "accepted_prediction_tokens": null,
+        "audio_tokens": null,
+        "reasoning_tokens": 8,
+        "rejected_prediction_tokens": null
+      },
+      "prompt_tokens_details": {
+        "audio_tokens": null,
+        "cached_tokens": 352,
+        "created_cache_tokens": 0,
+        "multimodal_tokens": null
+      },
+      "prompt_cache_hit_tokens": 352,
+      "prompt_cache_miss_tokens": 25
+    },
+    "choices_type": "list",
+    "choices_count": 1,
+    "choices": [
+      {
+        "finish_reason": "tool_calls",
+        "message_type": "dict",
+        "content_type": "NoneType",
+        "content_length": 0,
+        "tool_call_count": 1,
+        "refusal": false
+      }
+    ]
+  },
+  {
+    "latency_ms": 2763,
+    "response_type": "dict",
+    "usage": {
+      "completion_tokens": 112,
+      "prompt_tokens": 83,
+      "total_tokens": 195,
+      "completion_tokens_details": {
+        "accepted_prediction_tokens": null,
+        "audio_tokens": null,
+        "reasoning_tokens": 100,
+        "rejected_prediction_tokens": null
+      },
+      "prompt_tokens_details": {
+        "audio_tokens": null,
+        "cached_tokens": 64,
+        "created_cache_tokens": 0,
+        "multimodal_tokens": null
+      },
+      "prompt_cache_hit_tokens": 64,
+      "prompt_cache_miss_tokens": 19
+    },
+    "choices_type": "list",
+    "choices_count": 1,
+    "choices": [
+      {
+        "finish_reason": "stop",
+        "message_type": "dict",
+        "content_type": "str",
+        "content_length": 25,
+        "tool_call_count": 0,
+        "refusal": false
+      }
+    ]
+  }
+]

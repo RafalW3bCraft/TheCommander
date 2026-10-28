@@ -1,0 +1,63 @@
+{
+  "timestamp": "2026-10-27T15:33:21.790955+00:00",
+  "endpoint_host": "api.tokenfactory.nebius.com",
+  "model": "nvidia/nemotron-3-super-120b-a12b",
+  "github": "not run: token/repository/write authorization required",
+  "tavily": "not run by this Nebius probe; use scripts.live_research_smoke",
+  "checks": [
+    {
+      "check": "model_list",
+      "available": true
+    },
+    {
+      "check": "tool_proposal",
+      "valid": true,
+      "usage": {
+        "completion_tokens": 34,
+        "prompt_tokens": 377,
+        "total_tokens": 411,
+        "completion_tokens_details": {
+          "accepted_prediction_tokens": null,
+          "audio_tokens": null,
+          "reasoning_tokens": 8,
+          "rejected_prediction_tokens": null
+        },
+        "prompt_tokens_details": {
+          "audio_tokens": null,
+          "cached_tokens": 352,
+          "created_cache_tokens": 0,
+          "multimodal_tokens": null
+        },
+        "prompt_cache_hit_tokens": 352,
+        "prompt_cache_miss_tokens": 25
+      },
+      "latency_ms": 1757
+    },
+    {
+      "check": "tool_result_roundtrip",
+      "nonempty_result": true,
+      "usage": {
+        "completion_tokens": 112,
+        "prompt_tokens": 83,
+        "total_tokens": 195,
+        "completion_tokens_details": {
+          "accepted_prediction_tokens": null,
+          "audio_tokens": null,
+          "reasoning_tokens": 100,
+          "rejected_prediction_tokens": null
+        },
+        "prompt_tokens_details": {
+          "audio_tokens": null,
+          "cached_tokens": 64,
+          "created_cache_tokens": 0,
+          "multimodal_tokens": null
+        },
+        "prompt_cache_hit_tokens": 64,
+        "prompt_cache_miss_tokens": 19
+      },
+      "latency_ms": 2763
+    }
+  ],
+  "passed": true,
+  "status": "Live verified"
+}

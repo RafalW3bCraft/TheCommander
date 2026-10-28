@@ -1,6 +1,6 @@
 {
-  "generated_at": "2026-10-26T12:10:31.062391+00:00",
-  "head": "57b9dc21e45eb7d270c279a466ac9e9f674bcfdd",
+  "generated_at": "2026-10-27T15:45:41.975317+00:00",
+  "head": "1294bfa8733a5ae7057cf2152f057a418db3c67b",
   "scope": "All tracked and unignored files recursively; first-party Python AST/imports/routes, complete ECC artifact hashes, dependency manifests",
   "limits": [
     "Metadata enumeration is not line-by-line semantic certification of every catalog or third-party dependency.",
@@ -14,8 +14,8 @@
     "documentation": 35,
     "preserved-legacy": 28,
     "release-backend": 28,
-    "verification-evidence": 227,
-    "verification-and-operations": 26,
+    "verification-evidence": 246,
+    "verification-and-operations": 27,
     "release-frontend": 4,
     "generated-contract": 1
   },
@@ -4217,8 +4217,8 @@
     {
       "path": "README.md",
       "category": "documentation",
-      "bytes": 7502,
-      "sha256": "cd291e4db9bd9b7e9e41e04ee2d19ba538b88b89cd2cf313c15c809943c2b4cd"
+      "bytes": 7504,
+      "sha256": "26db7b3c1db184ef37ec68fb0a848d971b1ff28ef83c6a1fc939777bca1fb8e6"
     },
     {
       "path": "THIRD_PARTY_NOTICES",
@@ -4523,8 +4523,8 @@
     {
       "path": "docs/CONTINUATION_REPORT.md",
       "category": "documentation",
-      "bytes": 8464,
-      "sha256": "ec523b5f2c0b250bf125d01329da210635548e3bd46b21aaaa3fc03b22cdfe32"
+      "bytes": 8619,
+      "sha256": "7e4322b0367b4df5de63d4a1e6c3e619d9b411a81e99d28dd2d8922cb60fc07f"
     },
     {
       "path": "docs/DEMO_SCRIPT.md",
@@ -4535,8 +4535,8 @@
     {
       "path": "docs/ECC_APPLICATION.md",
       "category": "documentation",
-      "bytes": 6474,
-      "sha256": "34da7cdc1c33f24413f0e8047cca3f6e4b477fff94c39290f45b11683cbaac5c"
+      "bytes": 7075,
+      "sha256": "94b7ba4d35208bc708f21bbf109dc2110850bb9b712181d94c8970d1e58f8d57"
     },
     {
       "path": "docs/ECC_SETUP.md",
@@ -4547,32 +4547,32 @@
     {
       "path": "docs/EVALUATION.md",
       "category": "documentation",
-      "bytes": 3891,
-      "sha256": "09de399af03582ea1d9396f1db7bff945d9ddd97d7500d80d6636e39d8c63cca"
+      "bytes": 4242,
+      "sha256": "e237e6f143a906e1b604a2ad8003fa43b39a8a2f095f33925eeb07a708f80f4e"
     },
     {
       "path": "docs/FEEDBACK.md",
       "category": "documentation",
-      "bytes": 1823,
-      "sha256": "6a3c37b1078525cafe236b96c4bfaf34defc46f25aef6310e3014b9837cacc84"
+      "bytes": 2137,
+      "sha256": "52ec02f38ccc1d7b4d962a495994cd0b9137433aa484b14cccf8b4af41769b44"
     },
     {
       "path": "docs/FINDINGS.md",
       "category": "documentation",
-      "bytes": 5145,
-      "sha256": "04fe3874214c5c8cfc37bf2fc653a75f4d7d6e1c48b04014a493b453934999e6"
+      "bytes": 6490,
+      "sha256": "ddf731db28545a76cd7ea34ca6b1206d53800d9871984bb282bd5ffdbdf4b480"
     },
     {
       "path": "docs/HACKATHON_CHANGES.md",
       "category": "documentation",
-      "bytes": 2357,
-      "sha256": "9b2f617642e3c4fed18b43d9e3dd7d65aa553c3c215a30c64aa88ff454c584f6"
+      "bytes": 2460,
+      "sha256": "db137f376f3721b1ebd315a68ff1be7f71e51da82005fe695bcac59216db970d"
     },
     {
       "path": "docs/IMPLEMENTATION_STATUS.md",
       "category": "documentation",
-      "bytes": 2853,
-      "sha256": "2437c0041715fc324754d70487e2e5724ea384faa5b60fa03d7056627027b8ae"
+      "bytes": 3263,
+      "sha256": "d19a2051a49546bad1f52287cb6279738f5a84ae58a7dfaa96ec4be23d57c46c"
     },
     {
       "path": "docs/JUDGE_GUIDE.md",
@@ -4589,8 +4589,8 @@
     {
       "path": "docs/OPERATIONS.md",
       "category": "documentation",
-      "bytes": 10303,
-      "sha256": "be8e445223124f8a2bfddd9c1b55933abf43a46273f4e8506223234704402410"
+      "bytes": 10701,
+      "sha256": "cd02ebc913018eb6e063267d0bf025b28195979cbdedb0578b8de7d2ab1dd54c"
     },
     {
       "path": "docs/PRD.md",
@@ -4613,14 +4613,14 @@
     {
       "path": "docs/RELEASE_CHECKLIST.md",
       "category": "documentation",
-      "bytes": 2036,
-      "sha256": "446abd3f0c7623f4a389d8146622b6e055428742caae7b97b87ec6d52dfec092"
+      "bytes": 2350,
+      "sha256": "2e5fe1528f27a299d3b7dbd2aa480a43c96032811ba99aac9e06fba47cd8adf0"
     },
     {
       "path": "docs/RELEASE_REPORT.md",
       "category": "documentation",
-      "bytes": 10513,
-      "sha256": "eae40911f12f2b660a434805765c9e4eb43c740941cc36f2fb6aaf4d217af3a5"
+      "bytes": 9078,
+      "sha256": "2276a7e6ac2ca9fc27efece7df0bd6b9b4ecf07fdd4bde36ace98f5fab13f1f0"
     },
     {
       "path": "docs/SCOPE.md",
@@ -4649,8 +4649,8 @@
     {
       "path": "docs/TRACEABILITY.md",
       "category": "documentation",
-      "bytes": 4889,
-      "sha256": "7d5f4fbe2f20ded453adb25575872446066055ad064667e0f3c8d5daed7503b5"
+      "bytes": 5252,
+      "sha256": "137ca0b77a610728fa1ba878fb5e2e4f1a1b473373a007e45966f1aecdfb0958"
     },
     {
       "path": "docs/adr/001-preserve-legacy.md",
@@ -5627,19 +5627,25 @@
     {
       "path": "docs/evidence/browser-desktop.png",
       "category": "verification-evidence",
-      "bytes": 58841,
+      "bytes": 57782,
+      "hash_scope": "not hashed: mutable output, including this inventory"
+    },
+    {
+      "path": "docs/evidence/browser-disconnected.png",
+      "category": "verification-evidence",
+      "bytes": 166195,
       "hash_scope": "not hashed: mutable output, including this inventory"
     },
     {
       "path": "docs/evidence/browser-mobile.png",
       "category": "verification-evidence",
-      "bytes": 135326,
+      "bytes": 134107,
       "hash_scope": "not hashed: mutable output, including this inventory"
     },
     {
       "path": "docs/evidence/browser-results.json",
       "category": "verification-evidence",
-      "bytes": 9476,
+      "bytes": 10542,
       "hash_scope": "not hashed: mutable output, including this inventory"
     },
     {
@@ -5657,7 +5663,7 @@
     {
       "path": "docs/evidence/browser-tablet.png",
       "category": "verification-evidence",
-      "bytes": 134654,
+      "bytes": 133589,
       "hash_scope": "not hashed: mutable output, including this inventory"
     },
     {
@@ -5807,7 +5813,7 @@
     {
       "path": "docs/evidence/live-evaluation.json",
       "category": "verification-evidence",
-      "bytes": 29191,
+      "bytes": 29156,
       "hash_scope": "not hashed: mutable output, including this inventory"
     },
     {
@@ -5843,19 +5849,103 @@
     {
       "path": "docs/evidence/live-research-smoke.json",
       "category": "verification-evidence",
-      "bytes": 1563,
+      "bytes": 1429,
       "hash_scope": "not hashed: mutable output, including this inventory"
     },
     {
       "path": "docs/evidence/live-smoke.json",
       "category": "verification-evidence",
-      "bytes": 1797,
+      "bytes": 1802,
       "hash_scope": "not hashed: mutable output, including this inventory"
     },
     {
       "path": "docs/evidence/npm-audit.txt",
       "category": "verification-evidence",
       "bytes": 24,
+      "hash_scope": "not hashed: mutable output, including this inventory"
+    },
+    {
+      "path": "docs/evidence/oct27-backup.txt",
+      "category": "verification-evidence",
+      "bytes": 361,
+      "hash_scope": "not hashed: mutable output, including this inventory"
+    },
+    {
+      "path": "docs/evidence/oct27-baseline.json",
+      "category": "verification-evidence",
+      "bytes": 359,
+      "hash_scope": "not hashed: mutable output, including this inventory"
+    },
+    {
+      "path": "docs/evidence/oct27-before-evaluation-fix.txt",
+      "category": "verification-evidence",
+      "bytes": 6322,
+      "hash_scope": "not hashed: mutable output, including this inventory"
+    },
+    {
+      "path": "docs/evidence/oct27-evaluation-exit-green.txt",
+      "category": "verification-evidence",
+      "bytes": 594,
+      "hash_scope": "not hashed: mutable output, including this inventory"
+    },
+    {
+      "path": "docs/evidence/oct27-evaluation-exit-red.txt",
+      "category": "verification-evidence",
+      "bytes": 4214,
+      "hash_scope": "not hashed: mutable output, including this inventory"
+    },
+    {
+      "path": "docs/evidence/oct27-inventory.txt",
+      "category": "verification-evidence",
+      "bytes": 0,
+      "hash_scope": "not hashed: mutable output, including this inventory"
+    },
+    {
+      "path": "docs/evidence/oct27-live-diagnostic.txt",
+      "category": "verification-evidence",
+      "bytes": 1802,
+      "hash_scope": "not hashed: mutable output, including this inventory"
+    },
+    {
+      "path": "docs/evidence/oct27-live-evaluation.txt",
+      "category": "verification-evidence",
+      "bytes": 1007,
+      "hash_scope": "not hashed: mutable output, including this inventory"
+    },
+    {
+      "path": "docs/evidence/oct27-live-research.txt",
+      "category": "verification-evidence",
+      "bytes": 1545,
+      "hash_scope": "not hashed: mutable output, including this inventory"
+    },
+    {
+      "path": "docs/evidence/oct27-live-response-shapes.json",
+      "category": "verification-evidence",
+      "bytes": 1777,
+      "hash_scope": "not hashed: mutable output, including this inventory"
+    },
+    {
+      "path": "docs/evidence/oct27-live-smoke-first.json",
+      "category": "verification-evidence",
+      "bytes": 1269,
+      "hash_scope": "not hashed: mutable output, including this inventory"
+    },
+    {
+      "path": "docs/evidence/oct27-live-smoke.txt",
+      "category": "verification-evidence",
+      "bytes": 1269,
+      "hash_scope": "not hashed: mutable output, including this inventory"
+    },
+    {
+      "path": "docs/evidence/oct27-public-heads.txt",
+      "category": "verification-evidence",
+      "bytes": 129,
+      "hash_scope": "not hashed: mutable output, including this inventory"
+    },
+    {
+      "path": "docs/evidence/oct27-verification.txt",
+      "category": "verification-evidence",
+      "bytes": 6401,
       "hash_scope": "not hashed: mutable output, including this inventory"
     },
     {
@@ -5868,6 +5958,12 @@
       "path": "docs/evidence/package-reproducibility-red.txt",
       "category": "verification-evidence",
       "bytes": 3508,
+      "hash_scope": "not hashed: mutable output, including this inventory"
+    },
+    {
+      "path": "docs/evidence/package-reproducibility.json",
+      "category": "verification-evidence",
+      "bytes": 551,
       "hash_scope": "not hashed: mutable output, including this inventory"
     },
     {
@@ -5889,9 +5985,15 @@
       "hash_scope": "not hashed: mutable output, including this inventory"
     },
     {
+      "path": "docs/evidence/recheck-delivery.json",
+      "category": "verification-evidence",
+      "bytes": 1807,
+      "hash_scope": "not hashed: mutable output, including this inventory"
+    },
+    {
       "path": "docs/evidence/recheck-inventory.txt",
       "category": "verification-evidence",
-      "bytes": 0,
+      "bytes": 115,
       "hash_scope": "not hashed: mutable output, including this inventory"
     },
     {
@@ -5907,6 +6009,18 @@
       "hash_scope": "not hashed: mutable output, including this inventory"
     },
     {
+      "path": "docs/evidence/recheck-package.txt",
+      "category": "verification-evidence",
+      "bytes": 548,
+      "hash_scope": "not hashed: mutable output, including this inventory"
+    },
+    {
+      "path": "docs/evidence/recheck-packaged-build.txt",
+      "category": "verification-evidence",
+      "bytes": 11491,
+      "hash_scope": "not hashed: mutable output, including this inventory"
+    },
+    {
       "path": "docs/evidence/recheck-verification.txt",
       "category": "verification-evidence",
       "bytes": 6086,
@@ -5915,7 +6029,7 @@
     {
       "path": "docs/evidence/recursive-inventory.json",
       "category": "verification-evidence",
-      "bytes": 236898,
+      "bytes": 261481,
       "hash_scope": "not hashed: mutable output, including this inventory"
     },
     {
@@ -5969,7 +6083,7 @@
     {
       "path": "docs/evidence/release-manifest.json",
       "category": "verification-evidence",
-      "bytes": 11234,
+      "bytes": 11440,
       "hash_scope": "not hashed: mutable output, including this inventory"
     },
     {
@@ -6053,8 +6167,8 @@
     {
       "path": "frontend/e2e/workflows.spec.ts",
       "category": "verification-and-operations",
-      "bytes": 20706,
-      "sha256": "93b9f1b070ba2d045b1f14f0f62620628bb6a743d6dfbc04c18e01c4cce004b1"
+      "bytes": 23171,
+      "sha256": "a296a04a0818532defbb507ba98ed307bafe1e6363a4b249556002f0f52b13dc"
     },
     {
       "path": "frontend/eslint.config.js",
@@ -6209,8 +6323,8 @@
     {
       "path": "scripts/evaluate_live.py",
       "category": "verification-and-operations",
-      "bytes": 9634,
-      "sha256": "7bd03a8f52c9978a7c25874d05dc279d428a7dd28fdc70a6b7593b410d2bd4b4"
+      "bytes": 9851,
+      "sha256": "829df9ad3440d0f245c513605ece07ca157a9ef411efe3687a5403d6813740e5"
     },
     {
       "path": "scripts/export_openapi.py",
@@ -6325,6 +6439,12 @@
       "category": "verification-and-operations",
       "bytes": 2489,
       "sha256": "d18fe39fa77ca8b129d90ed01d50c1a695b77b963c3c9e5e8a24b828e238db09"
+    },
+    {
+      "path": "tests/test_live_evaluation_exit.py",
+      "category": "verification-and-operations",
+      "bytes": 3518,
+      "sha256": "1d44db20059a44c5721c8531c03d0a8b72dd6f09d4ee5c2adfc03837eb047c96"
     },
     {
       "path": "tests/test_live_probe.py",
@@ -7096,6 +7216,19 @@
       "imports": [
         "commander.api",
         "fastapi.testclient"
+      ],
+      "syntax": "parsed"
+    },
+    {
+      "path": "tests/test_live_evaluation_exit.py",
+      "imports": [
+        "commander.settings",
+        "contextlib",
+        "cryptography.fernet",
+        "json",
+        "pytest",
+        "scripts",
+        "types"
       ],
       "syntax": "parsed"
     },

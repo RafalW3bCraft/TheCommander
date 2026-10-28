@@ -1,0 +1,11 @@
+{
+  "timestamp": "2026-10-28T05:22:29.370125+00:00",
+  "scope": "Read-only application-token preflight; no external writes",
+  "status": "Blocked",
+  "authentication_http_status": 200,
+  "authenticated_login": "AetherSilva",
+  "repository_listing_http_status": 200,
+  "disposable_candidates": [],
+  "thecommander_visible": false,
+  "limitation": "No repository selected or configured; no issue dispatched"
+}

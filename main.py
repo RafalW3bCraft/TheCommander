@@ -1,6 +1,6 @@
 """Compatibility launcher for the supported FastAPI release.
 
-The original Flask entrypoint is preserved in legacy/main.py.txt for reference.
+The original Flask entrypoint is preserved in Git history; see ADR 004.
 Use scripts/start.sh for the complete API, PostgreSQL and worker deployment.
 """
 

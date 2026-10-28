@@ -1,19 +1,15 @@
-# Demonstration script — target 2:50 (not recorded)
+# Demonstration script — 2:50 target, not recorded
 
-- 0:00–0:20: Introduce the owner-controlled assistant and show actual Nebius model
-  connection status. Do not expose credentials or private prompts.
-- 0:20–0:40: Save the fictional briefing-format preference in Memory.
-- 0:40–1:00: Schedule Follow-through for a near-future instant; show the worker is
-  online. Close the browser. Explain that the server must stay running.
-- 1:00–1:25: Reopen after execution; show saved note and activity receipt. Start a
-  new conversation after an actual restart and demonstrate remembered context.
-- 1:25–2:10: Run Research to action using previously configured approved sources.
-  Review the exact issue, approve against an authorized disposable repository,
-  then open the actual GitHub receipt. If provider latency needs a cut, label the
-  elapsed interval; never splice fixture output into a claimed live result.
-- 2:10–2:35: Show a controlled denied unsafe tool proposal in the test evidence,
-  explicitly labeled as a test. Show cancellation/revocation controls.
-- 2:35–2:50: Explain storage/remote inference boundaries and remaining limitations.
+- 0:00–0:15: State the developer problem and show the configured Nebius NVIDIA model.
+- 0:15–0:35: Recall a fictional preference in a new conversation; show its Memory record.
+- 0:35–1:05: Run engineering briefing; inspect real source links and reopen the saved note.
+- 1:05–1:55: Prepare research-to-action; inspect exact repository/title/body, approve once,
+  then open the independently confirmed GitHub issue receipt.
+- 1:55–2:25: Schedule follow-through, close/reopen the browser and inspect the durable result.
+  Label any real elapsed-time cut; never substitute fixture output for live execution.
+- 2:25–2:50: Explain explicit permissions, owner-controlled storage, remote inference and
+  practical operating limits. Show repository/run instructions and judge access location.
 
-Prerequisites: verified live GitHub/Tavily, disposable repository authorization,
-working always-on deployment. No video URL or completed recording is claimed.
+Record only after live integration and deployment acceptance. Use fictional data,
+an authorized disposable repository and adequate provider quota. Keep secrets off
+screen. No completed recording, public video URL or submission is claimed.

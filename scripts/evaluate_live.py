@@ -246,7 +246,11 @@ def main():
         report["unknown_usage_calls"] = sum(
             u.get("usage") is None for r in report["scenarios"] for u in r["usage"]
         )
+        accepted = report["sample_size"] == len(cases) and report["passed"] == len(cases)
+        report["status"] = "Live verified" if accepted else "Blocked"
         Path("docs/evidence/live-evaluation.json").write_text(json.dumps(report, indent=2) + "\n")
+        if not accepted:
+            raise SystemExit(1)
     finally:
         if worker:
             worker.terminate()

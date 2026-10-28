@@ -1,10 +1,10 @@
 {
-  "timestamp": "2026-10-26T12:10:34.630136+00:00",
+  "timestamp": "2026-10-27T15:45:48.662747+00:00",
   "status": "Locally verified",
-  "source_sha256": "7e0a2030bd4939c3f7217a452ac433f1aa1c10e01b6b25864eae8d9903274326",
-  "first_artifact_sha256": "b0849476b9aaa4cee1915f42c643a6995a58e711c86be893e4229025ccb66524",
-  "second_artifact_sha256": "b0849476b9aaa4cee1915f42c643a6995a58e711c86be893e4229025ccb66524",
+  "source_sha256": "8bff26529a03f859a6ef767923e25b5763fece43836bd4de67a9ad3802fe403c",
+  "first_artifact_sha256": "5e1e80432c1db0ea9aced91a25b5368f1c725e5c8c62f751c5eb03f645691bde",
+  "second_artifact_sha256": "5e1e80432c1db0ea9aced91a25b5368f1c725e5c8c62f751c5eb03f645691bde",
   "identical": true,
   "runtime": "3.13.5 (main, May  5 2026, 21:05:52) [GCC 14.2.0]",
-  "limitation": "Reproducible within this pinned runtime; cross-runtime byte identity not tested."
+  "limitation": "Same pinned runtime; cross-runtime byte identity Not run"
 }
