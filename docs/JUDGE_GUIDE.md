@@ -23,3 +23,21 @@ There is no published deployment or judge credential in this repository.
 
 Offline tests deliberately use labeled vendor fixtures. They are not a substitute
 for judge-facing live integrations. See release report for exact remaining blockers.
+
+## Tested fictional acceptance example
+
+The isolated October 28 acceptance used `AetherSilva/thecommander-acceptance`
+(private), the NVIDIA Nemotron model documented in README, and `docs.python.org`
+as the Tavily domain. The prompt `Python asyncio task cancellation official
+documentation. Propose one documentation checklist issue for this fictional
+acceptance-test repository.` produced a reviewable action. Its final title/body
+were edited to label historical sources and avoid unsupported claims before one
+approval created issue #1. The exact preview and receipt are in release evidence.
+Do not replay that approval or assume authority to create another test issue.
+
+The private repository is an acceptance resource, not a public source repository
+or judge deployment. A reviewer needs an authorized GitHub website account to
+view its receipt contents. Dedicated application credentials, accessible repository
+scope, provider quota and availability through December 15 still need arranging.
+Never include the owner's bootstrap token, provider key or private test password
+in public instructions or the recording. Entrant eligibility remains unconfirmed.

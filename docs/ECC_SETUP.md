@@ -125,3 +125,10 @@ in cleanup-safety-red.txt and cleanup-safety-green.txt. Existing uncommitted wor
 is preserved; checkpoint evidence uses logs and an archive rather than commits
 over the owner’s changes. This pass is self-review, without new subagents,
 installers, native hooks or unrelated skill execution.
+
+The final continuation additionally applied verification-loop and e2e-testing
+guidance to actual UI scheduling, exact issue approval/receipt opening, retained
+state comparisons after restart, screenshot inspection and package checks.
+See evidence-index.json and RELEASE_REPORT.md. No catalog files were removed;
+catalog hash comparison is in cleanup-final-preservation.json. This records applied
+guidance, not execution of every skill or a new independent review.

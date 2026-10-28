@@ -1,0 +1,324 @@
+{
+  "timestamp": "2026-10-28T12:01:42.226516+00:00",
+  "head": "d04b33a862ff3e119e6e1fb2c32fb4f4a83fd4c6",
+  "source_sha256": "ddcf04614717141244b85efe4008869c3c437f1c6f1958679b466c07a6c449c0",
+  "artifact": ".runtime/releases/thecommander-ddcf04614717.tar.gz",
+  "artifact_sha256": "67b59f5c8edac941ba87d0b6b3d63f108decdaf8d36691630bb951da5d1dd1c6",
+  "source_note": "Candidate is committed implementation plus documented working-tree release files. Manifest hashes each package input. JSON/log/image evidence is excluded to avoid recursive fingerprints.",
+  "commands": [
+    {
+      "name": "cleanup-candidate-verification",
+      "scope": "Full controlled local release gate; real PostgreSQL and Chromium, no live provider completions",
+      "process_evidence": "cleanup-candidate-verification-process.json",
+      "log": "cleanup-candidate-verification.txt",
+      "command": [
+        "./scripts/verify.sh"
+      ],
+      "started_at": "2026-10-28T11:55:27.516067+00:00",
+      "finished_at": "2026-10-28T11:59:31.726805+00:00",
+      "returncode": 0,
+      "elapsed_seconds": 244.211,
+      "status": "Locally verified"
+    },
+    {
+      "name": "cleanup-final-backup",
+      "scope": "Isolated PostgreSQL and notes restoration",
+      "process_evidence": "cleanup-final-backup-process.json",
+      "log": "cleanup-final-backup.txt",
+      "command": [
+        "uv",
+        "run",
+        "python",
+        "-m",
+        "scripts.backup_smoke"
+      ],
+      "started_at": "2026-10-28T11:54:09.336405+00:00",
+      "finished_at": "2026-10-28T11:54:14.120244+00:00",
+      "returncode": 0,
+      "elapsed_seconds": 4.784,
+      "status": "Locally verified"
+    },
+    {
+      "name": "cleanup-final-clean-build",
+      "scope": "Clean source Compose and retained-volume recreation",
+      "process_evidence": "cleanup-final-clean-build-process.json",
+      "log": "cleanup-final-clean-build.txt",
+      "command": [
+        "uv",
+        "run",
+        "python",
+        "-m",
+        "scripts.clean_release_smoke"
+      ],
+      "started_at": "2026-10-28T11:55:04.114635+00:00",
+      "finished_at": "2026-10-28T11:55:53.576334+00:00",
+      "returncode": 0,
+      "elapsed_seconds": 49.462,
+      "status": "Locally verified"
+    },
+    {
+      "name": "cleanup-candidate-package",
+      "scope": "Public source archive generation",
+      "process_evidence": "cleanup-candidate-package-process.json",
+      "log": "cleanup-candidate-package.txt",
+      "command": [
+        "uv",
+        "run",
+        "python",
+        "-m",
+        "scripts.package_release"
+      ],
+      "started_at": "2026-10-28T11:59:54.998101+00:00",
+      "finished_at": "2026-10-28T11:59:55.464835+00:00",
+      "returncode": 0,
+      "elapsed_seconds": 0.467,
+      "status": "Locally verified"
+    },
+    {
+      "name": "cleanup-candidate-package-repeat",
+      "scope": "Repeated identical package generation",
+      "process_evidence": "cleanup-candidate-package-repeat-process.json",
+      "log": "cleanup-candidate-package-repeat.txt",
+      "command": [
+        "uv",
+        "run",
+        "python",
+        "-m",
+        "scripts.package_release"
+      ],
+      "started_at": "2026-10-28T12:00:11.994305+00:00",
+      "finished_at": "2026-10-28T12:00:12.409967+00:00",
+      "returncode": 0,
+      "elapsed_seconds": 0.416,
+      "status": "Locally verified"
+    },
+    {
+      "name": "cleanup-candidate-package-verification",
+      "scope": "Manifest/secret/path validation and clean startup from extracted package",
+      "process_evidence": "cleanup-candidate-package-verification-process.json",
+      "log": "cleanup-candidate-package-verification.txt",
+      "command": [
+        "uv",
+        "run",
+        "python",
+        "-m",
+        "scripts.verify_package"
+      ],
+      "started_at": "2026-10-28T12:00:12.502933+00:00",
+      "finished_at": "2026-10-28T12:00:59.354690+00:00",
+      "returncode": 0,
+      "elapsed_seconds": 46.852,
+      "status": "Locally verified"
+    },
+    {
+      "name": "cleanup-final-live-evaluation",
+      "scope": "Real Nebius bounded fictional acceptance; no external writes",
+      "process_evidence": "cleanup-final-live-evaluation-process.json",
+      "log": "cleanup-final-live-evaluation.txt",
+      "command": [
+        "uv",
+        "run",
+        "python",
+        "-m",
+        "scripts.evaluate_live"
+      ],
+      "started_at": "2026-10-28T06:58:14.248848+00:00",
+      "finished_at": "2026-10-28T07:00:33.088070+00:00",
+      "returncode": 0,
+      "elapsed_seconds": 138.839,
+      "status": "Locally verified"
+    },
+    {
+      "name": "cleanup-final-live-research",
+      "scope": "Real Tavily search and persisted sources",
+      "process_evidence": "cleanup-final-live-research-process.json",
+      "log": "cleanup-final-live-research.txt",
+      "command": [
+        "uv",
+        "run",
+        "python",
+        "-m",
+        "scripts.live_research_smoke"
+      ],
+      "started_at": "2026-10-28T06:58:15.607193+00:00",
+      "finished_at": "2026-10-28T06:58:32.174605+00:00",
+      "returncode": 0,
+      "elapsed_seconds": 16.567,
+      "status": "Locally verified"
+    },
+    {
+      "name": "cleanup-live-browser-approve",
+      "scope": "One exact authorized GitHub issue approval; private website inaccessible without login",
+      "process_evidence": "cleanup-live-browser-approve-process.json",
+      "log": "cleanup-live-browser-approve.txt",
+      "command": [
+        "/home/watcher/.nvm/versions/node/v22.23.3/bin/node",
+        ".runtime/cleanup-20261028/live_browser.mjs",
+        "approve"
+      ],
+      "started_at": "2026-10-28T07:02:49.442777+00:00",
+      "finished_at": "2026-10-28T07:03:00.529568+00:00",
+      "returncode": 0,
+      "elapsed_seconds": 11.087,
+      "status": "Locally verified"
+    },
+    {
+      "name": "cleanup-live-browser-schedule",
+      "scope": "Real UI schedule creation and browser close before execution",
+      "process_evidence": "cleanup-live-browser-schedule-process.json",
+      "log": "cleanup-live-browser-schedule.txt",
+      "command": [
+        "/home/watcher/.nvm/versions/node/v22.23.3/bin/node",
+        ".runtime/cleanup-20261028/persistence_browser.mjs",
+        "schedule"
+      ],
+      "started_at": "2026-10-28T11:54:08.051449+00:00",
+      "finished_at": "2026-10-28T11:54:11.249953+00:00",
+      "returncode": 0,
+      "elapsed_seconds": 3.199,
+      "status": "Locally verified"
+    },
+    {
+      "name": "cleanup-live-persistence",
+      "scope": "Live run completed; local state equality after API/worker restart",
+      "process_evidence": "cleanup-live-persistence-process.json",
+      "log": "cleanup-live-persistence.txt",
+      "command": [
+        ".venv/bin/python",
+        ".runtime/cleanup-20261028/verify_persistence.py"
+      ],
+      "started_at": "2026-10-28T11:55:02.914249+00:00",
+      "finished_at": "2026-10-28T11:55:15.422643+00:00",
+      "returncode": 0,
+      "elapsed_seconds": 12.508,
+      "status": "Locally verified"
+    },
+    {
+      "name": "cleanup-live-browser-notes",
+      "scope": "Browser reopened result, receipt and saved briefing",
+      "process_evidence": "cleanup-live-browser-notes-process.json",
+      "log": "cleanup-live-browser-notes.txt",
+      "command": [
+        "/home/watcher/.nvm/versions/node/v22.23.3/bin/node",
+        ".runtime/cleanup-20261028/persistence_browser.mjs",
+        "reopen"
+      ],
+      "started_at": "2026-10-28T11:56:17.824980+00:00",
+      "finished_at": "2026-10-28T11:56:21.913033+00:00",
+      "returncode": 0,
+      "elapsed_seconds": 4.088,
+      "status": "Locally verified"
+    },
+    {
+      "name": "cleanup-final-inventory",
+      "scope": "Recursive first-party inventory and complete ECC catalog hashes",
+      "process_evidence": "cleanup-final-inventory-process.json",
+      "log": "cleanup-final-inventory.txt",
+      "command": [
+        "uv",
+        "run",
+        "python",
+        "-m",
+        "scripts.audit_repository"
+      ],
+      "started_at": "2026-10-28T11:59:01.942561+00:00",
+      "finished_at": "2026-10-28T11:59:06.472568+00:00",
+      "returncode": 0,
+      "elapsed_seconds": 4.53,
+      "status": "Locally verified"
+    }
+  ],
+  "live_evidence": {
+    "nebius": {
+      "status": "Live verified",
+      "evidence": "live-evaluation.json",
+      "sample": "30/30 cases; 29 calls; 28061 reported tokens; unknown currency cost"
+    },
+    "tavily": {
+      "status": "Live verified",
+      "evidence": "live-research-smoke.json",
+      "sample": "Validation and 5 persisted sources, 3106 ms search"
+    },
+    "github": {
+      "status": "Live verified",
+      "evidence": "cleanup-github-confirmation.json",
+      "sample": "Authorized private repo and one exact issue; independent GET matches body/title/marker"
+    },
+    "engineering_briefing": {
+      "status": "Live verified",
+      "evidence": "cleanup-live-engineering-briefing-final.json",
+      "limitation": "Citation membership passed; recommendations not expert-validated"
+    },
+    "research_to_action": {
+      "status": "Live verified",
+      "evidence": "cleanup-github-executed.json",
+      "limitation": "No-evidence initial query retained; human edited proposal before one approval"
+    },
+    "follow_through": {
+      "status": "Live verified",
+      "evidence": "cleanup-live-follow-through.json",
+      "limitation": "One scheduled occurrence with browser closed; sustained uptime not established"
+    }
+  },
+  "retained_failure_evidence": [
+    "oct27-live-smoke-first.json",
+    "cleanup-live-engineering-briefing.json",
+    "cleanup-live-briefing-diagnostic.json",
+    "cleanup-live-research-to-action-final.json",
+    "citation-delimiter-red.txt"
+  ],
+  "preservation": "cleanup-final-preservation.json",
+  "manual_visual_review": "cleanup-final-visual-review.json",
+  "local_implementation": "Implemented",
+  "external_gates": {
+    "supplied_archive_comparison": {
+      "status": "Blocked",
+      "requires": "Actual supplied archive local path; generated release package is different"
+    },
+    "private_github_website_visual_content": {
+      "status": "Blocked",
+      "requires": "Authorized GitHub website login; API confirmation already passed"
+    },
+    "remote_deployment": {
+      "status": "Blocked",
+      "requires": "Host/domain/access and deployment authority; DNS/TLS/login/worker/workflow checks Not run"
+    },
+    "judge_access": {
+      "status": "Blocked",
+      "requires": "Dedicated access plus monitoring, backups, quota and availability arrangements"
+    },
+    "eligibility": {
+      "status": "Blocked",
+      "requires": "Entrant/team confirmation against official rules"
+    },
+    "publication_video_submission": {
+      "status": "Blocked",
+      "requires": "Review and specific publication/upload/submission authority; public video and final source/artifact not delivered by this agent"
+    }
+  },
+  "rules_review": {
+    "date": "2026-10-28",
+    "urls": [
+      "https://nebiusglobalaihackathon.devpost.com/rules",
+      "https://nebiusglobalaihackathon.devpost.com/details/faqs"
+    ],
+    "deadline_utc": "2026-10-30T17:00:00Z",
+    "judging_end_utc": "2026-12-15T20:00:00Z",
+    "entrant_eligibility": "Blocked",
+    "organizer_acceptance": "Not run"
+  },
+  "readiness": {
+    "locally_ready": {
+      "status": "Locally verified",
+      "scope": "99-file artifact passed complete gate, deterministic packaging and extracted-source Compose; three workflows have bounded live evidence"
+    },
+    "deployment_verified": {
+      "local_compose": "Locally verified",
+      "remote_https": "Not run"
+    },
+    "submission_ready": {
+      "status": "Blocked",
+      "reason": "External delivery and eligibility gates remain"
+    }
+  }
+}

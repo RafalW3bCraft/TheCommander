@@ -1,0 +1,14 @@
+{
+  "timestamp": "2026-10-28T11:52:55.776480+00:00",
+  "status": "Live verified",
+  "method": "independent authenticated GET, no write",
+  "http_status": 200,
+  "repository": "AetherSilva/thecommander-acceptance",
+  "number": 1,
+  "url": "https://github.com/AetherSilva/thecommander-acceptance/issues/1",
+  "title": "Acceptance test: review asyncio cancellation documentation",
+  "exact_body_and_marker_match": true,
+  "body_sha256": "4d52404604ff773274cff3c4fd7d2bb3a3b1c8f566235569e44ee429ae2f9f19",
+  "latency_ms": 1235,
+  "source_head": "d04b33a862ff3e119e6e1fb2c32fb4f4a83fd4c6"
+}

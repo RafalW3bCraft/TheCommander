@@ -1,0 +1,15 @@
+{
+  "status": "Locally verified",
+  "closed_at": "2026-10-28T11:54:11.233Z",
+  "schedule": {
+    "id": "5da17bfe-4dd2-4bef-a10e-6fdbba2ebde3",
+    "skill": "follow-through",
+    "prompt": "Fictional BLUEFIN follow-through: write three concise checklist bullets to a local note about reviewing the acceptance-test documentation. Do not create any external issue.",
+    "timezone": "UTC",
+    "next_at": "2026-10-28T07:55:00-04:00",
+    "interval_seconds": null,
+    "paused": false,
+    "revision": 1,
+    "last_at": null
+  }
+}

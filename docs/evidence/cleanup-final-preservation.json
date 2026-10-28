@@ -1,0 +1,17 @@
+{
+  "timestamp": "2026-10-28T11:59:28.985088+00:00",
+  "head": "d04b33a862ff3e119e6e1fb2c32fb4f4a83fd4c6",
+  "status": "Locally verified",
+  "ecc_files_compared": 693,
+  "ecc_unchanged": true,
+  "preservation_archive_digest_matches": true,
+  "private_files_match_original_baseline": {
+    ".env": true,
+    ".env.runtime": true
+  },
+  "private_file_note": "Values and hashes not emitted; a user edit is preserved, never reverted.",
+  "canonical_documents": 12,
+  "internal_markdown_links_checked": 42,
+  "broken_links": [],
+  "user_dotenv_example_preserved": true
+}

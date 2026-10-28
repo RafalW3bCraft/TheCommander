@@ -6,11 +6,11 @@ GitHub writes. Release 0.2.0 rebuilds the application around FastAPI, React,
 PostgreSQL and a separate worker. The obsolete Flask runtime has been retired from the working tree; Git history
 and a hashed local archive preserve its source. See [architecture](docs/ARCHITECTURE.md).
 
-**FINAL CLEANUP VERIFICATION IN PROGRESS — SUBMISSION NOT READY.**
-The supported application has prior local and Nebius/Tavily acceptance evidence.
-Current results, exact artifact identity and external blockers are recorded in
-[the release report](docs/RELEASE_REPORT.md). GitHub token authentication is verified;
-complete live workflows still need a selected disposable repository.
+**LOCAL ACCEPTANCE VERIFIED — DEPLOYMENT AND SUBMISSION PENDING.**
+The supported application has local verification and bounded live Nebius, Tavily
+and GitHub workflow evidence, including one authorized test issue and scheduled
+follow-through after closing the browser. Current results, exact package identity,
+quality limitations and external blockers are in [the release report](docs/RELEASE_REPORT.md).
 
 ## Capability status
 
@@ -19,11 +19,11 @@ complete live workflows still need a selected disposable repository.
 | Owner bootstrap/login/logout; session revocation | Yes | Local API and browser |
 | Memory CRUD/search/export and new-session recall | Yes | PostgreSQL + real Nebius recall |
 | NVIDIA inference and validated tool loop | Yes | Nebius Nemotron model, bounded live evaluation |
-| Engineering briefing with citations and saved note | Yes | Full live skill blocked by GitHub; Tavily search verified |
-| Research to action: edit, approve, create, confirm issue | Yes | Controlled transport only; live write pending |
-| Follow-through and durable schedules | Yes | Separate worker + local note effects |
+| Engineering briefing with citations and saved note | Yes | GitHub + Tavily + Nebius; citation validity does not guarantee factual quality |
+| Research to action: edit, approve, create, confirm issue | Yes | One authorized private issue; exact-content independent GET |
+| Follow-through and durable schedules | Yes | Live Nebius, browser closed, saved notes and restart persistence |
 | Cancel, lease recovery, uncertain-write reconciliation | Yes | Failure injection; no live GitHub timeout test |
-| Connections: scope, test, expiry, replace, revoke | Yes | Nebius/Tavily/workspace; GitHub workflow pending |
+| Connections: scope, test, expiry, replace, revoke | Yes | Nebius/Tavily/GitHub/workspace; negative paths use controlled tests |
 | Responsive Assistant, Memory, Skills, Settings, Activity | Yes | Chromium desktop/tablet/mobile and accessibility checks |
 
 Owner model/limit settings persist in PostgreSQL, with revision checks and operator

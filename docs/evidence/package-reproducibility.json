@@ -1,10 +1,10 @@
 {
-  "timestamp": "2026-10-27T15:45:48.662747+00:00",
+  "head": "d04b33a862ff3e119e6e1fb2c32fb4f4a83fd4c6",
+  "source_sha256": "ddcf04614717141244b85efe4008869c3c437f1c6f1958679b466c07a6c449c0",
+  "artifact": ".runtime/releases/thecommander-ddcf04614717.tar.gz",
+  "artifact_sha256": "67b59f5c8edac941ba87d0b6b3d63f108decdaf8d36691630bb951da5d1dd1c6",
+  "timestamp": "2026-10-28T12:00:12.457873+00:00",
   "status": "Locally verified",
-  "source_sha256": "8bff26529a03f859a6ef767923e25b5763fece43836bd4de67a9ad3802fe403c",
-  "first_artifact_sha256": "5e1e80432c1db0ea9aced91a25b5368f1c725e5c8c62f751c5eb03f645691bde",
-  "second_artifact_sha256": "5e1e80432c1db0ea9aced91a25b5368f1c725e5c8c62f751c5eb03f645691bde",
-  "identical": true,
-  "runtime": "3.13.5 (main, May  5 2026, 21:05:52) [GCC 14.2.0]",
-  "limitation": "Same pinned runtime; cross-runtime byte identity Not run"
+  "build_count": 2,
+  "identical_inputs_and_archive_bytes": true
 }

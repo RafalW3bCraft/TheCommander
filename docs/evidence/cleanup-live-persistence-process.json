@@ -1,0 +1,11 @@
+{
+  "command": [
+    ".venv/bin/python",
+    ".runtime/cleanup-20261028/verify_persistence.py"
+  ],
+  "started_at": "2026-10-28T11:55:02.914249+00:00",
+  "finished_at": "2026-10-28T11:55:15.422643+00:00",
+  "returncode": 0,
+  "elapsed_seconds": 12.508,
+  "status": "Locally verified"
+}

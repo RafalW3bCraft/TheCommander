@@ -1,0 +1,12 @@
+{
+  "command": [
+    "/home/watcher/.nvm/versions/node/v22.23.3/bin/node",
+    ".runtime/cleanup-20261028/persistence_browser.mjs",
+    "schedule"
+  ],
+  "started_at": "2026-10-28T11:54:08.051449+00:00",
+  "finished_at": "2026-10-28T11:54:11.249953+00:00",
+  "returncode": 0,
+  "elapsed_seconds": 3.199,
+  "status": "Locally verified"
+}

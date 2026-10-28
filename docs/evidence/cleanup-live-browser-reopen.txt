@@ -1,0 +1,1 @@
+After restart: scheduled result and exact GitHub receipt visible in browser.

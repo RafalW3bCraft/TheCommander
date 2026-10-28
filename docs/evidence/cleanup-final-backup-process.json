@@ -1,0 +1,14 @@
+{
+  "command": [
+    "uv",
+    "run",
+    "python",
+    "-m",
+    "scripts.backup_smoke"
+  ],
+  "started_at": "2026-10-28T11:54:09.336405+00:00",
+  "finished_at": "2026-10-28T11:54:14.120244+00:00",
+  "returncode": 0,
+  "elapsed_seconds": 4.784,
+  "status": "Locally verified"
+}

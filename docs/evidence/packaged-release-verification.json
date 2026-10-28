@@ -1,15 +1,15 @@
 {
-  "timestamp": "2026-10-27T15:49:05.525235+00:00",
+  "timestamp": "2026-10-28T12:00:59.329723+00:00",
   "status": "Locally verified",
-  "head": "1294bfa8733a5ae7057cf2152f057a418db3c67b",
-  "source_sha256": "8bff26529a03f859a6ef767923e25b5763fece43836bd4de67a9ad3802fe403c",
-  "artifact": ".runtime/releases/thecommander-8bff26529a03.tar.gz",
-  "artifact_sha256": "5e1e80432c1db0ea9aced91a25b5368f1c725e5c8c62f751c5eb03f645691bde",
-  "verified_files": 112,
+  "head": "d04b33a862ff3e119e6e1fb2c32fb4f4a83fd4c6",
+  "source_sha256": "ddcf04614717141244b85efe4008869c3c437f1c6f1958679b466c07a6c449c0",
+  "artifact": ".runtime/releases/thecommander-ddcf04614717.tar.gz",
+  "artifact_sha256": "67b59f5c8edac941ba87d0b6b3d63f108decdaf8d36691630bb951da5d1dd1c6",
+  "verified_files": 99,
   "archive_paths_links_hashes_and_configured_secret_scan": "passed",
   "clean_build_start_and_retained_volume_checks": {
-    "timestamp": "2026-10-27T15:49:00.428072+00:00",
-    "deployment": "thecommander-cleancheck-acb9bd424d",
+    "timestamp": "2026-10-28T12:00:56.058528+00:00",
+    "deployment": "thecommander-cleancheck-e86a344dbe",
     "checks": [
       "database_readiness",
       "production_frontend_served",

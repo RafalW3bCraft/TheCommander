@@ -42,7 +42,7 @@ Current outcomes are indexed in RELEASE_REPORT.md; implementation is not live ve
 | VERIFY-01 | CLI live smoke → provider checks → persisted evidence and process exit | test_live_probe.py; live-probe-red/green.txt; live-smoke.json |
 | PACKAGE-01 | package_release → fixed archive metadata → verify_package integrity → clean Compose/persistence | test_release_package.py; package-reproducibility-red/green.txt; packaged-release-verification.json |
 
-Latest results: RELEASE_REPORT.md and oct27-verification.txt.
+Latest results: RELEASE_REPORT.md and cleanup-candidate-verification.txt.
 
 ## October 27 verification coverage
 
@@ -137,3 +137,16 @@ not repeated paid inference. All offline gates are collected by `scripts/verify.
 |---|---|---|
 | VERIFY-03 | Unisolated Compose smoke exits before writes or HTTP; marker binds target | test_smoke_isolation.py |
 | PACKAGE-02 | Missing required inputs cannot create a partial release | test_release_package.py |
+| INF-02 | Unicode citation delimiters preserve exact source validation | test_workflows.py; citation-delimiter-red/green.txt |
+
+## October 28 live workflow evidence
+
+| Requirement | Status | Evidence and limit |
+|---|---|---|
+| SKILL-01 / FILE-01 | Live verified | cleanup-live-engineering-briefing-final.json; saved note reopened through Settings; factual recommendations still require review |
+| SKILL-02 / ACT-01 | Live verified | cleanup-github-executed.json and cleanup-github-confirmation.json; exact UI edit/one approval, independent GET; private website contents require GitHub login |
+| SKILL-03 / JOB-01 | Live verified | cleanup-live-follow-through.json; real browser scheduled then closed before dispatch |
+| SETTINGS-01 / MEM-01 / CHAT-01 / REC-01 | Locally verified | cleanup-live-persistence.json; settings, memory, conversations, schedules, note hashes and receipt retained across isolated API/worker restart |
+
+No intentional live write failure was injected. Uncertain-write recovery remains
+a controlled-transport verification, distinct from the confirmed live issue.

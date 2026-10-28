@@ -1,5 +1,5 @@
 {
-  "generated_at": "2026-10-27T15:45:41.975317+00:00",
+  "generated_at": "2026-10-28T11:59:02.075759+00:00",
   "scope": "All project .agents skills and supporting artifacts; applicability inventory, not all skills executed",
   "installation": {
     "schemaVersion": "ecc.install.v1",
@@ -340,7 +340,7 @@
       "status": "applied-guidance",
       "reason": "Guidance used in project work; linked artifacts record actual execution and limits.",
       "artifacts": [
-        "docs/CODEBASE_AUDIT.md",
+        "docs/RELEASE_REPORT.md",
         "docs/evidence/browser-results.json"
       ]
     },
@@ -406,7 +406,7 @@
       "status": "applied-guidance",
       "reason": "Guidance used in project work; linked artifacts record actual execution and limits.",
       "artifacts": [
-        "docs/CLICK_PATH_AUDIT.md",
+        "docs/TRACEABILITY.md",
         "frontend/e2e/workflows.spec.ts"
       ]
     },
@@ -935,7 +935,7 @@
       "reason": "Guidance used in project work; linked artifacts record actual execution and limits.",
       "artifacts": [
         "scripts/evaluate_live.py",
-        "docs/EVALUATION.md"
+        "docs/RELEASE_REPORT.md"
       ]
     },
     {
@@ -1963,7 +1963,7 @@
       "status": "applied-guidance",
       "reason": "Guidance used in project work; linked artifacts record actual execution and limits.",
       "artifacts": [
-        "docs/CODEBASE_AUDIT.md",
+        "docs/RELEASE_REPORT.md",
         "docs/RELEASE_REPORT.md"
       ]
     },
@@ -2290,7 +2290,7 @@
       "status": "applied-guidance",
       "reason": "Guidance used in project work; linked artifacts record actual execution and limits.",
       "artifacts": [
-        "docs/FINDINGS.md",
+        "docs/RELEASE_REPORT.md",
         "docs/THREAT_MODEL.md"
       ]
     },
@@ -2549,7 +2549,7 @@
       "reason": "Guidance used in project work; linked artifacts record actual execution and limits.",
       "artifacts": [
         "scripts/verify.sh",
-        "docs/evidence/release-verification.txt"
+        "docs/evidence/cleanup-verification.txt"
       ]
     },
     {

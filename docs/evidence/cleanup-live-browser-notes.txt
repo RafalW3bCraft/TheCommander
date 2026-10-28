@@ -1,0 +1,1 @@
+After restart: scheduled result, exact GitHub receipt, and cited saved briefing visible in browser.

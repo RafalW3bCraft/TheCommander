@@ -1,0 +1,14 @@
+{
+  "command": [
+    "uv",
+    "run",
+    "python",
+    "-m",
+    "scripts.package_release"
+  ],
+  "started_at": "2026-10-28T12:00:11.994305+00:00",
+  "finished_at": "2026-10-28T12:00:12.409967+00:00",
+  "returncode": 0,
+  "elapsed_seconds": 0.416,
+  "status": "Locally verified"
+}

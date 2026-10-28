@@ -3,27 +3,78 @@
 ## Current candidate
 
 **Implemented:** approved legacy retirement, documentation consolidation, strict
-Compose-smoke isolation and fail-closed required packaging inputs. The complete
+Compose-smoke isolation, fail-closed required packaging inputs, and correct parsing
+of Unicode-delimited evidence citations. The complete
 ECC catalog, private configuration, database volumes and Git history are retained.
 The two root prompt deletions predate this pass and remain preserved.
 
-Starting HEAD: `1294bfa8733a5ae7057cf2152f057a418db3c67b`, plus the existing and
-current working-tree changes. Final tested source and archive SHA256 are in
+Starting HEAD: `1294bfa8733a5ae7057cf2152f057a418db3c67b`. The owner subsequently
+committed implementation as `f8c0b1a` and `d04b33a`. Current source baseline:
+`d04b33a862ff3e119e6e1fb2c32fb4f4a83fd4c6`, plus release-documentation and evidence
+updates. Final tested source and archive SHA256 are in
 [evidence/release-manifest.json](evidence/release-manifest.json). The cleanup
 manifest records each removed path, hash, reason and local preservation archive:
 [evidence/cleanup-removals.json](evidence/cleanup-removals.json).
 
 ## Current verification
 
-Pending final gate; historical results below are not a claim of current success.
+**Locally verified:** the October 28 full gate after the citation fix passed
+87 Python tests with 91.14% first-party application coverage and seven Chromium
+scenarios. Ruff, formatting, mypy, generated OpenAPI/TypeScript, frontend formatting,
+lint/build, Python/npm dependency audits and configured-secret scan passed.
+See `cleanup-final-verification.txt` and its process record. The fresh run against
+the current committed candidate also passed, exit 0 at 11:59:31 UTC in 244.211 s
+(`cleanup-candidate-verification.txt` and its process JSON). Test database setup uses the
+actual `scripts/test_db.sh` URL, `postgresql://watcher@127.0.0.1:55432/postgres`;
+Node is 22.23.3. Controlled provider transports are separate from live evidence.
+
+**Locally verified:** clean-source Compose startup and retained-volume recreation,
+plus isolated database/notes backup restoration, passed again at 11:55/11:54 UTC.
+See `cleanup-final-clean-build-process.json` and `cleanup-final-backup-process.json`.
+The final package integrity/build result is recorded in
+`packaged-release-verification.json`; reproducibility is in
+`package-reproducibility.json`. Match those fingerprints to `release-manifest.json`
+before using a package. Generated evidence is deliberately outside package inputs.
+
+**Live verified:** the post-fix Nebius evaluation passed 30/30 bounded fictional
+cases: 29 model calls, 28,061 reported tokens, no missing usage metadata, median
+task latency 4,429 ms and maximum 7,325 ms. Model:
+`nvidia/nemotron-3-super-120b-a12b`, Token Factory endpoint, temperature 0.2,
+2048 output-token ceiling. Cost is unknown. See `live-evaluation.json` and
+`cleanup-final-live-evaluation-process.json`; this is not a general quality benchmark.
+Tavily validation and search persisted five sources in 3,106 ms; version/language
+relevance still needs human review (`live-research-smoke.json`).
+
+**Live verified:** GitHub repository read, cited engineering briefing and saved
+note, research proposal, exact UI edit/approval, and one confirmed issue in the
+explicitly authorized private `AetherSilva/thecommander-acceptance` repository.
+The separate authenticated GET on October 28 matched the exact approved title,
+body and correlation marker: [issue #1](https://github.com/AetherSilva/thecommander-acceptance/issues/1).
+Evidence: `cleanup-github-confirmation.json`, `cleanup-github-executed.json`, and
+`cleanup-live-engineering-briefing-final.json`. Approval was clicked once.
+The browser opened the receipt URL, but GitHub returned its private-repository
+not-found page without an authorized website login; visual inspection of the
+GitHub issue contents is **Blocked** on that login. API content verification passed.
+
+**Live verified:** follow-through was scheduled in the real UI, the browser closed
+before dispatch, and the separate worker used Nebius and saved notes. After
+restarting the isolated API and worker, settings/revision, memory, conversations,
+schedule, note contents and GitHub receipt matched. Browser reopening displayed
+the result, receipt and saved briefing. See `cleanup-live-follow-through.json`,
+`cleanup-live-persistence.json` and `cleanup-live-browser-notes-process.json`.
+These checks use an isolated owner/schema on port 8022, not the owner's main account.
+
+Desktop, tablet, mobile, Settings and disconnected-state screenshots were directly
+inspected. Automated axe checks belong to the browser suite; manual layout review
+is separate and is not approved-baseline visual regression testing. Commands,
+source hashes, dates, outcomes and limitations are indexed in `evidence-index.json`.
 
 ## Current blockers and readiness
 
-Live GitHub workflows: **Blocked** pending a selected disposable repository.
-The application token now authenticates, but its account has no detected disposable
-repository in the returned owned listing. No issue has been created. User delegated
-repository selection and the one-issue test; creating a new repository still needs
-a concrete approved target. See cleanup-github-preflight.json.
+GitHub credentials, repository selection and the one-issue write gate are resolved
+for the isolated acceptance owner. No additional issue, remote deployment or source
+publication is authorized by that test. Configure the intended owner separately;
+acceptance credentials and state are not judge-access credentials.
 
 Archive comparison: **Blocked** until the actual supplied archive path is provided.
 Remote HTTPS, dedicated judge access, monitoring, backups/quota and availability:
@@ -31,8 +82,11 @@ Remote HTTPS, dedicated judge access, monitoring, backups/quota and availability
 Entrant eligibility and publication/video/submission authorization remain required.
 The generated release archive is not the supplied archive.
 
-Locally ready: pending final gate. Deployment verified: pending local Compose;
-remote **Not run**. Submission ready: no.
+Locally ready: application and live acceptance **Locally verified / Live verified**;
+use the matching final package-verification record for artifact readiness.
+Deployment verified: disposable local Compose **Locally verified**; remote **Not run**.
+Submission ready: **Blocked** by public artifact/source, judge access, eligibility,
+video and delivery gates. No organizer acceptance is claimed.
 
 ## Review findings for this increment
 
@@ -43,6 +97,17 @@ remote **Not run**. Submission ready: no.
 - F19 (medium): packaging silently skipped missing required files. A controlled
   regression produced a partial archive before repair. Required release inputs now
   fail before output creation; obsolete prompt paths are removed from the allowlist.
+- F20 (medium, repaired): real briefing output wrapped valid evidence URLs in `】`,
+  which the citation parser incorrectly included in the URL and rejected. The
+  controlled regression failed before repair and passed afterward; invalid paths
+  and an unauthorized second URL remain rejected. See citation-delimiter-red.txt,
+  citation-delimiter-green.txt and tests/test_workflows.py. No citation allowlist
+  bypass or silent provider fallback was added.
+- Live research limitation: the first verbose research request returned no evidence
+  and failed visibly. A shorter query yielded a proposal, which was edited to remove
+  unsupported guarantees and label historical sources before approval. Retained
+  failures are cleanup-live-research-to-action-final.json and the earlier briefing
+  failure/diagnostic reports. Transport success does not establish factual quality.
 - Unresolved: the October 27 malformed Nebius continuation has no retained raw
   response/root-cause evidence. Later successes do not erase it.
 - Limitation: approved search domains do not ensure source freshness or relevance.
@@ -66,8 +131,9 @@ or organizer acceptance is claimed. See JUDGE_GUIDE.md and DEMO_SCRIPT.md.
 
 ## Historical repaired findings
 
-Independent security review used isolated PostgreSQL schemas and controlled HTTP
-transports. No live external issue was created. Historical fixes have their original regression evidence; current checks are above.
+The historical independent security review used isolated PostgreSQL schemas and
+controlled HTTP transports; it created no live issue. This continuation used
+self-review, not a new independent reviewer. Current live evidence is above.
 
 | ID | Severity | Reproducer | Fix | Regression |
 |---|---|---|---|---|
@@ -147,8 +213,9 @@ or uninterrupted live reliability. Application validation was not weakened.
 
 ## Historical evaluation — 2026-10-27
 
-Evidence: [live-evaluation.json](evidence/live-evaluation.json), generated by
-`uv run python -m scripts.evaluate_live`. Latest evidence timestamp: 2026-10-27 15:33:47 UTC.
+The following is the recorded October 27 result, not the latest evaluation.
+Current [live-evaluation.json](evidence/live-evaluation.json) is the October 28
+rerun described above, generated by `uv run python -m scripts.evaluate_live`.
 Endpoint: https://api.tokenfactory.nebius.com/v1.
 Model: `nvidia/nemotron-3-super-120b-a12b`; temperature 0.2; maximum output 2048 tokens.
 Fictional tasks used isolated PostgreSQL state and a separate worker process.
@@ -179,7 +246,8 @@ Limits: this is a small repeated acceptance set, not 30 independent quality
 benchmarks or a statistical reliability claim. Planning checks are bounded output
 acceptance, not expert grading. The application broker prevents shell execution;
 three model responses do not prove resistance to every prompt injection.
-No live GitHub task was possible with the current credential and repository scope.
+At that historical checkpoint, no live GitHub task was possible with its credential
+and repository scope; the October 28 authorized acceptance resolves that gap.
 Tavily was not included in these 30 scenarios; a subsequent separate live smoke
 validated its connection and persisted four approved-domain search results. Recovery,
 write uncertainty, concurrent claims and provider failures use deterministic

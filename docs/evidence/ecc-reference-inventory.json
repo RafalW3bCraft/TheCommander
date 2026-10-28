@@ -1,5 +1,5 @@
 {
-  "generated_at": "2026-10-27T15:45:41.975317+00:00",
+  "generated_at": "2026-10-28T11:59:02.075759+00:00",
   "commit": "90606c8315ee09cafc303515c5f33024db6b9882",
   "scope": "Every tracked regular file in pinned ECC source; hash inventory, not code execution or per-file quality certification",
   "files": [
@@ -23384,7 +23384,7 @@
       "path": "skills/browser-qa/SKILL.md",
       "status": "applied-guidance",
       "artifacts": [
-        "docs/CODEBASE_AUDIT.md",
+        "docs/RELEASE_REPORT.md",
         "docs/evidence/browser-results.json"
       ],
       "installed_project_copy": true
@@ -23415,7 +23415,7 @@
       "path": "skills/change-impact/SKILL.md",
       "status": "applied-guidance",
       "artifacts": [
-        "docs/CODEBASE_AUDIT.md",
+        "docs/RELEASE_REPORT.md",
         "docs/adr/002-retire-legacy-entrypoint.md"
       ],
       "installed_project_copy": false
@@ -23446,7 +23446,7 @@
       "path": "skills/click-path-audit/SKILL.md",
       "status": "applied-guidance",
       "artifacts": [
-        "docs/CLICK_PATH_AUDIT.md",
+        "docs/TRACEABILITY.md",
         "frontend/e2e/workflows.spec.ts"
       ],
       "installed_project_copy": true
@@ -23910,7 +23910,7 @@
       "status": "applied-guidance",
       "artifacts": [
         "scripts/evaluate_live.py",
-        "docs/EVALUATION.md"
+        "docs/RELEASE_REPORT.md"
       ],
       "installed_project_copy": true
     },
@@ -24485,7 +24485,7 @@
       "path": "skills/module-regression/SKILL.md",
       "status": "applied-guidance",
       "artifacts": [
-        "docs/REGRESSION.md",
+        "docs/TRACEABILITY.md",
         "scripts/verify.sh"
       ],
       "installed_project_copy": false
@@ -24771,7 +24771,7 @@
       "path": "skills/production-audit/SKILL.md",
       "status": "applied-guidance",
       "artifacts": [
-        "docs/CODEBASE_AUDIT.md",
+        "docs/RELEASE_REPORT.md",
         "docs/RELEASE_REPORT.md"
       ],
       "installed_project_copy": true
@@ -25047,7 +25047,7 @@
       "path": "skills/security-review/SKILL.md",
       "status": "applied-guidance",
       "artifacts": [
-        "docs/FINDINGS.md",
+        "docs/RELEASE_REPORT.md",
         "docs/THREAT_MODEL.md"
       ],
       "installed_project_copy": true
@@ -25313,7 +25313,7 @@
       "status": "applied-guidance",
       "artifacts": [
         "scripts/verify.sh",
-        "docs/evidence/release-verification.txt"
+        "docs/evidence/cleanup-verification.txt"
       ],
       "installed_project_copy": true
     },
