@@ -1,0 +1,5 @@
+Traceback (most recent call last):
+  File "/mnt/hostshare/TheCommander/.runtime/cleanup-20261028/finish_live.py", line 19, in <module>
+    if d['status']!=('succeeded' if skill=='engineering-briefing' else 'waiting_approval'):raise RuntimeError(skill+': '+str(d.get('error')))
+                                                                                           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+RuntimeError: research-to-action: No evidence found in your approved domains

@@ -178,7 +178,9 @@ class Broker:
             row["url"]
             for row in self.db.all("SELECT url FROM evidence WHERE run_id=%s", (run["id"],))
         }
-        urls = set(re.findall(r"https?://[^\s)\]>]+", text))
+        # Models also wrap exact evidence links in Unicode citation brackets.
+        # Delimiters end a URL; they do not authorize a different path or origin.
+        urls = set(re.findall(r"https?://[^\s)\]>】]+", text))
         if any(url not in allowed and url.rstrip(".,;:!?") not in allowed for url in urls):
             raise DomainError("Model returned an unsupported citation", 502, "unsupported_citation")
         return allowed

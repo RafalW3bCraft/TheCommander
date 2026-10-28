@@ -1,0 +1,15 @@
+{
+  "id": "7a3b99a3-8694-4dbf-bee1-8499f83c9bda",
+  "tool": "github_create_issue",
+  "status": "pending",
+  "arguments": {
+    "title": "Acceptance test: review asyncio cancellation documentation",
+    "body": "Authorized acceptance-test issue for the fictional BLUEFIN project. This is a documentation exercise, not a claim of a production defect.\n\nChecklist:\n- Add a small example demonstrating a cancellation request, its observed result, and cleanup.\n- Document the distinction between requesting cancellation and confirming completion.\n- Review behavior against the Python version actually used before publishing guidance.\n\nRetrieved evidence:\n- Historical Python 3.6 development guidance: https://docs.python.org/release/3.6.15/library/asyncio-dev.html\n- Version-alias development guidance: https://docs.python.org/3/library/asyncio-dev.html\n\nAcceptance: a human reviews the example and source/version relevance. No claim of universal cancellation or cleanup guarantees is made.",
+    "correlation_marker": "<!-- thecommander-action:7a3b99a3-8694-4dbf-bee1-8499f83c9bda -->",
+    "repository": "AetherSilva/thecommander-acceptance"
+  },
+  "args_hash": "776dea11f5b6c39a47cb24011752cbe13d610d0d609e78c341374e5eedc5b754",
+  "expires_at": "2026-10-28T03:32:17.507515-04:00",
+  "receipt": null,
+  "error": null
+}

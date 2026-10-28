@@ -1,0 +1,38 @@
+F..                                                                      [100%]
+=================================== FAILURES ===================================
+_ test_unicode_citation_delimiter_preserves_evidence_boundary[Use documented cancellation\u3010https://docs.python.org/3/\u3011.-succeeded] _
+
+app = (<starlette.testclient.TestClient object at 0x7f21e9e441a0>, <test_workflows.Vendor object at 0x7f21ea376ba0>, 'c260b417-88aa-4c2f-84c3-d15df5204d28', <commander.db.Database object at 0x7f21e9e35e50>)
+settings = Settings(database_url='postgresql://watcher@127.0.0.1:55432/postgres', database_schema='test_86a754afa52e44f58b6ca532e..._runs=50, max_daily_tokens=100000, daily_spend_limit_usd=None, input_usd_per_million=None, output_usd_per_million=None)
+content = 'Use documented cancellation【https://docs.python.org/3/】.'
+expected = 'succeeded'
+
+    @pytest.mark.parametrize(
+        "content,expected",
+        [
+            ("Use documented cancellation【https://docs.python.org/3/】.", "succeeded"),
+            ("See【https://docs.python.org/3/invented】.", "failed"),
+            ("See【https://docs.python.org/3/】https://made-up.example/evidence", "failed"),
+        ],
+    )
+    def test_unicode_citation_delimiter_preserves_evidence_boundary(app, settings, content, expected):
+        app[1].completions = [{"content": content}]
+        run = run_task(app, settings, "engineering-briefing")
+>       assert run["status"] == expected
+E       AssertionError: assert 'failed' == 'succeeded'
+E         
+E         - succeeded
+E         + failed
+
+tests/test_workflows.py:492: AssertionError
+------------------------------ Captured log call -------------------------------
+WARNING  commander.worker:worker.py:113 run_failure run=c2f29989-abae-4d41-8929-ffb4ddb17b37 code=unsupported_citation type=DomainError
+=============================== warnings summary ===============================
+.venv/lib/python3.13/site-packages/fastapi/testclient.py:1
+  /mnt/hostshare/TheCommander/.venv/lib/python3.13/site-packages/fastapi/testclient.py:1: StarletteDeprecationWarning: Using `httpx` with `starlette.testclient` is deprecated; install `httpx2` instead.
+    from starlette.testclient import TestClient as TestClient  # noqa
+
+-- Docs: https://docs.pytest.org/en/stable/how-to/capture-warnings.html
+=========================== short test summary info ============================
+FAILED tests/test_workflows.py::test_unicode_citation_delimiter_preserves_evidence_boundary[Use documented cancellation\u3010https://docs.python.org/3/\u3011.-succeeded]
+1 failed, 2 passed, 55 deselected, 1 warning in 12.30s

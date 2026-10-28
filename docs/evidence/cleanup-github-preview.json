@@ -1,0 +1,15 @@
+{
+  "id": "7a3b99a3-8694-4dbf-bee1-8499f83c9bda",
+  "tool": "github_create_issue",
+  "status": "pending",
+  "arguments": {
+    "title": "Documentation Checklist: Asyncio Task Cancellation Handling",
+    "body": "- Verify that examples show checking `task.cancelled()` before calling `set_result()`/`set_exception()` on a Future (see https://docs.python.org/release/3.6.15/library/asyncio-dev.html).\n- Ensure guidance mentions using `asyncio.wait_for()` timeout behavior which cancels the waited task (see https://docs.python.org/release/3.6.15/library/asyncio-dev.html).\n- Confirm that the documentation warns against using asynchronous generators in parallel tasks or across multiple event loops to prevent cancellation issues (see https://docs.python.org/3/library/asyncio-dev.html).",
+    "correlation_marker": "<!-- thecommander-action:7a3b99a3-8694-4dbf-bee1-8499f83c9bda -->",
+    "repository": "AetherSilva/thecommander-acceptance"
+  },
+  "args_hash": "fe211d47c0ce866c33db0e59ed1a5e5a0c06460db257439d3a46d658b507cc1f",
+  "expires_at": "2026-10-28T03:30:37.482899-04:00",
+  "receipt": null,
+  "error": null
+}

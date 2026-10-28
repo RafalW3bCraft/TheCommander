@@ -1,0 +1,49 @@
+{
+  "id": "1022ac53-08a6-4781-a6cd-0abd113a7169",
+  "skill": "research-to-action",
+  "prompt": "Prepare one issue titled Acceptance: document safe asyncio cancellation for fictional BLUEFIN. Identify it as an authorized acceptance-test documentation exercise, not a production defect claim. Use evidence from official Python docs and cite only exact retrieved URLs. Propose a short checklist about cancellation and cleanup. Call propose_issue once.",
+  "status": "failed",
+  "result": null,
+  "error": "No evidence found in your approved domains",
+  "created_at": "2026-10-28T02:58:13.021344-04:00",
+  "conversation_id": "8e53c4cd-9b82-4878-8b86-0cf1386ce954",
+  "schedule_id": null,
+  "skill_version": "6e3f40b14cc9d36c676264f94258a24632641e81983fb3b7b8a7238faa3aae78",
+  "events": [
+    {
+      "id": 28,
+      "kind": "queued",
+      "created_at": "2026-10-28T02:58:13.021344-04:00",
+      "payload": {}
+    },
+    {
+      "id": 29,
+      "kind": "started",
+      "created_at": "2026-10-28T02:58:13.448704-04:00",
+      "payload": {
+        "attempt": 1
+      }
+    },
+    {
+      "id": 30,
+      "kind": "github_read",
+      "created_at": "2026-10-28T02:58:15.339605-04:00",
+      "payload": {
+        "count": 0,
+        "repository": "AetherSilva/thecommander-acceptance"
+      }
+    },
+    {
+      "id": 31,
+      "kind": "error",
+      "created_at": "2026-10-28T02:58:24.426648-04:00",
+      "payload": {
+        "code": "no_evidence",
+        "message": "No evidence found in your approved domains"
+      }
+    }
+  ],
+  "actions": [],
+  "evidence": [],
+  "acceptance_latency_ms": 11625
+}

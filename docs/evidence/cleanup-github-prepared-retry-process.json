@@ -1,0 +1,12 @@
+{
+  "command": [
+    ".venv/bin/python",
+    ".runtime/cleanup-20261028/finish_live.py",
+    "prepare"
+  ],
+  "started_at": "2026-10-28T06:57:51.180565+00:00",
+  "finished_at": "2026-10-28T06:58:24.753739+00:00",
+  "returncode": 1,
+  "elapsed_seconds": 33.573,
+  "status": "Blocked"
+}

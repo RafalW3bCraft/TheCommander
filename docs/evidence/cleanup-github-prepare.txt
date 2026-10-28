@@ -1,0 +1,5 @@
+Traceback (most recent call last):
+  File "/mnt/hostshare/TheCommander/.runtime/cleanup-20261028/live_acceptance.py", line 58, in <module>
+    if run['status']!=expected:raise RuntimeError(skill+' ended '+run['status']+': '+str(run.get('error')))
+                               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+RuntimeError: engineering-briefing ended failed: Model returned an unsupported citation

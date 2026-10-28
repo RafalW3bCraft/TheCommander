@@ -478,6 +478,27 @@ def test_unsupported_citation_rejected(app, settings):
     assert run_task(app, settings)["status"] == "failed"
 
 
+@pytest.mark.parametrize(
+    "content,expected",
+    [
+        ("Use documented cancellation【https://docs.python.org/3/】.", "succeeded"),
+        ("See【https://docs.python.org/3/invented】.", "failed"),
+        ("See【https://docs.python.org/3/】https://made-up.example/evidence", "failed"),
+    ],
+)
+def test_unicode_citation_delimiter_preserves_evidence_boundary(app, settings, content, expected):
+    app[1].completions = [{"content": content}]
+    run = run_task(app, settings, "engineering-briefing")
+    assert run["status"] == expected
+    notes = app[0].get("/api/notes").json()
+    if expected == "succeeded":
+        assert any(note["name"] == run["id"] + ".md" for note in notes)
+        assert content in run["result"]
+    else:
+        assert run["error"] == "Model returned an unsupported citation"
+        assert not notes
+
+
 def test_unknown_spend_fails_closed(app, settings):
     settings.daily_spend_limit_usd = 0.5
     result = run_task(app, settings)

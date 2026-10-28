@@ -1,0 +1,143 @@
+{
+  "id": "aa2d8cc9-da02-458e-9986-151bee861e0b",
+  "skill": "research-to-action",
+  "prompt": "Python asyncio task cancellation official documentation. Propose one documentation checklist issue for this fictional acceptance-test repository.",
+  "status": "waiting_approval",
+  "result": "Review the exact issue in Activity. No external write has occurred.",
+  "error": null,
+  "created_at": "2026-10-28T03:00:28.373780-04:00",
+  "conversation_id": "40d1a665-eec1-4207-a7c0-71184bb0d329",
+  "schedule_id": null,
+  "skill_version": "6e3f40b14cc9d36c676264f94258a24632641e81983fb3b7b8a7238faa3aae78",
+  "events": [
+    {
+      "id": 32,
+      "kind": "queued",
+      "created_at": "2026-10-28T03:00:28.373780-04:00",
+      "payload": {}
+    },
+    {
+      "id": 33,
+      "kind": "started",
+      "created_at": "2026-10-28T03:00:28.665176-04:00",
+      "payload": {
+        "attempt": 1
+      }
+    },
+    {
+      "id": 34,
+      "kind": "github_read",
+      "created_at": "2026-10-28T03:00:29.981069-04:00",
+      "payload": {
+        "count": 0,
+        "repository": "AetherSilva/thecommander-acceptance"
+      }
+    },
+    {
+      "id": 35,
+      "kind": "search",
+      "created_at": "2026-10-28T03:00:34.009215-04:00",
+      "payload": {
+        "count": 3
+      }
+    },
+    {
+      "id": 36,
+      "kind": "inference",
+      "created_at": "2026-10-28T03:00:37.387727-04:00",
+      "payload": {
+        "model": "nvidia/nemotron-3-super-120b-a12b",
+        "usage": {
+          "total_tokens": 2269,
+          "prompt_tokens": 2047,
+          "completion_tokens": 222,
+          "prompt_tokens_details": {
+            "audio_tokens": null,
+            "cached_tokens": 0,
+            "multimodal_tokens": null,
+            "created_cache_tokens": 0
+          },
+          "prompt_cache_hit_tokens": 0,
+          "prompt_cache_miss_tokens": 2047,
+          "completion_tokens_details": {
+            "audio_tokens": null,
+            "reasoning_tokens": 50,
+            "accepted_prediction_tokens": null,
+            "rejected_prediction_tokens": null
+          }
+        },
+        "cost_usd": null,
+        "latency_ms": 3223
+      }
+    },
+    {
+      "id": 37,
+      "kind": "approval_required",
+      "created_at": "2026-10-28T03:00:37.501754-04:00",
+      "payload": {
+        "action_id": "7a3b99a3-8694-4dbf-bee1-8499f83c9bda"
+      }
+    },
+    {
+      "id": 38,
+      "kind": "skill_output",
+      "created_at": "2026-10-28T03:00:37.582987-04:00",
+      "payload": {
+        "result": "Review the exact issue in Activity. No external write has occurred.",
+        "evidence": [
+          "https://docs.python.org/release/3.6.15/library/asyncio-dev.html",
+          "https://docs.python.org/3/library/asyncio-dev.html",
+          "https://docs.python.org/3.15/library/asyncio-dev.html"
+        ],
+        "receipts": []
+      }
+    },
+    {
+      "id": 39,
+      "kind": "waiting_approval",
+      "created_at": "2026-10-28T03:00:37.602729-04:00",
+      "payload": {}
+    }
+  ],
+  "actions": [
+    {
+      "id": "7a3b99a3-8694-4dbf-bee1-8499f83c9bda",
+      "tool": "github_create_issue",
+      "status": "pending",
+      "arguments": {
+        "title": "Documentation Checklist: Asyncio Task Cancellation Handling",
+        "body": "- Verify that examples show checking `task.cancelled()` before calling `set_result()`/`set_exception()` on a Future (see https://docs.python.org/release/3.6.15/library/asyncio-dev.html).\n- Ensure guidance mentions using `asyncio.wait_for()` timeout behavior which cancels the waited task (see https://docs.python.org/release/3.6.15/library/asyncio-dev.html).\n- Confirm that the documentation warns against using asynchronous generators in parallel tasks or across multiple event loops to prevent cancellation issues (see https://docs.python.org/3/library/asyncio-dev.html).",
+        "correlation_marker": "<!-- thecommander-action:7a3b99a3-8694-4dbf-bee1-8499f83c9bda -->",
+        "repository": "AetherSilva/thecommander-acceptance"
+      },
+      "args_hash": "fe211d47c0ce866c33db0e59ed1a5e5a0c06460db257439d3a46d658b507cc1f",
+      "expires_at": "2026-10-28T03:30:37.482899-04:00",
+      "receipt": null,
+      "error": null
+    }
+  ],
+  "evidence": [
+    {
+      "id": "bfc6d9ce-d26b-4e92-93fd-2dce4ff4b010",
+      "url": "https://docs.python.org/release/3.6.15/library/asyncio-dev.html",
+      "title": "18.5.9. Develop with asyncio \u2014 Python 3.6.15 documentation",
+      "excerpt": "Futures and tasks can be cancelled explicitly with their `Future.cancel()` method. The `wait_for()` function cancels the waited task when the timeout occurs. There are many other cases where a task can be cancelled indirectly.\n\nDon\u2019t call `set_result()` or `set_exception()` method of `Future` if the future is cancelled: it would fail with an exception. For example, write:\n\n```\n if not fut. cancelled(): fut. set_result('done')\n``` [...] See also\n\nThe `AbstractEventLoop.set_debug()` method and the asyncio logger.\n\n## 18.5.9.2. Cancellation\u00b6\n\nCancellation of tasks is not common in classic programming. In asynchronous programming, not only is it something common, but you have to prepare your code to handle it. [...] 18.5.9. Develop with asyncio\n  + 18.5.9.1. Debug mode of asyncio\n  + 18.5.9.2. Cancellation\n  + 18.5.9.3. Concurrency and multithreading\n  + 18.5.9.4. Handle blocking functions correctly\n  + 18.5.9.5. Logging\n  + 18.5.9.6. Detect coroutine objects never scheduled\n  + 18.5.9.7. Detect exceptions never consumed\n  + 18.5.9.8. Chain coroutines correctly\n  + 18.5.9.9. Pending task destroyed\n  + 18.5.9.10. Close transports and event loops\n\n#### Previous topic\n\n18.5.8. Queues\n\n#### Next topic",
+      "fetched_at": "2026-10-28T03:00:33.963352-04:00"
+    },
+    {
+      "id": "a6951c7d-e3e2-4706-b80f-aca357212bfb",
+      "url": "https://docs.python.org/3/library/asyncio-dev.html",
+      "title": "Developing with asyncio \u2014 Python 3.15.2 documentation",
+      "excerpt": "```\n unhandled exception during asyncio. run() shutdown task:< Task finished name ='Task-3' coro =<< async_generator_athrow without __name__>()> exception = AssertionError()> Traceback(most recent call last): File\"example.py\", line 6, in cursor yield 1 asyncio. exceptions. CancelledError During handling of the above exception, another exception occurred: Traceback(most recent call last): File\"example.py\", line 8, in cursor assert work_done ^^^^^^^^^ AssertionError\n``` [...] \u00a9 Copyright 2001 Python Software Foundation.   \n This page is licensed under the Python Software Foundation License Version 2.   \n Examples, recipes, and other code in the documentation are additionally licensed under the Zero Clause BSD License.   \n See History and License for more information.  \n   \n The Python Software Foundation is a non-profit corporation. Please donate.   \n   \n Last updated on Oct 27, 2026 (11:09 UTC). Found a bug?   \n Created using Sphinx 8.2.3. [...] Therefore, it is recommended to avoid using asynchronous generators in parallel tasks or across multiple event loops.\n\n### Table of Contents",
+      "fetched_at": "2026-10-28T03:00:33.977404-04:00"
+    },
+    {
+      "id": "89e2cbff-118d-4c79-a5ec-daf608103a65",
+      "url": "https://docs.python.org/3.15/library/asyncio-dev.html",
+      "title": "Developing with asyncio \u2014 Python 3.15.2 documentation",
+      "excerpt": "```\n unhandled exception during asyncio. run() shutdown task:< Task finished name ='Task-3' coro =<< async_generator_athrow without __name__>()> exception = AssertionError()> Traceback(most recent call last): File\"example.py\", line 6, in cursor yield 1 asyncio. exceptions. CancelledError During handling of the above exception, another exception occurred: Traceback(most recent call last): File\"example.py\", line 8, in cursor assert work_done ^^^^^^^^^ AssertionError\n``` [...] \u00a9 Copyright 2001 Python Software Foundation.   \n This page is licensed under the Python Software Foundation License Version 2.   \n Examples, recipes, and other code in the documentation are additionally licensed under the Zero Clause BSD License.   \n See History and License for more information.  \n   \n The Python Software Foundation is a non-profit corporation. Please donate.   \n   \n Last updated on Oct 27, 2026 (11:09 UTC). Found a bug?   \n Created using Sphinx 8.2.3. [...] Therefore, it is recommended to avoid using asynchronous generators in parallel tasks or across multiple event loops.\n\n### Table of Contents",
+      "fetched_at": "2026-10-28T03:00:33.994945-04:00"
+    }
+  ],
+  "acceptance_latency_ms": 10906
+}

@@ -1,0 +1,73 @@
+Traceback (most recent call last):
+  File "/mnt/hostshare/TheCommander/.venv/lib/python3.13/site-packages/httpx/_transports/default.py", line 101, in map_httpcore_exceptions
+    yield
+  File "/mnt/hostshare/TheCommander/.venv/lib/python3.13/site-packages/httpx/_transports/default.py", line 250, in handle_request
+    resp = self._pool.handle_request(req)
+  File "/mnt/hostshare/TheCommander/.venv/lib/python3.13/site-packages/httpcore/_sync/connection_pool.py", line 256, in handle_request
+    raise exc from None
+  File "/mnt/hostshare/TheCommander/.venv/lib/python3.13/site-packages/httpcore/_sync/connection_pool.py", line 236, in handle_request
+    response = connection.handle_request(
+        pool_request.request
+    )
+  File "/mnt/hostshare/TheCommander/.venv/lib/python3.13/site-packages/httpcore/_sync/connection.py", line 101, in handle_request
+    raise exc
+  File "/mnt/hostshare/TheCommander/.venv/lib/python3.13/site-packages/httpcore/_sync/connection.py", line 78, in handle_request
+    stream = self._connect(request)
+  File "/mnt/hostshare/TheCommander/.venv/lib/python3.13/site-packages/httpcore/_sync/connection.py", line 124, in _connect
+    stream = self._network_backend.connect_tcp(**kwargs)
+  File "/mnt/hostshare/TheCommander/.venv/lib/python3.13/site-packages/httpcore/_backends/sync.py", line 207, in connect_tcp
+    with map_exceptions(exc_map):
+         ~~~~~~~~~~~~~~^^^^^^^^^
+  File "/usr/lib/python3.13/contextlib.py", line 162, in __exit__
+    self.gen.throw(value)
+    ~~~~~~~~~~~~~~^^^^^^^
+  File "/mnt/hostshare/TheCommander/.venv/lib/python3.13/site-packages/httpcore/_exceptions.py", line 14, in map_exceptions
+    raise to_exc(exc) from exc
+httpcore.ConnectError: [Errno 111] Connection refused
+
+The above exception was the direct cause of the following exception:
+
+Traceback (most recent call last):
+  File "/mnt/hostshare/TheCommander/.runtime/cleanup-20261028/proposal.py", line 5, in <module>
+    with closing(h['client'](state)) as c:
+                 ~~~~~~~~~~~^^^^^^^
+  File ".runtime/cleanup-20261028/live_acceptance.py", line 27, in client
+    r=c.post('/api/auth/login',json={'username':state['username'],'password':state['password']});r.raise_for_status();c.headers['X-CSRF-Token']=r.json()['csrf'];return c
+  File "/mnt/hostshare/TheCommander/.venv/lib/python3.13/site-packages/httpx/_client.py", line 1144, in post
+    return self.request(
+           ~~~~~~~~~~~~^
+        "POST",
+        ^^^^^^^
+    ...<11 lines>...
+        extensions=extensions,
+        ^^^^^^^^^^^^^^^^^^^^^^
+    )
+    ^
+  File "/mnt/hostshare/TheCommander/.venv/lib/python3.13/site-packages/httpx/_client.py", line 825, in request
+    return self.send(request, auth=auth, follow_redirects=follow_redirects)
+           ~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/mnt/hostshare/TheCommander/.venv/lib/python3.13/site-packages/httpx/_client.py", line 914, in send
+    response = self._send_handling_auth(
+        request,
+    ...<2 lines>...
+        history=[],
+    )
+  File "/mnt/hostshare/TheCommander/.venv/lib/python3.13/site-packages/httpx/_client.py", line 942, in _send_handling_auth
+    response = self._send_handling_redirects(
+        request,
+        follow_redirects=follow_redirects,
+        history=history,
+    )
+  File "/mnt/hostshare/TheCommander/.venv/lib/python3.13/site-packages/httpx/_client.py", line 979, in _send_handling_redirects
+    response = self._send_single_request(request)
+  File "/mnt/hostshare/TheCommander/.venv/lib/python3.13/site-packages/httpx/_client.py", line 1014, in _send_single_request
+    response = transport.handle_request(request)
+  File "/mnt/hostshare/TheCommander/.venv/lib/python3.13/site-packages/httpx/_transports/default.py", line 249, in handle_request
+    with map_httpcore_exceptions():
+         ~~~~~~~~~~~~~~~~~~~~~~~^^
+  File "/usr/lib/python3.13/contextlib.py", line 162, in __exit__
+    self.gen.throw(value)
+    ~~~~~~~~~~~~~~^^^^^^^
+  File "/mnt/hostshare/TheCommander/.venv/lib/python3.13/site-packages/httpx/_transports/default.py", line 118, in map_httpcore_exceptions
+    raise mapped_exc(message) from exc
+httpx.ConnectError: [Errno 111] Connection refused

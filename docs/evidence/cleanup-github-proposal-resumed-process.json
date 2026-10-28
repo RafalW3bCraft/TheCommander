@@ -1,0 +1,11 @@
+{
+  "command": [
+    ".venv/bin/python",
+    ".runtime/cleanup-20261028/proposal.py"
+  ],
+  "started_at": "2026-10-28T07:00:23.537904+00:00",
+  "finished_at": "2026-10-28T07:00:39.269906+00:00",
+  "returncode": 0,
+  "elapsed_seconds": 15.732,
+  "status": "Locally verified"
+}

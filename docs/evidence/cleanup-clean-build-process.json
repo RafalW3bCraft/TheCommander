@@ -1,0 +1,14 @@
+{
+  "command": [
+    "uv",
+    "run",
+    "python",
+    "-m",
+    "scripts.clean_release_smoke"
+  ],
+  "started_at": "2026-10-28T06:48:23.981605+00:00",
+  "finished_at": "2026-10-28T06:49:26.036897+00:00",
+  "returncode": 0,
+  "elapsed_seconds": 62.055,
+  "status": "Locally verified"
+}

@@ -1,0 +1,7 @@
+Traceback (most recent call last):
+  File "/mnt/hostshare/TheCommander/.runtime/cleanup-20261028/finish_live.py", line 11, in <module>
+    with h['client'](state) as c:
+         ~~~~~~~~~~~^^^^^^^
+  File "/mnt/hostshare/TheCommander/.venv/lib/python3.13/site-packages/httpx/_client.py", line 1283, in __enter__
+    raise RuntimeError(msg)
+RuntimeError: Cannot open a client instance more than once.

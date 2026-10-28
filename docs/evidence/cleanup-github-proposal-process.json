@@ -1,0 +1,11 @@
+{
+  "command": [
+    ".venv/bin/python",
+    ".runtime/cleanup-20261028/proposal.py"
+  ],
+  "started_at": "2026-10-28T06:59:09.220794+00:00",
+  "finished_at": "2026-10-28T06:59:10.330590+00:00",
+  "returncode": 1,
+  "elapsed_seconds": 1.11,
+  "status": "Blocked"
+}

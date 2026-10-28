@@ -1,0 +1,16 @@
+{
+  "command": [
+    "uv",
+    "run",
+    "pytest",
+    "tests/test_workflows.py",
+    "-k",
+    "unicode_citation_delimiter",
+    "-q"
+  ],
+  "started_at": "2026-10-28T06:55:27.705211+00:00",
+  "finished_at": "2026-10-28T06:55:43.644818+00:00",
+  "returncode": 1,
+  "elapsed_seconds": 15.94,
+  "status": "Blocked"
+}

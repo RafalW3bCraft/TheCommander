@@ -1,0 +1,10 @@
+{
+  "command": [
+    "./scripts/verify.sh"
+  ],
+  "started_at": "2026-10-28T06:57:52.291595+00:00",
+  "finished_at": "2026-10-28T07:02:43.449718+00:00",
+  "returncode": 0,
+  "elapsed_seconds": 291.158,
+  "status": "Locally verified"
+}

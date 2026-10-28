@@ -1,0 +1,12 @@
+{
+  "command": [
+    ".venv/bin/python",
+    ".runtime/cleanup-20261028/live_acceptance.py",
+    "prepare"
+  ],
+  "started_at": "2026-10-28T06:49:07.856264+00:00",
+  "finished_at": "2026-10-28T06:49:13.142746+00:00",
+  "returncode": 1,
+  "elapsed_seconds": 5.286,
+  "status": "Blocked"
+}
