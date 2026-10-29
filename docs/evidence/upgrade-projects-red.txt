@@ -1,0 +1,102 @@
+FFFFFF                                                                   [100%]
+=================================== FAILURES ===================================
+___________ test_projects_revision_scope_and_conversation_isolation ____________
+
+app = (<starlette.testclient.TestClient object at 0x7f90d8640050>, <test_workflows.Vendor object at 0x7f90d8a32f90>, '5fb5317c-3a81-4683-b35a-96c2609272e7', <commander.db.Database object at 0x7f90d8819e50>)
+
+    def test_projects_revision_scope_and_conversation_isolation(app):
+        client, vendor, owner, db = app
+        response = client.get('/api/projects')
+>       assert response.status_code == 200
+E       assert 404 == 200
+E        +  where 404 = <Response [404 Not Found]>.status_code
+
+tests/test_projects_modes.py:15: AssertionError
+__________ test_modes_cannot_dispatch_note_or_issue_side_effects[ask] __________
+
+app = (<starlette.testclient.TestClient object at 0x7f90d8581d10>, <test_workflows.Vendor object at 0x7f90d8818910>, '3727509b-9f99-4acd-af26-925d7c3ecf6f', <commander.db.Database object at 0x7f90d89feea0>)
+settings = Settings(database_url='postgresql://watcher@127.0.0.1:55432/postgres', database_schema='test_9e5888e4d5bd4321a0c9d25f9..._runs=50, max_daily_tokens=100000, daily_spend_limit_usd=None, input_usd_per_million=None, output_usd_per_million=None)
+mode = 'ask'
+
+    @pytest.mark.parametrize('mode', ['ask', 'plan', 'research'])
+    def test_modes_cannot_dispatch_note_or_issue_side_effects(app, settings, mode):
+        client, vendor, owner, db = app
+        vendor.completions = [{'tool_calls':[{'id':'forbidden','type':'function','function':{'name':'save_note','arguments':json.dumps({'name':'forbidden.md','content':'must not write'})}}]}]
+        created = client.post('/api/runs', json={'prompt':'Scope test', 'mode':mode})
+>       assert created.status_code == 200
+E       assert 422 == 200
+E        +  where 422 = <Response [422 Unprocessable Entity]>.status_code
+
+tests/test_projects_modes.py:41: AssertionError
+_________ test_modes_cannot_dispatch_note_or_issue_side_effects[plan] __________
+
+app = (<starlette.testclient.TestClient object at 0x7f90d84c74d0>, <test_workflows.Vendor object at 0x7f90d8582350>, '5296c47b-367e-49cb-8ae2-3caa1699d2de', <commander.db.Database object at 0x7f90d83f39b0>)
+settings = Settings(database_url='postgresql://watcher@127.0.0.1:55432/postgres', database_schema='test_3f5d8df31bbb4c2c8beb7290d..._runs=50, max_daily_tokens=100000, daily_spend_limit_usd=None, input_usd_per_million=None, output_usd_per_million=None)
+mode = 'plan'
+
+    @pytest.mark.parametrize('mode', ['ask', 'plan', 'research'])
+    def test_modes_cannot_dispatch_note_or_issue_side_effects(app, settings, mode):
+        client, vendor, owner, db = app
+        vendor.completions = [{'tool_calls':[{'id':'forbidden','type':'function','function':{'name':'save_note','arguments':json.dumps({'name':'forbidden.md','content':'must not write'})}}]}]
+        created = client.post('/api/runs', json={'prompt':'Scope test', 'mode':mode})
+>       assert created.status_code == 200
+E       assert 422 == 200
+E        +  where 422 = <Response [422 Unprocessable Entity]>.status_code
+
+tests/test_projects_modes.py:41: AssertionError
+_______ test_modes_cannot_dispatch_note_or_issue_side_effects[research] ________
+
+app = (<starlette.testclient.TestClient object at 0x7f90d8674b00>, <test_workflows.Vendor object at 0x7f90d89ff490>, '79c997b6-5e5f-4feb-aab7-9f0173a7df4b', <commander.db.Database object at 0x7f90d82138a0>)
+settings = Settings(database_url='postgresql://watcher@127.0.0.1:55432/postgres', database_schema='test_374278101d4d430aa1af786a7..._runs=50, max_daily_tokens=100000, daily_spend_limit_usd=None, input_usd_per_million=None, output_usd_per_million=None)
+mode = 'research'
+
+    @pytest.mark.parametrize('mode', ['ask', 'plan', 'research'])
+    def test_modes_cannot_dispatch_note_or_issue_side_effects(app, settings, mode):
+        client, vendor, owner, db = app
+        vendor.completions = [{'tool_calls':[{'id':'forbidden','type':'function','function':{'name':'save_note','arguments':json.dumps({'name':'forbidden.md','content':'must not write'})}}]}]
+        created = client.post('/api/runs', json={'prompt':'Scope test', 'mode':mode})
+>       assert created.status_code == 200
+E       assert 422 == 200
+E        +  where 422 = <Response [422 Unprocessable Entity]>.status_code
+
+tests/test_projects_modes.py:41: AssertionError
+______ test_plan_persists_and_unavailable_execution_fails_before_dispatch ______
+
+app = (<starlette.testclient.TestClient object at 0x7f90d8677820>, <test_workflows.Vendor object at 0x7f90d8676520>, '434b1cb7-f5db-4612-8063-09aff58ce887', <commander.db.Database object at 0x7f90d6e30650>)
+settings = Settings(database_url='postgresql://watcher@127.0.0.1:55432/postgres', database_schema='test_94bf1b1e51fa48fd8e84336b0..._runs=50, max_daily_tokens=100000, daily_spend_limit_usd=None, input_usd_per_million=None, output_usd_per_million=None)
+
+    def test_plan_persists_and_unavailable_execution_fails_before_dispatch(app, settings):
+        client, vendor, owner, db = app
+        for mode in ('build','review'):
+            response=client.post('/api/runs', json={'prompt':'No sandbox', 'mode':mode})
+>           assert response.status_code == 409
+E           assert 422 == 409
+E            +  where 422 = <Response [422 Unprocessable Entity]>.status_code
+
+tests/test_projects_modes.py:58: AssertionError
+______________ test_project_memory_recall_and_explicit_precedence ______________
+
+app = (<starlette.testclient.TestClient object at 0x7f90d7e53e30>, <test_workflows.Vendor object at 0x7f90d7feca70>, '88868235-98c9-45d9-9ad7-70a56587389f', <commander.db.Database object at 0x7f90d868d4f0>)
+settings = Settings(database_url='postgresql://watcher@127.0.0.1:55432/postgres', database_schema='test_93cb21466728434f897cc4859..._runs=50, max_daily_tokens=100000, daily_spend_limit_usd=None, input_usd_per_million=None, output_usd_per_million=None)
+
+    def test_project_memory_recall_and_explicit_precedence(app, settings):
+        client, vendor, owner, db = app
+>       a=client.post('/api/projects',json={'name':'Atlas'}).json()['id']
+          ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+E       KeyError: 'id'
+
+tests/test_projects_modes.py:71: KeyError
+=============================== warnings summary ===============================
+.venv/lib/python3.13/site-packages/fastapi/testclient.py:1
+  /mnt/hostshare/TheCommander/.venv/lib/python3.13/site-packages/fastapi/testclient.py:1: StarletteDeprecationWarning: Using `httpx` with `starlette.testclient` is deprecated; install `httpx2` instead.
+    from starlette.testclient import TestClient as TestClient  # noqa
+
+-- Docs: https://docs.pytest.org/en/stable/how-to/capture-warnings.html
+=========================== short test summary info ============================
+FAILED tests/test_projects_modes.py::test_projects_revision_scope_and_conversation_isolation
+FAILED tests/test_projects_modes.py::test_modes_cannot_dispatch_note_or_issue_side_effects[ask]
+FAILED tests/test_projects_modes.py::test_modes_cannot_dispatch_note_or_issue_side_effects[plan]
+FAILED tests/test_projects_modes.py::test_modes_cannot_dispatch_note_or_issue_side_effects[research]
+FAILED tests/test_projects_modes.py::test_plan_persists_and_unavailable_execution_fails_before_dispatch
+FAILED tests/test_projects_modes.py::test_project_memory_recall_and_explicit_precedence
+6 failed, 1 warning in 5.71s

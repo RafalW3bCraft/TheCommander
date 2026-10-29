@@ -1,0 +1,54 @@
+{
+  "baseline_head": "005deba0b0ee7a5c36bb57304bf0d542b5842005",
+  "branch": "feat/enhance-codex-+",
+  "requirements": [
+    {
+      "id": "U00",
+      "milestone": "Baseline",
+      "status": "Not run",
+      "acceptance": "Branch, immutable source inventory, preserved private state and ECC"
+    },
+    {
+      "id": "U01",
+      "milestone": "Projects and modes",
+      "status": "Not run",
+      "acceptance": "Owner/project isolation, revision CRUD, backend tool policy, five-view UI"
+    },
+    {
+      "id": "U02",
+      "milestone": "Providers and efficiency",
+      "status": "Not run",
+      "acceptance": "Validated adapters, explicit routing, budgets, pooling, event delivery"
+    },
+    {
+      "id": "U03",
+      "milestone": "Mem0 memory",
+      "status": "Not run",
+      "acceptance": "Private derived index, scoped retrieval, deletion, recall@5 evaluation"
+    },
+    {
+      "id": "U04",
+      "milestone": "Coding and grants",
+      "status": "Not run",
+      "acceptance": "Isolated execution, reviewed diffs, atomic bounded authority"
+    },
+    {
+      "id": "U05",
+      "milestone": "Browser automation",
+      "status": "Not run",
+      "acceptance": "Isolated encrypted profiles, egress enforcement, protected login"
+    },
+    {
+      "id": "U06",
+      "milestone": "Skills and operations",
+      "status": "Not run",
+      "acceptance": "Versioned skills, MFA, recovery, backups, monitoring"
+    },
+    {
+      "id": "U07",
+      "milestone": "Production acceptance",
+      "status": "Not run",
+      "acceptance": "Final artifact, live acceptance, authorized staging and seven-day soak"
+    }
+  ]
+}
