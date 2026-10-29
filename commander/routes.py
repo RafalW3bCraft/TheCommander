@@ -1,9 +1,9 @@
 from typing import Annotated
 from uuid import UUID
 
-from fastapi import Depends, Path
+from fastapi import Depends, Path, Query
 
-from commander import preferences, runs, schedules
+from commander import preferences, projects, runs, schedules
 from commander.broker import Broker
 from commander.connections import Connections
 from commander.contracts import (
@@ -20,6 +20,9 @@ from commander.contracts import (
     NoteContentView,
     NoteListView,
     NoteReceiptView,
+    ProjectEdit,
+    ProjectInput,
+    ProjectView,
     RunDetailView,
     RunInput,
     RunView,
@@ -36,8 +39,30 @@ from commander.workspace import Workspace
 
 
 def install_routes(app, db, settings, principal, transport):
+    from commander.events import install_event_routes
+
+    install_event_routes(app, db, principal)
     connections = Connections(db, settings, transport)
     broker = Broker(db, settings, transport)
+
+    @app.get("/api/projects", response_model=list[ProjectView])
+    def list_projects(owner=Depends(principal)):
+        return db.all(
+            "SELECT * FROM projects WHERE owner_id=%s ORDER BY is_default DESC,created_at,id",
+            (owner,),
+        )
+
+    @app.post("/api/projects", response_model=ProjectView)
+    def create_project(data: ProjectInput, owner=Depends(principal)):
+        return projects.create(db, owner, data)
+
+    @app.patch("/api/projects/{project_id}", response_model=ProjectView)
+    def update_project(project_id: UUID, data: ProjectEdit, owner=Depends(principal)):
+        return projects.update(db, owner, project_id, data)
+
+    @app.delete("/api/projects/{project_id}", response_model=StatusView)
+    def delete_project(project_id: UUID, revision: int = Query(ge=1), owner=Depends(principal)):
+        return projects.delete(db, owner, project_id, revision)
 
     @app.get("/api/settings", response_model=preferences.SettingsView)
     def get_settings(owner=Depends(principal)):
@@ -49,14 +74,16 @@ def install_routes(app, db, settings, principal, transport):
 
     @app.get("/api/models", response_model=preferences.ModelsView)
     def models(provider: str = "nebius", owner=Depends(principal)):
-        if provider != "nebius":
+        if provider not in ("nebius", "openai", "anthropic"):
             raise DomainError("Unsupported provider", 422)
         from commander.connections import owner_lock
         from commander.providers import Provider
 
         with owner_lock(db, owner):
-            effective = preferences.resolve(db, settings, owner)
-            row = connections.get(owner, "nebius")
+            effective = preferences.resolve(db, settings, owner).model_copy(
+                update={"inference_provider": provider}
+            )
+            row = connections.get(owner, provider)
             return {
                 "models": preferences.discover(
                     Provider(effective, transport), effective, connections.secret(row)
@@ -115,7 +142,13 @@ def install_routes(app, db, settings, principal, transport):
         return DEFINITIONS
 
     @app.get("/api/runs", response_model=list[RunView])
-    def list_runs(owner=Depends(principal)):
+    def list_runs(project_id: UUID | None = None, owner=Depends(principal)):
+        if project_id:
+            projects.require(db, owner, project_id)
+            return db.all(
+                "SELECT * FROM runs WHERE owner_id=%s AND project_id=%s ORDER BY created_at DESC LIMIT 100",
+                (owner, project_id),
+            )
         return db.all(
             "SELECT * FROM runs WHERE owner_id=%s ORDER BY created_at DESC LIMIT 100", (owner,)
         )
@@ -137,7 +170,13 @@ def install_routes(app, db, settings, principal, transport):
         return runs.reconcile_notes(db, settings, owner, run_id)
 
     @app.get("/api/conversations", response_model=list[ConversationView])
-    def conversations(owner=Depends(principal)):
+    def conversations(project_id: UUID | None = None, owner=Depends(principal)):
+        if project_id:
+            projects.require(db, owner, project_id)
+            return db.all(
+                "SELECT * FROM conversations WHERE owner_id=%s AND project_id=%s ORDER BY created_at DESC LIMIT 100",
+                (owner, project_id),
+            )
         return db.all(
             "SELECT * FROM conversations WHERE owner_id=%s ORDER BY created_at DESC LIMIT 100",
             (owner,),
@@ -182,7 +221,13 @@ def install_routes(app, db, settings, principal, transport):
         return {"status": "deleted"}
 
     @app.get("/api/schedules", response_model=list[ScheduleView])
-    def list_schedules(owner=Depends(principal)):
+    def list_schedules(project_id: UUID | None = None, owner=Depends(principal)):
+        if project_id:
+            projects.require(db, owner, project_id)
+            return db.all(
+                "SELECT * FROM schedules WHERE owner_id=%s AND project_id=%s ORDER BY next_at NULLS LAST",
+                (owner, project_id),
+            )
         return db.all(
             "SELECT * FROM schedules WHERE owner_id=%s ORDER BY next_at NULLS LAST", (owner,)
         )
@@ -253,7 +298,7 @@ def install_routes(app, db, settings, principal, transport):
             "max_daily_tokens": effective.max_daily_tokens,
             "daily_spend_limit_usd": effective.daily_spend_limit_usd,
             "usage": db.all(
-                "SELECT model,tokens,cost_usd,latency_ms,created_at FROM usage WHERE owner_id=%s ORDER BY created_at DESC LIMIT 100",
+                "SELECT model,provider,tokens,cost_usd,latency_ms,created_at FROM usage WHERE owner_id=%s ORDER BY created_at DESC LIMIT 100",
                 (owner,),
             ),
         }

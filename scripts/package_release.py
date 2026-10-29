@@ -27,6 +27,7 @@ TOP = {
 }
 PREFIXES = (
     "commander/",
+    "memory_service/",
     "frontend/src/",
     "frontend/e2e/",
     "scripts/",
@@ -61,6 +62,26 @@ REQUIRED = (TOP | FRONTEND) - {"docs/evidence/.gitkeep"} | {
     "commander/migrations/003_message_runs.sql",
     "commander/migrations/004_owner_settings.sql",
     "commander/migrations/005_usage_reservation.sql",
+    "commander/migrations/006_projects_modes.sql",
+    "commander/migrations/007_provider_selection.sql",
+    "commander/projects.py",
+    "commander/modes.py",
+    "commander/events.py",
+    "commander/memory_index.py",
+    "commander/memory_sync.py",
+    "memory_service/app.py",
+    "memory_service/backend.py",
+    "memory_service/contracts.py",
+    "memory_service/pyproject.toml",
+    "memory_service/uv.lock",
+    "memory_service/Dockerfile",
+    "memory_service/init-db.sh",
+    "deploy/compose.memory.yaml",
+    "commander/migrations/008_memory_index_outbox.sql",
+    "frontend/src/MemorySearch.tsx",
+    "frontend/src/ProjectSelector.tsx",
+    "frontend/src/SafeMarkdown.tsx",
+    "frontend/src/useRunEvents.ts",
 }
 
 

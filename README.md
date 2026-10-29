@@ -1,5 +1,13 @@
 # TheCommander — Personal AI
 
+> Enhancement branch: project scope, restricted assistant modes, optional API
+> providers and resumable progress are under development on `feat/enhance-codex-+`.
+> The broader Mem0/coding/browser production upgrade is **not complete**.
+> See [current release status](docs/RELEASE_REPORT.md) and
+> [requirement ledger](docs/evidence/upgrade-requirements.json). The preserved
+> hackathon baseline is commit `005deba` on `main`.
+
+
 An owner-controlled engineering assistant with persistent memory, three reusable
 skills, scoped connections, scheduled background work and exact approval for
 GitHub writes. Release 0.2.0 rebuilds the application around FastAPI, React,

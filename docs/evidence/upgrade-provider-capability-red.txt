@@ -1,0 +1,32 @@
+F                                                                        [100%]
+=================================== FAILURES ===================================
+___________ test_optional_model_without_tool_capability_is_not_saved ___________
+
+app = (<starlette.testclient.TestClient object at 0x7f8c828841a0>, <test_workflows.Vendor object at 0x7f8c84d94980>, '8d565798-48b5-4dd8-9241-8783978d59de', <commander.db.Database object at 0x7f8c82a12990>)
+settings = Settings(database_url='postgresql://watcher@127.0.0.1:55432/postgres', database_schema='test_cf8b094a7b6a4dceacb02e8d9..._runs=50, max_daily_tokens=100000, daily_spend_limit_usd=None, input_usd_per_million=None, output_usd_per_million=None)
+
+    def test_optional_model_without_tool_capability_is_not_saved(app,settings):
+        client,vendor,owner,db=app
+        from commander.connections import Connections
+        from commander.contracts import ConnectionInput
+        from commander.preferences import SettingsPatch, update, view
+        def handle(request):
+            if request.method=='GET':
+                return httpx.Response(200,json={'data':[{'id':'gpt-4.1'}]})
+            return httpx.Response(200,json={'choices':[{'message':{'content':'I cannot call tools'},'finish_reason':'stop'}]})
+        transport=httpx.MockTransport(handle)
+        Connections(db,settings,transport).save(owner,'openai',ConnectionInput(secret='isolated-provider-key'))
+>       with pytest.raises(DomainError,match='tool'):
+             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+E       Failed: DID NOT RAISE DomainError
+
+tests/test_provider_adapters.py:204: Failed
+=============================== warnings summary ===============================
+.venv/lib/python3.13/site-packages/fastapi/testclient.py:1
+  /mnt/hostshare/TheCommander/.venv/lib/python3.13/site-packages/fastapi/testclient.py:1: StarletteDeprecationWarning: Using `httpx` with `starlette.testclient` is deprecated; install `httpx2` instead.
+    from starlette.testclient import TestClient as TestClient  # noqa
+
+-- Docs: https://docs.pytest.org/en/stable/how-to/capture-warnings.html
+=========================== short test summary info ============================
+FAILED tests/test_provider_adapters.py::test_optional_model_without_tool_capability_is_not_saved
+1 failed, 1 warning in 2.08s

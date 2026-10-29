@@ -1,0 +1,17 @@
+{
+  "command": [
+    "uv",
+    "run",
+    "python",
+    "-m",
+    "scripts.live_research_smoke"
+  ],
+  "started_at": "2026-10-29T05:46:38.140850+00:00",
+  "finished_at": "2026-10-29T05:46:47.943005+00:00",
+  "exit_code": 0,
+  "seconds": 9.802,
+  "head": "c9084c5ecc22d39642959ec539f898f03c19ced8",
+  "branch": "feat/enhance-codex-+",
+  "working_tree_diff_sha256": "3aad7b31b7056d0d8833b7d95c9591e2047f9ea6a9b56f114506c04b9b93ed6e",
+  "limitation": "diff hash is not the release manifest; final source input identity is recorded when packaging"
+}

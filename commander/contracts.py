@@ -19,7 +19,34 @@ class Bootstrap(Login):
     token: str = Field(min_length=32, max_length=200)
 
 
+class ProjectInput(Strict):
+    name: str = Field(min_length=1, max_length=120)
+
+    @field_validator("name")
+    @classmethod
+    def trimmed_name(cls, value):
+        if not value.strip():
+            raise ValueError("Enter a project name")
+        return value.strip()
+
+
+class ProjectEdit(ProjectInput):
+    revision: int = Field(ge=1)
+
+
+class ProjectView(BaseModel):
+    id: UUID
+    name: str
+    revision: int
+    is_default: bool
+    created_at: datetime
+
+
+Mode = Literal["ask", "plan", "research", "build", "review", "automate"]
+
+
 class MemoryInput(Strict):
+    project_id: UUID | None = None
     kind: Literal["explicit", "inferred", "episodic", "task", "evidence", "procedural"] = "explicit"
     key: str = Field(min_length=1, max_length=200)
     content: str = Field(min_length=1, max_length=10000)
@@ -59,12 +86,15 @@ SkillName = Literal["conversation", "engineering-briefing", "research-to-action"
 
 
 class RunInput(Strict):
+    project_id: UUID | None = None
+    mode: Mode = "automate"
     skill: SkillName = "conversation"
     prompt: str = Field(min_length=1, max_length=8000)
     conversation_id: UUID | None = None
 
 
 class ScheduleInput(Strict):
+    project_id: UUID | None = None
     skill: SkillName = "follow-through"
     prompt: str = Field(min_length=1, max_length=8000)
     next_at: datetime
@@ -123,6 +153,7 @@ class UserView(BaseModel):
 
 
 class MemoryView(BaseModel):
+    project_id: UUID | None
     id: UUID
     kind: str
     key: str
@@ -135,7 +166,25 @@ class MemoryView(BaseModel):
     expires_at: datetime | None
 
 
+class MemorySearchView(BaseModel):
+    records: list[MemoryView]
+    method: Literal["hybrid", "lexical"]
+    index_status: Literal["ready", "degraded", "disabled"]
+    query_truncated: bool = False
+
+
+class MemoryIndexStatusView(BaseModel):
+    configured: bool
+    pending: int
+    truncated: int
+    failed: int
+    oldest_pending: datetime | None
+    last_synced: datetime | None
+
+
 class RunView(BaseModel):
+    project_id: UUID
+    mode: Mode
     id: UUID
     skill: str
     prompt: str
@@ -211,6 +260,7 @@ class ConnectionView(BaseModel):
 
 
 class ScheduleView(BaseModel):
+    project_id: UUID
     id: UUID
     skill: str
     prompt: str
@@ -238,6 +288,7 @@ class SkillView(BaseModel):
 
 
 class ConversationView(BaseModel):
+    project_id: UUID
     id: UUID
     title: str
     created_at: datetime
@@ -297,6 +348,7 @@ class ImportConnectionsView(BaseModel):
 
 
 class UsageView(BaseModel):
+    provider: str = "nebius"
     model: str
     tokens: dict | None
     cost_usd: float | None

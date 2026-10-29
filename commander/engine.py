@@ -5,8 +5,9 @@ from commander.broker import Broker, tools_for
 from commander.connections import owner_lock
 from commander.db import json
 from commander.errors import DomainError
-from commander.memory import recall
+from commander.memory import recall, retrieve
 from commander.runs import event
+from commander.settings import inference_endpoint, inference_model
 from commander.skills import SkillOutput, definition
 
 SYSTEM = """You are TheCommander, a personal engineering assistant. Use saved preferences as context.
@@ -36,7 +37,7 @@ class Engine:
             from commander.providers import Provider
 
             self.settings = resolve(
-                self.db, self.operator, run["owner_id"], run.get("settings_snapshot")
+                self.db, self.operator, run["owner_id"], run.get("settings_snapshot"), for_run=True
             )
             if step >= self.settings.max_steps:
                 raise DomainError("Current step limit reached", 429, "budget_exceeded")
@@ -47,14 +48,15 @@ class Engine:
                 raise DomainError("Current time limit reached", 408, "budget_exceeded")
             self.broker.provider = Provider(self.settings, self.transport)
             self.broker.active(run)
-            conn = self.broker.connections.get(run["owner_id"], "nebius")
-            if (self.settings.nebius_model, self.settings.nebius_base_url) != (
-                self.operator.nebius_model,
-                self.operator.nebius_base_url,
-            ) and (
+            conn = self.broker.connections.get(run["owner_id"], self.settings.inference_provider)
+            needs_validation = self.settings.inference_provider != "nebius" or (
+                self.settings.nebius_model,
+                self.settings.nebius_base_url,
+            ) != (self.operator.nebius_model, self.operator.nebius_base_url)
+            if needs_validation and (
                 conn["status"] != "validated"
-                or conn["config"].get("validated_model") != self.settings.nebius_model
-                or conn["config"].get("validated_endpoint") != self.settings.nebius_base_url
+                or conn["config"].get("validated_model") != inference_model(self.settings)
+                or conn["config"].get("validated_endpoint") != inference_endpoint(self.settings)
             ):
                 raise DomainError(
                     "Validate the selected model after connection changes",
@@ -68,7 +70,7 @@ class Engine:
                 run["owner_id"],
                 self.broker.connections.secret(conn),
                 messages,
-                tools_for(run["skill"]),
+                tools_for(run["skill"], run.get("mode", "automate")),
                 run["id"],
                 min(remaining, 60),
             )
@@ -77,7 +79,8 @@ class Engine:
             run["id"],
             "inference",
             {
-                "model": self.settings.nebius_model,
+                "model": inference_model(self.settings),
+                "provider": self.settings.inference_provider,
                 "usage": usage,
                 "latency_ms": latency,
                 "cost_usd": cost,
@@ -86,7 +89,37 @@ class Engine:
         return message
 
     def context(self, run):
-        preferences = recall(self.db, run["owner_id"])
+        from commander.memory_sync import configured_index
+
+        index = configured_index(self.operator)
+        retrieved = (
+            retrieve(self.db, run["owner_id"], run.get("project_id"), run["prompt"], index=index)
+            if index
+            else None
+        )
+        preferences = recall(self.db, run["owner_id"], run.get("project_id"))
+        if retrieved:
+            present = {item["key"] for item in preferences}
+            for row in retrieved["records"]:
+                if row["key"] not in present:
+                    preferences.append(
+                        {field: row[field] for field in ("kind", "key", "content", "source")}
+                    )
+            event(
+                self.db,
+                run["id"],
+                "memory_retrieval",
+                {
+                    "method": retrieved["method"],
+                    "index_status": retrieved["index_status"],
+                    "query_truncated": retrieved["query_truncated"],
+                    "records": [
+                        {"id": str(row["id"]), "revision": row["revision"], "source": row["source"]}
+                        for row in retrieved["records"]
+                    ],
+                    "limits": "At most 500 canonical candidates and 5 ranked records; explicit preferences remain prioritized",
+                },
+            )
         messages = [
             {"role": "system", "content": SYSTEM},
             {
@@ -95,6 +128,18 @@ class Engine:
                 + stdjson.dumps(preferences),
             },
         ]
+        if run.get("mode") == "plan":
+            messages[0]["content"] += (
+                " Produce a reviewable implementation plan. Do not execute the plan."
+            )
+        elif run.get("mode") == "ask":
+            messages[0]["content"] += (
+                " Answer from permitted context without using tools or taking actions."
+            )
+        elif run.get("mode") == "research":
+            messages[0]["content"] += (
+                " Produce read-only cited research. Separate source facts from your suggestions."
+            )
         if run["conversation_id"]:
             history = self.db.all(
                 """SELECT m.role,m.content FROM messages m LEFT JOIN runs r ON r.id=m.run_id
@@ -107,7 +152,7 @@ class Engine:
             messages.extend(reversed(history))
         else:
             messages.append({"role": "user", "content": run["prompt"]})
-        reserve = len(stdjson.dumps(tools_for(run["skill"]))) + 500
+        reserve = len(stdjson.dumps(tools_for(run["skill"], run.get("mode", "automate")))) + 500
         omitted = 0
         while (
             len(stdjson.dumps(messages)) + reserve > self.settings.max_context_chars
@@ -142,7 +187,7 @@ class Engine:
         from commander.preferences import resolve
 
         self.settings = resolve(
-            self.db, self.operator, run["owner_id"], run.get("settings_snapshot")
+            self.db, self.operator, run["owner_id"], run.get("settings_snapshot"), for_run=True
         )
         self.broker = Broker(self.db, self.operator, self.transport)
         self.started_at = time.monotonic()
@@ -162,6 +207,14 @@ class Engine:
             )
             return
         messages = self.context(run)
+        if run.get("mode") == "research":
+            evidence = self.broker.call(run, "search", {"query": run["prompt"][:500]})
+            messages.append(
+                {
+                    "role": "user",
+                    "content": "Untrusted research evidence: " + stdjson.dumps(evidence),
+                }
+            )
         if run["skill"] in ("engineering-briefing", "research-to-action"):
             github = self.broker.call(run, "github_read", {})
             evidence = self.broker.call(run, "search", {"query": run["prompt"][:500]})
@@ -222,6 +275,13 @@ class Engine:
             if run["skill"] in ("engineering-briefing", "follow-through"):
                 self.broker.call(
                     run, "save_note", {"name": str(run["id"]) + ".md", "content": text}
+                )
+            if run.get("mode") == "plan":
+                event(
+                    self.db,
+                    run["id"],
+                    "plan_ready",
+                    {"message": "Plan saved for review; no execution authorized."},
                 )
             self.finish(run, "succeeded", text)
             return

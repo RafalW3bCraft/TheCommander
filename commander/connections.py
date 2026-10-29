@@ -7,8 +7,9 @@ from cryptography.fernet import Fernet
 from commander.db import json
 from commander.errors import DomainError
 from commander.providers import Provider, ProviderError
+from commander.settings import inference_endpoint, inference_model
 
-KINDS = ("nebius", "github", "tavily", "workspace")
+KINDS = ("nebius", "github", "tavily", "workspace", "openai", "anthropic")
 
 
 def usable_secret(value):
@@ -165,50 +166,43 @@ class Connections:
         status, detail = "validated", "Connection checked successfully"
         try:
             secret = self.secret(row)
-            if kind == "nebius":
-                models = provider.request(
-                    "GET", effective.nebius_base_url.rstrip("/") + "/models", secret, retry=True
-                )
-                if (
-                    not isinstance(models, dict)
-                    or not isinstance(models.get("data"), list)
-                    or any(
-                        not isinstance(model, dict) or not isinstance(model.get("id"), str)
-                        for model in models["data"]
-                    )
-                ):
-                    raise ProviderError(
-                        "Provider returned malformed model data", 502, "malformed_response"
-                    )
-                if effective.nebius_model not in [m["id"] for m in models["data"]]:
-                    raise ProviderError(
-                        "Configured NVIDIA model is unavailable to this account",
-                        502,
-                        "unavailable_model",
-                    )
-                from commander.inference import complete
+            if kind in ("nebius", "openai", "anthropic"):
+                from commander.inference import validate_model
+                from commander.preferences import discover
 
-                complete(
-                    self.db,
-                    effective,
-                    provider,
-                    owner,
-                    secret,
-                    [{"role": "user", "content": "Reply with OK only."}],
-                )
-                self.db.one(
-                    "UPDATE connections SET config=config || %s WHERE owner_id=%s AND kind='nebius' RETURNING kind",
-                    (
-                        json(
-                            {
-                                "validated_model": effective.nebius_model,
-                                "validated_endpoint": effective.nebius_base_url,
-                            }
+                # An optional connection can be checked before selecting it, but
+                # generation requires the owner to explicitly choose its model.
+                selected = effective.model_copy(update={"inference_provider": kind})
+                provider = Provider(selected, self.provider.transport)
+                models = discover(provider, selected, secret)
+                if kind != "nebius" and effective.inference_provider != kind:
+                    if not models:
+                        raise ProviderError(
+                            "No supported models available", 502, "unavailable_model"
+                        )
+                    detail = "Account models discovered. Select and validate a model in settings before inference."
+                else:
+                    if inference_model(selected) not in models:
+                        raise ProviderError(
+                            "Configured model is unavailable to this account",
+                            502,
+                            "unavailable_model",
+                        )
+                    validate_model(self.db, selected, provider, owner, secret)
+                    self.db.one(
+                        "UPDATE connections SET config=config || %s WHERE owner_id=%s AND kind=%s RETURNING kind",
+                        (
+                            json(
+                                {
+                                    "validated_model": inference_model(selected),
+                                    "validated_endpoint": inference_endpoint(selected),
+                                }
+                            ),
+                            owner,
+                            kind,
                         ),
-                        owner,
-                    ),
-                )
-                detail = "Model listed and harmless inference completed"
+                    )
+                    detail = "Model listed and harmless inference completed"
             elif kind == "github":
                 repository = provider.request(
                     "GET",
@@ -255,6 +249,8 @@ class Connections:
         imported = []
         for kind, key in [
             ("nebius", self.settings.nebius_api_key),
+            ("openai", self.settings.openai_api_key),
+            ("anthropic", self.settings.anthropic_api_key),
             ("github", self.settings.github_token),
             ("tavily", self.settings.tavily_api_key),
         ]:

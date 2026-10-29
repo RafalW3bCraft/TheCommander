@@ -132,3 +132,23 @@ state comparisons after restart, screenshot inspection and package checks.
 See evidence-index.json and RELEASE_REPORT.md. No catalog files were removed;
 catalog hash comparison is in cleanup-final-preservation.json. This records applied
 guidance, not execution of every skill or a new independent review.
+
+## Enhancement branch application
+
+Applied contract-first to project/mode/provider/event contracts and generated
+TypeScript; TDD/regression guidance to project boundaries and provider routing;
+verification-loop to backend/frontend/operational checks; frontend/accessibility
+guidance to the graphite/silver interface and safe Markdown.
+
+Bounded frontend, SSE, provider and memory tasks were delegated following the
+pinned navigation guide. All four agents subsequently reached host usage limits.
+SSE supplied 12 passing controlled tests before that limit; the primary agent
+continued integration and repair. Provider changes required additional primary
+review/tests. The memory task resumed after the continuation and delivered the separate
+Mem0/pgvector service with local embeddings and controlled service/client tests.
+The primary agent added canonical admission, a durable outbox, API/engine/UI
+integration, and race/expiry regressions. Contract-first and verification-loop
+were reread and applied at this boundary; actual service evidence is separate
+from controlled transport tests.
+Delegation is not independent security approval. The complete catalog remains
+versioned; no hooks, installers or global configuration changes ran.

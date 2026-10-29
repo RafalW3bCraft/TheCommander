@@ -1,0 +1,17 @@
+{
+  "command": [
+    "uv",
+    "run",
+    "python",
+    "-m",
+    "scripts.clean_release_smoke"
+  ],
+  "started_at": "2026-10-29T05:47:30.834049+00:00",
+  "finished_at": "2026-10-29T05:48:40.332577+00:00",
+  "exit_code": 0,
+  "seconds": 69.499,
+  "head": "c9084c5ecc22d39642959ec539f898f03c19ced8",
+  "branch": "feat/enhance-codex-+",
+  "working_tree_diff_sha256": "5bdbe523d2b664c33c9d7324d0af57579eea61df546a905821ee1f17ae42afb5",
+  "limitation": "diff hash is not the release manifest; final source input identity is recorded when packaging"
+}

@@ -5,50 +5,59 @@
     {
       "id": "U00",
       "milestone": "Baseline",
-      "status": "Not run",
-      "acceptance": "Branch, immutable source inventory, preserved private state and ECC"
+      "status": "Locally verified",
+      "acceptance": "Branch, immutable source inventory, preserved private state and ECC",
+      "limitation": "Enhancement branch, immutable baseline, 693 ECC files/private environment hashes preserved."
     },
     {
       "id": "U01",
       "milestone": "Projects and modes",
-      "status": "Not run",
-      "acceptance": "Owner/project isolation, revision CRUD, backend tool policy, five-view UI"
+      "status": "Implemented",
+      "acceptance": "Owner/project isolation, revision CRUD, backend tool policy, five-view UI",
+      "limitation": "Projects, read-only modes, scoped memory/schedules, Markdown/theme; final browser gate in progress. Coding modes disabled; full contextual artifacts/budget profiles remain."
     },
     {
       "id": "U02",
       "milestone": "Providers and efficiency",
-      "status": "Not run",
-      "acceptance": "Validated adapters, explicit routing, budgets, pooling, event delivery"
+      "status": "Implemented",
+      "acceptance": "Validated adapters, explicit routing, budgets, pooling, event delivery",
+      "limitation": "Native optional adapters and resumable event delivery implemented. Controlled tests pass; no optional API keys. Pooling, provider token streaming, budget profiles and routing configuration remain."
     },
     {
       "id": "U03",
       "milestone": "Mem0 memory",
       "status": "Not run",
-      "acceptance": "Private derived index, scoped retrieval, deletion, recall@5 evaluation"
+      "acceptance": "Private derived index, scoped retrieval, deletion, recall@5 evaluation",
+      "limitation": "Mem0 service/index, extraction/proposals, ingestion and retrieval evaluation remain unimplemented; delegate stopped at host usage limit before files were delivered."
     },
     {
       "id": "U04",
       "milestone": "Coding and grants",
       "status": "Not run",
-      "acceptance": "Isolated execution, reviewed diffs, atomic bounded authority"
+      "acceptance": "Isolated execution, reviewed diffs, atomic bounded authority",
+      "limitation": "Coding supervisor and reusable grants not implemented. Build/Review fail closed."
     },
     {
       "id": "U05",
       "milestone": "Browser automation",
       "status": "Not run",
-      "acceptance": "Isolated encrypted profiles, egress enforcement, protected login"
+      "acceptance": "Isolated encrypted profiles, egress enforcement, protected login",
+      "limitation": "Browser profiles and automation not implemented."
     },
     {
       "id": "U06",
       "milestone": "Skills and operations",
       "status": "Not run",
-      "acceptance": "Versioned skills, MFA, recovery, backups, monitoring"
+      "acceptance": "Versioned skills, MFA, recovery, backups, monitoring",
+      "limitation": "Versioned runtime skills, MFA, operational metrics and encrypted automated backup additions remain."
     },
     {
       "id": "U07",
       "milestone": "Production acceptance",
-      "status": "Not run",
-      "acceptance": "Final artifact, live acceptance, authorized staging and seven-day soak"
+      "status": "Blocked",
+      "acceptance": "Final artifact, live acceptance, authorized staging and seven-day soak",
+      "limitation": "Deployment host/domain/authorization and seven-day soak unavailable; full upgrade capabilities unfinished. Local compatibility verification is separate."
     }
-  ]
+  ],
+  "updated_at": "2026-10-29T05:51:13.747194+00:00"
 }

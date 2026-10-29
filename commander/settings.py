@@ -1,4 +1,5 @@
 from pathlib import Path
+from typing import Literal
 
 from cryptography.fernet import Fernet
 from pydantic import AliasChoices, Field, model_validator
@@ -22,6 +23,12 @@ class Settings(BaseSettings):
         default="nvidia/nemotron-3-super-120b-a12b",
         validation_alias=AliasChoices("NEBIUS_MODEL", "MODEL_ID", "nebius_model"),
     )
+    inference_provider: Literal["nebius", "openai", "anthropic"] = "nebius"
+    provider_model: str = Field(default="", max_length=200, pattern=r"^[A-Za-z0-9_.:/-]*$")
+    openai_api_key: str = ""
+    anthropic_api_key: str = ""
+    memory_index_url: str = ""
+    memory_index_token: str = ""
     github_token: str = ""
     github_repository: str = ""
     tavily_api_key: str = ""
@@ -38,6 +45,12 @@ class Settings(BaseSettings):
     @model_validator(mode="after")
     def validate_runtime(self):
         Fernet(self.encryption_key.encode())
+        if self.memory_index_url:
+            from commander.memory_index import MemoryIndex
+
+            MemoryIndex(self.memory_index_url, self.memory_index_token)
+        elif self.memory_index_token:
+            raise ValueError("Memory index token requires an explicit index URL")
         if self.production and not self.app_origin.startswith("https://"):
             raise ValueError("Production APP_ORIGIN must use HTTPS")
         if self.nebius_base_url.rstrip("/") not in {
@@ -47,4 +60,23 @@ class Settings(BaseSettings):
             raise ValueError("Only documented Nebius endpoints are allowed")
         if not self.nebius_model.startswith("nvidia/"):
             raise ValueError("NEBIUS_MODEL must select an NVIDIA model")
+        if self.inference_provider != "nebius" and not self.provider_model:
+            raise ValueError("Optional inference providers require an explicit model")
         return self
+
+
+def inference_model(settings):
+    return (
+        settings.nebius_model
+        if settings.inference_provider == "nebius"
+        else settings.provider_model
+    )
+
+
+def inference_endpoint(settings):
+    endpoints = {"openai": "https://api.openai.com/v1", "anthropic": "https://api.anthropic.com/v1"}
+    return (
+        settings.nebius_base_url
+        if settings.inference_provider == "nebius"
+        else endpoints[settings.inference_provider]
+    )

@@ -1,0 +1,43 @@
+..F...                                                                   [100%]
+=================================== FAILURES ===================================
+_____ test_old_snapshot_cannot_silently_route_to_current_optional_provider _____
+
+app = (<starlette.testclient.TestClient object at 0x7f03eb99ec10>, <test_workflows.Vendor object at 0x7f03ecba2fd0>, '0f022c6b-e5a9-471f-ae13-85a3cfca0807', <commander.db.Database object at 0x7f03ec9f27a0>)
+settings = Settings(database_url='postgresql://watcher@127.0.0.1:55432/postgres', database_schema='test_30810b30da0a4773ba4625087..._runs=50, max_daily_tokens=100000, daily_spend_limit_usd=None, input_usd_per_million=None, output_usd_per_million=None)
+
+    def test_old_snapshot_cannot_silently_route_to_current_optional_provider(app, settings):
+        client, vendor, owner, db = app
+        from commander.db import json as dbjson
+    
+        db.one(
+            "INSERT INTO owner_settings(owner_id,preferences) VALUES (%s,%s) RETURNING owner_id",
+            (owner, dbjson({"inference_provider": "openai", "provider_model": "gpt-4.1"})),
+        )
+        old = values(settings)
+        old.pop("inference_provider")
+        old.pop("provider_model")
+        assert resolve(db, settings, owner, old).inference_provider == "nebius"
+        # Null snapshots predate provider routing and must also preserve Nebius.
+        queued = db.one(
+            "INSERT INTO runs(owner_id,skill,skill_version,prompt) VALUES (%s,'conversation','conversation-v1','legacy') RETURNING *",
+            (owner,),
+        )
+        Worker(settings, vendor.transport()).tick()
+>       assert db.one("SELECT status FROM runs WHERE id=%s", (queued["id"],))["status"] == "succeeded"
+E       AssertionError: assert 'failed' == 'succeeded'
+E         
+E         - succeeded
+E         + failed
+
+tests/test_provider_adapters.py:106: AssertionError
+------------------------------ Captured log call -------------------------------
+WARNING  commander.worker:worker.py:113 run_failure run=560b3418-d6e7-4076-9937-0e6983098e42 code=disconnected type=DomainError
+=============================== warnings summary ===============================
+.venv/lib/python3.13/site-packages/fastapi/testclient.py:1
+  /mnt/hostshare/TheCommander/.venv/lib/python3.13/site-packages/fastapi/testclient.py:1: StarletteDeprecationWarning: Using `httpx` with `starlette.testclient` is deprecated; install `httpx2` instead.
+    from starlette.testclient import TestClient as TestClient  # noqa
+
+-- Docs: https://docs.pytest.org/en/stable/how-to/capture-warnings.html
+=========================== short test summary info ============================
+FAILED tests/test_provider_adapters.py::test_old_snapshot_cannot_silently_route_to_current_optional_provider
+1 failed, 5 passed, 1 warning in 6.15s

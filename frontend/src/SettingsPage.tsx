@@ -23,6 +23,7 @@ export function SettingsPage({
   const [tab, setTab] = useState("Connections");
   const [settings, setSettings] = useState<Settings | null>(null);
   const [system, setSystem] = useState<System | null>(null);
+  const [provider, setProvider] = useState("nebius");
   const [models, setModels] = useState<string[]>([]);
   const [error, setError] = useState("");
   const [busy, setBusy] = useState(false);
@@ -33,6 +34,7 @@ export function SettingsPage({
       .then(([s, health]) => {
         if (active) {
           setSettings(s);
+          setProvider(s.effective.inference_provider ?? "nebius");
           setSystem(health);
         }
       })
@@ -84,7 +86,9 @@ export function SettingsPage({
             disabled={busy}
             onClick={() =>
               void job(async () => {
-                setSettings(await api<Settings>("/settings"));
+                const fresh = await api<Settings>("/settings");
+                setSettings(fresh);
+                setProvider(fresh.effective.inference_provider ?? "nebius");
                 setSystem(await api<System>("/system/status"));
                 setNotice("Settings reloaded. Review before saving.");
               })
@@ -101,9 +105,31 @@ export function SettingsPage({
           <section>
             <h2>Model and limits</h2>
             <p>
-              Choose an NVIDIA model on Nebius. Model or endpoint changes
-              perform a small live validation request before saving. Limits
-              cannot exceed the operator ceilings shown below.
+              Choose Nebius/NVIDIA or an explicitly configured optional API
+              provider. Model or endpoint changes perform a small live
+              validation request before saving. Limits cannot exceed the
+              operator ceilings shown below.
+            </p>
+            <label>
+              Inference provider
+              <select
+                aria-label="Inference provider"
+                value={provider}
+                disabled={busy}
+                onChange={(e) => {
+                  setProvider(e.target.value);
+                  setModels([]);
+                  setNotice("");
+                }}
+              >
+                <option value="nebius">Nebius · NVIDIA (default)</option>
+                <option value="openai">OpenAI API</option>
+                <option value="anthropic">Anthropic API</option>
+              </select>
+            </label>
+            <p>
+              No automatic fallback. Optional providers need their own API
+              credentials in Connections.
             </p>
             <button
               className="secondary"
@@ -111,11 +137,11 @@ export function SettingsPage({
               onClick={() =>
                 void job(async () => {
                   const result = await api<components["schemas"]["ModelsView"]>(
-                    "/models?provider=nebius",
+                    "/models?provider=" + provider,
                   );
                   setModels(result.models);
                   setNotice(
-                    `${result.models.length} NVIDIA models available on the saved endpoint.`,
+                    `${result.models.length} models available for ${provider}.`,
                   );
                 })
               }
@@ -123,14 +149,19 @@ export function SettingsPage({
               Discover available models
             </button>
             <form
-              key={settings.revision}
+              key={`${settings.revision}:${provider}`}
               onSubmit={(event) => {
                 event.preventDefault();
                 const data = new FormData(event.currentTarget);
                 const changes: Record<string, string | number | null> = {
                   revision: settings.revision,
-                  nebius_model: String(data.get("model")),
-                  nebius_base_url: String(data.get("endpoint")),
+                  inference_provider: provider,
+                  ...(provider === "nebius"
+                    ? {
+                        nebius_model: String(data.get("model")),
+                        nebius_base_url: String(data.get("endpoint")),
+                      }
+                    : { provider_model: String(data.get("model")) }),
                   daily_spend_limit_usd: data.get("spend")
                     ? Number(data.get("spend"))
                     : null,
@@ -148,14 +179,22 @@ export function SettingsPage({
               }}
             >
               <label>
-                NVIDIA model
+                {provider === "nebius" ? "NVIDIA model" : "Provider model"}
                 <input
                   name="model"
                   list="nebius-models"
-                  defaultValue={settings.effective.nebius_model ?? ""}
+                  defaultValue={
+                    provider === "nebius"
+                      ? (settings.effective.nebius_model ?? "")
+                      : provider === settings.effective.inference_provider
+                        ? (settings.effective.provider_model ?? "")
+                        : ""
+                  }
                   required
                   maxLength={200}
-                  pattern="nvidia/[A-Za-z0-9_.-]+"
+                  pattern={
+                    provider === "nebius" ? "nvidia/[A-Za-z0-9_.-]+" : undefined
+                  }
                 />
               </label>
               <datalist id="nebius-models">
@@ -163,20 +202,24 @@ export function SettingsPage({
                   <option key={model} value={model} />
                 ))}
               </datalist>
-              <label>
-                Nebius endpoint
-                <select
-                  name="endpoint"
-                  defaultValue={settings.effective.nebius_base_url ?? undefined}
-                >
-                  <option value="https://api.tokenfactory.nebius.com/v1">
-                    Token Factory · default
-                  </option>
-                  <option value="https://api.tokenfactory.us-central1.nebius.com/v1">
-                    Token Factory · US Central
-                  </option>
-                </select>
-              </label>
+              {provider === "nebius" && (
+                <label>
+                  Nebius endpoint
+                  <select
+                    name="endpoint"
+                    defaultValue={
+                      settings.effective.nebius_base_url ?? undefined
+                    }
+                  >
+                    <option value="https://api.tokenfactory.nebius.com/v1">
+                      Token Factory · default
+                    </option>
+                    <option value="https://api.tokenfactory.us-central1.nebius.com/v1">
+                      Token Factory · US Central
+                    </option>
+                  </select>
+                </label>
+              )}
               <div className="settings-grid">
                 {fields.map(([key, label, minimum]) => (
                   <label key={key}>
@@ -222,8 +265,9 @@ export function SettingsPage({
           <h2>Your data and privacy</h2>
           <p>
             Memory, conversations, schedules, and receipts persist in your
-            database. Selected context goes to Nebius; research queries go to
-            Tavily; approved issue content goes to GitHub.
+            database. Selected context goes to the selected inference provider;
+            research queries go to Tavily; approved issue content goes to
+            GitHub.
           </p>
           <p>
             Correct, export, or delete preferences in Memory. Delete a

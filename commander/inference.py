@@ -4,6 +4,7 @@ import json as stdjson
 
 from commander.db import json
 from commander.errors import DomainError
+from commander.settings import inference_model
 
 
 def check_budget(db, settings, owner):
@@ -41,11 +42,12 @@ def complete(db, settings, provider, owner, secret, messages, tools=None, run_id
     if len(stdjson.dumps(messages)) + len(stdjson.dumps(tools)) > settings.max_context_chars:
         raise DomainError("Context budget exceeded; shorten the task", 422, "budget_exceeded")
     record = db.one(
-        "INSERT INTO usage(owner_id,run_id,model,latency_ms,reserved_tokens) VALUES (%s,%s,%s,0,%s) RETURNING id",
+        "INSERT INTO usage(owner_id,run_id,model,provider,latency_ms,reserved_tokens) VALUES (%s,%s,%s,%s,0,%s) RETURNING id",
         (
             owner,
             run_id,
-            settings.nebius_model,
+            inference_model(settings),
+            settings.inference_provider,
             settings.max_context_chars + settings.max_output_tokens,
         ),
     )
@@ -53,7 +55,7 @@ def complete(db, settings, provider, owner, secret, messages, tools=None, run_id
     if usage is not None and (
         not isinstance(usage, dict)
         or any(
-            not isinstance(usage.get(k), int) or usage[k] < 0
+            type(usage.get(k)) is not int or usage[k] < 0
             for k in ("prompt_tokens", "completion_tokens", "total_tokens")
         )
     ):
@@ -75,3 +77,58 @@ def complete(db, settings, provider, owner, secret, messages, tools=None, run_id
         (json(usage), cost, latency, record["id"]),
     )
     return message, usage, latency, cost
+
+
+def validate_model(db, settings, provider, owner, secret):
+    """A validation proposal has no broker dispatch and cannot cause a tool effect."""
+    if settings.inference_provider == "nebius":
+        return complete(
+            db,
+            settings,
+            provider,
+            owner,
+            secret,
+            [{"role": "user", "content": "Reply with OK only."}],
+        )
+    tool = {
+        "type": "function",
+        "function": {
+            "name": "validation_probe",
+            "description": "Confirm supported tool-call syntax without executing any action.",
+            "parameters": {
+                "type": "object",
+                "properties": {"ok": {"type": "boolean", "enum": [True]}},
+                "required": ["ok"],
+                "additionalProperties": False,
+            },
+        },
+    }
+    result = complete(
+        db,
+        settings,
+        provider,
+        owner,
+        secret,
+        [
+            {
+                "role": "user",
+                "content": "Call validation_probe exactly once with ok=true. Do not answer in text.",
+            }
+        ],
+        [tool],
+    )
+    try:
+        calls = result[0].get("tool_calls", [])
+        if (
+            len(calls) != 1
+            or calls[0]["function"]["name"] != "validation_probe"
+            or stdjson.loads(calls[0]["function"]["arguments"]) != {"ok": True}
+        ):
+            raise ValueError()
+    except (KeyError, TypeError, ValueError):
+        raise DomainError(
+            "Selected model did not demonstrate the required tool capability",
+            502,
+            "unsupported_capability",
+        ) from None
+    return result

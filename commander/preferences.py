@@ -7,6 +7,7 @@ from pydantic import Field, model_validator
 from commander.contracts import Strict
 from commander.db import json
 from commander.errors import DomainError
+from commander.settings import inference_endpoint, inference_model
 
 Endpoint = Literal[
     "https://api.tokenfactory.nebius.com/v1", "https://api.tokenfactory.us-central1.nebius.com/v1"
@@ -19,10 +20,19 @@ LIMITS = (
     "max_daily_runs",
     "max_daily_tokens",
 )
-FIELDS = (*LIMITS, "daily_spend_limit_usd", "nebius_model", "nebius_base_url")
+FIELDS = (
+    *LIMITS,
+    "daily_spend_limit_usd",
+    "nebius_model",
+    "nebius_base_url",
+    "inference_provider",
+    "provider_model",
+)
 
 
 class Preferences(Strict):
+    inference_provider: Literal["nebius", "openai", "anthropic"] | None = None
+    provider_model: str | None = Field(default=None, pattern=r"^[A-Za-z0-9_.:/-]*$", max_length=200)
     nebius_model: str | None = Field(
         default=None, pattern=r"^nvidia/[A-Za-z0-9_.-]+$", max_length=200
     )
@@ -72,10 +82,14 @@ def values(settings):
     return {k: getattr(settings, k) for k in FIELDS}
 
 
-def resolve(db, operator, owner, snapshot=None):
+def resolve(db, operator, owner, snapshot=None, *, for_run=False):
     row = db.one("SELECT * FROM owner_settings WHERE owner_id=%s", (owner,))
     current = {**values(operator), **(row["preferences"] if row else {})}
     selected = {**current, **(snapshot or {})}
+    if (for_run and snapshot is None) or (
+        snapshot is not None and "inference_provider" not in snapshot
+    ):
+        selected.update(inference_provider="nebius", provider_model="")
     for k in LIMITS:
         selected[k] = min(selected[k], current[k], getattr(operator, k))
     caps = [
@@ -88,7 +102,10 @@ def resolve(db, operator, owner, snapshot=None):
         if v is not None
     ]
     selected["daily_spend_limit_usd"] = min(caps) if caps else None
-    if selected["nebius_model"] != operator.nebius_model:
+    if (
+        selected["inference_provider"] != "nebius"
+        or selected["nebius_model"] != operator.nebius_model
+    ):
         selected.update(input_usd_per_million=None, output_usd_per_million=None)
     return operator.model_copy(update=selected)
 
@@ -104,8 +121,13 @@ def view(db, operator, owner):
 
 
 def discover(provider, settings, secret):
+    kind = settings.inference_provider
+    if kind not in ("nebius", "openai", "anthropic"):
+        raise DomainError("Unsupported inference provider", 422, "unsupported_provider")
+    # Bounded account discovery. No provider-controlled URL is followed.
+    path = "/models?limit=1000" if kind == "anthropic" else "/models"
     data = provider.request(
-        "GET", settings.nebius_base_url.rstrip("/") + "/models", secret, retry=True
+        "GET", inference_endpoint(settings).rstrip("/") + path, secret, retry=True
     )
     if (
         not isinstance(data, dict)
@@ -113,12 +135,24 @@ def discover(provider, settings, secret):
         or any(not isinstance(m, dict) or not isinstance(m.get("id"), str) for m in data["data"])
     ):
         raise DomainError("Provider returned malformed model data", 502, "malformed_response")
-    return sorted({m["id"] for m in data["data"] if m["id"].startswith("nvidia/")})
+
+    def eligible(model):
+        if kind == "nebius":
+            return model.startswith("nvidia/")
+        if kind == "anthropic":
+            return model.startswith("claude-")
+        # Listing alone does not promise chat/tool capability: selection also
+        # executes the validation probe, with no automatic fallback.
+        return model.startswith(("gpt-", "o1", "o3", "o4")) and not any(
+            part in model for part in ("audio", "realtime", "image", "transcribe", "tts")
+        )
+
+    return sorted({m["id"] for m in data["data"] if eligible(m["id"])})
 
 
 def update(db, operator, owner, data, transport=None):
     from commander.connections import Connections, owner_lock
-    from commander.inference import complete
+    from commander.inference import validate_model
     from commander.providers import Provider
 
     with owner_lock(db, owner):
@@ -141,42 +175,44 @@ def update(db, operator, owner, data, transport=None):
         merged = {**(row["preferences"] if row else {}), **changes}
         before = resolve(db, operator, owner)
         candidate = operator.model_copy(update={**values(before), **changes})
-        if candidate.nebius_model != operator.nebius_model:
+        if candidate.inference_provider != "nebius" and not candidate.provider_model:
+            raise DomainError(
+                "Select an explicit model for this provider", 422, "unavailable_model"
+            )
+        if (
+            candidate.inference_provider != "nebius"
+            or candidate.nebius_model != operator.nebius_model
+        ):
             candidate = candidate.model_copy(
                 update={"input_usd_per_million": None, "output_usd_per_million": None}
             )
         model_changed = any(
-            getattr(candidate, k) != getattr(before, k) for k in ("nebius_model", "nebius_base_url")
+            getattr(candidate, k) != getattr(before, k)
+            for k in ("nebius_model", "nebius_base_url", "inference_provider", "provider_model")
         )
         if model_changed:
             connections = Connections(db, operator, transport)
-            connection = connections.get(owner, "nebius")
+            connection = connections.get(owner, candidate.inference_provider)
             secret = connections.secret(connection)
             provider = Provider(candidate, transport)
-            if candidate.nebius_model not in discover(provider, candidate, secret):
+            if inference_model(candidate) not in discover(provider, candidate, secret):
                 raise DomainError(
-                    "Selected NVIDIA model is unavailable to this account", 502, "unavailable_model"
+                    "Selected model is unavailable to this account", 502, "unavailable_model"
                 )
-            complete(
-                db,
-                candidate,
-                provider,
-                owner,
-                secret,
-                [{"role": "user", "content": "Reply with OK only."}],
-            )
+            validate_model(db, candidate, provider, owner, secret)
         with db.connect() as conn:
             if model_changed:
                 conn.execute(
-                    "UPDATE connections SET status='validated',validated_at=now(),detail='Selected model validated',config=config || %s WHERE owner_id=%s AND kind='nebius'",
+                    "UPDATE connections SET status='validated',validated_at=now(),detail='Selected model validated',config=config || %s WHERE owner_id=%s AND kind=%s",
                     (
                         json(
                             {
-                                "validated_model": candidate.nebius_model,
-                                "validated_endpoint": candidate.nebius_base_url,
+                                "validated_model": inference_model(candidate),
+                                "validated_endpoint": inference_endpoint(candidate),
                             }
                         ),
                         owner,
+                        candidate.inference_provider,
                     ),
                 )
             conn.execute(

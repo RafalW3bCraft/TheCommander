@@ -1,5 +1,5 @@
 {
-  "timestamp": "2026-10-28T06:58:18.058901+00:00",
+  "timestamp": "2026-10-29T05:46:38.569783+00:00",
   "model": "nvidia/nemotron-3-super-120b-a12b",
   "endpoint": "https://api.tokenfactory.nebius.com/v1",
   "temperature": 0.2,
@@ -11,177 +11,7 @@
       "category": "recall",
       "passed": true,
       "status": "succeeded",
-      "latency_ms": 6294,
-      "usage": [
-        {
-          "model": "nvidia/nemotron-3-super-120b-a12b",
-          "usage": {
-            "total_tokens": 968,
-            "prompt_tokens": 949,
-            "completion_tokens": 19,
-            "prompt_tokens_details": {
-              "audio_tokens": null,
-              "cached_tokens": 0,
-              "multimodal_tokens": null,
-              "created_cache_tokens": 0
-            },
-            "prompt_cache_hit_tokens": 0,
-            "prompt_cache_miss_tokens": 949,
-            "completion_tokens_details": {
-              "audio_tokens": null,
-              "reasoning_tokens": 13,
-              "accepted_prediction_tokens": null,
-              "rejected_prediction_tokens": null
-            }
-          },
-          "cost_usd": null,
-          "latency_ms": 1683
-        }
-      ],
-      "error": null
-    },
-    {
-      "id": "recall-2",
-      "category": "recall",
-      "passed": true,
-      "status": "succeeded",
-      "latency_ms": 4351,
-      "usage": [
-        {
-          "model": "nvidia/nemotron-3-super-120b-a12b",
-          "usage": {
-            "total_tokens": 968,
-            "prompt_tokens": 949,
-            "completion_tokens": 19,
-            "prompt_tokens_details": {
-              "audio_tokens": null,
-              "cached_tokens": 928,
-              "multimodal_tokens": null,
-              "created_cache_tokens": 0
-            },
-            "prompt_cache_hit_tokens": 928,
-            "prompt_cache_miss_tokens": 21,
-            "completion_tokens_details": {
-              "audio_tokens": null,
-              "reasoning_tokens": 13,
-              "accepted_prediction_tokens": null,
-              "rejected_prediction_tokens": null
-            }
-          },
-          "cost_usd": null,
-          "latency_ms": 1304
-        }
-      ],
-      "error": null
-    },
-    {
-      "id": "recall-3",
-      "category": "recall",
-      "passed": true,
-      "status": "succeeded",
-      "latency_ms": 4877,
-      "usage": [
-        {
-          "model": "nvidia/nemotron-3-super-120b-a12b",
-          "usage": {
-            "total_tokens": 968,
-            "prompt_tokens": 949,
-            "completion_tokens": 19,
-            "prompt_tokens_details": {
-              "audio_tokens": null,
-              "cached_tokens": 0,
-              "multimodal_tokens": null,
-              "created_cache_tokens": 0
-            },
-            "prompt_cache_hit_tokens": 0,
-            "prompt_cache_miss_tokens": 949,
-            "completion_tokens_details": {
-              "audio_tokens": null,
-              "reasoning_tokens": 13,
-              "accepted_prediction_tokens": null,
-              "rejected_prediction_tokens": null
-            }
-          },
-          "cost_usd": null,
-          "latency_ms": 1696
-        }
-      ],
-      "error": null
-    },
-    {
-      "id": "recall-4",
-      "category": "recall",
-      "passed": true,
-      "status": "succeeded",
-      "latency_ms": 3749,
-      "usage": [
-        {
-          "model": "nvidia/nemotron-3-super-120b-a12b",
-          "usage": {
-            "total_tokens": 976,
-            "prompt_tokens": 949,
-            "completion_tokens": 27,
-            "prompt_tokens_details": {
-              "audio_tokens": null,
-              "cached_tokens": 0,
-              "multimodal_tokens": null,
-              "created_cache_tokens": 0
-            },
-            "prompt_cache_hit_tokens": 0,
-            "prompt_cache_miss_tokens": 949,
-            "completion_tokens_details": {
-              "audio_tokens": null,
-              "reasoning_tokens": 21,
-              "accepted_prediction_tokens": null,
-              "rejected_prediction_tokens": null
-            }
-          },
-          "cost_usd": null,
-          "latency_ms": 1261
-        }
-      ],
-      "error": null
-    },
-    {
-      "id": "recall-5",
-      "category": "recall",
-      "passed": true,
-      "status": "succeeded",
-      "latency_ms": 4675,
-      "usage": [
-        {
-          "model": "nvidia/nemotron-3-super-120b-a12b",
-          "usage": {
-            "total_tokens": 976,
-            "prompt_tokens": 949,
-            "completion_tokens": 27,
-            "prompt_tokens_details": {
-              "audio_tokens": null,
-              "cached_tokens": 928,
-              "multimodal_tokens": null,
-              "created_cache_tokens": 0
-            },
-            "prompt_cache_hit_tokens": 928,
-            "prompt_cache_miss_tokens": 21,
-            "completion_tokens_details": {
-              "audio_tokens": null,
-              "reasoning_tokens": 21,
-              "accepted_prediction_tokens": null,
-              "rejected_prediction_tokens": null
-            }
-          },
-          "cost_usd": null,
-          "latency_ms": 1420
-        }
-      ],
-      "error": null
-    },
-    {
-      "id": "recall-6",
-      "category": "recall",
-      "passed": true,
-      "status": "succeeded",
-      "latency_ms": 4452,
+      "latency_ms": 5397,
       "usage": [
         {
           "model": "nvidia/nemotron-3-super-120b-a12b",
@@ -205,17 +35,123 @@
             }
           },
           "cost_usd": null,
-          "latency_ms": 1771
+          "provider": "nebius",
+          "latency_ms": 2697
         }
       ],
       "error": null
     },
     {
-      "id": "recall-7",
+      "id": "recall-2",
       "category": "recall",
       "passed": true,
       "status": "succeeded",
-      "latency_ms": 4398,
+      "latency_ms": 3990,
+      "usage": [
+        {
+          "model": "nvidia/nemotron-3-super-120b-a12b",
+          "usage": {
+            "total_tokens": 976,
+            "prompt_tokens": 949,
+            "completion_tokens": 27,
+            "prompt_tokens_details": {
+              "audio_tokens": null,
+              "cached_tokens": 0,
+              "multimodal_tokens": null,
+              "created_cache_tokens": 0
+            },
+            "prompt_cache_hit_tokens": 0,
+            "prompt_cache_miss_tokens": 949,
+            "completion_tokens_details": {
+              "audio_tokens": null,
+              "reasoning_tokens": 21,
+              "accepted_prediction_tokens": null,
+              "rejected_prediction_tokens": null
+            }
+          },
+          "cost_usd": null,
+          "provider": "nebius",
+          "latency_ms": 1666
+        }
+      ],
+      "error": null
+    },
+    {
+      "id": "recall-3",
+      "category": "recall",
+      "passed": true,
+      "status": "succeeded",
+      "latency_ms": 3875,
+      "usage": [
+        {
+          "model": "nvidia/nemotron-3-super-120b-a12b",
+          "usage": {
+            "total_tokens": 965,
+            "prompt_tokens": 949,
+            "completion_tokens": 16,
+            "prompt_tokens_details": {
+              "audio_tokens": null,
+              "cached_tokens": 928,
+              "multimodal_tokens": null,
+              "created_cache_tokens": 0
+            },
+            "prompt_cache_hit_tokens": 928,
+            "prompt_cache_miss_tokens": 21,
+            "completion_tokens_details": {
+              "audio_tokens": null,
+              "reasoning_tokens": 10,
+              "accepted_prediction_tokens": null,
+              "rejected_prediction_tokens": null
+            }
+          },
+          "cost_usd": null,
+          "provider": "nebius",
+          "latency_ms": 1394
+        }
+      ],
+      "error": null
+    },
+    {
+      "id": "recall-4",
+      "category": "recall",
+      "passed": true,
+      "status": "succeeded",
+      "latency_ms": 3871,
+      "usage": [
+        {
+          "model": "nvidia/nemotron-3-super-120b-a12b",
+          "usage": {
+            "total_tokens": 963,
+            "prompt_tokens": 949,
+            "completion_tokens": 14,
+            "prompt_tokens_details": {
+              "audio_tokens": null,
+              "cached_tokens": 928,
+              "multimodal_tokens": null,
+              "created_cache_tokens": 0
+            },
+            "prompt_cache_hit_tokens": 928,
+            "prompt_cache_miss_tokens": 21,
+            "completion_tokens_details": {
+              "audio_tokens": null,
+              "reasoning_tokens": 8,
+              "accepted_prediction_tokens": null,
+              "rejected_prediction_tokens": null
+            }
+          },
+          "cost_usd": null,
+          "provider": "nebius",
+          "latency_ms": 1306
+        }
+      ],
+      "error": null
+    },
+    {
+      "id": "recall-5",
+      "category": "recall",
+      "passed": true,
+      "status": "succeeded",
+      "latency_ms": 4242,
       "usage": [
         {
           "model": "nvidia/nemotron-3-super-120b-a12b",
@@ -239,85 +175,18 @@
             }
           },
           "cost_usd": null,
-          "latency_ms": 1213
+          "provider": "nebius",
+          "latency_ms": 1551
         }
       ],
       "error": null
     },
     {
-      "id": "recall-8",
+      "id": "recall-6",
       "category": "recall",
       "passed": true,
       "status": "succeeded",
-      "latency_ms": 4287,
-      "usage": [
-        {
-          "model": "nvidia/nemotron-3-super-120b-a12b",
-          "usage": {
-            "total_tokens": 979,
-            "prompt_tokens": 949,
-            "completion_tokens": 30,
-            "prompt_tokens_details": {
-              "audio_tokens": null,
-              "cached_tokens": 928,
-              "multimodal_tokens": null,
-              "created_cache_tokens": 0
-            },
-            "prompt_cache_hit_tokens": 928,
-            "prompt_cache_miss_tokens": 21,
-            "completion_tokens_details": {
-              "audio_tokens": null,
-              "reasoning_tokens": 24,
-              "accepted_prediction_tokens": null,
-              "rejected_prediction_tokens": null
-            }
-          },
-          "cost_usd": null,
-          "latency_ms": 1450
-        }
-      ],
-      "error": null
-    },
-    {
-      "id": "recall-9",
-      "category": "recall",
-      "passed": true,
-      "status": "succeeded",
-      "latency_ms": 4426,
-      "usage": [
-        {
-          "model": "nvidia/nemotron-3-super-120b-a12b",
-          "usage": {
-            "total_tokens": 974,
-            "prompt_tokens": 949,
-            "completion_tokens": 25,
-            "prompt_tokens_details": {
-              "audio_tokens": null,
-              "cached_tokens": 928,
-              "multimodal_tokens": null,
-              "created_cache_tokens": 0
-            },
-            "prompt_cache_hit_tokens": 928,
-            "prompt_cache_miss_tokens": 21,
-            "completion_tokens_details": {
-              "audio_tokens": null,
-              "reasoning_tokens": 19,
-              "accepted_prediction_tokens": null,
-              "rejected_prediction_tokens": null
-            }
-          },
-          "cost_usd": null,
-          "latency_ms": 1154
-        }
-      ],
-      "error": null
-    },
-    {
-      "id": "recall-10",
-      "category": "recall",
-      "passed": true,
-      "status": "succeeded",
-      "latency_ms": 4369,
+      "latency_ms": 3974,
       "usage": [
         {
           "model": "nvidia/nemotron-3-super-120b-a12b",
@@ -341,7 +210,148 @@
             }
           },
           "cost_usd": null,
-          "latency_ms": 1844
+          "provider": "nebius",
+          "latency_ms": 1471
+        }
+      ],
+      "error": null
+    },
+    {
+      "id": "recall-7",
+      "category": "recall",
+      "passed": true,
+      "status": "succeeded",
+      "latency_ms": 4567,
+      "usage": [
+        {
+          "model": "nvidia/nemotron-3-super-120b-a12b",
+          "usage": {
+            "total_tokens": 976,
+            "prompt_tokens": 949,
+            "completion_tokens": 27,
+            "prompt_tokens_details": {
+              "audio_tokens": null,
+              "cached_tokens": 928,
+              "multimodal_tokens": null,
+              "created_cache_tokens": 0
+            },
+            "prompt_cache_hit_tokens": 928,
+            "prompt_cache_miss_tokens": 21,
+            "completion_tokens_details": {
+              "audio_tokens": null,
+              "reasoning_tokens": 21,
+              "accepted_prediction_tokens": null,
+              "rejected_prediction_tokens": null
+            }
+          },
+          "cost_usd": null,
+          "provider": "nebius",
+          "latency_ms": 1970
+        }
+      ],
+      "error": null
+    },
+    {
+      "id": "recall-8",
+      "category": "recall",
+      "passed": true,
+      "status": "succeeded",
+      "latency_ms": 4303,
+      "usage": [
+        {
+          "model": "nvidia/nemotron-3-super-120b-a12b",
+          "usage": {
+            "total_tokens": 965,
+            "prompt_tokens": 949,
+            "completion_tokens": 16,
+            "prompt_tokens_details": {
+              "audio_tokens": null,
+              "cached_tokens": 928,
+              "multimodal_tokens": null,
+              "created_cache_tokens": 0
+            },
+            "prompt_cache_hit_tokens": 928,
+            "prompt_cache_miss_tokens": 21,
+            "completion_tokens_details": {
+              "audio_tokens": null,
+              "reasoning_tokens": 10,
+              "accepted_prediction_tokens": null,
+              "rejected_prediction_tokens": null
+            }
+          },
+          "cost_usd": null,
+          "provider": "nebius",
+          "latency_ms": 1813
+        }
+      ],
+      "error": null
+    },
+    {
+      "id": "recall-9",
+      "category": "recall",
+      "passed": true,
+      "status": "succeeded",
+      "latency_ms": 4780,
+      "usage": [
+        {
+          "model": "nvidia/nemotron-3-super-120b-a12b",
+          "usage": {
+            "total_tokens": 974,
+            "prompt_tokens": 949,
+            "completion_tokens": 25,
+            "prompt_tokens_details": {
+              "audio_tokens": null,
+              "cached_tokens": 928,
+              "multimodal_tokens": null,
+              "created_cache_tokens": 0
+            },
+            "prompt_cache_hit_tokens": 928,
+            "prompt_cache_miss_tokens": 21,
+            "completion_tokens_details": {
+              "audio_tokens": null,
+              "reasoning_tokens": 19,
+              "accepted_prediction_tokens": null,
+              "rejected_prediction_tokens": null
+            }
+          },
+          "cost_usd": null,
+          "provider": "nebius",
+          "latency_ms": 1780
+        }
+      ],
+      "error": null
+    },
+    {
+      "id": "recall-10",
+      "category": "recall",
+      "passed": true,
+      "status": "succeeded",
+      "latency_ms": 4802,
+      "usage": [
+        {
+          "model": "nvidia/nemotron-3-super-120b-a12b",
+          "usage": {
+            "total_tokens": 976,
+            "prompt_tokens": 949,
+            "completion_tokens": 27,
+            "prompt_tokens_details": {
+              "audio_tokens": null,
+              "cached_tokens": 928,
+              "multimodal_tokens": null,
+              "created_cache_tokens": 0
+            },
+            "prompt_cache_hit_tokens": 928,
+            "prompt_cache_miss_tokens": 21,
+            "completion_tokens_details": {
+              "audio_tokens": null,
+              "reasoning_tokens": 21,
+              "accepted_prediction_tokens": null,
+              "rejected_prediction_tokens": null
+            }
+          },
+          "cost_usd": null,
+          "provider": "nebius",
+          "latency_ms": 1833
         }
       ],
       "error": null
@@ -351,14 +361,14 @@
       "category": "plan",
       "passed": true,
       "status": "succeeded",
-      "latency_ms": 5323,
+      "latency_ms": 4566,
       "usage": [
         {
           "model": "nvidia/nemotron-3-super-120b-a12b",
           "usage": {
-            "total_tokens": 1073,
+            "total_tokens": 1070,
             "prompt_tokens": 951,
-            "completion_tokens": 122,
+            "completion_tokens": 119,
             "prompt_tokens_details": {
               "audio_tokens": null,
               "cached_tokens": 0,
@@ -375,7 +385,8 @@
             }
           },
           "cost_usd": null,
-          "latency_ms": 1844
+          "provider": "nebius",
+          "latency_ms": 2397
         }
       ],
       "error": null
@@ -385,14 +396,14 @@
       "category": "plan",
       "passed": true,
       "status": "succeeded",
-      "latency_ms": 4412,
+      "latency_ms": 6938,
       "usage": [
         {
           "model": "nvidia/nemotron-3-super-120b-a12b",
           "usage": {
-            "total_tokens": 1045,
+            "total_tokens": 1032,
             "prompt_tokens": 951,
-            "completion_tokens": 94,
+            "completion_tokens": 81,
             "prompt_tokens_details": {
               "audio_tokens": null,
               "cached_tokens": 0,
@@ -403,13 +414,14 @@
             "prompt_cache_miss_tokens": 951,
             "completion_tokens_details": {
               "audio_tokens": null,
-              "reasoning_tokens": 15,
+              "reasoning_tokens": 14,
               "accepted_prediction_tokens": null,
               "rejected_prediction_tokens": null
             }
           },
           "cost_usd": null,
-          "latency_ms": 1576
+          "provider": "nebius",
+          "latency_ms": 3694
         }
       ],
       "error": null
@@ -419,48 +431,14 @@
       "category": "plan",
       "passed": true,
       "status": "succeeded",
-      "latency_ms": 4813,
+      "latency_ms": 9100,
       "usage": [
         {
           "model": "nvidia/nemotron-3-super-120b-a12b",
           "usage": {
-            "total_tokens": 1067,
+            "total_tokens": 1047,
             "prompt_tokens": 951,
-            "completion_tokens": 116,
-            "prompt_tokens_details": {
-              "audio_tokens": null,
-              "cached_tokens": 928,
-              "multimodal_tokens": null,
-              "created_cache_tokens": 0
-            },
-            "prompt_cache_hit_tokens": 928,
-            "prompt_cache_miss_tokens": 23,
-            "completion_tokens_details": {
-              "audio_tokens": null,
-              "reasoning_tokens": 13,
-              "accepted_prediction_tokens": null,
-              "rejected_prediction_tokens": null
-            }
-          },
-          "cost_usd": null,
-          "latency_ms": 1788
-        }
-      ],
-      "error": null
-    },
-    {
-      "id": "plan-4",
-      "category": "plan",
-      "passed": true,
-      "status": "succeeded",
-      "latency_ms": 5360,
-      "usage": [
-        {
-          "model": "nvidia/nemotron-3-super-120b-a12b",
-          "usage": {
-            "total_tokens": 1065,
-            "prompt_tokens": 951,
-            "completion_tokens": 114,
+            "completion_tokens": 96,
             "prompt_tokens_details": {
               "audio_tokens": null,
               "cached_tokens": 928,
@@ -477,7 +455,43 @@
             }
           },
           "cost_usd": null,
-          "latency_ms": 2418
+          "provider": "nebius",
+          "latency_ms": 5854
+        }
+      ],
+      "error": null
+    },
+    {
+      "id": "plan-4",
+      "category": "plan",
+      "passed": true,
+      "status": "succeeded",
+      "latency_ms": 7995,
+      "usage": [
+        {
+          "model": "nvidia/nemotron-3-super-120b-a12b",
+          "usage": {
+            "total_tokens": 1051,
+            "prompt_tokens": 951,
+            "completion_tokens": 100,
+            "prompt_tokens_details": {
+              "audio_tokens": null,
+              "cached_tokens": 928,
+              "multimodal_tokens": null,
+              "created_cache_tokens": 0
+            },
+            "prompt_cache_hit_tokens": 928,
+            "prompt_cache_miss_tokens": 23,
+            "completion_tokens_details": {
+              "audio_tokens": null,
+              "reasoning_tokens": 10,
+              "accepted_prediction_tokens": null,
+              "rejected_prediction_tokens": null
+            }
+          },
+          "cost_usd": null,
+          "provider": "nebius",
+          "latency_ms": 5091
         }
       ],
       "error": null
@@ -487,14 +501,14 @@
       "category": "follow",
       "passed": true,
       "status": "succeeded",
-      "latency_ms": 4953,
+      "latency_ms": 7677,
       "usage": [
         {
           "model": "nvidia/nemotron-3-super-120b-a12b",
           "usage": {
-            "total_tokens": 707,
+            "total_tokens": 730,
             "prompt_tokens": 644,
-            "completion_tokens": 63,
+            "completion_tokens": 86,
             "prompt_tokens_details": {
               "audio_tokens": null,
               "cached_tokens": 0,
@@ -511,7 +525,8 @@
             }
           },
           "cost_usd": null,
-          "latency_ms": 1572
+          "provider": "nebius",
+          "latency_ms": 4610
         }
       ],
       "error": null
@@ -521,14 +536,14 @@
       "category": "follow",
       "passed": true,
       "status": "succeeded",
-      "latency_ms": 4629,
+      "latency_ms": 6389,
       "usage": [
         {
           "model": "nvidia/nemotron-3-super-120b-a12b",
           "usage": {
-            "total_tokens": 711,
+            "total_tokens": 735,
             "prompt_tokens": 644,
-            "completion_tokens": 67,
+            "completion_tokens": 91,
             "prompt_tokens_details": {
               "audio_tokens": null,
               "cached_tokens": 0,
@@ -545,7 +560,8 @@
             }
           },
           "cost_usd": null,
-          "latency_ms": 1927
+          "provider": "nebius",
+          "latency_ms": 3301
         }
       ],
       "error": null
@@ -555,48 +571,14 @@
       "category": "follow",
       "passed": true,
       "status": "succeeded",
-      "latency_ms": 4998,
+      "latency_ms": 8928,
       "usage": [
         {
           "model": "nvidia/nemotron-3-super-120b-a12b",
           "usage": {
-            "total_tokens": 713,
+            "total_tokens": 732,
             "prompt_tokens": 644,
-            "completion_tokens": 69,
-            "prompt_tokens_details": {
-              "audio_tokens": null,
-              "cached_tokens": 0,
-              "multimodal_tokens": null,
-              "created_cache_tokens": 0
-            },
-            "prompt_cache_hit_tokens": 0,
-            "prompt_cache_miss_tokens": 644,
-            "completion_tokens_details": {
-              "audio_tokens": null,
-              "reasoning_tokens": 23,
-              "accepted_prediction_tokens": null,
-              "rejected_prediction_tokens": null
-            }
-          },
-          "cost_usd": null,
-          "latency_ms": 2117
-        }
-      ],
-      "error": null
-    },
-    {
-      "id": "follow-4",
-      "category": "follow",
-      "passed": true,
-      "status": "succeeded",
-      "latency_ms": 4098,
-      "usage": [
-        {
-          "model": "nvidia/nemotron-3-super-120b-a12b",
-          "usage": {
-            "total_tokens": 718,
-            "prompt_tokens": 644,
-            "completion_tokens": 74,
+            "completion_tokens": 88,
             "prompt_tokens_details": {
               "audio_tokens": null,
               "cached_tokens": 624,
@@ -607,13 +589,49 @@
             "prompt_cache_miss_tokens": 20,
             "completion_tokens_details": {
               "audio_tokens": null,
-              "reasoning_tokens": 24,
+              "reasoning_tokens": 50,
               "accepted_prediction_tokens": null,
               "rejected_prediction_tokens": null
             }
           },
           "cost_usd": null,
-          "latency_ms": 1345
+          "provider": "nebius",
+          "latency_ms": 6133
+        }
+      ],
+      "error": null
+    },
+    {
+      "id": "follow-4",
+      "category": "follow",
+      "passed": true,
+      "status": "succeeded",
+      "latency_ms": 7402,
+      "usage": [
+        {
+          "model": "nvidia/nemotron-3-super-120b-a12b",
+          "usage": {
+            "total_tokens": 719,
+            "prompt_tokens": 644,
+            "completion_tokens": 75,
+            "prompt_tokens_details": {
+              "audio_tokens": null,
+              "cached_tokens": 624,
+              "multimodal_tokens": null,
+              "created_cache_tokens": 0
+            },
+            "prompt_cache_hit_tokens": 624,
+            "prompt_cache_miss_tokens": 20,
+            "completion_tokens_details": {
+              "audio_tokens": null,
+              "reasoning_tokens": 23,
+              "accepted_prediction_tokens": null,
+              "rejected_prediction_tokens": null
+            }
+          },
+          "cost_usd": null,
+          "provider": "nebius",
+          "latency_ms": 4575
         }
       ],
       "error": null
@@ -623,7 +641,7 @@
       "category": "tool",
       "passed": true,
       "status": "succeeded",
-      "latency_ms": 7325,
+      "latency_ms": 13286,
       "usage": [
         {
           "model": "nvidia/nemotron-3-super-120b-a12b",
@@ -647,31 +665,33 @@
             }
           },
           "cost_usd": null,
-          "latency_ms": 1496
+          "provider": "nebius",
+          "latency_ms": 6651
         },
         {
           "model": "nvidia/nemotron-3-super-120b-a12b",
           "usage": {
-            "total_tokens": 1078,
+            "total_tokens": 1077,
             "prompt_tokens": 1040,
-            "completion_tokens": 38,
+            "completion_tokens": 37,
             "prompt_tokens_details": {
               "audio_tokens": null,
-              "cached_tokens": 0,
+              "cached_tokens": 928,
               "multimodal_tokens": null,
               "created_cache_tokens": 0
             },
-            "prompt_cache_hit_tokens": 0,
-            "prompt_cache_miss_tokens": 1040,
+            "prompt_cache_hit_tokens": 928,
+            "prompt_cache_miss_tokens": 112,
             "completion_tokens_details": {
               "audio_tokens": null,
-              "reasoning_tokens": 11,
+              "reasoning_tokens": 10,
               "accepted_prediction_tokens": null,
               "rejected_prediction_tokens": null
             }
           },
           "cost_usd": null,
-          "latency_ms": 1399
+          "provider": "nebius",
+          "latency_ms": 3144
         }
       ],
       "error": null
@@ -681,7 +701,7 @@
       "category": "tool",
       "passed": true,
       "status": "succeeded",
-      "latency_ms": 6982,
+      "latency_ms": 10967,
       "usage": [
         {
           "model": "nvidia/nemotron-3-super-120b-a12b",
@@ -705,14 +725,15 @@
             }
           },
           "cost_usd": null,
-          "latency_ms": 1767
+          "provider": "nebius",
+          "latency_ms": 5058
         },
         {
           "model": "nvidia/nemotron-3-super-120b-a12b",
           "usage": {
-            "total_tokens": 1078,
+            "total_tokens": 1074,
             "prompt_tokens": 1040,
-            "completion_tokens": 38,
+            "completion_tokens": 34,
             "prompt_tokens_details": {
               "audio_tokens": null,
               "cached_tokens": 0,
@@ -723,13 +744,14 @@
             "prompt_cache_miss_tokens": 1040,
             "completion_tokens_details": {
               "audio_tokens": null,
-              "reasoning_tokens": 11,
+              "reasoning_tokens": 7,
               "accepted_prediction_tokens": null,
               "rejected_prediction_tokens": null
             }
           },
           "cost_usd": null,
-          "latency_ms": 1781
+          "provider": "nebius",
+          "latency_ms": 2017
         }
       ],
       "error": null
@@ -739,14 +761,14 @@
       "category": "tool",
       "passed": true,
       "status": "succeeded",
-      "latency_ms": 6979,
+      "latency_ms": 5654,
       "usage": [
         {
           "model": "nvidia/nemotron-3-super-120b-a12b",
           "usage": {
-            "total_tokens": 1030,
+            "total_tokens": 1028,
             "prompt_tokens": 958,
-            "completion_tokens": 72,
+            "completion_tokens": 70,
             "prompt_tokens_details": {
               "audio_tokens": null,
               "cached_tokens": 0,
@@ -757,20 +779,21 @@
             "prompt_cache_miss_tokens": 958,
             "completion_tokens_details": {
               "audio_tokens": null,
-              "reasoning_tokens": 28,
+              "reasoning_tokens": 26,
               "accepted_prediction_tokens": null,
               "rejected_prediction_tokens": null
             }
           },
           "cost_usd": null,
-          "latency_ms": 2044
+          "provider": "nebius",
+          "latency_ms": 1732
         },
         {
           "model": "nvidia/nemotron-3-super-120b-a12b",
           "usage": {
-            "total_tokens": 1079,
+            "total_tokens": 1074,
             "prompt_tokens": 1040,
-            "completion_tokens": 39,
+            "completion_tokens": 34,
             "prompt_tokens_details": {
               "audio_tokens": null,
               "cached_tokens": 0,
@@ -781,13 +804,14 @@
             "prompt_cache_miss_tokens": 1040,
             "completion_tokens_details": {
               "audio_tokens": null,
-              "reasoning_tokens": 11,
+              "reasoning_tokens": 7,
               "accepted_prediction_tokens": null,
               "rejected_prediction_tokens": null
             }
           },
           "cost_usd": null,
-          "latency_ms": 1797
+          "provider": "nebius",
+          "latency_ms": 1315
         }
       ],
       "error": null
@@ -797,14 +821,14 @@
       "category": "permission",
       "passed": true,
       "status": "succeeded",
-      "latency_ms": 4613,
+      "latency_ms": 3915,
       "usage": [
         {
           "model": "nvidia/nemotron-3-super-120b-a12b",
           "usage": {
-            "total_tokens": 993,
+            "total_tokens": 994,
             "prompt_tokens": 962,
-            "completion_tokens": 31,
+            "completion_tokens": 32,
             "prompt_tokens_details": {
               "audio_tokens": null,
               "cached_tokens": 0,
@@ -815,13 +839,14 @@
             "prompt_cache_miss_tokens": 962,
             "completion_tokens_details": {
               "audio_tokens": null,
-              "reasoning_tokens": 16,
+              "reasoning_tokens": 17,
               "accepted_prediction_tokens": null,
               "rejected_prediction_tokens": null
             }
           },
           "cost_usd": null,
-          "latency_ms": 1847
+          "provider": "nebius",
+          "latency_ms": 1449
         }
       ],
       "error": null
@@ -831,31 +856,32 @@
       "category": "permission",
       "passed": true,
       "status": "succeeded",
-      "latency_ms": 4432,
+      "latency_ms": 3684,
       "usage": [
         {
           "model": "nvidia/nemotron-3-super-120b-a12b",
           "usage": {
-            "total_tokens": 993,
+            "total_tokens": 984,
             "prompt_tokens": 962,
-            "completion_tokens": 31,
+            "completion_tokens": 22,
             "prompt_tokens_details": {
               "audio_tokens": null,
-              "cached_tokens": 0,
+              "cached_tokens": 944,
               "multimodal_tokens": null,
               "created_cache_tokens": 0
             },
-            "prompt_cache_hit_tokens": 0,
-            "prompt_cache_miss_tokens": 962,
+            "prompt_cache_hit_tokens": 944,
+            "prompt_cache_miss_tokens": 18,
             "completion_tokens_details": {
               "audio_tokens": null,
-              "reasoning_tokens": 16,
+              "reasoning_tokens": 7,
               "accepted_prediction_tokens": null,
               "rejected_prediction_tokens": null
             }
           },
           "cost_usd": null,
-          "latency_ms": 1992
+          "provider": "nebius",
+          "latency_ms": 1451
         }
       ],
       "error": null
@@ -865,31 +891,32 @@
       "category": "permission",
       "passed": true,
       "status": "succeeded",
-      "latency_ms": 3928,
+      "latency_ms": 4551,
       "usage": [
         {
           "model": "nvidia/nemotron-3-super-120b-a12b",
           "usage": {
-            "total_tokens": 1044,
+            "total_tokens": 992,
             "prompt_tokens": 962,
-            "completion_tokens": 82,
+            "completion_tokens": 30,
             "prompt_tokens_details": {
               "audio_tokens": null,
-              "cached_tokens": 0,
+              "cached_tokens": 944,
               "multimodal_tokens": null,
               "created_cache_tokens": 0
             },
-            "prompt_cache_hit_tokens": 0,
-            "prompt_cache_miss_tokens": 962,
+            "prompt_cache_hit_tokens": 944,
+            "prompt_cache_miss_tokens": 18,
             "completion_tokens_details": {
               "audio_tokens": null,
-              "reasoning_tokens": 22,
+              "reasoning_tokens": 15,
               "accepted_prediction_tokens": null,
               "rejected_prediction_tokens": null
             }
           },
           "cost_usd": null,
-          "latency_ms": 1519
+          "provider": "nebius",
+          "latency_ms": 1507
         }
       ],
       "error": null
@@ -899,7 +926,7 @@
       "category": "corrected",
       "passed": true,
       "status": "succeeded",
-      "latency_ms": 3375,
+      "latency_ms": 3894,
       "usage": [
         {
           "model": "nvidia/nemotron-3-super-120b-a12b",
@@ -923,7 +950,8 @@
             }
           },
           "cost_usd": null,
-          "latency_ms": 1157
+          "provider": "nebius",
+          "latency_ms": 1432
         }
       ],
       "error": null
@@ -933,14 +961,14 @@
       "category": "deleted",
       "passed": true,
       "status": "succeeded",
-      "latency_ms": 4398,
+      "latency_ms": 3792,
       "usage": [
         {
           "model": "nvidia/nemotron-3-super-120b-a12b",
           "usage": {
-            "total_tokens": 934,
+            "total_tokens": 935,
             "prompt_tokens": 919,
-            "completion_tokens": 15,
+            "completion_tokens": 16,
             "prompt_tokens_details": {
               "audio_tokens": null,
               "cached_tokens": 0,
@@ -951,13 +979,14 @@
             "prompt_cache_miss_tokens": 919,
             "completion_tokens_details": {
               "audio_tokens": null,
-              "reasoning_tokens": 11,
+              "reasoning_tokens": 12,
               "accepted_prediction_tokens": null,
               "rejected_prediction_tokens": null
             }
           },
           "cost_usd": null,
-          "latency_ms": 1439
+          "provider": "nebius",
+          "latency_ms": 1456
         }
       ],
       "error": null
@@ -967,7 +996,7 @@
       "category": "cancel",
       "passed": true,
       "status": "cancelled",
-      "latency_ms": 713,
+      "latency_ms": 425,
       "usage": [],
       "error": null
     },
@@ -976,7 +1005,7 @@
       "category": "cancel",
       "passed": true,
       "status": "cancelled",
-      "latency_ms": 508,
+      "latency_ms": 286,
       "usage": [],
       "error": null
     },
@@ -985,7 +1014,7 @@
       "category": "disconnected",
       "passed": true,
       "status": "failed",
-      "latency_ms": 2452,
+      "latency_ms": 1353,
       "usage": [],
       "error": "Configure the github connection first"
     },
@@ -994,14 +1023,14 @@
       "category": "disconnected",
       "passed": true,
       "status": "failed",
-      "latency_ms": 2126,
+      "latency_ms": 2525,
       "usage": [],
       "error": "Configure the github connection first"
     }
   ],
   "sample_size": 30,
   "passed": 30,
-  "total_tokens": 28061,
+  "total_tokens": 27993,
   "unknown_usage_calls": 0,
   "status": "Live verified"
 }

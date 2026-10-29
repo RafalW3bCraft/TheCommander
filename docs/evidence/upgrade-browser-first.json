@@ -1,0 +1,499 @@
+{
+  "config": {
+    "argv": [
+      "/home/watcher/.nvm/versions/node/v22.23.3/bin/node",
+      "/mnt/hostshare/TheCommander/frontend/node_modules/.bin/playwright",
+      "test"
+    ],
+    "configFile": "/mnt/hostshare/TheCommander/frontend/playwright.config.ts",
+    "rootDir": "/mnt/hostshare/TheCommander/frontend/e2e",
+    "failOnFlakyTests": false,
+    "forbidOnly": false,
+    "fullyParallel": false,
+    "globalSetup": null,
+    "globalTeardown": null,
+    "globalTimeout": 0,
+    "grep": {},
+    "grepInvert": null,
+    "maxFailures": 0,
+    "metadata": {
+      "actualWorkers": 1
+    },
+    "preserveOutput": "always",
+    "projects": [
+      {
+        "outputDir": "/mnt/hostshare/TheCommander/frontend/test-results",
+        "repeatEach": 1,
+        "retries": 0,
+        "metadata": {
+          "actualWorkers": 1
+        },
+        "id": "chromium",
+        "name": "chromium",
+        "testDir": "/mnt/hostshare/TheCommander/frontend/e2e",
+        "testIgnore": [],
+        "testMatch": [
+          "**/*.@(spec|test).?(c|m)[jt]s?(x)"
+        ],
+        "timeout": 120000
+      }
+    ],
+    "filteredProjects": [
+      {
+        "grep": {},
+        "grepInvert": null,
+        "outputDir": "/mnt/hostshare/TheCommander/frontend/test-results",
+        "repeatEach": 1,
+        "retries": 0,
+        "metadata": {
+          "actualWorkers": 1
+        },
+        "name": "chromium",
+        "testDir": "/mnt/hostshare/TheCommander/frontend/e2e",
+        "snapshotDir": "/mnt/hostshare/TheCommander/frontend/e2e",
+        "testIgnore": [],
+        "testMatch": "**/*.@(spec|test).?(c|m)[jt]s?(x)",
+        "timeout": 120000,
+        "use": {
+          "baseURL": "http://127.0.0.1:8010",
+          "viewport": {
+            "width": 1440,
+            "height": 900
+          },
+          "trace": "retain-on-failure",
+          "screenshot": "only-on-failure",
+          "browserName": "chromium"
+        },
+        "dependencies": [],
+        "ignoreSnapshots": false,
+        "__projectId": "chromium"
+      }
+    ],
+    "quiet": false,
+    "reporter": [
+      [
+        "list",
+        null
+      ],
+      [
+        "json",
+        {
+          "outputFile": "../docs/evidence/browser-results.json"
+        }
+      ]
+    ],
+    "reportSlowTests": {
+      "max": 5,
+      "threshold": 300000
+    },
+    "shard": null,
+    "tags": [],
+    "updateSnapshots": "default",
+    "updateSourceMethod": "patch",
+    "version": "1.64.1",
+    "workers": 1,
+    "webServer": {
+      "command": "cd .. && uv run uvicorn scripts.e2e_server:app --host 127.0.0.1 --port 8010",
+      "url": "http://127.0.0.1:8010/health/ready",
+      "reuseExistingServer": false,
+      "timeout": 30000
+    }
+  },
+  "suites": [
+    {
+      "title": "workflows.spec.ts",
+      "file": "workflows.spec.ts",
+      "column": 0,
+      "line": 0,
+      "specs": [
+        {
+          "title": "desktop owner memory connections three skills approvals and receipts",
+          "ok": true,
+          "tags": [],
+          "tests": [
+            {
+              "timeout": 120000,
+              "annotations": [],
+              "expectedStatus": "passed",
+              "projectId": "chromium",
+              "projectName": "chromium",
+              "results": [
+                {
+                  "workerIndex": 0,
+                  "parallelIndex": 0,
+                  "status": "passed",
+                  "duration": 20387,
+                  "errors": [],
+                  "stdout": [],
+                  "stderr": [],
+                  "retry": 0,
+                  "startTime": "2026-10-29T00:26:54.878Z",
+                  "annotations": [],
+                  "attachments": []
+                }
+              ],
+              "status": "expected"
+            }
+          ],
+          "id": "26aa48cee8983222f549-4adce86fbf3b3ec59ded",
+          "file": "workflows.spec.ts",
+          "line": 14,
+          "column": 1
+        },
+        {
+          "title": "mobile keyboard schedule survives closed page and can be edited paused deleted",
+          "ok": true,
+          "tags": [],
+          "tests": [
+            {
+              "timeout": 120000,
+              "annotations": [],
+              "expectedStatus": "passed",
+              "projectId": "chromium",
+              "projectName": "chromium",
+              "results": [
+                {
+                  "workerIndex": 0,
+                  "parallelIndex": 0,
+                  "status": "passed",
+                  "duration": 10717,
+                  "errors": [],
+                  "stdout": [],
+                  "stderr": [],
+                  "retry": 0,
+                  "startTime": "2026-10-29T00:27:15.464Z",
+                  "annotations": [],
+                  "attachments": []
+                }
+              ],
+              "status": "expected"
+            }
+          ],
+          "id": "26aa48cee8983222f549-1def9012388ffb9da11c",
+          "file": "workflows.spec.ts",
+          "line": 152,
+          "column": 1
+        },
+        {
+          "title": "expired session returns to sign-in and tablet navigation remains usable",
+          "ok": true,
+          "tags": [],
+          "tests": [
+            {
+              "timeout": 120000,
+              "annotations": [],
+              "expectedStatus": "passed",
+              "projectId": "chromium",
+              "projectName": "chromium",
+              "results": [
+                {
+                  "workerIndex": 0,
+                  "parallelIndex": 0,
+                  "status": "passed",
+                  "duration": 7152,
+                  "errors": [],
+                  "stdout": [],
+                  "stderr": [],
+                  "retry": 0,
+                  "startTime": "2026-10-29T00:27:26.225Z",
+                  "annotations": [],
+                  "attachments": []
+                }
+              ],
+              "status": "expected"
+            }
+          ],
+          "id": "26aa48cee8983222f549-0f23078745a73525703e",
+          "file": "workflows.spec.ts",
+          "line": 243,
+          "column": 1
+        },
+        {
+          "title": "delayed responses preserve memory search, edits, selected notes and cancelled runs",
+          "ok": true,
+          "tags": [],
+          "tests": [
+            {
+              "timeout": 120000,
+              "annotations": [],
+              "expectedStatus": "passed",
+              "projectId": "chromium",
+              "projectName": "chromium",
+              "results": [
+                {
+                  "workerIndex": 0,
+                  "parallelIndex": 0,
+                  "status": "passed",
+                  "duration": 10175,
+                  "errors": [],
+                  "stdout": [],
+                  "stderr": [],
+                  "retry": 0,
+                  "startTime": "2026-10-29T00:27:33.412Z",
+                  "annotations": [],
+                  "attachments": []
+                }
+              ],
+              "status": "expected"
+            }
+          ],
+          "id": "26aa48cee8983222f549-d9fc84cb307b726280ac",
+          "file": "workflows.spec.ts",
+          "line": 283,
+          "column": 1
+        },
+        {
+          "title": "conversation switching ignores delayed history",
+          "ok": true,
+          "tags": [],
+          "tests": [
+            {
+              "timeout": 120000,
+              "annotations": [],
+              "expectedStatus": "passed",
+              "projectId": "chromium",
+              "projectName": "chromium",
+              "results": [
+                {
+                  "workerIndex": 0,
+                  "parallelIndex": 0,
+                  "status": "passed",
+                  "duration": 3114,
+                  "errors": [],
+                  "stdout": [],
+                  "stderr": [],
+                  "retry": 0,
+                  "startTime": "2026-10-29T00:27:43.629Z",
+                  "annotations": [],
+                  "attachments": []
+                }
+              ],
+              "status": "expected"
+            }
+          ],
+          "id": "26aa48cee8983222f549-f363aa8668782a4b157d",
+          "file": "workflows.spec.ts",
+          "line": 464,
+          "column": 1
+        },
+        {
+          "title": "settings persist and expose redacted health and privacy controls",
+          "ok": true,
+          "tags": [],
+          "tests": [
+            {
+              "timeout": 120000,
+              "annotations": [],
+              "expectedStatus": "passed",
+              "projectId": "chromium",
+              "projectName": "chromium",
+              "results": [
+                {
+                  "workerIndex": 0,
+                  "parallelIndex": 0,
+                  "status": "passed",
+                  "duration": 5111,
+                  "errors": [],
+                  "stdout": [],
+                  "stderr": [],
+                  "retry": 0,
+                  "startTime": "2026-10-29T00:27:46.783Z",
+                  "annotations": [],
+                  "attachments": []
+                }
+              ],
+              "status": "expected"
+            }
+          ],
+          "id": "26aa48cee8983222f549-219e87ebc7ee85b3e6a0",
+          "file": "workflows.spec.ts",
+          "line": 545,
+          "column": 1
+        },
+        {
+          "title": "empty memory and revoked inference show recoverable persisted states",
+          "ok": true,
+          "tags": [],
+          "tests": [
+            {
+              "timeout": 120000,
+              "annotations": [],
+              "expectedStatus": "passed",
+              "projectId": "chromium",
+              "projectName": "chromium",
+              "results": [
+                {
+                  "workerIndex": 0,
+                  "parallelIndex": 0,
+                  "status": "passed",
+                  "duration": 7473,
+                  "errors": [],
+                  "stdout": [],
+                  "stderr": [],
+                  "retry": 0,
+                  "startTime": "2026-10-29T00:27:51.930Z",
+                  "annotations": [],
+                  "attachments": []
+                }
+              ],
+              "status": "expected"
+            }
+          ],
+          "id": "26aa48cee8983222f549-e5d02e0023cb7fe991b9",
+          "file": "workflows.spec.ts",
+          "line": 584,
+          "column": 1
+        }
+      ]
+    },
+    {
+      "title": "z-upgrade.spec.ts",
+      "file": "z-upgrade.spec.ts",
+      "column": 0,
+      "line": 0,
+      "specs": [
+        {
+          "title": "project selection scopes new runs and rejects stale project renames",
+          "ok": false,
+          "tags": [],
+          "tests": [
+            {
+              "timeout": 120000,
+              "annotations": [],
+              "expectedStatus": "passed",
+              "projectId": "chromium",
+              "projectName": "chromium",
+              "results": [
+                {
+                  "workerIndex": 0,
+                  "parallelIndex": 0,
+                  "status": "timedOut",
+                  "duration": 120262,
+                  "error": {
+                    "message": "\u001b[31mTest timeout of 120000ms exceeded.\u001b[39m",
+                    "stack": "\u001b[31mTest timeout of 120000ms exceeded.\u001b[39m"
+                  },
+                  "errors": [
+                    {
+                      "message": "\u001b[31mTest timeout of 120000ms exceeded.\u001b[39m"
+                    },
+                    {
+                      "location": {
+                        "file": "/mnt/hostshare/TheCommander/frontend/e2e/z-upgrade.spec.ts",
+                        "column": 6,
+                        "line": 22
+                      },
+                      "message": "Error: locator.inputValue: Test timeout of 120000ms exceeded.\nCall log:\n\u001b[2m  - waiting for getByLabel('Project', { exact: true })\u001b[22m\n\n\n  20 |   const defaultProject = await page\n  21 |     .getByLabel(\"Project\", { exact: true })\n> 22 |     .inputValue();\n     |      ^\n  23 |   await page.getByRole(\"button\", { name: \"New project\", exact: true }).click();\n  24 |   await page\n  25 |     .getByLabel(\"Project name\", { exact: true })\n    at /mnt/hostshare/TheCommander/frontend/e2e/z-upgrade.spec.ts:22:6"
+                    }
+                  ],
+                  "stdout": [],
+                  "stderr": [],
+                  "retry": 0,
+                  "startTime": "2026-10-29T00:27:59.471Z",
+                  "annotations": [],
+                  "attachments": [
+                    {
+                      "name": "screenshot",
+                      "contentType": "image/png",
+                      "path": "/mnt/hostshare/TheCommander/frontend/test-results/z-upgrade-project-selectio-1f18f-jects-stale-project-renames-chromium/test-failed-1.png"
+                    },
+                    {
+                      "name": "error-context",
+                      "contentType": "text/markdown",
+                      "path": "/mnt/hostshare/TheCommander/frontend/test-results/z-upgrade-project-selectio-1f18f-jects-stale-project-renames-chromium/error-context.md"
+                    },
+                    {
+                      "name": "trace",
+                      "contentType": "application/zip",
+                      "path": "/mnt/hostshare/TheCommander/frontend/test-results/z-upgrade-project-selectio-1f18f-jects-stale-project-renames-chromium/trace.zip"
+                    }
+                  ]
+                }
+              ],
+              "status": "unexpected"
+            }
+          ],
+          "id": "4cdea4e1e96334bacba2-6e25e857addf9c37f9a2",
+          "file": "z-upgrade.spec.ts",
+          "line": 16,
+          "column": 1
+        },
+        {
+          "title": "assistant renders safe Markdown without executing HTML or loading images",
+          "ok": false,
+          "tags": [],
+          "tests": [
+            {
+              "timeout": 120000,
+              "annotations": [],
+              "expectedStatus": "passed",
+              "projectId": "chromium",
+              "projectName": "chromium",
+              "results": [
+                {
+                  "workerIndex": 1,
+                  "parallelIndex": 0,
+                  "status": "timedOut",
+                  "duration": 120276,
+                  "error": {
+                    "message": "\u001b[31mTest timeout of 120000ms exceeded.\u001b[39m",
+                    "stack": "\u001b[31mTest timeout of 120000ms exceeded.\u001b[39m"
+                  },
+                  "errors": [
+                    {
+                      "message": "\u001b[31mTest timeout of 120000ms exceeded.\u001b[39m"
+                    },
+                    {
+                      "location": {
+                        "file": "/mnt/hostshare/TheCommander/frontend/e2e/z-upgrade.spec.ts",
+                        "column": 6,
+                        "line": 113
+                      },
+                      "message": "Error: locator.inputValue: Test timeout of 120000ms exceeded.\nCall log:\n\u001b[2m  - waiting for getByLabel('Project', { exact: true })\u001b[22m\n\n\n  111 |   const project = await page\n  112 |     .getByLabel(\"Project\", { exact: true })\n> 113 |     .inputValue();\n      |      ^\n  114 |   const run = await (\n  115 |     await page.request.post(\"/api/runs\", {\n  116 |       headers: { \"X-CSRF-Token\": me.csrf },\n    at /mnt/hostshare/TheCommander/frontend/e2e/z-upgrade.spec.ts:113:6"
+                    }
+                  ],
+                  "stdout": [],
+                  "stderr": [],
+                  "retry": 0,
+                  "startTime": "2026-10-29T00:30:00.832Z",
+                  "annotations": [],
+                  "attachments": [
+                    {
+                      "name": "screenshot",
+                      "contentType": "image/png",
+                      "path": "/mnt/hostshare/TheCommander/frontend/test-results/z-upgrade-assistant-render-5b267-ting-HTML-or-loading-images-chromium/test-failed-1.png"
+                    },
+                    {
+                      "name": "error-context",
+                      "contentType": "text/markdown",
+                      "path": "/mnt/hostshare/TheCommander/frontend/test-results/z-upgrade-assistant-render-5b267-ting-HTML-or-loading-images-chromium/error-context.md"
+                    },
+                    {
+                      "name": "trace",
+                      "contentType": "application/zip",
+                      "path": "/mnt/hostshare/TheCommander/frontend/test-results/z-upgrade-assistant-render-5b267-ting-HTML-or-loading-images-chromium/trace.zip"
+                    }
+                  ]
+                }
+              ],
+              "status": "unexpected"
+            }
+          ],
+          "id": "4cdea4e1e96334bacba2-967ba8018c2b655b1a49",
+          "file": "z-upgrade.spec.ts",
+          "line": 106,
+          "column": 1
+        }
+      ]
+    }
+  ],
+  "errors": [],
+  "stats": {
+    "startTime": "2026-10-29T00:26:50.658Z",
+    "duration": 310806.56200000003,
+    "expected": 7,
+    "skipped": 0,
+    "unexpected": 2,
+    "flaky": 0
+  }
+}

@@ -1,0 +1,36 @@
+{
+  "checks": [
+    {
+      "command": [
+        "uv",
+        "run",
+        "pip-audit",
+        "--path",
+        "memory_service/.venv/lib/python3.13/site-packages",
+        "--skip-editable",
+        "--timeout",
+        "60"
+      ],
+      "started": "2026-10-29T11:17:11.385055+00:00",
+      "seconds": 3.847,
+      "exit_code": 0,
+      "log": "docs/evidence/upgrade-memory-audit-dependencies.txt"
+    },
+    {
+      "command": [
+        "uv",
+        "run",
+        "pip-audit",
+        "--no-deps",
+        "--disable-pip",
+        "-r",
+        "memory_service/.cache/torch-audit.txt"
+      ],
+      "started": "2026-10-29T11:17:15.232486+00:00",
+      "seconds": 0.994,
+      "exit_code": 0,
+      "log": "docs/evidence/upgrade-memory-audit-torch.txt"
+    }
+  ],
+  "limitation": "Direct audit skips torch2.15.0+cpu; normalized2.15.0 separately checked, not binary certification."
+}

@@ -1,0 +1,65 @@
+# Optional overlay. Disabled until explicitly selected with --profile memory.
+# Supply independent private credentials, never the main database credentials.
+services:
+  api:
+    networks: [default, memory-private]
+    environment:
+      MEMORY_INDEX_URL: http://memory-index:8090
+      MEMORY_INDEX_TOKEN: ${MEMORY_INDEX_TOKEN:?Set an independent random service token}
+  worker:
+    networks: [default, memory-private]
+    environment:
+      MEMORY_INDEX_URL: http://memory-index:8090
+      MEMORY_INDEX_TOKEN: ${MEMORY_INDEX_TOKEN:?Set an independent random service token}
+  memory-db:
+    image: docker.io/pgvector/pgvector:0.8.2-pg17-bookworm@sha256:e04af45eb526378554a24ed05b37d9ea56fd623feca9adf264d4f47d875c9a93
+    profiles: [memory]
+    environment:
+      POSTGRES_USER: memory_admin
+      POSTGRES_DB: memory_index
+      POSTGRES_PASSWORD: ${MEMORY_ADMIN_PASSWORD:?Set a separate memory database administrator password}
+      MEMORY_DB_PASSWORD: ${MEMORY_DB_PASSWORD:?Set a separate restricted memory database password}
+    volumes:
+      - memory-index-data:/var/lib/postgresql/data
+      - ./memory_service/init-db.sh:/docker-entrypoint-initdb.d/010-memory.sh:ro
+    networks: [memory-private]
+    healthcheck:
+      test: [CMD-SHELL, "pg_isready -U memory_admin -d memory_index"]
+      interval: 5s
+      timeout: 3s
+      retries: 15
+    restart: unless-stopped
+  memory-index:
+    profiles: [memory]
+    build:
+      context: .
+      dockerfile: memory_service/Dockerfile
+    environment:
+      MEMORY_INDEX_TOKEN: ${MEMORY_INDEX_TOKEN:?Set an independent random token of at least 32 characters}
+      MEMORY_DB_HOST: memory-db
+      MEMORY_DB_USER: memory_index
+      MEMORY_DB_NAME: memory_index
+      MEMORY_DB_PASSWORD: ${MEMORY_DB_PASSWORD:?Set the restricted memory database password}
+      MEM0_TELEMETRY: "false"
+    networks: [memory-private]
+    read_only: true
+    tmpfs: [/tmp:size=64m,noexec,nosuid]
+    cap_drop: [ALL]
+    security_opt: [no-new-privileges:true]
+    mem_limit: 2g
+    cpus: 2
+    pids_limit: 128
+    depends_on:
+      memory-db: {condition: service_healthy}
+    restart: unless-stopped
+    # Health endpoint is authenticated; check it without printing the token.
+    healthcheck:
+      test: [CMD, python, -c, "import os,urllib.request; r=urllib.request.Request('http://127.0.0.1:8090/health',headers={'Authorization':'Bearer '+os.environ['MEMORY_INDEX_TOKEN']}); urllib.request.urlopen(r,timeout=4).read()"]
+      interval: 30s
+      timeout: 5s
+      retries: 5
+networks:
+  memory-private:
+    internal: true
+volumes:
+  memory-index-data:

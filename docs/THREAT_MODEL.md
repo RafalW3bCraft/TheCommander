@@ -33,3 +33,29 @@ settings/connection-validation commit. New credentials invalidate prior model
 validation. Queued configuration cannot override current tighter limits or revoked
 connections. Pricing from one model is never applied to another model silently.
 Model discovery responses and validation failures are bounded and sanitized.
+
+## Enhancement trust-boundary review
+
+Projects are enforced through owner-filtered queries and composite foreign keys.
+Modes reduce skill tool authority. Unsupported coding modes reject before enqueue.
+SSE reauthenticates during replay and holds no database transaction while waiting.
+Model responses, browser-delivered event data and Markdown remain untrusted.
+
+Optional provider selection uses fixed origins and separate credentials. The
+engine must select a credential using the snapshotted provider, never its previous
+Nebius-only connection lookup. A regression covers preserving legacy routing.
+Tool validation proves bounded protocol behavior only; it does not establish
+general model quality or prompt-injection resistance. No sandbox, browser-profile
+isolation, MFA certification or independent penetration-test result is claimed.
+
+## Derived memory boundary
+
+The optional service accepts only a private operator token and typed bounded
+canonical records. It has its own restricted database role/network and no model
+provider keys. Index IDs/scores cannot establish authority: the application
+rechecks canonical owner/project/revision/expiry after each search. Monotonic
+mutations/tombstones and a durable outbox handle stale updates. Controlled tests
+cover hostile/stale hints, deletion during retrieval and correction during sync.
+This does not establish immunity to semantic poisoning, an independent security
+review, or the unimplemented extraction/document-parsing boundary. Production
+memory quality and service-backup acceptance remain outstanding.

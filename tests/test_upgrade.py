@@ -4,9 +4,7 @@ from psycopg import sql
 from test_workflows import Vendor
 
 from commander.auth import hasher
-from commander.contracts import MemoryInput
 from commander.db import Database
-from commander.memory import save_memory
 from commander.worker import Worker
 
 
@@ -34,9 +32,19 @@ def test_upgrade_preserves_legacy_rows_and_executes_null_snapshot(settings):
             "INSERT INTO runs(owner_id,skill,skill_version,prompt) VALUES (%s,'conversation','conversation-v1','Continue after upgrade') RETURNING id",
             (owner,),
         ).fetchone()["id"]
-    memory = save_memory(db, owner, MemoryInput(key="upgrade", content="Preserve this preference"))
+    # Seed through the historical SQL contract; current services require current migrations.
+    memory = db.one(
+        "INSERT INTO memories(owner_id,kind,key,content,source) VALUES (%s,'explicit','upgrade','Preserve this preference','owner entry') RETURNING *",
+        (owner,),
+    )
     db.migrate()
     db.migrate()
+    upgraded = db.one("SELECT project_id,mode FROM runs WHERE id=%s", (run,))
+    assert upgraded["mode"] == "automate"
+    assert db.one(
+        "SELECT is_default FROM projects WHERE id=%s AND owner_id=%s",
+        (upgraded["project_id"], owner),
+    )["is_default"]
     assert (
         db.one("SELECT content FROM memories WHERE id=%s", (memory["id"],))["content"]
         == memory["content"]

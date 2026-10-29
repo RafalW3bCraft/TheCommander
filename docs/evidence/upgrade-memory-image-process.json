@@ -1,0 +1,14 @@
+{
+  "command": [
+    "podman",
+    "build",
+    "--file",
+    "memory_service/Dockerfile",
+    "--tag",
+    "localhost/thecommander-memory:0.1.0",
+    "."
+  ],
+  "started": "2026-10-29T11:16:19.147291+00:00",
+  "seconds": 155.147,
+  "exit_code": 125
+}

@@ -1,0 +1,1 @@
+{"timestamp": "2026-10-29T05:47:33.987162+00:00", "clean_initialization": true, "custom_format_dump_restore": true, "memory_and_revision_preserved": true, "owner_settings_preserved": true, "encrypted_connection_decrypts_with_original_key": true, "migrations_after_restore": true, "notes_archive_restore_preserves_content": true, "test_databases_removed": true}

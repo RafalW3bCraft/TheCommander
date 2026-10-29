@@ -1,0 +1,15 @@
+{
+  "command": [
+    "bash",
+    "-c",
+    "npm --prefix frontend run build && npm --prefix frontend run test:e2e"
+  ],
+  "started_at": "2026-10-29T11:12:25.507489+00:00",
+  "finished_at": "2026-10-29T11:14:00.819322+00:00",
+  "exit_code": 0,
+  "seconds": 95.312,
+  "head": "c9084c5ecc22d39642959ec539f898f03c19ced8",
+  "branch": "feat/enhance-codex-+",
+  "working_tree_diff_sha256": "e5701139c4815bf771cdc489813b7864f6c8ac4d0551ca173be3fe0a04959011",
+  "limitation": "diff hash is not the release manifest; final source input identity is recorded when packaging"
+}

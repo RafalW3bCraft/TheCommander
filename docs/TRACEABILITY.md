@@ -150,3 +150,27 @@ not repeated paid inference. All offline gates are collected by `scripts/verify.
 
 No intentional live write failure was injected. Uncertain-write recovery remains
 a controlled-transport verification, distinct from the confirmed live issue.
+
+## Production enhancement requirement trace
+
+The baseline is `005deba`; enhancement work is isolated on `feat/enhance-codex-+`.
+The machine-readable progress ledger is [upgrade-requirements.json](evidence/upgrade-requirements.json).
+These rows describe the implementation under test, not a completed production upgrade.
+
+| Requirement | UI/API → implementation | Acceptance |
+|---|---|---|
+| U01 projects | Assistant project selector → `/api/projects`, scoped runs/conversations → `projects.py`, migration006 composite foreign keys | `test_projects_modes.py`, `z-upgrade.spec.ts` |
+| U01 memory scope | Memory scope selector → `MemoryInput.project_id` → `memory.py` canonical eligibility and immutable correction scope | scoped recall, omitted-scope correction and isolation tests |
+| U01 modes | Composer → run mode snapshot → `modes.permitted`, engine and broker | Ask/Plan/Research deny note/issue effects; unavailable coding modes reject enqueue |
+| U01 persistence | Scoped schedule form → schedule project → worker occurrence | `test_schedule_occurrences_keep_project_scope` |
+| U01 rendering | `SafeMarkdown.tsx` escaped text nodes, safe links, no image/HTML sink | controlled browser rendering and axe checks |
+| U02 provider selection | Connections + model Settings → revision PATCH/discovery → native adapters, encrypted keys, provider snapshots | `test_provider_adapters.py`; optional-provider live acceptance blocked on keys |
+| U02 event delivery | `useRunEvents` → authenticated bounded SSE → owner-filtered events/session recheck | 12 `test_events.py` cases, existing delayed-response/cancellation browser acceptance |
+| Compatibility | Historical SQL rows → migrations001–008 → current worker | `test_upgrade.py`; existing 87 tests retained |
+
+| U03 derived memory | Memory recall panel → search/index-status API → canonical admission + private Mem0/E5 backend | `test_memory_retrieval.py`, `test_memory_index.py`, disabled/degraded browser scenario |
+| U03 synchronization | canonical memory trigger → outbox → idle worker → monotonic index mutations | correction/deletion race, expiry/renewal, pending retry and truncation regressions |
+
+Not implemented here: memory proposals/ingestion/summaries, coding supervisor, grants,
+logged-in browser profiles, dynamic skills, MFA, pooling, full provider token
+streaming, budget profiles, load/quality evaluation and deployed operational gates.

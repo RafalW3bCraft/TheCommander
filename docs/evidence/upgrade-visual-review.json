@@ -1,0 +1,26 @@
+{
+  "at": "2026-10-29T05:58:54.090943+00:00",
+  "status": "Locally verified",
+  "review": "Primary agent direct screenshot inspection",
+  "files": {
+    "browser-desktop.png": "6442a2cebff34f211d923731ed2fdd515c39209a453eaf890b96f45885b635b2",
+    "browser-mobile.png": "ba601496fbce22edc9446ea8d63a893bb6a407c7c6a2ce7b6893f0bf3922b68e",
+    "browser-tablet.png": "2b706c44d0709c8caa061dcd01ecfdac0a847fd88d1b05ba2e08a6d4beaa9401",
+    "browser-settings.png": "655f0ce7a125fa03c98c20d34327202e51ef28bbfa8e03594bac6b33c5632256",
+    "browser-disconnected.png": "687051215653be8020504f4669f860f40f9a15dd65b944638d0964a0e7fd57c0",
+    "upgrade-dark-desktop.png": "774bd237bbc308d086130b4c4f0349d2d7c5d991b8a27e9e27ae3babdc16e94b",
+    "upgrade-light-mobile.png": "ecb9539d18a8804f78c72acd6e3a4aa9785d8b8ad3d8d4ff9577bdc59e7f6bda"
+  },
+  "observations": [
+    "Desktop activity and Settings controls readable",
+    "Mobile controls fit viewport; long assistant/schedule view scrolls vertically",
+    "Tablet project selector truncates its selected label but remains usable; no horizontal page overflow observed",
+    "Dark and light Markdown rendering leaves unsafe links/HTML/images as literal text",
+    "Disconnected inference displays a persisted recoverable failure"
+  ],
+  "limitations": [
+    "No approved visual-regression baseline",
+    "No manual screen-reader session",
+    "Browser data and providers use controlled fixtures; screenshots are not live integration evidence"
+  ]
+}

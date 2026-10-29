@@ -32,10 +32,13 @@ settings = Settings(
 )
 db = Database(settings)
 db.migrate()
-db.one(
-    "INSERT INTO owners(username,password_hash) VALUES (%s,%s) RETURNING id",
-    ("browser-owner", hasher.hash("fictional-browser-password")),
-)
+# Separate suites exercise real per-owner limits without sharing their request
+# budget. Production throttling remains unchanged.
+for username in ("browser-owner", "upgrade-browser-owner"):
+    db.one(
+        "INSERT INTO owners(username,password_hash) VALUES (%s,%s) RETURNING id",
+        (username, hasher.hash("fictional-browser-password")),
+    )
 issues = []
 
 

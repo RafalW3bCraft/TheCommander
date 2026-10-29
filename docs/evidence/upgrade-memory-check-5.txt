@@ -1,0 +1,22 @@
+{
+  "status": "Locally verified",
+  "timestamp": "2026-10-29T11:16:36.484521+00:00",
+  "backend": "mem0ai==2.2.1 / pgvector 0.8.2",
+  "model": "intfloat/multilingual-e5-small",
+  "revision": "614241f622f53c4eeff9890bdc4f31cfecc418b3",
+  "seconds": 29.521,
+  "checks": [
+    "authenticated readiness",
+    "real local embedding and hybrid retrieval",
+    "owner filtering",
+    "revision correction",
+    "stale rejection",
+    "tombstone exclusion",
+    "expiry renewal",
+    "disclosed truncation"
+  ],
+  "limitations": "Fictional bounded smoke, not recall@5 benchmark, deployed availability or live provider evidence."
+}
+
+Loading weights:   0%|          | 0/199 [00:00<?, ?it/s]
+Loading weights: 100%|██████████| 199/199 [00:00<00:00, 3093.03it/s]

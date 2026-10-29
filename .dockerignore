@@ -24,3 +24,10 @@ frontend/playwright-report/
 .tools/
 .git/
 .venv/
+# Optional private memory image; admit only public source and pinned dependencies.
+!memory_service/
+!memory_service/*.py
+!memory_service/pyproject.toml
+!memory_service/uv.lock
+!memory_service/Dockerfile
+!memory_service/init-db.sh

@@ -3,7 +3,7 @@ from pathlib import Path
 from uuid import UUID
 
 import psycopg
-from fastapi import Depends, FastAPI, Request
+from fastapi import Depends, FastAPI, Query, Request
 from fastapi.exceptions import RequestValidationError
 from fastapi.responses import FileResponse, JSONResponse
 from fastapi.staticfiles import StaticFiles
@@ -15,7 +15,9 @@ from commander.contracts import (
     ErrorResponse,
     Login,
     MemoryEdit,
+    MemoryIndexStatusView,
     MemoryInput,
+    MemorySearchView,
     MemoryView,
     StatusView,
     UserView,
@@ -181,8 +183,30 @@ def create_app(settings=None, transport=None):
         return {"status": "signed_out"}
 
     @app.get("/api/memory", response_model=list[MemoryView])
-    def memories(q: str = "", owner=Depends(principal)):
-        return memory.list_memory(db, owner, q[:200])
+    def memories(q: str = "", project_id: UUID | None = None, owner=Depends(principal)):
+        return memory.list_memory(db, owner, q[:200], project_id)
+
+    @app.get("/api/memory/search", response_model=MemorySearchView)
+    def search_memory(
+        q: str = Query(min_length=1, max_length=2000, pattern=r".*\S.*"),
+        project_id: UUID | None = None,
+        owner=Depends(principal),
+    ):
+        from commander.memory_sync import configured_index
+
+        return memory.retrieve(db, owner, project_id, q, index=configured_index(settings))
+
+    @app.get("/api/memory/index-status", response_model=MemoryIndexStatusView)
+    def memory_index_status(owner=Depends(principal)):
+        counts = db.one(
+            "SELECT count(*) AS pending,count(*) FILTER (WHERE last_error IS NOT NULL) AS failed,min(updated_at) AS oldest_pending FROM memory_index_jobs WHERE owner_id=%s",
+            (owner,),
+        )
+        synced = db.one(
+            "SELECT max(synced_at) AS last_synced,count(*) FILTER (WHERE truncated) AS truncated FROM memory_index_state WHERE owner_id=%s",
+            (owner,),
+        )
+        return {"configured": bool(settings.memory_index_url), **counts, **synced}
 
     @app.get("/api/memory/export", response_model=list[MemoryView])
     def export_memory(owner=Depends(principal)):

@@ -1,0 +1,41 @@
+
+> thecommander-ui@0.2.0 build
+> tsc --noEmit && vite build
+
+vite v6.4.5 building for production...
+transforming...
+✓ 34 modules transformed.
+rendering chunks...
+computing gzip size...
+dist/index.html                   0.36 kB │ gzip:  0.26 kB
+dist/assets/index-BlnaHnpR.css    7.43 kB │ gzip:  2.37 kB
+dist/assets/index-Dh25xRwT.js   266.85 kB │ gzip: 82.76 kB
+✓ built in 3.39s
+
+> thecommander-ui@0.2.0 test:e2e
+> playwright test
+
+[WebServer] INFO:     Started server process [361034]
+[WebServer] INFO:     Waiting for application startup.
+[WebServer] INFO:     Application startup complete.
+[WebServer] INFO:     Uvicorn running on http://127.0.0.1:8010 (Press CTRL+C to quit)
+
+Running 10 tests using 1 worker
+
+(node:361546) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+(Use `node --trace-warnings ...` to show where the warning was created)
+  ✓   1 [chromium] › e2e/workflows.spec.ts:14:1 › desktop owner memory connections three skills approvals and receipts (17.1s)
+  ✓   2 [chromium] › e2e/workflows.spec.ts:152:1 › mobile keyboard schedule survives closed page and can be edited paused deleted (9.8s)
+  ✓   3 [chromium] › e2e/workflows.spec.ts:243:1 › expired session returns to sign-in and tablet navigation remains usable (7.4s)
+  ✓   4 [chromium] › e2e/workflows.spec.ts:283:1 › delayed responses preserve memory search, edits, selected notes and cancelled runs (10.2s)
+  ✓   5 [chromium] › e2e/workflows.spec.ts:464:1 › conversation switching ignores delayed history (2.4s)
+  ✓   6 [chromium] › e2e/workflows.spec.ts:545:1 › settings persist and expose redacted health and privacy controls (4.5s)
+[WebServer] run_failure run=55d997df-d733-4b94-8a2e-cc465e7bea93 code=disconnected type=DomainError
+  ✓   7 [chromium] › e2e/workflows.spec.ts:584:1 › empty memory and revoked inference show recoverable persisted states (6.6s)
+[WebServer] run_failure run=a80d4e7d-c7e6-4eff-86d7-36350e6e7971 code=disconnected type=DomainError
+  ✓   8 [chromium] › e2e/z-upgrade.spec.ts:18:1 › project selection scopes new runs and rejects stale project renames (4.0s)
+[WebServer] run_failure run=083feeba-6cfe-44fb-b4ff-fddd2da0f2b6 code=disconnected type=DomainError
+  ✓   9 [chromium] › e2e/z-upgrade.spec.ts:108:1 › assistant renders safe Markdown without executing HTML or loading images (9.9s)
+  ✓  10 [chromium] › e2e/z-upgrade.spec.ts:184:1 › memory recall explains disabled and degraded index states (3.6s)
+
+  10 passed (1.4m)
