@@ -11,9 +11,10 @@ export function MemorySearch({ projects }: { projects: Project[] }) {
   const [result, setResult] = useState<Search | null>(null);
   const [error, setError] = useState("");
   const [busy, setBusy] = useState(false);
-  const version = useRef(0);
+  const version = useRef({ value: 0 });
   useEffect(() => {
     let active = true;
+    const requestState = version.current;
     void api<IndexStatus>("/memory/index-status")
       .then((value) => {
         if (active) setStatus(value);
@@ -24,7 +25,7 @@ export function MemorySearch({ projects }: { projects: Project[] }) {
       });
     return () => {
       active = false;
-      ++version.current;
+      ++requestState.value;
     };
   }, []);
   return (
@@ -39,14 +40,14 @@ export function MemorySearch({ projects }: { projects: Project[] }) {
       </p>
       <form
         onChange={() => {
-          ++version.current;
+          ++version.current.value;
           setResult(null);
           setBusy(false);
         }}
         onSubmit={(event) => {
           event.preventDefault();
           const form = new FormData(event.currentTarget);
-          const request = ++version.current;
+          const request = ++version.current.value;
           const query = String(form.get("query") || "").trim();
           if (!query) return;
           const project = String(form.get("scope") || "");
@@ -61,13 +62,13 @@ export function MemorySearch({ projects }: { projects: Project[] }) {
             api<IndexStatus>("/memory/index-status"),
           ])
             .then(([found, current]) => {
-              if (request === version.current) {
+              if (request === version.current.value) {
                 setResult(found);
                 setStatus(current);
               }
             })
             .catch((failure: unknown) => {
-              if (request === version.current)
+              if (request === version.current.value)
                 setError(
                   failure instanceof Error
                     ? failure.message
@@ -75,7 +76,7 @@ export function MemorySearch({ projects }: { projects: Project[] }) {
                 );
             })
             .finally(() => {
-              if (request === version.current) setBusy(false);
+              if (request === version.current.value) setBusy(false);
             });
         }}
       >

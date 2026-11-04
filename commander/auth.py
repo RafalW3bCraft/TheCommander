@@ -54,7 +54,7 @@ def login(db, data):
 def session(db, owner):
     token, csrf = secrets.token_urlsafe(32), secrets.token_urlsafe(32)
     db.one(
-        "INSERT INTO auth_sessions(token_hash,owner_id,csrf,expires_at) VALUES (%s,%s,%s,now()+interval '12 hours') RETURNING owner_id",
+        "INSERT INTO auth_sessions(token_hash,owner_id,csrf,expires_at,reauthenticated_at) VALUES (%s,%s,%s,now()+interval '12 hours',now()) RETURNING owner_id",
         (digest(token), owner["id"], csrf),
     )
     return token, {"owner_id": str(owner["id"]), "username": owner["username"], "csrf": csrf}
@@ -72,3 +72,65 @@ def authenticate(db, request):
         if not secrets.compare_digest(request.headers.get("X-CSRF-Token", ""), row["csrf"]):
             raise DomainError("Refresh the page and try again", 403, "csrf")
     return row
+
+
+def list_sessions(db, owner, token):
+    return db.all(
+        """SELECT session_id AS id,created_at,expires_at,reauthenticated_at,
+          (token_hash=%s) AS current FROM auth_sessions
+          WHERE owner_id=%s AND expires_at>now() ORDER BY created_at DESC,session_id""",
+        (digest(token), owner),
+    )
+
+
+def revoke_session(db, owner, session_id):
+    with db.connect() as conn:
+        row = conn.execute(
+            "DELETE FROM auth_sessions WHERE owner_id=%s AND session_id=%s RETURNING session_id",
+            (owner, session_id),
+        ).fetchone()
+        if not row:
+            raise DomainError("Session not found", 404)
+        conn.execute(
+            "INSERT INTO auth_events(owner_id,session_id,kind) VALUES (%s,%s,'session_revoked')",
+            (owner, session_id),
+        )
+
+
+def reauthenticate(db, owner, token, password):
+    throttle(db, "reauth:" + str(owner), 5)
+    # Bind validation/update to this still-active session, including concurrent
+    # revocation. A password check cannot recreate a revoked session.
+    with db.connect() as conn:
+        row = conn.execute(
+            """SELECT s.session_id,o.password_hash FROM auth_sessions s JOIN owners o ON o.id=s.owner_id
+              WHERE s.owner_id=%s AND s.token_hash=%s AND s.expires_at>now() FOR UPDATE OF s""",
+            (owner, digest(token)),
+        ).fetchone()
+        if not row:
+            raise DomainError("Sign in to continue", 401, "unauthenticated")
+        try:
+            hasher.verify(row["password_hash"], password)
+        except VerificationError:
+            raise DomainError("Password verification failed", 401, "invalid_credentials") from None
+        conn.execute(
+            "UPDATE auth_sessions SET reauthenticated_at=now() WHERE session_id=%s",
+            (row["session_id"],),
+        )
+        conn.execute(
+            "INSERT INTO auth_events(owner_id,session_id,kind) VALUES (%s,%s,'reauthenticated')",
+            (owner, row["session_id"]),
+        )
+
+
+def require_recent(db, owner, token):
+    row = db.one(
+        """SELECT session_id FROM auth_sessions WHERE owner_id=%s AND token_hash=%s
+          AND expires_at>now() AND reauthenticated_at>now()-interval '5 minutes'""",
+        (owner, digest(token)),
+    )
+    if not row:
+        raise DomainError(
+            "Verify your password again before changing authority", 403, "reauthentication_required"
+        )
+    return row["session_id"]

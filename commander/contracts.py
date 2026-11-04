@@ -363,3 +363,15 @@ class BudgetView(BaseModel):
     max_daily_tokens: int
     daily_spend_limit_usd: float | None
     usage: list[UsageView]
+
+
+class SessionView(BaseModel):
+    id: UUID
+    created_at: datetime
+    expires_at: datetime
+    reauthenticated_at: datetime | None
+    current: bool
+
+
+class Reauthentication(Strict):
+    password: str = Field(min_length=1, max_length=1024)

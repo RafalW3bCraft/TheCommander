@@ -1,0 +1,89 @@
+FFF                                                                      [100%]
+=================================== FAILURES ===================================
+_______ test_session_list_redacts_tokens_and_revokes_only_owned_session ________
+
+app = (<starlette.testclient.TestClient object at 0x7f73892bc1a0>, <test_workflows.Vendor object at 0x7f73897bb230>, 'a5be52a4-a20a-4d13-966c-005a21c507b8', <commander.db.Database object at 0x7f7389242990>)
+
+    def test_session_list_redacts_tokens_and_revokes_only_owned_session(app):
+        client, _, owner, db = app
+        second = TestClient(client.app)
+        login = second.post('/api/auth/login', json={'username':'owner','password':'fictional-test-password'})
+        assert login.status_code == 200, login.text
+        sessions = client.get('/api/auth/sessions')
+>       assert sessions.status_code == 200
+E       assert 404 == 200
+E        +  where 404 = <Response [404 Not Found]>.status_code
+
+tests/test_sessions.py:21: AssertionError
+______ test_reauthentication_is_csrf_bound_rate_limited_and_session_local ______
+
+app = (<starlette.testclient.TestClient object at 0x7f7389313890>, <test_workflows.Vendor object at 0x7f7389241450>, '434fa396-1b28-4d13-a268-92e8134b6b66', <commander.db.Database object at 0x7f738960b5c0>)
+
+    def test_reauthentication_is_csrf_bound_rate_limited_and_session_local(app):
+        client, _, owner, db = app
+>       db.one("UPDATE auth_sessions SET reauthenticated_at=NULL WHERE owner_id=%s RETURNING owner_id",(owner,))
+
+tests/test_sessions.py:38: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+commander/db.py:51: in one
+    return conn.execute(query, params).fetchone()
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+self = <psycopg.Connection [BAD] at 0x7f73892e0c80>
+query = 'UPDATE auth_sessions SET reauthenticated_at=NULL WHERE owner_id=%s RETURNING owner_id'
+params = ('434fa396-1b28-4d13-a268-92e8134b6b66',), prepare = None
+binary = False
+
+    def execute(
+        self,
+        query: Query,
+        params: Params | None = None,
+        *,
+        prepare: bool | None = None,
+        binary: bool = False,
+    ) -> Cursor[Row]:
+        """Execute a query and return a cursor to read its results."""
+        try:
+            cur = self.cursor()
+            if binary:
+                cur.format = BINARY
+    
+            if isinstance(query, Template):
+                if params is not None:
+                    raise TypeError(
+                        "'execute()' with string template query doesn't support parameters"
+                    )
+                return cur.execute(query, prepare=prepare)
+            else:
+                return cur.execute(query, params, prepare=prepare)
+        except e._NO_TRACEBACK as ex:
+>           raise ex.with_traceback(None)
+E           psycopg.errors.UndefinedColumn: column "reauthenticated_at" of relation "auth_sessions" does not exist
+E           LINE 1: UPDATE auth_sessions SET reauthenticated_at=NULL WHERE owner...
+E                                            ^
+
+.venv/lib/python3.13/site-packages/psycopg/connection.py:304: UndefinedColumn
+_________ test_current_session_revocation_and_expired_session_listing __________
+
+app = (<starlette.testclient.TestClient object at 0x7f738960b950>, <test_workflows.Vendor object at 0x7f7389313d90>, 'b3fa849a-c21f-4c45-8ed0-da963568a685', <commander.db.Database object at 0x7f7388f56570>)
+
+    def test_current_session_revocation_and_expired_session_listing(app):
+        client, _, owner, db = app
+        rows = client.get('/api/auth/sessions')
+>       assert rows.status_code == 200
+E       assert 404 == 200
+E        +  where 404 = <Response [404 Not Found]>.status_code
+
+tests/test_sessions.py:60: AssertionError
+=============================== warnings summary ===============================
+.venv/lib/python3.13/site-packages/fastapi/testclient.py:1
+  /mnt/hostshare/TheCommander/.venv/lib/python3.13/site-packages/fastapi/testclient.py:1: StarletteDeprecationWarning: Using `httpx` with `starlette.testclient` is deprecated; install `httpx2` instead.
+    from starlette.testclient import TestClient as TestClient  # noqa
+
+-- Docs: https://docs.pytest.org/en/stable/how-to/capture-warnings.html
+=========================== short test summary info ============================
+FAILED tests/test_sessions.py::test_session_list_redacts_tokens_and_revokes_only_owned_session
+FAILED tests/test_sessions.py::test_reauthentication_is_csrf_bound_rate_limited_and_session_local
+FAILED tests/test_sessions.py::test_current_session_revocation_and_expired_session_listing
+3 failed, 1 warning in 4.96s

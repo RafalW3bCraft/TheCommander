@@ -5,7 +5,7 @@ ENV PYTHONDONTWRITEBYTECODE=1 PYTHONUNBUFFERED=1 UV_LINK_MODE=copy \
 WORKDIR /app
 RUN pip install --no-cache-dir uv==0.13.1 && groupadd --gid 10002 memory && useradd --uid 10002 --gid 10002 --create-home memory
 COPY memory_service/pyproject.toml memory_service/uv.lock ./
-RUN uv sync --frozen --no-dev
+RUN uv sync --frozen --no-dev --no-cache
 COPY memory_service/ /app/memory_service/
 RUN .venv/bin/python -c 'from sentence_transformers import SentenceTransformer; from memory_service.backend import MODEL,REVISION; SentenceTransformer(MODEL, revision=REVISION, device="cpu", trust_remote_code=False)'
 ENV PATH="/app/.venv/bin:$PATH" HF_HUB_OFFLINE=1 TRANSFORMERS_OFFLINE=1

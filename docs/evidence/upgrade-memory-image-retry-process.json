@@ -1,0 +1,19 @@
+{
+  "command": [
+    "podman",
+    "build",
+    "--file",
+    "memory_service/Dockerfile",
+    "--tag",
+    "localhost/thecommander-memory:0.1.0",
+    "."
+  ],
+  "started_at": "2026-10-29T22:05:59.375468+00:00",
+  "finished_at": "2026-10-29T22:12:27.246429+00:00",
+  "exit_code": 0,
+  "seconds": 387.871,
+  "head": "9cf3f2d895539b1dc686627b5a1ebf7817213bbe",
+  "branch": "feat/enhance-codex-+",
+  "working_tree_diff_sha256": "2576672367f999b91232c7011932fa471bf6eb59b27a2d6d7d629f8485100fa1",
+  "limitation": "diff hash is not the release manifest; final source input identity is recorded when packaging"
+}

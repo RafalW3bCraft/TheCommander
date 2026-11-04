@@ -19,6 +19,8 @@ from commander.contracts import (
     MemoryInput,
     MemorySearchView,
     MemoryView,
+    Reauthentication,
+    SessionView,
     StatusView,
     UserView,
 )
@@ -172,6 +174,25 @@ def create_app(settings=None, transport=None):
     def me(request: Request, owner=Depends(principal)):
         row = auth.authenticate(db, request)
         return {"owner_id": str(owner), "username": row["username"], "csrf": row["csrf"]}
+
+    @app.get("/api/auth/sessions", response_model=list[SessionView])
+    def sessions(request: Request, owner=Depends(principal)):
+        return auth.list_sessions(db, owner, request.cookies.get("commander_session", ""))
+
+    @app.delete("/api/auth/sessions/{session_id}", response_model=StatusView)
+    def revoke_session(
+        session_id: UUID, request: Request, response: Response, owner=Depends(principal)
+    ):
+        current = auth.authenticate(db, request)
+        auth.revoke_session(db, owner, session_id)
+        if current["session_id"] == session_id:
+            response.delete_cookie("commander_session", path="/")
+        return {"status": "revoked"}
+
+    @app.post("/api/auth/reauthenticate", response_model=StatusView)
+    def reauthenticate(data: Reauthentication, request: Request, owner=Depends(principal)):
+        auth.reauthenticate(db, owner, request.cookies.get("commander_session", ""), data.password)
+        return {"status": "reauthenticated"}
 
     @app.post("/api/auth/logout", response_model=StatusView)
     def logout(request: Request, response: Response, owner=Depends(principal)):
