@@ -99,7 +99,7 @@ Use a Vultr control VM and preferably a separate Vultr runner VM on a private ne
 3. Deploy the existing app with the existing start/HTTPS instructions. For a same-host native sandbox runner, enable only the optional loopback database port:
 
 ```sh
-docker compose --env-file .env.runtime -f compose.yaml -f deploy/compose.sandbox.yaml up -d --build
+docker compose --env-file .env --env-file .env.runtime -f compose.yaml -f deploy/compose.sandbox.yaml up -d --build
 ```
 
 For separate VMs use private-network PostgreSQL TLS, firewall the runner source and issue a dedicated least-privilege database login. Never publish PostgreSQL or Docker's daemon to the internet. Both processes must use the same application schema and encryption key to resolve the owner's encrypted Vultr connection.
@@ -115,7 +115,7 @@ uv sync --frozen
 
 The browser package and base image both use Playwright 1.64.1. The checked-in upstream seccomp profile permits required user namespace operations. Resolve/pin the resulting image digests for a deployment release after smoke testing.
 
-6. Add the new fields shown at the end of `env.release.example` to existing operator configuration. Set `SANDBOX_ENABLED=true`, explicit `SANDBOX_MODEL`, explicit `SANDBOX_VISION_MODEL`, and JSON `SANDBOX_BROWSER_DOMAINS=["your-approved-domain"]`. Do not use an unverified model ID from an old guide. Configure the **Vultr** connection in Settings, or import a server `VULTR_API_KEY` through the existing import flow. Existing Nebius/OpenAI/Anthropic keys remain untouched. The Sandbox worker always chooses Vultr, independent of the normal chat provider.
+6. Add the new fields shown at the end of `env.release.example` to existing operator configuration. Keep `SANDBOX_ENABLED=false` until real containment passes, then enable it. Set explicit `SANDBOX_MODEL`, explicit `SANDBOX_VISION_MODEL`, and JSON `SANDBOX_BROWSER_DOMAINS=["your-approved-domain"]`. Do not use an unverified model ID from an old guide. Configure the **Vultr** connection in Settings, or import a server `VULTR_API_KEY` through the existing import flow. Existing Nebius/OpenAI/Anthropic keys remain untouched. The Sandbox worker always chooses Vultr, independent of the normal chat provider.
 7. Start the worker natively with `DATABASE_URL` pointing to the same actual database. For a same-host Compose DB use port 5434 and its existing credential; the Compose hostname `db` is not resolvable from a native host process. `deploy/sandbox/commander-sandbox.service` expects `/opt/thecommander`, an unprivileged `commander-runner` account with Docker access, and a root-protected `/etc/thecommander/runner.env`. Set its database URL, schema, required application keys and sandbox fields there. Docker control access is powerful; never grant it to the public API user.
 
 ```sh

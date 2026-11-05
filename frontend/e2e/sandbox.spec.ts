@@ -1,4 +1,4 @@
-import { test, expect } from "@playwright/test";
+import { test, expect } from "./fixtures";
 import AxeBuilder from "@axe-core/playwright";
 
 test("sandbox displays evidence and requires deliberate exact approval", async ({
@@ -111,7 +111,13 @@ test("sandbox displays evidence and requires deliberate exact approval", async (
   await page
     .getByLabel("Password", { exact: true })
     .fill("fictional-browser-password");
+  const loginResponse = page.waitForResponse(
+    (response) =>
+      response.url().endsWith("/api/auth/login") &&
+      response.request().method() === "POST",
+  );
   await page.getByRole("button", { name: "Sign in", exact: true }).click();
+  expect((await loginResponse).status(), "real sign-in must succeed").toBe(200);
   await page.getByRole("button", { name: "Sandbox", exact: true }).click();
   await expect(
     page.getByRole("heading", { name: "Sandbox", exact: true }),

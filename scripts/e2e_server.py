@@ -17,6 +17,7 @@ from commander.auth import hasher
 from commander.db import Database
 from commander.settings import Settings
 from commander.worker import Worker
+from scripts.e2e_isolation import isolate_client
 
 schema = "test_e2e_" + uuid.uuid4().hex
 settings = Settings(
@@ -112,6 +113,7 @@ def vendor(request):
 
 transport = httpx.MockTransport(vendor)
 app = create_app(settings, transport)
+app.middleware("http")(isolate_client)
 stop = threading.Event()
 
 
