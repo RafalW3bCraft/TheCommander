@@ -1,0 +1,11 @@
+Source: 8ab487716b1d73395dca49fd87db1a5e54fa7821
+Run: https://github.com/RafalW3bCraft/TheCommander/actions/runs/42054356178
+Job: 127338557859; conclusion: success
+Selected actual log lines; omitted build/download noise. Docker/runc, not gVisor.
+2026-11-05T15:23:04.4299471Z #6 [2/2] COPY deploy/sandbox/proxy.py /opt/commander/proxy.py
+2026-11-05T15:23:32.5257004Z #7 [3/3] COPY deploy/sandbox/browser.py /opt/commander/browser.py
+2026-11-05T15:23:37.4742943Z ##[group]Run uv run pytest -q tests/test_sandbox_docker.py
+2026-11-05T15:23:37.4786915Z   RUN_SANDBOX_DOCKER: 1
+2026-11-05T15:23:37.4787095Z   RUN_SANDBOX_BROWSER: 1
+2026-11-05T15:23:37.4787288Z   SANDBOX_TEST_RUNTIME: runc
+2026-11-05T15:23:47.9607377Z 4 passed in 9.73s

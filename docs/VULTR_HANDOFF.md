@@ -1,8 +1,8 @@
 # Branch-only handoff
 
 **Publication update — 2026-11-05:** The implementation is now published on the
-remote `vultr` branch through the GitHub integration. Terminal Git remains without
-push credentials. `main` is unchanged. The integration publishes a consolidated
+remote `vultr` branch through the GitHub integration. Terminal Git publication was subsequently verified on November 5; see
+[Vultr verification](VULTR_VERIFICATION.md) for the current source and CI evidence. `main` is unchanged. The integration publishes a consolidated
 commit containing the reviewed local source and permission bits; its commit ID
 can differ from the earlier local five-commit history.
 

@@ -152,3 +152,13 @@ were reread and applied at this boundary; actual service evidence is separate
 from controlled transport tests.
 Delegation is not independent security approval. The complete catalog remains
 versioned; no hooks, installers or global configuration changes ran.
+
+## Vultr release repair — 2026-11-05
+
+Reviewed and applied `verification-loop` and `security-review` from the preserved
+project catalog: reproduced CI failures, tested build-context exclusions with
+fictional secret canaries, isolated browser authentication fixtures without
+relaxing production throttling, and verified Chromium confinement with real
+containers. Read the Codex navigation guide from the pinned reference. Evidence:
+[Vultr verification](VULTR_VERIFICATION.md). No catalog changes, native hooks,
+new installer, or independent reviewer execution are claimed for this repair.

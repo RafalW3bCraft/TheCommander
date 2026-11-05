@@ -1,0 +1,17 @@
+{
+  "command": [
+    "uv",
+    "run",
+    "python",
+    "-m",
+    "scripts.live_research_smoke"
+  ],
+  "started_at": "2026-11-05T09:41:48.356789+00:00",
+  "finished_at": "2026-11-05T09:41:56.747913+00:00",
+  "exit_code": 0,
+  "seconds": 8.391,
+  "head": "eca70d15816c8a02a230c6a4f6ce4a399ee929c8",
+  "branch": "vultr",
+  "working_tree_diff_sha256": "9471eb941d3e0008c72be6e81603e583556c48386062eaff44c017d7881124f7",
+  "limitation": "diff hash is not the release manifest; final source input identity is recorded when packaging"
+}

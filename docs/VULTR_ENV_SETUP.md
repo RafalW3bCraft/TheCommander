@@ -2,9 +2,10 @@
 
 Checked against `vultr` commit `f5a90fa88611cff0c27cf9bc539ac5cadc38be0d` on 2026-11-05. This guide adds instructions; it does not install real keys or deploy infrastructure. Work on `vultr` only.
 
-## Current release facts
+## Historical starting evidence
 
-The GitHub publication succeeded. Subsequent CI provides newer evidence than the earlier local-only report:
+The following records the starting failure, not the latest release status. See
+[Vultr verification](VULTR_VERIFICATION.md) for current checks and blockers.
 
 | Gate | Observed result at f5a90fa |
 |---|---|
@@ -13,7 +14,7 @@ The GitHub publication succeeded. Subsequent CI provides newer evidence than the
 | Sandbox workflow | Failed building egress image: `COPY deploy/sandbox/proxy.py` was excluded from the root Docker context |
 | Real Vultr / gVisor deployment | Still unverified |
 
-Runs: [Verify release](https://github.com/RafalW3bCraft/TheCommander/actions/runs/41971716067), [Sandbox containment](https://github.com/RafalW3bCraft/TheCommander/actions/runs/41971716172). The release prompt starts by fixing these concrete failures. Changing keys alone will not fix either failure.
+Runs: [Verify release](https://github.com/RafalW3bCraft/TheCommander/actions/runs/41971716067), [Sandbox containment](https://github.com/RafalW3bCraft/TheCommander/actions/runs/41971716172). These failures were addressed in the November 5 repair cycle; current containment and deployment results are recorded separately.
 
 ## 1. Prepare the existing checkout
 
@@ -118,6 +119,12 @@ except (httpx.HTTPError, ValueError):
     sys.exit('Model discovery failed or returned malformed data; inspect account access/network without logging credentials.')
 PY
 ```
+
+A returned model catalog alone does **not** establish credential validity: the
+November 5 catalog request succeeded while an actual completion returned HTTP 401.
+Require a real text request and a genuine image-input request before activating
+models. Keep the Compute CLI credential in a separate protected administrative
+configuration; the application `VULTR_API_KEY` remains an inference key.
 
 Set the chosen text ID in **both** `PROVIDER_MODEL` and `SANDBOX_MODEL`. Set the proven image-input model in `SANDBOX_VISION_MODEL`. Keep `SANDBOX_ENABLED=false` until the execution runner passes containment checks.
 

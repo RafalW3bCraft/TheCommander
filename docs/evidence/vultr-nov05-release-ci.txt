@@ -1,0 +1,20 @@
+Source: 8ab487716b1d73395dca49fd87db1a5e54fa7821
+Run: https://github.com/RafalW3bCraft/TheCommander/actions/runs/42054356203
+Job: 127338557838; conclusion: success
+Selected actual check-result lines; controlled providers in app tests.
+2026-11-05T15:23:47.2310410Z 7 moderate severity vulnerabilities
+2026-11-05T15:24:08.2564882Z  + coverage==7.16.2
+2026-11-05T15:24:08.3504102Z All checks passed!
+2026-11-05T15:26:40.3705157Z ================================ tests coverage ================================
+2026-11-05T15:26:40.3706134Z _______________ coverage: platform linux, python 3.13.18-final-0 _______________
+2026-11-05T15:26:40.3736128Z TOTAL                             2542    241    91%
+2026-11-05T15:26:40.3736981Z Required test coverage of 80.0% reached. Total coverage: 90.52%
+2026-11-05T15:26:40.3737807Z ============ 176 passed, 4 skipped, 1 warning in 141.48s (0:02:21) =============
+2026-11-05T15:26:49.5068345Z 7 moderate severity vulnerabilities
+2026-11-05T15:27:45.5884545Z   11 passed (44.8s)
+2026-11-05T15:27:48.8096735Z No known vulnerabilities found
+2026-11-05T15:27:55.2973187Z No known vulnerabilities found
+2026-11-05T15:27:56.7818046Z 7 moderate severity vulnerabilities
+2026-11-05T15:27:56.8976835Z No configured private runtime values found in tracked/unignored release files or frontend bundle.
+2026-11-05T15:27:57.5766821Z (node:22470) [DEP0169] DeprecationWarning: `url.parse()` behavior is not standardized and prone to errors that have security implications. Use the WHATWG URL API instead. CVEs are not issued for `url.parse()` vulnerabilities.
+2026-11-05T15:27:59.5191414Z (node:22482) [DEP0169] DeprecationWarning: `url.parse()` behavior is not standardized and prone to errors that have security implications. Use the WHATWG URL API instead. CVEs are not issued for `url.parse()` vulnerabilities.

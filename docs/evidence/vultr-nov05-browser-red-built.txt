@@ -1,0 +1,29 @@
+
+> thecommander-ui@0.2.0 test:e2e
+> playwright test
+
+[WebServer] INFO:     Started server process [110244]
+[WebServer] INFO:     Waiting for application startup.
+[WebServer] INFO:     Application startup complete.
+[WebServer] INFO:     Uvicorn running on http://127.0.0.1:8010 (Press CTRL+C to quit)
+
+Running 11 tests using 1 worker
+
+(node:110427) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+(Use `node --trace-warnings ...` to show where the warning was created)
+  ✓   1 [chromium] › e2e/sandbox.spec.ts:4:1 › sandbox displays evidence and requires deliberate exact approval (6.4s)
+  ✓   2 [chromium] › e2e/workflows.spec.ts:14:1 › desktop owner memory connections three skills approvals and receipts (20.0s)
+  ✓   3 [chromium] › e2e/workflows.spec.ts:152:1 › mobile keyboard schedule survives closed page and can be edited paused deleted (7.7s)
+  ✓   4 [chromium] › e2e/workflows.spec.ts:243:1 › expired session returns to sign-in and tablet navigation remains usable (9.3s)
+  ✓   5 [chromium] › e2e/workflows.spec.ts:283:1 › delayed responses preserve memory search, edits, selected notes and cancelled runs (8.6s)
+  ✓   6 [chromium] › e2e/workflows.spec.ts:464:1 › conversation switching ignores delayed history (3.5s)
+  ✓   7 [chromium] › e2e/workflows.spec.ts:545:1 › settings persist and expose redacted health and privacy controls (6.1s)
+[WebServer] run_failure run=a22b0342-c4d2-4f07-91b3-c0497527211b code=disconnected type=DomainError
+  ✓   8 [chromium] › e2e/workflows.spec.ts:584:1 › empty memory and revoked inference show recoverable persisted states (9.6s)
+[WebServer] run_failure run=7522139c-d4ff-4084-8f6b-92541b645f5c code=disconnected type=DomainError
+  ✓   9 [chromium] › e2e/z-upgrade.spec.ts:18:1 › project selection scopes new runs and rejects stale project renames (6.5s)
+[WebServer] run_failure run=ffc6dc92-e96f-49d8-9369-96d20bc39789 code=disconnected type=DomainError
+  ✓  10 [chromium] › e2e/z-upgrade.spec.ts:108:1 › assistant renders safe Markdown without executing HTML or loading images (8.8s)
+  ✓  11 [chromium] › e2e/z-upgrade.spec.ts:184:1 › memory recall explains disabled and degraded index states (4.6s)
+
+  11 passed (1.7m)

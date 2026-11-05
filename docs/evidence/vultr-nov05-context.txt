@@ -1,0 +1,14 @@
+Emulate Docker CLI using podman. Create /etc/containers/nodocker to quiet msg.
+STEP 1/3: FROM docker.io/library/python:3.13-slim-bookworm@sha256:4cea12ab7d78a3312c85f8cab19b6971d4fe9704da25443986c0bc20a6678850
+STEP 2/3: COPY . /context
+--> 8ab60b55fec7
+STEP 3/3: RUN python -c "from pathlib import Path; p=Path('/context'); assert all((p/x).is_file() for x in ['deploy/sandbox/browser.py', 'deploy/sandbox/proxy.py']); assert not any((p/x).exists() for x in ['.env', '.env.runtime', '.env.private', 'deploy/sandbox/private.env', 'deploy/private.env', 'commander/.env.private', '.runtime/private', '.git/config', '.venv/private', '.tools/private', 'frontend/node_modules/private']); print('Required sandbox sources admitted; all private canaries excluded')"
+Required sandbox sources admitted; all private canaries excluded
+COMMIT localhost/commander-context-check:0591a398fb6047ebbd64ea8b3ff8c017
+--> 38b80406e12b
+Successfully tagged localhost/commander-context-check:0591a398fb6047ebbd64ea8b3ff8c017
+38b80406e12bbcf27948f2b25dcb42312b1431c8603685880506703e998ebde9
+Emulate Docker CLI using podman. Create /etc/containers/nodocker to quiet msg.
+Untagged: localhost/commander-context-check:0591a398fb6047ebbd64ea8b3ff8c017
+Deleted: 38b80406e12bbcf27948f2b25dcb42312b1431c8603685880506703e998ebde9
+Deleted: 8ab60b55fec79d31c575fd36973e5cb13829461714412d6f2550750aedb6cc17

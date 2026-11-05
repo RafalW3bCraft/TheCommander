@@ -1,0 +1,17 @@
+{
+  "command": [
+    "uv",
+    "run",
+    "python",
+    "-m",
+    "scripts.backup_smoke"
+  ],
+  "started_at": "2026-11-05T09:28:33.793387+00:00",
+  "finished_at": "2026-11-05T09:29:08.438324+00:00",
+  "exit_code": 0,
+  "seconds": 34.645,
+  "head": "eca70d15816c8a02a230c6a4f6ce4a399ee929c8",
+  "branch": "vultr",
+  "working_tree_diff_sha256": "11e8047d088b7c28e413ef8085ce22cd0f73bdbef5dbbef26843851ea4cc8a08",
+  "limitation": "diff hash is not the release manifest; final source input identity is recorded when packaging"
+}
