@@ -22,4 +22,6 @@ Playwright browser seccomp profile
 Source: https://github.com/microsoft/playwright/blob/v1.64.1/utils/docker/seccomp_profile.json
 Copyright Microsoft Corporation and Playwright contributors; Apache License 2.0.
 The supplied deployment profile is an upstream Docker seccomp policy with Chromium
-user namespace permissions. See deploy/sandbox/LICENSE.playwright for the license.
+user namespace permissions, locally adapted to return ENOSYS for denied clone3
+and permit Chromium chroot inside its user namespace without granting the outer
+container CAP_SYS_CHROOT. See deploy/sandbox/LICENSE.playwright for the license.

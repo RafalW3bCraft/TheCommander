@@ -2,6 +2,9 @@
 
 import json
 import os
+import subprocess
+import tempfile
+import uuid
 
 import pytest
 from test_sandbox_policy import config
@@ -58,6 +61,50 @@ def test_real_code_timeout_and_output_flood():
     result = DockerRunner(cfg).execute("code", "while True: print('x' * 8192, flush=True)")
     assert result["receipt"]["stop_reason"] == "output_limit"
     assert result["receipt"]["destroyed"]
+
+
+@pytest.mark.skipif(os.getenv("RUN_SANDBOX_BROWSER") != "1", reason="Requires browser image")
+def test_real_browser_sandbox_launch_without_network():
+    """Exercise libc threads and Chromium namespaces before involving remote pages."""
+    runner = DockerRunner(runtime())
+    name = "commander-launch-" + uuid.uuid4().hex
+    script = """
+import os, threading
+thread = threading.Thread(target=lambda: None)
+thread.start()
+thread.join()
+try:
+    os.chroot('/tmp')
+    raise AssertionError('outer process unexpectedly has chroot authority')
+except PermissionError:
+    pass
+from playwright.sync_api import sync_playwright
+with sync_playwright() as p:
+    browser = p.chromium.launch(headless=True, chromium_sandbox=True)
+    page = browser.new_page()
+    page.set_content('<title>Contained</title>')
+    assert page.title() == 'Contained'
+    browser.close()
+print('sandboxed Chromium launched; outer chroot denied')
+"""
+    with tempfile.TemporaryDirectory(prefix="commander-launch-") as directory:
+        base = runner._base(directory)
+        try:
+            result = subprocess.run(
+                base
+                + ["run", "--pull=never", *runner.flags(name, "none", True)]
+                + [runner.settings.sandbox_browser_image, "python", "-c", script],
+                env=runner._env(),
+                capture_output=True,
+                text=True,
+                timeout=30,
+            )
+            # Only fixed local HTML and no credentials/network enter this diagnostic.
+            assert result.returncode == 0, result.stderr[-12000:]
+            assert "sandboxed Chromium launched" in result.stdout
+        finally:
+            runner._control(base, ["rm", "-f", name], check=False)
+        assert runner._control(base, ["inspect", name], check=False).returncode != 0
 
 
 @pytest.mark.skipif(

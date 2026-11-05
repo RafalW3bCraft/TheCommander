@@ -51,6 +51,17 @@
 	],
 	"syscalls": [
 		{
+			"comment": "Keep clone3 denied with ENOSYS so libc uses permitted clone for threads",
+			"names": ["clone3"],
+			"action": "SCMP_ACT_ERRNO",
+			"errnoRet": 38
+		},
+		{
+			"comment": "Chromium chroots inside its user namespace; outer process has no CAP_SYS_CHROOT",
+			"names": ["chroot"],
+			"action": "SCMP_ACT_ALLOW"
+		},
+		{
 			"comment": "Allow create user namespaces",
 			"names": [
 				"clone",
