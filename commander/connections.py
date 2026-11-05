@@ -9,7 +9,7 @@ from commander.errors import DomainError
 from commander.providers import Provider, ProviderError
 from commander.settings import inference_endpoint, inference_model
 
-KINDS = ("nebius", "github", "tavily", "workspace", "openai", "anthropic")
+KINDS = ("nebius", "github", "tavily", "workspace", "openai", "anthropic", "vultr")
 
 
 def usable_secret(value):
@@ -166,7 +166,7 @@ class Connections:
         status, detail = "validated", "Connection checked successfully"
         try:
             secret = self.secret(row)
-            if kind in ("nebius", "openai", "anthropic"):
+            if kind in ("nebius", "openai", "anthropic", "vultr"):
                 from commander.inference import validate_model
                 from commander.preferences import discover
 
@@ -251,6 +251,7 @@ class Connections:
             ("nebius", self.settings.nebius_api_key),
             ("openai", self.settings.openai_api_key),
             ("anthropic", self.settings.anthropic_api_key),
+            ("vultr", self.settings.vultr_api_key),
             ("github", self.settings.github_token),
             ("tavily", self.settings.tavily_api_key),
         ]:

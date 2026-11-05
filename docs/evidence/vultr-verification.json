@@ -1,0 +1,61 @@
+{
+  "date": "2026-11-04",
+  "branch": "vultr",
+  "baseline": "96fcd1f8fdd0d64ebba486acb67e2c56e5851b7a",
+  "python_tests": {
+    "passed": 34,
+    "skipped": 3,
+    "skipped_reason": "Opt-in real Docker runner unavailable",
+    "evidence_type": "offline policy/driver/release contracts"
+  },
+  "browser_ui": {
+    "passed": 1,
+    "browser": "Chromium 153",
+    "backend": "mocked",
+    "viewports": [
+      {
+        "width": 1440,
+        "height": 1000
+      },
+      {
+        "width": 390,
+        "height": 844
+      }
+    ],
+    "checks": [
+      "exact approval gated by checkbox and password",
+      "receipt export",
+      "desktop/mobile axe",
+      "no horizontal overflow"
+    ],
+    "evidence_type": "real browser, fixture API"
+  },
+  "static_checks": {
+    "ruff": "passed",
+    "mypy": "passed",
+    "typescript_build": "passed",
+    "eslint": "passed",
+    "prettier": "passed",
+    "configured_secret_scan": "passed"
+  },
+  "audit": {
+    "python": "no known vulnerabilities reported",
+    "frontend_production": 0,
+    "frontend_development_moderate": 13,
+    "advisory": "GHSA-g3hv-75wg-m249"
+  },
+  "blocked": {
+    "github_publication": "HTTP 403 Resource not accessible by integration; terminal credentials unavailable",
+    "ci": "not triggered",
+    "postgresql_integration": "connection refused at localhost:5433; 11 tests written, no assertions executed",
+    "docker_gvisor": "not available locally",
+    "vultr_text_and_vision": "no configured credentials",
+    "deployment_demo_submission": "not performed"
+  },
+  "preservation": {
+    "removed_files": 0,
+    "baseline_api_paths": "all preserved",
+    "private_environment_or_key_files_changed": false,
+    "new_sandbox_api_paths": 8
+  }
+}

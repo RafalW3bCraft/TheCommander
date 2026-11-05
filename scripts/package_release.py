@@ -41,6 +41,7 @@ FRONTEND = {
     "frontend/tsconfig.json",
     "frontend/vite.config.ts",
     "frontend/playwright.config.ts",
+    "frontend/playwright.sandbox-ui.config.ts",
     "frontend/eslint.config.js",
     "frontend/index.html",
 }
@@ -82,6 +83,13 @@ REQUIRED = (TOP | FRONTEND) - {"docs/evidence/.gitkeep"} | {
     "frontend/src/ProjectSelector.tsx",
     "frontend/src/SafeMarkdown.tsx",
     "frontend/src/useRunEvents.ts",
+    "frontend/src/SandboxPage.tsx",
+    "commander/migrations/010_vultr_sandbox.sql",
+    "commander/sandbox/worker.py",
+    "commander/sandbox/runner.py",
+    "deploy/sandbox/browser.py",
+    "deploy/sandbox/proxy.py",
+    "deploy/sandbox/seccomp-browser.json",
 }
 
 

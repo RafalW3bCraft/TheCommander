@@ -1,0 +1,4 @@
+# Opt-in loopback access for the trusted host runner only. Never publish externally.
+services:
+  db:
+    ports: ["127.0.0.1:5434:5432"]

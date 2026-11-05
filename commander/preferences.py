@@ -31,7 +31,7 @@ FIELDS = (
 
 
 class Preferences(Strict):
-    inference_provider: Literal["nebius", "openai", "anthropic"] | None = None
+    inference_provider: Literal["nebius", "openai", "anthropic", "vultr"] | None = None
     provider_model: str | None = Field(default=None, pattern=r"^[A-Za-z0-9_.:/-]*$", max_length=200)
     nebius_model: str | None = Field(
         default=None, pattern=r"^nvidia/[A-Za-z0-9_.-]+$", max_length=200
@@ -122,7 +122,7 @@ def view(db, operator, owner):
 
 def discover(provider, settings, secret):
     kind = settings.inference_provider
-    if kind not in ("nebius", "openai", "anthropic"):
+    if kind not in ("nebius", "openai", "anthropic", "vultr"):
         raise DomainError("Unsupported inference provider", 422, "unsupported_provider")
     # Bounded account discovery. No provider-controlled URL is followed.
     path = "/models?limit=1000" if kind == "anthropic" else "/models"
@@ -141,6 +141,8 @@ def discover(provider, settings, secret):
             return model.startswith("nvidia/")
         if kind == "anthropic":
             return model.startswith("claude-")
+        if kind == "vultr":
+            return True
         # Listing alone does not promise chat/tool capability: selection also
         # executes the validation probe, with no automatic fallback.
         return model.startswith(("gpt-", "o1", "o3", "o4")) and not any(

@@ -74,7 +74,7 @@ def install_routes(app, db, settings, principal, transport):
 
     @app.get("/api/models", response_model=preferences.ModelsView)
     def models(provider: str = "nebius", owner=Depends(principal)):
-        if provider not in ("nebius", "openai", "anthropic"):
+        if provider not in ("nebius", "openai", "anthropic", "vultr"):
             raise DomainError("Unsupported provider", 422)
         from commander.connections import owner_lock
         from commander.providers import Provider

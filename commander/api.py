@@ -254,6 +254,9 @@ def create_app(settings=None, transport=None):
     from commander.routes import install_routes
 
     install_routes(app, db, settings, principal, transport)
+    from commander.sandbox.service import install as install_sandbox
+
+    install_sandbox(app, db, settings, principal)
     dist = Path(__file__).parent.parent / "frontend" / "dist"
     if dist.exists():
         app.mount("/assets", StaticFiles(directory=dist / "assets"), name="assets")

@@ -28,6 +28,7 @@ class Provider:
             not in {
                 "api.github.com",
                 "api.openai.com",
+                "api.vultrinference.com",
                 "api.anthropic.com",
                 "api.tavily.com",
                 "api.tokenfactory.nebius.com",
@@ -99,7 +100,7 @@ class Provider:
     def completion(self, secret, messages, tools=None, timeout=30):
         if self.settings.inference_provider == "anthropic":
             return self._anthropic_completion(secret, messages, tools, timeout)
-        if self.settings.inference_provider not in ("nebius", "openai"):
+        if self.settings.inference_provider not in ("nebius", "openai", "vultr"):
             raise ProviderError("Unsupported inference provider", 422, "unsupported_provider")
         body = {
             "model": inference_model(self.settings),

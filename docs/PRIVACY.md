@@ -53,3 +53,22 @@ failed updates. Operator backups can retain older copies under the configured
 retention policy; deleting a current record does not erase historical backups or
 previous conversation messages. The separate index database needs its own backup,
 retention and restore procedures before production enablement.
+
+
+## Optional Vultr Sandbox workspace
+
+Sandbox goals and bounded execution outputs are persisted in PostgreSQL. Browser
+observations include page text and screenshots; the original approval screenshot,
+plan and URL remain in the approval snapshot for review after execution. Vultr
+receives goals, bounded code output and browser screenshots for planning and
+verification. Browser traffic reaches only the operator-approved public HTTPS
+domains through the per-task gateway. Task containers receive no provider keys,
+application environment, owner sessions or memory database mounts.
+
+Use fictional/public input for the current demo. Entered goal or form values can
+themselves contain sensitive information; container isolation does not redact
+user-supplied secrets. Exported job JSON includes screenshots and plan values.
+Sandbox history currently has no user-facing retention/delete control; operators
+must include it in database retention and backup deletion procedures. Do not
+claim that deleting a memory item deletes separate sandbox evidence or provider
+copies.

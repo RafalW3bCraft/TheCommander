@@ -23,8 +23,18 @@ class Settings(BaseSettings):
         default="nvidia/nemotron-3-super-120b-a12b",
         validation_alias=AliasChoices("NEBIUS_MODEL", "MODEL_ID", "nebius_model"),
     )
-    inference_provider: Literal["nebius", "openai", "anthropic"] = "nebius"
+    inference_provider: Literal["nebius", "openai", "anthropic", "vultr"] = "nebius"
     provider_model: str = Field(default="", max_length=200, pattern=r"^[A-Za-z0-9_.:/-]*$")
+    vultr_api_key: str = ""
+    sandbox_enabled: bool = False
+    sandbox_code_image: str = "docker.io/library/python:3.13-slim-bookworm@sha256:4cea12ab7d78a3312c85f8cab19b6971d4fe9704da25443986c0bc20a6678850"
+    sandbox_proxy_image: str = "localhost/commander-egress:1"
+    sandbox_browser_image: str = "localhost/commander-browser:1.64.1"
+    sandbox_model: str = Field(default="", max_length=200, pattern=r"^[A-Za-z0-9_.:/-]*$")
+    sandbox_vision_model: str = Field(default="", max_length=200, pattern=r"^[A-Za-z0-9_.:/-]*$")
+    sandbox_browser_domains: list[str] = Field(default_factory=list, max_length=20)
+    sandbox_timeout_seconds: int = Field(default=45, ge=5, le=120)
+    sandbox_runtime: str = Field(default="runsc", pattern=r"^[a-z][a-z0-9_-]{0,30}$")
     openai_api_key: str = ""
     anthropic_api_key: str = ""
     memory_index_url: str = ""
@@ -74,7 +84,11 @@ def inference_model(settings):
 
 
 def inference_endpoint(settings):
-    endpoints = {"openai": "https://api.openai.com/v1", "anthropic": "https://api.anthropic.com/v1"}
+    endpoints = {
+        "vultr": "https://api.vultrinference.com/v1",
+        "openai": "https://api.openai.com/v1",
+        "anthropic": "https://api.anthropic.com/v1",
+    }
     return (
         settings.nebius_base_url
         if settings.inference_provider == "nebius"

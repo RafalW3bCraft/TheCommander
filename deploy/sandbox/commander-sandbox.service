@@ -1,0 +1,26 @@
+[Unit]
+Description=TheCommander isolated task control worker
+After=network-online.target docker.service
+Wants=network-online.target
+Requires=docker.service
+
+[Service]
+Type=simple
+User=commander-runner
+Group=commander-runner
+SupplementaryGroups=docker
+WorkingDirectory=/opt/thecommander
+EnvironmentFile=/etc/thecommander/runner.env
+ExecStart=/opt/thecommander/.venv/bin/python -m commander.sandbox.worker
+Restart=on-failure
+RestartSec=5
+TimeoutStopSec=15
+UMask=0077
+NoNewPrivileges=true
+PrivateTmp=true
+ProtectSystem=strict
+ProtectHome=true
+ReadWritePaths=/opt/thecommander/.runtime
+
+[Install]
+WantedBy=multi-user.target

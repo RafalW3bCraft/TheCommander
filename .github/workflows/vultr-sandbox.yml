@@ -1,0 +1,25 @@
+name: Vultr sandbox containment
+on:
+  push:
+    branches: [vultr]
+  workflow_dispatch:
+permissions:
+  contents: read
+jobs:
+  docker-containment:
+    runs-on: ubuntu-latest
+    timeout-minutes: 20
+    steps:
+      - uses: actions/checkout@v4
+      - uses: astral-sh/setup-uv@v6
+        with: {version: "0.13.1"}
+      - run: uv sync --frozen
+      - run: docker pull docker.io/library/python:3.13-slim-bookworm@sha256:4cea12ab7d78a3312c85f8cab19b6971d4fe9704da25443986c0bc20a6678850
+      - run: docker build -f deploy/sandbox/Dockerfile.egress -t localhost/commander-egress:1 .
+      - run: docker build -f deploy/sandbox/Dockerfile.browser -t localhost/commander-browser:1.64.1 .
+      - name: Real Docker code and browser execution (runc CI, not deployment gVisor)
+        env:
+          RUN_SANDBOX_DOCKER: "1"
+          RUN_SANDBOX_BROWSER: "1"
+          SANDBOX_TEST_RUNTIME: runc
+        run: uv run pytest -q tests/test_sandbox_docker.py

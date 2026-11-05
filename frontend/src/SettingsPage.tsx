@@ -125,6 +125,7 @@ export function SettingsPage({
                 <option value="nebius">Nebius · NVIDIA (default)</option>
                 <option value="openai">OpenAI API</option>
                 <option value="anthropic">Anthropic API</option>
+                <option value="vultr">Vultr Serverless Inference</option>
               </select>
             </label>
             <p>

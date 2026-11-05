@@ -1,3 +1,4 @@
+import { SandboxPage } from "./SandboxPage";
 import { MemorySearch } from "./MemorySearch";
 import React, { useCallback, useEffect, useRef, useState } from "react";
 import { createRoot } from "react-dom/client";
@@ -210,17 +211,22 @@ function App() {
           TheCommander<span>Personal engineering assistant</span>
         </a>
         <nav aria-label="Primary">
-          {["Assistant", "Memory", "Skills", "Settings", "Activity"].map(
-            (p) => (
-              <button
-                key={p}
-                aria-current={page === p ? "page" : undefined}
-                onClick={() => setPage(p)}
-              >
-                {p}
-              </button>
-            ),
-          )}
+          {[
+            "Assistant",
+            "Sandbox",
+            "Memory",
+            "Skills",
+            "Settings",
+            "Activity",
+          ].map((p) => (
+            <button
+              key={p}
+              aria-current={page === p ? "page" : undefined}
+              onClick={() => setPage(p)}
+            >
+              {p}
+            </button>
+          ))}
         </nav>
         <button
           className="quiet theme-toggle"
@@ -252,6 +258,8 @@ function App() {
         </header>
         {page === "Assistant" ? (
           <Today />
+        ) : page === "Sandbox" ? (
+          <SandboxPage />
         ) : page === "Memory" ? (
           <MemoryPage />
         ) : page === "Skills" ? (
@@ -1319,20 +1327,22 @@ function ConnectionCard({
         <h2>
           {c.kind === "nebius"
             ? "Nebius · NVIDIA inference"
-            : c.kind === "openai"
-              ? "OpenAI API"
-              : c.kind === "anthropic"
-                ? "Anthropic API"
-                : c.kind === "github"
-                  ? "GitHub"
-                  : c.kind === "tavily"
-                    ? "Tavily research"
-                    : "Workspace notes"}
+            : c.kind === "vultr"
+              ? "Vultr Serverless Inference"
+              : c.kind === "openai"
+                ? "OpenAI API"
+                : c.kind === "anthropic"
+                  ? "Anthropic API"
+                  : c.kind === "github"
+                    ? "GitHub"
+                    : c.kind === "tavily"
+                      ? "Tavily research"
+                      : "Workspace notes"}
         </h2>
         <Status value={c.status} />
       </div>
       <p>
-        {["nebius", "openai", "anthropic"].includes(c.kind)
+        {["nebius", "openai", "anthropic", "vultr"].includes(c.kind)
           ? "Receives your selected conversation and memory context."
           : c.kind === "github"
             ? "Reads one repository. Issue creation requires exact approval."
