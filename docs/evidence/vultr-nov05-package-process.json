@@ -1,0 +1,13 @@
+{
+  "command": [
+    "uv",
+    "run",
+    "python",
+    "-m",
+    "scripts.verify_package"
+  ],
+  "head": "23e1fb3fd961d780d217c1cc999eac8316d3d825",
+  "status": "Blocked",
+  "exit_code": 143,
+  "limitation": "Process terminated during Compose recreate after startup checks; no final verification report. Only its own disposable project was selected for cleanup. Cause not established."
+}
