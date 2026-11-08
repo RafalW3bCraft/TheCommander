@@ -1,0 +1,13 @@
+{
+  "command": [
+    "./scripts/verify.sh"
+  ],
+  "started_at": "2026-10-29T22:02:40.797369+00:00",
+  "finished_at": "2026-10-29T22:02:40.810905+00:00",
+  "exit_code": 127,
+  "seconds": 0.013,
+  "head": "9cf3f2d895539b1dc686627b5a1ebf7817213bbe",
+  "branch": "feat/enhance-codex-+",
+  "working_tree_diff_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+  "limitation": "diff hash is not the release manifest; final source input identity is recorded when packaging"
+}

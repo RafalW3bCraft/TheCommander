@@ -98,7 +98,10 @@ class Worker:
         dispatch_due(self.db, self.settings)
         run = self.claim()
         if not run:
-            return False
+            from commander.memory_sync import configured_index, sync_one
+
+            index = configured_index(self.settings)
+            return sync_one(self.db, index) if index else False
         event(self.db, run["id"], "started", {"attempt": run["attempts"]})
         try:
             self.engine.execute(run)

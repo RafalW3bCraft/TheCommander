@@ -1,0 +1,343 @@
+Created .env.runtime with mode 0600. Use its bootstrap token on first sign-in.
+Added a local Compose database password without changing existing settings.
+Using CPython 3.13.5 interpreter at: /bin/python3
+Creating virtual environment at: .venv
+Downloading cryptography (4.5MiB)
+Downloading mypy (14.0MiB)
+Downloading pydantic-core (2.1MiB)
+Downloading pygments (1.2MiB)
+Downloading ruff (9.9MiB)
+Downloading psycopg-binary (5.0MiB)
+Downloading pip (1.7MiB)
+ Downloaded pygments
+ Downloaded pip
+ Downloaded pydantic-core
+ Downloaded psycopg-binary
+ Downloaded cryptography
+ Downloaded ruff
+ Downloaded mypy
+Prepared 62 packages in 27.47s
+warning: Failed to hardlink files; falling back to full copy. This may lead to degraded performance.
+         If the cache and target directories are on different filesystems, hardlinking may not be supported.
+         If this is intentional, set `export UV_LINK_MODE=copy` or use `--link-mode=copy` to suppress this warning.
+Installed 62 packages in 921ms
+ + annotated-doc==0.0.5
+ + annotated-types==0.8.0
+ + anyio==4.15.1
+ + argon2-cffi==25.1.0
+ + argon2-cffi-bindings==26.1.0
+ + boolean-py==5.0
+ + cachecontrol==0.14.4
+ + certifi==2026.10.19
+ + cffi==2.1.1
+ + charset-normalizer==3.5.2
+ + click==8.5.0
+ + coverage==7.16.2
+ + cryptography==50.0.2
+ + cyclonedx-python-lib==11.12.0
+ + defusedxml==0.7.1
+ + fastapi==0.159.1
+ + filelock==4.2.4
+ + h11==0.16.0
+ + httpcore==1.0.9
+ + httpx==0.28.1
+ + idna==3.20
+ + iniconfig==2.3.1
+ + librt==0.16.0
+ + license-expression==30.4.4
+ + markdown-it-py==4.2.0
+ + mdurl==0.1.2
+ + msgpack==1.2.3
+ + mypy==1.20.2
+ + mypy-extensions==1.1.0
+ + opentelemetry-api==1.45.1
+ + packageurl-python==0.17.6
+ + packaging==26.3
+ + pathspec==1.1.1
+ + pip==26.2.2
+ + pip-api==0.0.35
+ + pip-audit==2.10.1
+ + pip-requirements-parser==32.0.1
+ + platformdirs==4.13.5
+ + pluggy==1.7.0
+ + psycopg==3.3.6
+ + psycopg-binary==3.3.6
+ + py-serializable==2.1.0
+ + pycparser==3.11
+ + pydantic==2.14.1
+ + pydantic-core==2.50.1
+ + pydantic-settings==2.16.1
+ + pygments==2.21.0
+ + pyparsing==3.3.3
+ + pytest==9.1.1
+ + pytest-cov==7.1.0
+ + python-dotenv==1.2.4
+ + requests==2.34.2
+ + rich==15.0.0
+ + ruff==0.17.1
+ + sortedcontainers==2.4.0
+ + starlette==1.9.0
+ + tomli==2.5.0
+ + tomli-w==1.2.0
+ + typing-extensions==4.16.0
+ + typing-inspection==0.4.4
+ + urllib3==2.8.0
+ + uvicorn==0.54.0
+Existing .env.runtime preserved.
+Emulate Docker CLI using podman. Create /etc/containers/nodocker to quiet msg.
+[4m>>>> Executing external compose provider "/usr/libexec/docker/cli-plugins/docker-compose". Please see podman-compose(1) for how to disable this message. <<<<
+
+[0m db Pulling 
+ worker Pulling 
+ worker Error {"message":"connection refused"}
+ 11422d7ca1a4 Already exists 
+ 32ac211a4068 Pulling fs layer 
+ 80015fd97697 Pulling fs layer 
+ 32ac211a4068 Downloading [=============================>                     ]  2.697MB/4.534MB
+ 80015fd97697 Downloading [====================>                              ]  513.5kB/1.25MB
+ abc91d04c190 Pulling fs layer 
+ abc91d04c190 Downloading [======>                                            ]  146.2kB/1.196MB
+ 3d633189a257 Pulling fs layer 
+ b69f574b66a3 Pulling fs layer 
+ abc91d04c190 Downloading [========>                                          ]  193.7kB/1.196MB
+ 3d633189a257 Downloading [===============================>                   ]  5.049MB/8.066MB
+ 32ac211a4068 Download complete 
+ 80015fd97697 Download complete 
+ 3d633189a257 Downloading [======================================>            ]  6.282MB/8.066MB
+ 3d633189a257 Downloading [==========================================>        ]   6.81MB/8.066MB
+ a03cba1ee28f Pulling fs layer 
+ b69f574b66a3 Download complete 
+ ebb1e532806b Pulling fs layer 
+ abc91d04c190 Download complete 
+ c5f39862cce6 Pulling fs layer 
+ c5f39862cce6 Downloading [=======>                                           ]     17MB/112.9MB
+ c5f39862cce6 Downloading [=========>                                         ]   20.9MB/112.9MB
+ 3d633189a257 Download complete 
+ 1dc57ea82d8b Pulling fs layer 
+ c5f39862cce6 Downloading [==========>                                        ]  23.98MB/112.9MB
+ c5f39862cce6 Downloading [========================>                          ]  55.01MB/112.9MB
+ c5f39862cce6 Downloading [==========================>                        ]  58.75MB/112.9MB
+ c5f39862cce6 Downloading [===========================>                       ]  62.35MB/112.9MB
+ c5f39862cce6 Downloading [=============================>                     ]  65.81MB/112.9MB
+ 1dc57ea82d8b Download complete 
+ ebb1e532806b Download complete 
+ c5f39862cce6 Downloading [==============================>                    ]  69.57MB/112.9MB
+ c5f39862cce6 Downloading [================================>                  ]  73.28MB/112.9MB
+ c5f39862cce6 Downloading [=================================>                 ]  74.82MB/112.9MB
+ 66361375bc70 Pulling fs layer 
+ 34c01ab7a545 Pulling fs layer 
+ 2433825d376d Pulling fs layer 
+ c5f39862cce6 Downloading [======================================>            ]  86.09MB/112.9MB
+ c5f39862cce6 Downloading [=======================================>           ]  90.24MB/112.9MB
+ c5f39862cce6 Downloading [=========================================>         ]   94.2MB/112.9MB
+ c5f39862cce6 Downloading [===========================================>       ]  97.87MB/112.9MB
+ c5f39862cce6 Downloading [============================================>      ]  101.3MB/112.9MB
+ c5f39862cce6 Downloading [==============================================>    ]  104.4MB/112.9MB
+ c5f39862cce6 Downloading [=================================================> ]  112.3MB/112.9MB
+ c5f39862cce6 Downloading [=================================================> ]  112.4MB/112.9MB
+ 66361375bc70 Download complete 
+ c5f39862cce6 Download complete 
+ 34c01ab7a545 Download complete 
+ 2433825d376d Download complete 
+ eb2a6aab6a8e Pulling fs layer 
+ eb2a6aab6a8e Download complete 
+ a03cba1ee28f Download complete 
+ e4bdd2f9eeab Pulling fs layer 
+ e4bdd2f9eeab Download complete 
+ e4bdd2f9eeab Download complete 
+ db Pulled 
+Sending build context to Docker daemon  208.6kB
+[1/2] STEP 1/6: FROM docker.io/library/node:22-bookworm-slim@sha256:de170b39439eb0e5a3444ad7d60b015614a381e10fecae2e30ec9e735122f38d AS frontend
+Trying to pull docker.io/library/node@sha256:de170b39439eb0e5a3444ad7d60b015614a381e10fecae2e30ec9e735122f38d...
+Getting image source signatures
+Copying blob sha256:9d58805976c12f11013d188c510c3520e3f061c1b311d4905afe5865aa496e63
+Copying blob sha256:ba8be34911c2eabcd63c9da67f2e8887ddf912df62c1223ca377ef9e9655cfba
+Copying blob sha256:b43ad0aedb87ae13912d52799d0d5552c146dced05197a7fa83b117cb3308906
+Copying blob sha256:696628b66b50a8ea2d374542f47107bc19fb3fd29825211da5c68b74a1b01555
+Copying blob sha256:11422d7ca1a44390a32bd8d8d9dc5946b4d053b3bbd9507d682e35584ba84a26
+Copying config sha256:58a96d9752cfedf3c4fcfcbe2dabbad725c147f7003caa9f7899a3f414ada3fc
+Writing manifest to image destination
+[1/2] STEP 2/6: WORKDIR /build/frontend
+--> 9c5f0f2082a1
+[1/2] STEP 3/6: COPY frontend/package.json frontend/package-lock.json ./
+--> 71e6664e3c9f
+[1/2] STEP 4/6: RUN npm ci
+npm warn deprecated eslint@9.39.5: This version is no longer supported. Please see https://eslint.org/version-support for other options.
+
+added 204 packages, and audited 205 packages in 1m
+
+52 packages are looking for funding
+  run `npm fund` for details
+
+7 moderate severity vulnerabilities
+
+To address issues that do not require attention, run:
+  npm audit fix
+
+To address all issues (including breaking changes), run:
+  npm audit fix --force
+
+Run `npm audit` for details.
+npm notice
+npm notice New major version of npm available! 10.9.9 -> 12.2.2
+npm notice Changelog: https://github.com/npm/cli/releases/tag/v12.2.2
+npm notice To update run: npm install -g npm@12.2.2
+npm notice
+--> 139d86b1f077
+[1/2] STEP 5/6: COPY frontend/ ./
+--> 53445670a294
+[1/2] STEP 6/6: RUN npm run build
+
+> thecommander-ui@0.2.0 build
+> tsc --noEmit && vite build
+
+vite v6.4.5 building for production...
+transforming...
+✓ 35 modules transformed.
+rendering chunks...
+computing gzip size...
+dist/index.html                   0.36 kB │ gzip:  0.26 kB
+dist/assets/index-JwzF8Pw-.css    8.72 kB │ gzip:  2.66 kB
+dist/assets/index-B1gJpl10.js   274.75 kB │ gzip: 85.41 kB
+✓ built in 2.54s
+--> 49566e2996cc
+[2/2] STEP 1/14: FROM docker.io/library/python:3.13-slim-bookworm@sha256:4cea12ab7d78a3312c85f8cab19b6971d4fe9704da25443986c0bc20a6678850
+[2/2] STEP 2/14: ENV PYTHONDONTWRITEBYTECODE=1 PYTHONUNBUFFERED=1 UV_LINK_MODE=copy
+--> 522a389bd4fe
+[2/2] STEP 3/14: WORKDIR /app
+--> 19d5a3518e4a
+[2/2] STEP 4/14: RUN pip install --no-cache-dir uv==0.13.1 && groupadd --gid 10001 commander && useradd --uid 10001 --gid 10001 --create-home commander
+Collecting uv==0.13.1
+  Downloading uv-0.13.1-py3-none-manylinux_2_17_x86_64.manylinux2014_x86_64.whl.metadata (11 kB)
+Downloading uv-0.13.1-py3-none-manylinux_2_17_x86_64.manylinux2014_x86_64.whl (17.3 MB)
+   ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ 17.3/17.3 MB 2.4 MB/s  0:00:07
+Installing collected packages: uv
+Successfully installed uv-0.13.1
+WARNING: Running pip as the 'root' user can result in broken permissions and conflicting behaviour with the system package manager, possibly rendering your system unusable. It is recommended to use a virtual environment instead: https://pip.pypa.io/warnings/venv. Use the --root-user-action option if you know what you are doing and want to suppress this warning.
+
+[notice] A new release of pip is available: 26.2.2 -> 26.3
+[notice] To update, run: pip install --upgrade pip
+--> 7e0ce7a65b6f
+[2/2] STEP 5/14: COPY pyproject.toml uv.lock ./
+--> 26e2fa7a5f1a
+[2/2] STEP 6/14: RUN uv sync --frozen --no-dev
+Using CPython 3.13.17 interpreter at: /usr/local/bin/python3
+Creating virtual environment at: .venv
+Downloading cryptography (4.5MiB)
+Downloading psycopg-binary (5.0MiB)
+Downloading pydantic-core (2.1MiB)
+ Downloaded pydantic-core
+ Downloaded cryptography
+ Downloaded psycopg-binary
+Prepared 26 packages in 5.13s
+Installed 26 packages in 402ms
+ + annotated-doc==0.0.5
+ + annotated-types==0.8.0
+ + anyio==4.15.1
+ + argon2-cffi==25.1.0
+ + argon2-cffi-bindings==26.1.0
+ + certifi==2026.10.19
+ + cffi==2.1.1
+ + click==8.5.0
+ + cryptography==50.0.2
+ + fastapi==0.159.1
+ + h11==0.16.0
+ + httpcore==1.0.9
+ + httpx==0.28.1
+ + idna==3.20
+ + opentelemetry-api==1.45.1
+ + psycopg==3.3.6
+ + psycopg-binary==3.3.6
+ + pycparser==3.11
+ + pydantic==2.14.1
+ + pydantic-core==2.50.1
+ + pydantic-settings==2.16.1
+ + python-dotenv==1.2.4
+ + starlette==1.9.0
+ + typing-extensions==4.16.0
+ + typing-inspection==0.4.4
+ + uvicorn==0.54.0
+--> 896638c099fe
+[2/2] STEP 7/14: COPY commander/ commander/
+--> f492285f0ed7
+[2/2] STEP 8/14: COPY --from=frontend /build/frontend/dist frontend/dist
+--> be91362d182a
+[2/2] STEP 9/14: RUN mkdir -p /data/notes && chown -R commander:commander /data /app
+--> 95f3104a9da8
+[2/2] STEP 10/14: USER commander
+--> 007f9f90b566
+[2/2] STEP 11/14: ENV PATH="/app/.venv/bin:$PATH" WORKSPACE_ROOT=/data/notes
+--> eebdd48d6719
+[2/2] STEP 12/14: EXPOSE 8000
+--> c0d566321365
+[2/2] STEP 13/14: CMD ["uvicorn", "commander.api:create_app", "--factory", "--host", "0.0.0.0", "--port", "8000", "--no-access-log"]
+--> 484e1c29b562
+[2/2] STEP 14/14: LABEL "com.docker.compose.image.builder"="classic"
+[2/2] COMMIT localhost/thecommander:0.2.0
+--> 09dce25be7d4
+Successfully tagged localhost/thecommander:0.2.0
+09dce25be7d4fe301718d330775ec8238033631874fde1203e800b2a250522b9
+Successfully built 09dce25be7d4
+Successfully tagged localhost/thecommander:0.2.0
+ Network thecommander-cleancheck-a238f6e524_default  Creating
+ Network thecommander-cleancheck-a238f6e524_default  Created
+ Volume "thecommander-cleancheck-a238f6e524_database"  Creating
+ Volume "thecommander-cleancheck-a238f6e524_database"  Created
+ Volume "thecommander-cleancheck-a238f6e524_notes"  Creating
+ Volume "thecommander-cleancheck-a238f6e524_notes"  Created
+ Container thecommander-cleancheck-a238f6e524-db-1  Creating
+ Container thecommander-cleancheck-a238f6e524-db-1  Created
+ Container thecommander-cleancheck-a238f6e524-api-1  Creating
+ Container thecommander-cleancheck-a238f6e524-worker-1  Creating
+ Container thecommander-cleancheck-a238f6e524-worker-1  Created
+ Container thecommander-cleancheck-a238f6e524-api-1  Created
+ Container thecommander-cleancheck-a238f6e524-db-1  Starting
+ Container thecommander-cleancheck-a238f6e524-db-1  Started
+ Container thecommander-cleancheck-a238f6e524-db-1  Waiting
+ Container thecommander-cleancheck-a238f6e524-db-1  Waiting
+ Container thecommander-cleancheck-a238f6e524-db-1  Healthy
+ Container thecommander-cleancheck-a238f6e524-api-1  Starting
+ Container thecommander-cleancheck-a238f6e524-db-1  Healthy
+ Container thecommander-cleancheck-a238f6e524-worker-1  Starting
+ Container thecommander-cleancheck-a238f6e524-worker-1  Started
+ Container thecommander-cleancheck-a238f6e524-api-1  Started
+Open http://localhost:8002. Bootstrap token is in .env.runtime.
+{"timestamp": "2026-11-05T09:36:59.032189+00:00", "deployment": "thecommander-cleancheck-a238f6e524", "checks": ["database_readiness", "production_frontend_served", "secure_owner_login", "persistent_owner_settings", "persisted_memory_export", "persistent_workspace_note", "separate_worker_heartbeat", "session_revocation"]}
+Emulate Docker CLI using podman. Create /etc/containers/nodocker to quiet msg.
+[4m>>>> Executing external compose provider "/usr/libexec/docker/cli-plugins/docker-compose". Please see podman-compose(1) for how to disable this message. <<<<
+
+[0m Container thecommander-cleancheck-a238f6e524-db-1  Running
+ Container thecommander-cleancheck-a238f6e524-worker-1  Recreate
+ Container thecommander-cleancheck-a238f6e524-api-1  Recreate
+ Container thecommander-cleancheck-a238f6e524-worker-1  Recreated
+ Container thecommander-cleancheck-a238f6e524-api-1  Recreated
+ Container thecommander-cleancheck-a238f6e524-db-1  Waiting
+ Container thecommander-cleancheck-a238f6e524-db-1  Waiting
+ Container thecommander-cleancheck-a238f6e524-db-1  Healthy
+ Container thecommander-cleancheck-a238f6e524-worker-1  Starting
+ Container thecommander-cleancheck-a238f6e524-db-1  Healthy
+ Container thecommander-cleancheck-a238f6e524-api-1  Starting
+ Container thecommander-cleancheck-a238f6e524-worker-1  Started
+ Container thecommander-cleancheck-a238f6e524-api-1  Started
+{"timestamp": "2026-11-05T09:37:16.838197+00:00", "deployment": "thecommander-cleancheck-a238f6e524", "checks": ["database_readiness", "production_frontend_served", "secure_owner_login", "retained_volume_memory_note_settings_after_recreate", "persistent_owner_settings", "persisted_memory_export", "persistent_workspace_note", "separate_worker_heartbeat", "session_revocation"]}
+Emulate Docker CLI using podman. Create /etc/containers/nodocker to quiet msg.
+[4m>>>> Executing external compose provider "/usr/libexec/docker/cli-plugins/docker-compose". Please see podman-compose(1) for how to disable this message. <<<<
+
+[0m Container thecommander-cleancheck-a238f6e524-worker-1  Stopping
+ Container thecommander-cleancheck-a238f6e524-api-1  Stopping
+ Container thecommander-cleancheck-a238f6e524-worker-1  Stopped
+ Container thecommander-cleancheck-a238f6e524-worker-1  Removing
+ Container thecommander-cleancheck-a238f6e524-worker-1  Removed
+ Container thecommander-cleancheck-a238f6e524-api-1  Stopped
+ Container thecommander-cleancheck-a238f6e524-api-1  Removing
+ Container thecommander-cleancheck-a238f6e524-api-1  Removed
+ Container thecommander-cleancheck-a238f6e524-db-1  Stopping
+ Container thecommander-cleancheck-a238f6e524-db-1  Stopped
+ Container thecommander-cleancheck-a238f6e524-db-1  Removing
+ Container thecommander-cleancheck-a238f6e524-db-1  Removed
+ Volume thecommander-cleancheck-a238f6e524_notes  Removing
+ Volume thecommander-cleancheck-a238f6e524_database  Removing
+ Network thecommander-cleancheck-a238f6e524_default  Removing
+ Volume thecommander-cleancheck-a238f6e524_notes  Removed
+ Volume thecommander-cleancheck-a238f6e524_database  Removed
+ Network thecommander-cleancheck-a238f6e524_default  Removed

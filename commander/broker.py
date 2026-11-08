@@ -31,7 +31,9 @@ def args_hash(args):
     ).hexdigest()
 
 
-def tools_for(skill):
+def tools_for(skill, mode="automate"):
+    from commander.modes import permitted
+
     return [
         {
             "type": "function",
@@ -46,7 +48,7 @@ def tools_for(skill):
                 "parameters": SCHEMAS[name].model_json_schema(),
             },
         }
-        for name in definition(skill)["tools"]
+        for name in permitted(skill, mode)
     ]
 
 
@@ -62,7 +64,7 @@ class Broker:
         from commander.preferences import resolve
 
         self.settings = resolve(
-            self.db, self.operator, run["owner_id"], run.get("settings_snapshot")
+            self.db, self.operator, run["owner_id"], run.get("settings_snapshot"), for_run=True
         )
         if self.started_at is not None and time.monotonic() - self.started_at >= min(
             self.settings.max_run_seconds,
@@ -75,7 +77,9 @@ class Broker:
         return current
 
     def call(self, run, name, arguments):
-        if name not in definition(run["skill"])["tools"]:
+        from commander.modes import permitted
+
+        if name not in permitted(run["skill"], run.get("mode", "automate")):
             raise DomainError("This tool is not allowed for this skill", 403, "tool_denied")
         try:
             data = SCHEMAS[name].model_validate(arguments)
@@ -273,7 +277,9 @@ class Broker:
 
     def execute(self, run, action):
         with owner_lock(self.db, run["owner_id"]):
-            self.active(run)
+            current = self.active(run)
+            if current["mode"] != "automate":
+                raise DomainError("This mode cannot execute external writes", 403, "tool_denied")
             row = self.action(run["owner_id"], action["id"])
             conn = self.connections.get(run["owner_id"], "github")
             if (

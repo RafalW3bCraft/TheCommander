@@ -1,4 +1,5 @@
 from pathlib import Path
+from typing import Literal
 
 from cryptography.fernet import Fernet
 from pydantic import AliasChoices, Field, model_validator
@@ -22,6 +23,24 @@ class Settings(BaseSettings):
         default="nvidia/nemotron-3-super-120b-a12b",
         validation_alias=AliasChoices("NEBIUS_MODEL", "MODEL_ID", "nebius_model"),
     )
+    inference_provider: Literal["nebius", "openai", "anthropic", "vultr"] = "nebius"
+    provider_model: str = Field(default="", max_length=200, pattern=r"^[A-Za-z0-9_.:/-]*$")
+    vultr_api_key: str = ""
+    sandbox_enabled: bool = False
+    sandbox_code_image: str = "docker.io/library/python:3.13-slim-bookworm@sha256:4cea12ab7d78a3312c85f8cab19b6971d4fe9704da25443986c0bc20a6678850"
+    sandbox_proxy_image: str = "localhost/commander-egress:1"
+    sandbox_browser_image: str = "localhost/commander-browser:1.64.1"
+    sandbox_model: str = Field(default="", max_length=200, pattern=r"^[A-Za-z0-9_.:/-]*$")
+    sandbox_vision_model: str = Field(default="", max_length=200, pattern=r"^[A-Za-z0-9_.:/-]*$")
+    sandbox_browser_domains: list[str] = Field(default_factory=list, max_length=20)
+    sandbox_browser_fixture_origin: str = ""
+    sandbox_retention_days: int = Field(default=7, ge=1, le=30)
+    sandbox_timeout_seconds: int = Field(default=45, ge=5, le=120)
+    sandbox_runtime: str = Field(default="runsc", pattern=r"^[a-z][a-z0-9_-]{0,30}$")
+    openai_api_key: str = ""
+    anthropic_api_key: str = ""
+    memory_index_url: str = ""
+    memory_index_token: str = ""
     github_token: str = ""
     github_repository: str = ""
     tavily_api_key: str = ""
@@ -38,6 +57,22 @@ class Settings(BaseSettings):
     @model_validator(mode="after")
     def validate_runtime(self):
         Fernet(self.encryption_key.encode())
+        if self.sandbox_browser_fixture_origin:
+            from urllib.parse import urlsplit
+
+            from commander.sandbox.contracts import safe_url
+
+            origin = self.sandbox_browser_fixture_origin
+            safe_url(origin, self.sandbox_browser_domains)
+            parsed = urlsplit(origin)
+            if parsed.path or parsed.query or parsed.fragment or parsed.port is not None:
+                raise ValueError("Browser fixture must use an exact HTTPS origin without a path")
+        if self.memory_index_url:
+            from commander.memory_index import MemoryIndex
+
+            MemoryIndex(self.memory_index_url, self.memory_index_token)
+        elif self.memory_index_token:
+            raise ValueError("Memory index token requires an explicit index URL")
         if self.production and not self.app_origin.startswith("https://"):
             raise ValueError("Production APP_ORIGIN must use HTTPS")
         if self.nebius_base_url.rstrip("/") not in {
@@ -47,4 +82,27 @@ class Settings(BaseSettings):
             raise ValueError("Only documented Nebius endpoints are allowed")
         if not self.nebius_model.startswith("nvidia/"):
             raise ValueError("NEBIUS_MODEL must select an NVIDIA model")
+        if self.inference_provider != "nebius" and not self.provider_model:
+            raise ValueError("Optional inference providers require an explicit model")
         return self
+
+
+def inference_model(settings):
+    return (
+        settings.nebius_model
+        if settings.inference_provider == "nebius"
+        else settings.provider_model
+    )
+
+
+def inference_endpoint(settings):
+    endpoints = {
+        "vultr": "https://api.vultrinference.com/v1",
+        "openai": "https://api.openai.com/v1",
+        "anthropic": "https://api.anthropic.com/v1",
+    }
+    return (
+        settings.nebius_base_url
+        if settings.inference_provider == "nebius"
+        else endpoints[settings.inference_provider]
+    )

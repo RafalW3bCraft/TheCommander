@@ -24,3 +24,19 @@ frontend/playwright-report/
 .tools/
 .git/
 .venv/
+# Optional private memory image; admit only public source and pinned dependencies.
+!memory_service/
+!memory_service/*.py
+!memory_service/pyproject.toml
+!memory_service/uv.lock
+!memory_service/Dockerfile
+!memory_service/init-db.sh
+# Trusted sandbox image inputs only; never admit deployment credentials/state.
+!deploy/
+deploy/**
+!deploy/sandbox/
+deploy/sandbox/**
+!deploy/sandbox/proxy.py
+!deploy/sandbox/browser.py
+# Keep private environment variants excluded even beneath admitted source dirs.
+**/.env*

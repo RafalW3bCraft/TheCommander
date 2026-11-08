@@ -1,0 +1,7 @@
+{
+  "observed_at": "2026-10-29T05:57:35.739239+00:00",
+  "command": "./scripts/verify.sh",
+  "tool_session_exit": 143,
+  "gate_log": "upgrade-verification-session143.txt",
+  "observation": "All check output reported success; parent process did not persist completion record. Cause unconfirmed. Complete gate rerun under separate session."
+}

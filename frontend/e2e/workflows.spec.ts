@@ -1,4 +1,5 @@
-import { test, expect, type Page } from "@playwright/test";
+import { type Page } from "@playwright/test";
+import { test, expect } from "./fixtures";
 import AxeBuilder from "@axe-core/playwright";
 async function login(page: Page) {
   await page.goto("/");
@@ -6,7 +7,13 @@ async function login(page: Page) {
   await page
     .getByLabel("Password", { exact: true })
     .fill("fictional-browser-password");
+  const loginResponse = page.waitForResponse(
+    (response) =>
+      response.url().endsWith("/api/auth/login") &&
+      response.request().method() === "POST",
+  );
   await page.getByRole("button", { name: "Sign in", exact: true }).click();
+  expect((await loginResponse).status(), "real sign-in must succeed").toBe(200);
   await expect(
     page.getByRole("heading", { name: "Assistant", exact: true }),
   ).toBeVisible();

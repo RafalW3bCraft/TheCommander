@@ -1,0 +1,14 @@
+{
+  "command": [
+    ".venv/bin/python",
+    ".runtime/enhancement/github_read.py"
+  ],
+  "started_at": "2026-10-29T05:53:15.401113+00:00",
+  "finished_at": "2026-10-29T05:53:17.823601+00:00",
+  "exit_code": 0,
+  "seconds": 2.422,
+  "head": "c9084c5ecc22d39642959ec539f898f03c19ced8",
+  "branch": "feat/enhance-codex-+",
+  "working_tree_diff_sha256": "a5d90e07deb506485bfdbcb31219c088777c76defb84afb013a1ccfb16b06e27",
+  "limitation": "diff hash is not the release manifest; final source input identity is recorded when packaging"
+}

@@ -1,6 +1,27 @@
+# Production enhancement — in progress, 2026-10-29 UTC
+
+**The requested production upgrade is not complete.** This branch preserves the
+hackathon baseline at `005deba0b0ee7a5c36bb57304bf0d542b5842005` and adds project
+scope, backend mode restrictions, safe Markdown/theme controls, resumable progress
+events and optional native provider adapters. Build/Review remain unavailable.
+
+Current check results are recorded in `evidence/upgrade-verification.txt` and
+`evidence/upgrade-*-process.json`. They supersede historical counts only for this
+branch. See the requirement ledger for incomplete milestones. Optional OpenAI and
+Anthropic live verification is blocked by missing application API keys. Existing
+GitHub acceptance remains historical; no additional issue creation is authorized
+or performed. Remote deployment and the seven-day production soak have not run.
+
+The source/artifact identity of a packaged candidate is recorded in
+`evidence/release-manifest.json`. Historical reports below describe their original
+source, not the enhancement working tree. Do not use their readiness conclusions
+as acceptance of the broader upgrade.
+
+---
+
 # Release report — 2026-10-28 UTC
 
-## Current candidate
+## Historical October 28 candidate
 
 **Implemented:** approved legacy retirement, documentation consolidation, strict
 Compose-smoke isolation, fail-closed required packaging inputs, and correct parsing
@@ -16,7 +37,7 @@ updates. Final tested source and archive SHA256 are in
 manifest records each removed path, hash, reason and local preservation archive:
 [evidence/cleanup-removals.json](evidence/cleanup-removals.json).
 
-## Current verification
+## Historical October 28 verification
 
 **Locally verified:** the October 28 full gate after the citation fix passed
 87 Python tests with 91.14% first-party application coverage and seven Chromium

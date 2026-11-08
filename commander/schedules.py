@@ -7,6 +7,18 @@ from commander.skills import definition
 
 
 def save(db, owner, data, schedule_id=None):
+    from commander.projects import require
+
+    existing = (
+        db.one("SELECT * FROM schedules WHERE id=%s AND owner_id=%s", (schedule_id, owner))
+        if schedule_id
+        else None
+    )
+    if schedule_id and not existing:
+        raise DomainError("Schedule changed or no longer exists", 409)
+    project = require(db, owner, data.project_id or (existing["project_id"] if existing else None))
+    if existing and existing["project_id"] != project["id"]:
+        raise DomainError("A schedule cannot move between projects", 409)
     values = (
         data.skill,
         data.prompt,
@@ -14,10 +26,11 @@ def save(db, owner, data, schedule_id=None):
         data.next_at,
         data.interval_seconds,
         data.paused,
+        project["id"],
     )
     if schedule_id:
         row = db.one(
-            """UPDATE schedules SET skill=%s,prompt=%s,timezone=%s,next_at=%s,interval_seconds=%s,paused=%s,revision=revision+1
+            """UPDATE schedules SET skill=%s,prompt=%s,timezone=%s,next_at=%s,interval_seconds=%s,paused=%s,project_id=%s,revision=revision+1
           WHERE id=%s AND owner_id=%s AND revision=%s RETURNING *""",
             (*values, schedule_id, owner, data.revision),
         )
@@ -25,7 +38,7 @@ def save(db, owner, data, schedule_id=None):
             raise DomainError("Schedule changed or no longer exists", 409)
         return row
     return db.one(
-        "INSERT INTO schedules(skill,prompt,timezone,next_at,interval_seconds,paused,owner_id) VALUES (%s,%s,%s,%s,%s,%s,%s) RETURNING *",
+        "INSERT INTO schedules(skill,prompt,timezone,next_at,interval_seconds,paused,project_id,owner_id) VALUES (%s,%s,%s,%s,%s,%s,%s,%s) RETURNING *",
         (*values, owner),
     )
 
@@ -49,8 +62,8 @@ def dispatch_due(db, settings):
             if count >= effective.max_daily_runs:
                 continue
             conn.execute(
-                """INSERT INTO runs(owner_id,schedule_id,occurrence_at,skill,skill_version,prompt,settings_snapshot)
-               VALUES (%s,%s,%s,%s,%s,%s,%s) ON CONFLICT(schedule_id,occurrence_at) DO NOTHING""",
+                """INSERT INTO runs(owner_id,schedule_id,occurrence_at,skill,skill_version,prompt,settings_snapshot,project_id)
+               VALUES (%s,%s,%s,%s,%s,%s,%s,%s) ON CONFLICT(schedule_id,occurrence_at) DO NOTHING""",
                 (
                     row["owner_id"],
                     row["id"],
@@ -59,6 +72,7 @@ def dispatch_due(db, settings):
                     definition(row["skill"])["hash"],
                     row["prompt"],
                     json(values(effective)),
+                    row["project_id"],
                 ),
             )
             next_at = None

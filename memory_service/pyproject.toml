@@ -1,0 +1,20 @@
+[project]
+name = "thecommander-memory-index"
+version = "0.1.0"
+requires-python = ">=3.13,<3.14"
+dependencies = [
+  "fastapi==0.162.0",
+  "uvicorn==0.54.0",
+  "mem0ai==2.2.1",
+  "psycopg[binary,pool]==3.3.6",
+  "sentence-transformers==6.2.0",
+  "torch==2.15.0",
+]
+
+[tool.uv.sources]
+torch = { index = "pytorch-cpu" }
+
+[[tool.uv.index]]
+name = "pytorch-cpu"
+url = "https://download.pytorch.org/whl/cpu"
+explicit = true

@@ -1,0 +1,13 @@
+{
+  "timestamp": "2026-11-05T09:26:12.181955+00:00",
+  "head": "eca70d15816c8a02a230c6a4f6ce4a399ee929c8",
+  "provider": "vultr",
+  "catalog_is_not_authentication_proof": true,
+  "model_discovery": "returned catalog",
+  "catalog_count": 35,
+  "model": "qwen3.8-27b",
+  "text": "Blocked",
+  "error_code": "invalid_credentials",
+  "message": "Provider request failed (401). Check connection permissions and status.",
+  "latency_ms": 2392
+}

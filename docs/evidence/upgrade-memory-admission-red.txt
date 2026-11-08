@@ -1,0 +1,91 @@
+FFFFF                                                                    [100%]
+=================================== FAILURES ===================================
+__ test_index_hints_cannot_restore_expired_deleted_wrong_project_or_revision ___
+
+app = (<starlette.testclient.TestClient object at 0x7fa61c984590>, <test_workflows.Vendor object at 0x7fa61cd974d0>, 'fe062bc4-2026-4614-b4f6-903c48970481', <commander.db.Database object at 0x7fa61ca0ac10>)
+
+    def test_index_hints_cannot_restore_expired_deleted_wrong_project_or_revision(app):
+        client, _, owner, db = app
+        project = client.get("/api/projects").json()[0]["id"]
+        other = client.post("/api/projects", json={"name": "Other"}).json()["id"]
+        good = save(client, "python retries", project_id=project)
+        stale = save(client, "old fact")
+        expired = save(client, "expired", expires_at=(datetime.now(timezone.utc)-timedelta(days=1)).isoformat())
+        foreign = save(client, "other project", project_id=other)
+        deleted = save(client, "deleted")
+        assert client.delete('/api/memory/'+deleted['id']).status_code == 200
+        index = Index()
+        index.hits = [IndexHit(good['id'],1,.9), IndexHit(stale['id'],999,.9), IndexHit(expired['id'],1,.9), IndexHit(foreign['id'],1,.9), IndexHit(deleted['id'],1,.9), IndexHit(str(uuid4()),1,.9)]
+>       result = memory.retrieve(db, owner, project, "python", index=index)
+                 ^^^^^^^^^^^^^^^
+E       AttributeError: module 'commander.memory' has no attribute 'retrieve'
+
+tests/test_memory_retrieval.py:48: AttributeError
+___________ test_explicit_precedence_applies_before_semantic_ranking ___________
+
+app = (<starlette.testclient.TestClient object at 0x7fa61b7874d0>, <test_workflows.Vendor object at 0x7fa61ca09590>, 'ac817b2e-2ffc-4a11-a04e-81a150b2b926', <commander.db.Database object at 0x7fa61c8eb100>)
+
+    def test_explicit_precedence_applies_before_semantic_ranking(app):
+        client, _, owner, db = app
+        project = client.get('/api/projects').json()[0]['id']
+        inferred = save(client, 'style', kind='inferred', content='old style')
+        explicit = save(client, 'style', content='new style')
+        index = Index()
+        index.hits = [IndexHit(inferred['id'],1,.99)]
+>       result = memory.retrieve(db, owner, project, 'style', index=index)
+                 ^^^^^^^^^^^^^^^
+E       AttributeError: module 'commander.memory' has no attribute 'retrieve'
+
+tests/test_memory_retrieval.py:60: AttributeError
+_____________ test_outage_is_explicit_and_lexical_context_survives _____________
+
+app = (<starlette.testclient.TestClient object at 0x7fa61c589590>, <test_workflows.Vendor object at 0x7fa61b787b10>, 'e65cc786-4e55-43be-a7a2-a36288d5ecf0', <commander.db.Database object at 0x7fa61c448ef0>)
+
+    def test_outage_is_explicit_and_lexical_context_survives(app):
+        client, _, owner, db = app
+        row = save(client, 'python retries')
+        class Down(Index):
+            def search(self, *args, **kwargs):
+                raise IndexUnavailable('secret internal exception')
+>       result = memory.retrieve(db, owner, None, 'python', index=Down())
+                 ^^^^^^^^^^^^^^^
+E       AttributeError: module 'commander.memory' has no attribute 'retrieve'
+
+tests/test_memory_retrieval.py:70: AttributeError
+______________ test_durable_outbox_correction_deletion_and_retry _______________
+
+app = (<starlette.testclient.TestClient object at 0x7fa61c8e8fc0>, <test_workflows.Vendor object at 0x7fa61c8e9e00>, '4a797660-8fc3-416e-8d87-b151253e327f', <commander.db.Database object at 0x7fa61c250f30>)
+settings = Settings(database_url='postgresql://watcher@127.0.0.1:55432/postgres', database_schema='test_45063f902334445898ad05074..._runs=50, max_daily_tokens=100000, daily_spend_limit_usd=None, input_usd_per_million=None, output_usd_per_million=None)
+
+    def test_durable_outbox_correction_deletion_and_retry(app, settings):
+>       from commander.memory_sync import sync_one
+E       ModuleNotFoundError: No module named 'commander.memory_sync'
+
+tests/test_memory_retrieval.py:78: ModuleNotFoundError
+________________ test_search_contract_scope_and_disabled_status ________________
+
+app = (<starlette.testclient.TestClient object at 0x7fa61c8eb950>, <test_workflows.Vendor object at 0x7fa61c8ea780>, '29ff9caa-383a-4e81-8cf7-1b6ea7c4c033', <commander.db.Database object at 0x7fa61c8d1a50>)
+
+    def test_search_contract_scope_and_disabled_status(app):
+        client, _, owner, db = app
+        row = save(client, 'canonical only')
+        response = client.get('/api/memory/search',params={'q':'canonical'})
+>       assert response.status_code == 200, response.text
+E       AssertionError: {"detail":"Method Not Allowed"}
+E       assert 405 == 200
+E        +  where 405 = <Response [405 Method Not Allowed]>.status_code
+
+tests/test_memory_retrieval.py:104: AssertionError
+=============================== warnings summary ===============================
+.venv/lib/python3.13/site-packages/fastapi/testclient.py:1
+  /mnt/hostshare/TheCommander/.venv/lib/python3.13/site-packages/fastapi/testclient.py:1: StarletteDeprecationWarning: Using `httpx` with `starlette.testclient` is deprecated; install `httpx2` instead.
+    from starlette.testclient import TestClient as TestClient  # noqa
+
+-- Docs: https://docs.pytest.org/en/stable/how-to/capture-warnings.html
+=========================== short test summary info ============================
+FAILED tests/test_memory_retrieval.py::test_index_hints_cannot_restore_expired_deleted_wrong_project_or_revision
+FAILED tests/test_memory_retrieval.py::test_explicit_precedence_applies_before_semantic_ranking
+FAILED tests/test_memory_retrieval.py::test_outage_is_explicit_and_lexical_context_survives
+FAILED tests/test_memory_retrieval.py::test_durable_outbox_correction_deletion_and_retry
+FAILED tests/test_memory_retrieval.py::test_search_contract_scope_and_disabled_status
+5 failed, 1 warning in 7.10s

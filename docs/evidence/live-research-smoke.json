@@ -1,5 +1,5 @@
 {
-  "timestamp": "2026-10-28T06:58:18.876198+00:00",
+  "timestamp": "2026-10-29T05:46:40.076617+00:00",
   "provider": "Tavily",
   "endpoint": "https://api.tavily.com/search",
   "approved_domains": [
@@ -9,32 +9,32 @@
   "live": true,
   "external_writes": false,
   "validation_status": "validated",
-  "search_latency_ms": 3106,
+  "search_latency_ms": 2420,
   "evidence": [
     {
       "url": "https://docs.python.org/3/library/asyncio-task.html",
       "title": "Coroutines and tasks \u2014 Python 3.15.2 documentation",
-      "fetched_at": "2026-10-28T02:58:30.494327-04:00"
+      "fetched_at": "2026-10-29T01:46:47.025378-04:00"
     },
     {
       "url": "https://docs.python.org/3/library/asyncio-exceptions.html",
       "title": "Exceptions \u2014 Python 3.15.2 documentation",
-      "fetched_at": "2026-10-28T02:58:30.569760-04:00"
+      "fetched_at": "2026-10-29T01:46:47.053240-04:00"
     },
     {
       "url": "https://docs.python.org/3/library/asyncio-queue.html",
       "title": "Queues \u2014 Python 3.15.2 documentation",
-      "fetched_at": "2026-10-28T02:58:30.616039-04:00"
+      "fetched_at": "2026-10-29T01:46:47.077051-04:00"
     },
     {
       "url": "https://docs.python.org/3/library/asyncio-runner.html",
       "title": "Runners \u2014 Python 3.15.2 documentation",
-      "fetched_at": "2026-10-28T02:58:30.664187-04:00"
+      "fetched_at": "2026-10-29T01:46:47.097908-04:00"
     },
     {
-      "url": "https://docs.python.org/pl/3.6/library/asyncio-task.html",
-      "title": "18.5.3. Tasks and coroutines \u2014 Python 3.6.15 - dokumentacja",
-      "fetched_at": "2026-10-28T02:58:30.714451-04:00"
+      "url": "https://docs.python.org/3/library/asyncio-dev.html",
+      "title": "Developing with asyncio \u2014 Python 3.15.2 documentation",
+      "fetched_at": "2026-10-29T01:46:47.123813-04:00"
     }
   ],
   "persisted_evidence_count": 5,

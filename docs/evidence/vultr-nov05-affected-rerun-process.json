@@ -1,0 +1,19 @@
+{
+  "command": [
+    "uv",
+    "run",
+    "pytest",
+    "-q",
+    "tests/test_workflows.py",
+    "-k",
+    "injection_cannot_expand or connection_expiry or cross_owner_access"
+  ],
+  "started_at": "2026-11-05T09:35:02.793956+00:00",
+  "finished_at": "2026-11-05T09:35:34.713118+00:00",
+  "exit_code": 0,
+  "seconds": 31.919,
+  "head": "eca70d15816c8a02a230c6a4f6ce4a399ee929c8",
+  "branch": "vultr",
+  "working_tree_diff_sha256": "aec9674d7697e439ba980fd3c5f6cf209bca90a1125549971be6bf11321c76b0",
+  "limitation": "diff hash is not the release manifest; final source input identity is recorded when packaging"
+}

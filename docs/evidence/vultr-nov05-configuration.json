@@ -1,0 +1,26 @@
+{
+  "status": {
+    "VULTR_API_KEY": "configured",
+    "PROVIDER_MODEL": "missing",
+    "SANDBOX_MODEL": "missing",
+    "SANDBOX_VISION_MODEL": "missing",
+    "APP_DOMAIN": "missing",
+    "ENCRYPTION_KEY": "configured",
+    "BOOTSTRAP_TOKEN": "configured",
+    "POSTGRES_PASSWORD": "configured",
+    "NEBIUS_API_KEY": "configured",
+    "GITHUB_TOKEN": "configured",
+    "GITHUB_REPOSITORY": "configured",
+    "TAVILY_API_KEY": "configured"
+  },
+  "conflicting_key_names": [],
+  "unsupported_file_key_names": [
+    "SESSION_SECRET"
+  ],
+  "permissions": {
+    ".env": "0o600",
+    ".env.runtime": "0o600"
+  },
+  "settings_validation": "passed",
+  "sandbox_execution_enabled": false
+}

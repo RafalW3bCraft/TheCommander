@@ -19,8 +19,10 @@ def event(db, run_id, kind, payload=None):
 
 
 def enqueue(db, settings, owner, data):
+    from commander import modes, projects
     from commander.preferences import resolve, values
 
+    modes.validate(data.mode, data.skill)
     SkillInput(prompt=data.prompt)
     settings = resolve(db, settings, owner)
     with db.connect() as conn:
@@ -32,21 +34,28 @@ def enqueue(db, settings, owner, data):
         if count >= settings.max_daily_runs:
             raise DomainError("Daily run budget reached", 429, "budget_exceeded")
         conversation = data.conversation_id
-        if (
-            conversation
-            and not conn.execute(
-                "SELECT 1 FROM conversations WHERE id=%s AND owner_id=%s FOR UPDATE",
+        existing = None
+        if conversation:
+            existing = conn.execute(
+                "SELECT * FROM conversations WHERE id=%s AND owner_id=%s FOR UPDATE",
                 (conversation, owner),
             ).fetchone()
-        ):
-            raise DomainError("Conversation not found", 404)
+            if not existing:
+                raise DomainError("Conversation not found", 404)
+        project = projects.owned(
+            conn, owner, data.project_id or (existing["project_id"] if existing else None)
+        )
+        if existing and existing["project_id"] != project["id"]:
+            raise DomainError(
+                "Conversation belongs to a different project", 409, "project_conflict"
+            )
         if not conversation:
             conversation = conn.execute(
-                "INSERT INTO conversations(owner_id,title) VALUES (%s,%s) RETURNING id",
-                (owner, data.prompt[:100]),
+                "INSERT INTO conversations(owner_id,title,project_id) VALUES (%s,%s,%s) RETURNING id",
+                (owner, data.prompt[:100], project["id"]),
             ).fetchone()["id"]
         row = conn.execute(
-            "INSERT INTO runs(owner_id,conversation_id,skill,skill_version,prompt,settings_snapshot) VALUES (%s,%s,%s,%s,%s,%s) RETURNING *",
+            "INSERT INTO runs(owner_id,conversation_id,skill,skill_version,prompt,settings_snapshot,project_id,mode) VALUES (%s,%s,%s,%s,%s,%s,%s,%s) RETURNING *",
             (
                 owner,
                 conversation,
@@ -54,6 +63,8 @@ def enqueue(db, settings, owner, data):
                 definition(data.skill)["hash"],
                 data.prompt,
                 json(values(settings)),
+                project["id"],
+                data.mode,
             ),
         ).fetchone()
         conn.execute(

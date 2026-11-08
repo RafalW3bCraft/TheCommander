@@ -1,0 +1,13 @@
+{
+  "command": [
+    "./scripts/verify.sh"
+  ],
+  "started_at": "2026-11-05T09:35:43.152017+00:00",
+  "finished_at": "2026-11-05T09:41:32.211842+00:00",
+  "exit_code": 2,
+  "seconds": 349.06,
+  "head": "eca70d15816c8a02a230c6a4f6ce4a399ee929c8",
+  "branch": "vultr",
+  "working_tree_diff_sha256": "c49e6881b2bd211b97c389cac22c53bebfe458788adaaa9181096f0a5369818a",
+  "limitation": "diff hash is not the release manifest; final source input identity is recorded when packaging"
+}

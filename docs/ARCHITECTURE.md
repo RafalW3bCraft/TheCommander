@@ -86,3 +86,55 @@ count and daily model tokens are configurable. Unknown usage reserves the maximu
 request allowance. Currency limits fail closed without operator-supplied model
 prices. No model prices or provider usage are invented. Provider timeout is
 bounded per request. Unknown cost remains null in activity diagnostics.
+
+## Enhancement branch (implementation in progress)
+
+The `feat/enhance-codex-+` branch starts at 005deba0b0ee7a5c36bb57304bf0d542b5842005.
+Migration 006 creates owner-scoped projects, backfills existing conversations,
+schedules and runs into Personal, and assigns new owners a default project.
+Composite foreign keys prevent cross-owner or cross-project conversation/run
+associations. Memory may be explicitly owner-wide or project-scoped; scope cannot
+be widened by editing. Owner-wide explicit preferences still participate in recall.
+
+Ask exposes no tools. Plan and Research expose only the existing permitted read
+tools. Plan output is persisted for review; Research starts with an approved-domain
+search. Automate retains existing workflow authority and exact write approval.
+Build and Review fail closed until isolated execution is implemented and verified.
+The mode is persisted per run and intersected with skill tools by the broker.
+
+Migration 007 adds optional OpenAI and Anthropic connections and per-provider
+usage attribution. Nebius remains the default. Optional model selection requires
+account discovery and a tool-capability probe, whose proposal is never executed.
+Native Anthropic tool-use/result blocks are translated at the adapter boundary;
+OpenAI uses Chat Completions with storage disabled. No provider fallback exists.
+Legacy snapshots and null-snapshot runs retain Nebius routing. Current revocations
+and tighter limits still apply. Pricing for optional providers remains unknown.
+
+Run events support bounded authenticated SSE replay, decimal-string cursors,
+heartbeats and session revalidation. The frontend refreshes typed run details on
+notifications and uses ordinary GET as a fallback. This is progress delivery,
+not model token streaming. Results use escaped React Markdown without raw HTML
+or automatic image loading.
+
+Migration 008 adds a durable canonical-memory synchronization outbox and index
+status. An optional private service uses Mem0's explicit pgvector backend and a
+pinned local E5 model; it does not instantiate Mem0's default inference runtime.
+API and worker retain authority: search reloads eligible owner/project records
+after the service responds, applies explicit-memory precedence, and rejects stale
+revision hints. Corrections/deletion enqueue updates transactionally; expiry is
+excluded immediately and propagated by the idle worker. Jobs retry with bounded
+backoff; stale acknowledgements cannot remove newer work. Text-free revision
+tombstones prevent late index writes from resurrecting deleted records.
+
+The Memory page exposes scoped lexical/hybrid search and degraded/disabled
+status. Configured assistant runs record retrieval IDs/revisions in their event
+trail; explicit preferences remain prioritized. Retrieval is bounded to 500
+canonical candidates and five ranked results. Index prefixes are bounded to
+4,000 characters and 512 model tokens, disclosed through status. This is the
+indexing portion of milestone 3; extraction/proposals, summaries, document
+ingestion and retrieval-quality acceptance remain outstanding. See ADR005.
+
+Coding sandboxes, reusable grants, browser profiles, runtime skill
+publication and MFA are not implemented by these changes. The complete upgrade
+is tracked separately in `evidence/upgrade-requirements.json`; availability of
+a mode label does not establish a working execution capability.

@@ -1,0 +1,201 @@
+Checked 62 packages in 23ms
+All checks passed!
+74 files already formatted
+Success: no issues found in 32 source files
+============================= test session starts ==============================
+platform linux -- Python 3.13.5, pytest-9.1.1, pluggy-1.7.0
+rootdir: /mnt/hostshare/TheCommander
+configfile: pyproject.toml
+testpaths: tests
+plugins: platformdirs-4.13.5, anyio-4.15.1, cov-7.1.0
+collected 180 items
+
+tests/test_auth_memory.py .                                              [  0%]
+tests/test_e2e_isolation.py ..                                           [  1%]
+tests/test_events.py ............                                        [  8%]
+tests/test_live_evaluation_exit.py ..                                    [  9%]
+tests/test_live_probe.py ......                                          [ 12%]
+tests/test_memory_index.py ..............                                [ 20%]
+tests/test_memory_retrieval.py .........                                 [ 25%]
+tests/test_projects_modes.py ........                                    [ 30%]
+tests/test_provider_adapters.py ......                                   [ 33%]
+tests/test_release_package.py ....                                       [ 35%]
+tests/test_release_settings.py ...........                               [ 41%]
+tests/test_sandbox_browser_driver.py .....                               [ 44%]
+tests/test_sandbox_docker.py ssss                                        [ 46%]
+tests/test_sandbox_policy.py ...................                         [ 57%]
+tests/test_sandbox_workflows.py ...........                              [ 63%]
+tests/test_sessions.py ...                                               [ 65%]
+tests/test_smoke_isolation.py ....                                       [ 67%]
+tests/test_upgrade.py .                                                  [ 67%]
+tests/test_workflows.py ................................................ [ 94%]
+..........                                                               [100%]
+
+=============================== warnings summary ===============================
+.venv/lib/python3.13/site-packages/fastapi/testclient.py:1
+  /mnt/hostshare/TheCommander/.venv/lib/python3.13/site-packages/fastapi/testclient.py:1: StarletteDeprecationWarning: Using `httpx` with `starlette.testclient` is deprecated; install `httpx2` instead.
+    from starlette.testclient import TestClient as TestClient  # noqa
+
+-- Docs: https://docs.pytest.org/en/stable/how-to/capture-warnings.html
+================================ tests coverage ================================
+_______________ coverage: platform linux, python 3.13.5-final-0 ________________
+
+Name                             Stmts   Miss  Cover   Missing
+--------------------------------------------------------------
+commander/__init__.py                0      0   100%
+commander/api.py                   141      9    94%   79, 86, 104, 126, 151, 155-156, 160, 266
+commander/auth.py                   70      3    96%   35, 50, 111
+commander/broker.py                212     21    90%   73, 76, 101, 123, 127, 130, 145, 152, 160, 176, 219, 241, 261, 282, 294, 313, 318, 377, 380, 392, 401
+commander/connections.py           137     12    91%   76, 101, 103, 116, 179-183, 186, 220, 226, 265-273
+commander/contracts.py             269      3    99%   72, 81, 118
+commander/db.py                     32      0   100%
+commander/engine.py                143     15    90%   34, 43, 48, 102-108, 161-162, 235, 241, 254, 267, 270
+commander/errors.py                  6      0   100%
+commander/events.py                 70      2    97%   42, 74
+commander/healthcheck.py             7      7     0%   3-13
+commander/inference.py              41      6    85%   30-35, 43, 62, 71
+commander/memory.py                 61      1    98%   27
+commander/memory_index.py           74      4    95%   82, 97, 118, 147
+commander/memory_sync.py            31      2    94%   9, 35
+commander/modes.py                  13      1    92%   24
+commander/preferences.py           112      4    96%   126, 145, 176, 181
+commander/projects.py               35      0   100%
+commander/providers.py             150     21    86%   61-62, 81, 90, 95-98, 104, 127, 131, 142, 179, 189, 191, 206-207, 216, 244, 246, 248, 255, 277
+commander/routes.py                155     13    92%   78, 142, 180, 203, 208, 220, 249, 286-289, 293-294
+commander/runs.py                   76      7    91%   35, 123, 126, 132, 138-139, 143
+commander/sandbox/__init__.py        0      0   100%
+commander/sandbox/contracts.py      64      2    97%   64, 66
+commander/sandbox/runner.py        138     28    80%   33-40, 77-97, 132-133, 163, 195-207, 233, 297, 303
+commander/sandbox/service.py        68      7    90%   21, 25, 33-34, 62, 93, 120
+commander/sandbox/worker.py        171     33    81%   73, 92, 124, 185, 250, 261, 263, 265-266, 303, 325-356, 381, 390-395, 426-438, 442
+commander/schedules.py              36      3    92%   18, 21, 63
+commander/settings.py               67      7    90%   59-61, 63, 65, 70, 72, 74
+commander/skills.py                 23      0   100%
+commander/worker.py                 92     24    74%   58, 128-150, 154-155
+commander/workspace.py              48      3    94%   17, 21, 56
+--------------------------------------------------------------
+TOTAL                             2542    238    91%
+Required test coverage of 80.0% reached. Total coverage: 90.64%
+============ 176 passed, 4 skipped, 1 warning in 201.41s (0:03:21) =============
+npm warn deprecated eslint@9.39.5: This version is no longer supported. Please see https://eslint.org/version-support for other options.
+
+added 204 packages, and audited 205 packages in 12s
+
+52 packages are looking for funding
+  run `npm fund` for details
+
+7 moderate severity vulnerabilities
+
+To address issues that do not require attention, run:
+  npm audit fix
+
+To address all issues (including breaking changes), run:
+  npm audit fix --force
+
+Run `npm audit` for details.
+
+> thecommander-ui@0.2.0 api:types
+> openapi-typescript ../docs/openapi.json -o src/api-schema.d.ts && prettier --write src/api-schema.d.ts
+
+✨ openapi-typescript 7.13.0
+🚀 ../docs/openapi.json → src/api-schema.d.ts [561.5ms]
+src/api-schema.d.ts 1222ms
+
+> thecommander-ui@0.2.0 format:check
+> prettier --check src e2e *.ts *.js package.json tsconfig.json
+
+Checking formatting...
+All matched files use Prettier code style!
+
+> thecommander-ui@0.2.0 lint
+> eslint src e2e *.ts *.js
+
+
+> thecommander-ui@0.2.0 build
+> tsc --noEmit && vite build
+
+vite v6.4.5 building for production...
+transforming...
+✓ 35 modules transformed.
+rendering chunks...
+computing gzip size...
+dist/index.html                   0.36 kB │ gzip:  0.26 kB
+dist/assets/index-JwzF8Pw-.css    8.72 kB │ gzip:  2.66 kB
+dist/assets/index-B1gJpl10.js   274.75 kB │ gzip: 85.41 kB
+✓ built in 1.89s
+
+> thecommander-ui@0.2.0 test:e2e
+> playwright test
+
+[WebServer] INFO:     Started server process [217422]
+[WebServer] INFO:     Waiting for application startup.
+[WebServer] INFO:     Application startup complete.
+[WebServer] INFO:     Uvicorn running on http://127.0.0.1:8010 (Press CTRL+C to quit)
+
+Running 11 tests using 1 worker
+
+(node:217588) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+(Use `node --trace-warnings ...` to show where the warning was created)
+  ✓   1 [chromium] › e2e/sandbox.spec.ts:4:1 › sandbox displays evidence and requires deliberate exact approval (4.2s)
+  ✓   2 [chromium] › e2e/workflows.spec.ts:21:1 › desktop owner memory connections three skills approvals and receipts (12.7s)
+  ✓   3 [chromium] › e2e/workflows.spec.ts:159:1 › mobile keyboard schedule survives closed page and can be edited paused deleted (9.5s)
+  ✓   4 [chromium] › e2e/workflows.spec.ts:250:1 › expired session returns to sign-in and tablet navigation remains usable (5.8s)
+  ✓   5 [chromium] › e2e/workflows.spec.ts:290:1 › delayed responses preserve memory search, edits, selected notes and cancelled runs (5.8s)
+  ✓   6 [chromium] › e2e/workflows.spec.ts:471:1 › conversation switching ignores delayed history (1.7s)
+  ✓   7 [chromium] › e2e/workflows.spec.ts:552:1 › settings persist and expose redacted health and privacy controls (3.1s)
+[WebServer] run_failure run=ffe5fce4-8f06-4369-a081-1d04a071a816 code=disconnected type=DomainError
+  ✓   8 [chromium] › e2e/workflows.spec.ts:591:1 › empty memory and revoked inference show recoverable persisted states (4.8s)
+[WebServer] run_failure run=bb4f5160-20c8-4fd8-b9f6-280186a7e015 code=disconnected type=DomainError
+  ✓   9 [chromium] › e2e/z-upgrade.spec.ts:25:1 › project selection scopes new runs and rejects stale project renames (3.2s)
+[WebServer] run_failure run=5346d20c-7f8d-46ef-933a-3dc720d3a027 code=disconnected type=DomainError
+  ✓  10 [chromium] › e2e/z-upgrade.spec.ts:115:1 › assistant renders safe Markdown without executing HTML or loading images (3.8s)
+  ✓  11 [chromium] › e2e/z-upgrade.spec.ts:191:1 › memory recall explains disabled and degraded index states (2.7s)
+
+  11 passed (1.0m)
+No known vulnerabilities found
+Checked 74 packages in 24ms
+No known vulnerabilities found
+Name  Skip Reason
+----- -------------------------------------------------------------------------
+torch Dependency not found on PyPI and could not be audited: torch (2.15.0+cpu)
+# npm audit report
+
+minimatch  7.0.0 - 11.0.0
+Severity: moderate
+minimatch has potential denial of service via globparts amplification - https://github.com/advisories/GHSA-g3hv-75wg-m249
+fix available via `npm audit fix --force`
+Will install typescript-eslint@8.36.0, which is a breaking change
+node_modules/@typescript-eslint/typescript-estree/node_modules/minimatch
+  @typescript-eslint/typescript-estree  >=6.16.0
+  Depends on vulnerable versions of minimatch
+  node_modules/@typescript-eslint/typescript-estree
+    @typescript-eslint/parser  >=6.16.0
+    Depends on vulnerable versions of @typescript-eslint/typescript-estree
+    node_modules/@typescript-eslint/parser
+      @typescript-eslint/eslint-plugin  >=6.16.0
+      Depends on vulnerable versions of @typescript-eslint/parser
+      Depends on vulnerable versions of @typescript-eslint/type-utils
+      Depends on vulnerable versions of @typescript-eslint/utils
+      node_modules/@typescript-eslint/eslint-plugin
+      typescript-eslint  *
+      Depends on vulnerable versions of @typescript-eslint/eslint-plugin
+      Depends on vulnerable versions of @typescript-eslint/parser
+      Depends on vulnerable versions of @typescript-eslint/typescript-estree
+      Depends on vulnerable versions of @typescript-eslint/utils
+      node_modules/typescript-eslint
+    @typescript-eslint/type-utils  >=6.16.0
+    Depends on vulnerable versions of @typescript-eslint/typescript-estree
+    Depends on vulnerable versions of @typescript-eslint/utils
+    node_modules/@typescript-eslint/type-utils
+    @typescript-eslint/utils  >=6.16.0
+    Depends on vulnerable versions of @typescript-eslint/typescript-estree
+    node_modules/@typescript-eslint/utils
+
+7 moderate severity vulnerabilities
+
+To address issues that do not require attention, run:
+  npm audit fix
+
+To address all issues (including breaking changes), run:
+  npm audit fix --force
+No configured private runtime values found in tracked/unignored release files or frontend bundle.

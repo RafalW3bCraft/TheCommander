@@ -1,0 +1,11 @@
+{
+  "timestamp": "2026-11-05T15:12:47.868431+00:00",
+  "cli_version": "3.11.0",
+  "operation": "instance get (read-only)",
+  "exit_code": 1,
+  "credential_source_key": "VULTR_API_KEY",
+  "status": "Blocked",
+  "http_codes": [
+    "401"
+  ]
+}

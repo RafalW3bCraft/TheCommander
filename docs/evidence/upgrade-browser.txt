@@ -1,0 +1,103 @@
+
+> thecommander-ui@0.2.0 test:e2e
+> playwright test
+
+[WebServer] INFO:     Started server process [269885]
+[WebServer] INFO:     Waiting for application startup.
+[WebServer] INFO:     Application startup complete.
+[WebServer] INFO:     Uvicorn running on http://127.0.0.1:8010 (Press CTRL+C to quit)
+
+Running 9 tests using 1 worker
+
+(node:270235) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+(Use `node --trace-warnings ...` to show where the warning was created)
+  ✓  1 [chromium] › e2e/workflows.spec.ts:14:1 › desktop owner memory connections three skills approvals and receipts (14.3s)
+  ✓  2 [chromium] › e2e/workflows.spec.ts:152:1 › mobile keyboard schedule survives closed page and can be edited paused deleted (10.1s)
+  ✓  3 [chromium] › e2e/workflows.spec.ts:243:1 › expired session returns to sign-in and tablet navigation remains usable (6.3s)
+  ✓  4 [chromium] › e2e/workflows.spec.ts:283:1 › delayed responses preserve memory search, edits, selected notes and cancelled runs (6.7s)
+  ✓  5 [chromium] › e2e/workflows.spec.ts:464:1 › conversation switching ignores delayed history (1.8s)
+  ✓  6 [chromium] › e2e/workflows.spec.ts:545:1 › settings persist and expose redacted health and privacy controls (3.3s)
+[WebServer] run_failure run=b9a2089a-ab67-4c84-ae2f-3542aac23e2c code=disconnected type=DomainError
+  ✓  7 [chromium] › e2e/workflows.spec.ts:584:1 › empty memory and revoked inference show recoverable persisted states (5.1s)
+  ✘  8 [chromium] › e2e/z-upgrade.spec.ts:16:1 › project selection scopes new runs and rejects stale project renames (6.7s)
+(node:273000) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+(Use `node --trace-warnings ...` to show where the warning was created)
+[WebServer] run_failure run=039bbddd-8a20-4593-bf3d-1fc53220aab3 code=disconnected type=DomainError
+  ✘  9 [chromium] › e2e/z-upgrade.spec.ts:106:1 › assistant renders safe Markdown without executing HTML or loading images (2.0m)
+
+
+  1) [chromium] › e2e/z-upgrade.spec.ts:16:1 › project selection scopes new runs and rejects stale project renames 
+
+    Error: expect(locator).toBeDisabled() failed
+
+    Locator:  getByRole('option', { name: 'Build · sandbox unavailable' })
+    Expected: disabled
+    Received: enabled
+    Timeout:  5000ms
+
+    Call log:
+      - Expect "toBeDisabled" getByRole('option', { name: 'Build · sandbox unavailable' }) with timeout 5000ms
+      - waiting for getByRole('option', { name: 'Build · sandbox unavailable' })
+        13 × locator resolved to <option disabled value="build">Build · sandbox unavailable</option>
+           - unexpected value "enabled"
+
+
+      34 |   await expect(
+      35 |     page.getByRole("option", { name: "Build · sandbox unavailable" }),
+    > 36 |   ).toBeDisabled();
+         |     ^
+      37 |   await expect(
+      38 |     page.getByRole("option", { name: "Review · sandbox unavailable" }),
+      39 |   ).toBeDisabled();
+        at /mnt/hostshare/TheCommander/frontend/e2e/z-upgrade.spec.ts:36:5
+
+    attachment #1: screenshot (image/png) ──────────────────────────────────────────────────────────
+    test-results/z-upgrade-project-selectio-1f18f-jects-stale-project-renames-chromium/test-failed-1.png
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+
+    Error Context: test-results/z-upgrade-project-selectio-1f18f-jects-stale-project-renames-chromium/error-context.md
+
+    attachment #3: trace (application/zip) ─────────────────────────────────────────────────────────
+    test-results/z-upgrade-project-selectio-1f18f-jects-stale-project-renames-chromium/trace.zip
+    Usage:
+
+        npx playwright show-trace test-results/z-upgrade-project-selectio-1f18f-jects-stale-project-renames-chromium/trace.zip
+
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+
+  2) [chromium] › e2e/z-upgrade.spec.ts:106:1 › assistant renders safe Markdown without executing HTML or loading images 
+
+    Test timeout of 120000ms exceeded.
+
+    Error: locator.selectOption: Test timeout of 120000ms exceeded.
+    Call log:
+      - waiting for getByLabel('Conversation', { exact: true })
+
+
+      143 |   await page
+      144 |     .getByLabel("Conversation", { exact: true })
+    > 145 |     .selectOption(run.conversation_id);
+          |      ^
+      146 |   const message = page.locator(".message");
+      147 |   await expect(
+      148 |     message.getByRole("heading", { name: "Evidence", exact: true }),
+        at /mnt/hostshare/TheCommander/frontend/e2e/z-upgrade.spec.ts:145:6
+
+    attachment #1: screenshot (image/png) ──────────────────────────────────────────────────────────
+    test-results/z-upgrade-assistant-render-5b267-ting-HTML-or-loading-images-chromium/test-failed-1.png
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+
+    Error Context: test-results/z-upgrade-assistant-render-5b267-ting-HTML-or-loading-images-chromium/error-context.md
+
+    attachment #3: trace (application/zip) ─────────────────────────────────────────────────────────
+    test-results/z-upgrade-assistant-render-5b267-ting-HTML-or-loading-images-chromium/trace.zip
+    Usage:
+
+        npx playwright show-trace test-results/z-upgrade-assistant-render-5b267-ting-HTML-or-loading-images-chromium/trace.zip
+
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+
+  2 failed
+    [chromium] › e2e/z-upgrade.spec.ts:16:1 › project selection scopes new runs and rejects stale project renames 
+    [chromium] › e2e/z-upgrade.spec.ts:106:1 › assistant renders safe Markdown without executing HTML or loading images 
+  7 passed (3.0m)

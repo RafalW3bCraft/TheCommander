@@ -1,0 +1,17 @@
+{
+  "command": [
+    "npm",
+    "--prefix",
+    "frontend",
+    "run",
+    "test:e2e"
+  ],
+  "started_at": "2026-11-05T09:23:11.464791+00:00",
+  "finished_at": "2026-11-05T09:24:52.312615+00:00",
+  "exit_code": 0,
+  "seconds": 100.848,
+  "head": "eca70d15816c8a02a230c6a4f6ce4a399ee929c8",
+  "branch": "vultr",
+  "working_tree_diff_sha256": "efaca17e7cb919b933d8a6867f7ba7064d95958a9e08fa9683dce05f39aeacfe",
+  "limitation": "diff hash is not the release manifest; final source input identity is recorded when packaging"
+}

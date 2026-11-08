@@ -1,5 +1,28 @@
 # TheCommander — Personal AI
 
+## Vultr / Blast Radius Zero (`vultr` branch)
+
+This branch adds a dedicated **Sandbox** workspace: Vultr text/vision inference,
+disposable offline Python and constrained Playwright containers, project-scoped
+jobs, exact expiring browser approvals, containment receipts and evidence export.
+All existing application structure, provider keys/defaults and workflows are preserved.
+Sandbox execution is disabled until explicitly configured; task code never runs in the API.
+
+Read the [complete hackathon analysis and deployment guide](docs/VULTR_GUIDE.md),
+[implementation plan](docs/VULTR_PLAN.md), [verification status](docs/VULTR_VERIFICATION.md),
+and [Codex continuation prompt](docs/VULTR_CODEX_PROMPT.md), and
+[branch-only handoff](docs/VULTR_HANDOFF.md). A live Vultr deployment,
+real inference/vision evidence and final submission are **not yet verified**.
+The sections below describe the preserved earlier application and its historical evidence.
+
+> Enhancement branch: project scope, restricted assistant modes, optional API
+> providers and resumable progress are under development on `feat/enhance-codex-+`.
+> The broader Mem0/coding/browser production upgrade is **not complete**.
+> See [current release status](docs/RELEASE_REPORT.md) and
+> [requirement ledger](docs/evidence/upgrade-requirements.json). The preserved
+> hackathon baseline is commit `005deba` on `main`.
+
+
 An owner-controlled engineering assistant with persistent memory, three reusable
 skills, scoped connections, scheduled background work and exact approval for
 GitHub writes. Release 0.2.0 rebuilds the application around FastAPI, React,

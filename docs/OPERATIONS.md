@@ -196,3 +196,44 @@ historical provenance are safely published. Private environments, data, backups
 and ECC installation were not removed. To recover an individual archived file,
 inspect its path and hash first, and extract it into a separate temporary directory;
 do not overwrite the current checkout or execute archived code automatically.
+
+## Enhancement branch rollout boundary
+
+The production upgrade is still under development. Migrations 006 and 007 are
+additive and run transactionally on startup; preserve a backup before upgrading.
+An older image is not a validated rollback against the upgraded schema: restore
+the matching backup into a separate deployment. New owner defaults and legacy
+run provider routing are tested independently of clean installation.
+
+Run progress uses `/api/runs/{id}/events` with resumable SSE and authenticated GET
+fallback. Disable reverse-proxy response buffering for this route and allow the
+25-second bounded stream. Do not expose database ports or raw execution services.
+
+OpenAI/Anthropic connections are optional and require their own API credentials.
+Do not enter secrets into frontend build variables. The canonical public template
+remains `env.release.example`; the ignored user-owned `.env.example` is preserved.
+Mem0, coding/browser execution and new production controls remain unavailable
+until their separate implementation and acceptance gates are completed.
+
+## Optional memory service — enhancement acceptance
+
+Follow [ADR005](adr/005-memory-index.md) for the explicit overlay and separate
+secret names. Do not enable it on the preserved baseline. The main startup path
+continues to work with the index disabled. The worker drains the durable index
+outbox while idle; `/api/memory/index-status` reports owner-scoped pending/retry
+counts and last synchronization. An unavailable index falls back visibly to
+canonical lexical recall; inspect service health without printing tokens.
+
+`verify.sh` now checks the separate frozen memory dependency installation and
+its audit as well as application checks. The CPU-tagged torch distribution can
+be absent from PyPI advisories; inspect the audit's skip diagnostics rather than
+claiming every dependency was checked. Real local vector/model acceptance uses
+`memory_service/.venv/bin/python -m memory_service.smoke --download-model` on
+disposable resources, separately from controlled tests. The download flag permits
+only the pinned public model; the runtime itself stays offline.
+
+The existing backup smoke covers canonical PostgreSQL, including migration008;
+it does not establish an optional-index restore. Before production activation,
+back up or deterministically rebuild the index from canonical records, preserve
+pending tombstones, test correction/deletion after restoration and document
+retention. The seven-day soak and recovery objectives remain release gates.

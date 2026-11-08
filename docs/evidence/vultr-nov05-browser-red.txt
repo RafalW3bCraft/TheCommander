@@ -1,0 +1,51 @@
+
+> thecommander-ui@0.2.0 test:e2e
+> playwright test
+
+[WebServer] INFO:     Started server process [109075]
+[WebServer] INFO:     Waiting for application startup.
+[WebServer] INFO:     Application startup complete.
+[WebServer] INFO:     Uvicorn running on http://127.0.0.1:8010 (Press CTRL+C to quit)
+
+Running 11 tests using 1 worker
+
+(node:109239) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+(Use `node --trace-warnings ...` to show where the warning was created)
+  ✘   1 [chromium] › e2e/sandbox.spec.ts:4:1 › sandbox displays evidence and requires deliberate exact approval (42.1s)
+
+
+  1) [chromium] › e2e/sandbox.spec.ts:4:1 › sandbox displays evidence and requires deliberate exact approval 
+
+    Test was interrupted.
+
+    Error: locator.click: Test ended.
+    Call log:
+      - waiting for getByRole('button', { name: 'Sandbox', exact: true })
+
+
+      113 |     .fill("fictional-browser-password");
+      114 |   await page.getByRole("button", { name: "Sign in", exact: true }).click();
+    > 115 |   await page.getByRole("button", { name: "Sandbox", exact: true }).click();
+          |                                                                    ^
+      116 |   await expect(
+      117 |     page.getByRole("heading", { name: "Sandbox", exact: true }),
+      118 |   ).toBeVisible();
+        at /mnt/hostshare/TheCommander/frontend/e2e/sandbox.spec.ts:115:68
+
+    attachment #1: screenshot (image/png) ──────────────────────────────────────────────────────────
+    test-results/sandbox-sandbox-displays-e-d085d-s-deliberate-exact-approval-chromium/test-failed-1.png
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+
+    Error Context: test-results/sandbox-sandbox-displays-e-d085d-s-deliberate-exact-approval-chromium/error-context.md
+
+    attachment #3: trace (application/zip) ─────────────────────────────────────────────────────────
+    test-results/sandbox-sandbox-displays-e-d085d-s-deliberate-exact-approval-chromium/trace.zip
+    Usage:
+
+        npx playwright show-trace test-results/sandbox-sandbox-displays-e-d085d-s-deliberate-exact-approval-chromium/trace.zip
+
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+
+  1 interrupted
+    [chromium] › e2e/sandbox.spec.ts:4:1 › sandbox displays evidence and requires deliberate exact approval 
+  10 did not run

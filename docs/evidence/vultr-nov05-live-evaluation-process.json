@@ -1,0 +1,17 @@
+{
+  "command": [
+    "uv",
+    "run",
+    "python",
+    "-m",
+    "scripts.evaluate_live"
+  ],
+  "started_at": "2026-11-05T09:41:49.529266+00:00",
+  "finished_at": "2026-11-05T09:43:54.224007+00:00",
+  "exit_code": 0,
+  "seconds": 124.695,
+  "head": "eca70d15816c8a02a230c6a4f6ce4a399ee929c8",
+  "branch": "vultr",
+  "working_tree_diff_sha256": "bf1a0eacf3a2e808f6880f9581bda0c62e1965e9d3e9bc4150460dbd6cdbbc6f",
+  "limitation": "diff hash is not the release manifest; final source input identity is recorded when packaging"
+}

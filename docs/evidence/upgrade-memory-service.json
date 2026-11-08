@@ -1,0 +1,106 @@
+{
+  "source_head": "c9084c5ecc22d39642959ec539f898f03c19ced8",
+  "source_files": {
+    "memory_service/init-db.sh": "3ffecaacd4ea43bae3c8f0d56e80cf89a9d0e6c43c959ee7004d8550dcf8169d",
+    "memory_service/backend.py": "1e23b12564b63f09fe9ceb7f9f18ca98dc61223d61ae65f1b4f5456dedf4eb4e",
+    "memory_service/smoke.py": "56676f3893a9a59a92de94d92ce3211b4fb82831d2012f3ae489dbc654fb71ae",
+    "memory_service/uv.lock": "6b0f4d9ccfb90adfe8fa8acca1ac1f14eea0bcdb265cf52b0ccdb14a43aa8279",
+    "memory_service/Dockerfile": "90a1dbeaebf55a0dd9534c73eb61cbb3fc5f0305a06a030723d8aa2609e2e42f",
+    "memory_service/pyproject.toml": "1594fa604e6970d92b27bcddbea3ae8667e1e289e30fe3f9b8175915de397e0d",
+    "memory_service/app.py": "5d1da5440c42c479434ef9a68039caf67e836b82a81711c62b727a792effb7bc",
+    "memory_service/contracts.py": "40a99b8387a4f3a8fa4e5d2e8dc27533e4c84b7c3ac820296854d8f94ad36c0c",
+    "memory_service/__init__.py": "c82220115df72d7c69187bc4a115e1fc52c0ed2f6c120ee44a1726312f4f9e32",
+    "commander/memory_index.py": "1dc39a39e8aa907c31e34091bfe2228ef2ce3c288cec50127eb054892c7aba41",
+    "tests/test_memory_index.py": "0b7fd0b590b2605dce46f23a79df72d7184f2f68844d48ffa614f2558d9b51f3",
+    "deploy/compose.memory.yaml": "3c00b51bcd1b013f7a3836bc297a66fecc443b199d108c737b16772bc6df6267"
+  },
+  "checks": [
+    {
+      "command": [
+        "uv",
+        "run",
+        "pytest",
+        "-q",
+        "tests/test_memory_index.py"
+      ],
+      "started": "2026-10-29T11:16:03.188141+00:00",
+      "seconds": 2.147,
+      "exit_code": 0,
+      "log": "docs/evidence/upgrade-memory-check-1.txt"
+    },
+    {
+      "command": [
+        "uv",
+        "run",
+        "ruff",
+        "check",
+        "commander/memory_index.py",
+        "memory_service",
+        "tests/test_memory_index.py"
+      ],
+      "started": "2026-10-29T11:16:05.335502+00:00",
+      "seconds": 0.08,
+      "exit_code": 0,
+      "log": "docs/evidence/upgrade-memory-check-2.txt"
+    },
+    {
+      "command": [
+        "uv",
+        "run",
+        "mypy",
+        "commander/memory_index.py"
+      ],
+      "started": "2026-10-29T11:16:05.415343+00:00",
+      "seconds": 0.749,
+      "exit_code": 0,
+      "log": "docs/evidence/upgrade-memory-check-3.txt"
+    },
+    {
+      "command": [
+        "uv",
+        "lock",
+        "--project",
+        "memory_service",
+        "--check"
+      ],
+      "started": "2026-10-29T11:16:06.164597+00:00",
+      "seconds": 0.016,
+      "exit_code": 0,
+      "log": "docs/evidence/upgrade-memory-check-4.txt"
+    },
+    {
+      "command": [
+        "memory_service/.venv/bin/python",
+        "-m",
+        "memory_service.smoke"
+      ],
+      "started": "2026-10-29T11:16:06.181067+00:00",
+      "seconds": 32.635,
+      "exit_code": 0,
+      "log": "docs/evidence/upgrade-memory-check-5.txt",
+      "smoke": {
+        "status": "Locally verified",
+        "timestamp": "2026-10-29T11:16:36.484521+00:00",
+        "backend": "mem0ai==2.2.1 / pgvector 0.8.2",
+        "model": "intfloat/multilingual-e5-small",
+        "revision": "614241f622f53c4eeff9890bdc4f31cfecc418b3",
+        "seconds": 29.521,
+        "checks": [
+          "authenticated readiness",
+          "real local embedding and hybrid retrieval",
+          "owner filtering",
+          "revision correction",
+          "stale rejection",
+          "tombstone exclusion",
+          "expiry renewal",
+          "disclosed truncation"
+        ],
+        "limitations": "Fictional bounded smoke, not recall@5 benchmark, deployed availability or live provider evidence."
+      }
+    }
+  ],
+  "limits": [
+    "Controlled tests distinct from real local Mem0 smoke.",
+    "No recall@5 quality benchmark, production deployment or live inference claim."
+  ]
+}

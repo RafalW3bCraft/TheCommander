@@ -20,10 +20,11 @@ from commander.db import Database
 from commander.memory import save_memory
 from commander.settings import Settings
 from commander.workspace import Workspace
+from scripts.test_database import require_test_database_url
 
 
 def main():
-    base = os.environ["TEST_DATABASE_URL"]
+    base = require_test_database_url()
     token = uuid.uuid4().hex[:12]
     source = "tc_backup_" + token
     target = "tc_restore_" + token

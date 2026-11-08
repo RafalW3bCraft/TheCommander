@@ -1,3 +1,6 @@
+import { SandboxPage } from "./SandboxPage";
+import { AccountPage, type Account } from "./AccountPage";
+import { MemorySearch } from "./MemorySearch";
 import React, { useCallback, useEffect, useRef, useState } from "react";
 import { createRoot } from "react-dom/client";
 import {
@@ -20,6 +23,10 @@ import {
 } from "./api";
 import "./style.css";
 import { SettingsPage } from "./SettingsPage";
+import { useRunEvents } from "./useRunEvents";
+import { SafeMarkdown } from "./SafeMarkdown";
+import { ProjectSelector, type Project } from "./ProjectSelector";
+import type { components } from "./api-schema";
 function localInputTime(value: string | null | undefined) {
   if (!value) return "";
   const date = new Date(value);
@@ -58,18 +65,52 @@ function Status({ value }: { value: string }) {
 }
 function App() {
   const [user, setUser] = useState<User | null>(null);
+  const [account, setAccount] = useState<Account | null>(null);
   const [ready, setReady] = useState(false);
   const [page, setPage] = useState("Assistant");
   const [bootstrap, setBootstrap] = useState(false);
+  const [register, setRegister] = useState(false);
+  const content = useRef<HTMLElement>(null);
+  const signOut = useCallback(() => {
+    setCSRF("");
+    setUser(null);
+    setAccount(null);
+    setPage("Assistant");
+  }, []);
   useEffect(() => {
-    const expired = () => {
-      setCSRF("");
-      setUser(null);
-    };
+    if (!user) return;
+    let active = true;
+    void api<Account>("/account").then((value) => {
+      if (active) setAccount(value);
+    }).catch(() => { /* Account controls show a retry; authority stays on the server. */ });
+    return () => { active = false; };
+  }, [user]);
+  useEffect(() => {
+    if (user) content.current?.focus();
+  }, [page, user]);
+  const [theme, setTheme] = useState(() => {
+    try {
+      return localStorage.getItem("commander-theme") === "light"
+        ? "light"
+        : "dark";
+    } catch {
+      return "dark";
+    }
+  });
+  useEffect(() => {
+    document.documentElement.dataset.theme = theme;
+    try {
+      localStorage.setItem("commander-theme", theme);
+    } catch {
+      /* storage may be unavailable */
+    }
+  }, [theme]);
+  useEffect(() => {
+    const expired = signOut;
     window.addEventListener("commander-session-expired", expired);
     return () =>
       window.removeEventListener("commander-session-expired", expired);
-  }, []);
+  }, [signOut]);
 
   const { run: runJob, ...job } = useJob();
   useEffect(() => {
@@ -106,11 +147,11 @@ function App() {
       <main className="login">
         <p className="eyebrow">THECOMMANDER</p>
         <h1>
-          {bootstrap ? "Your personal engineering assistant" : "Welcome back"}
+          {bootstrap ? "Your personal engineering assistant" : register ? "Create your private account" : "Welcome back"}
         </h1>
         <p>
-          Your memory stays in your database. Selected context goes to Nebius;
-          research queries go to Tavily.
+          Your memory stays in your database. Selected context goes to your
+          selected inference provider; research queries go to Tavily.
         </p>
         <ErrorBox error={job.error} />
         <form
@@ -122,15 +163,17 @@ function App() {
                 username: String(form.get("username")),
                 password: String(form.get("password")),
                 ...(bootstrap ? { token: String(form.get("token")) } : {}),
+                ...(register && !bootstrap ? { invitation: String(form.get("invitation")) } : {}),
               };
               const me = await api<User>(
-                bootstrap ? "/auth/bootstrap" : "/auth/login",
+                bootstrap ? "/auth/bootstrap" : register ? "/auth/register" : "/auth/login",
                 "POST",
                 body,
               );
               setCSRF(me.csrf);
               setUser(me);
               setBootstrap(false);
+              setRegister(false);
             });
           }}
         >
@@ -148,7 +191,7 @@ function App() {
             <input
               name="password"
               type="password"
-              autoComplete={bootstrap ? "new-password" : "current-password"}
+              autoComplete={bootstrap || register ? "new-password" : "current-password"}
               minLength={12}
               maxLength={256}
               required
@@ -164,18 +207,29 @@ function App() {
               </small>
             </label>
           )}
+          {register && !bootstrap && <label>
+            Invitation token
+            <input name="invitation" type="password" required maxLength={256} autoComplete="off" />
+            <small>Use the one-time token sent privately by the operator. Public registration is closed.</small>
+          </label>}
           <button disabled={job.busy}>
             {job.busy
               ? "Please wait…"
               : bootstrap
                 ? "Create owner account"
-                : "Sign in"}
+                : register ? "Create private account" : "Sign in"}
           </button>
         </form>
+        {!bootstrap && <button className="quiet" disabled={job.busy} onClick={() => setRegister(!register)}>
+          {register ? "Back to sign in" : "Register with invitation"}
+        </button>}
       </main>
     );
   return (
     <div className="shell">
+      <a className="skip-link" href="#main-content">
+        Skip to main content
+      </a>
       <aside>
         <a
           className="brand"
@@ -185,18 +239,32 @@ function App() {
           TheCommander<span>Personal engineering assistant</span>
         </a>
         <nav aria-label="Primary">
-          {["Assistant", "Memory", "Skills", "Settings", "Activity"].map(
-            (p) => (
-              <button
-                key={p}
-                aria-current={page === p ? "page" : undefined}
-                onClick={() => setPage(p)}
-              >
-                {p}
-              </button>
-            ),
-          )}
+          {[
+            "Assistant",
+            "Sandbox",
+            "Run code",
+            "Use browser",
+            "Memory",
+            "Skills",
+            "Settings",
+            "Activity",
+            "Account",
+          ].map((p) => (
+            <button
+              key={p}
+              aria-current={page === p ? "page" : undefined}
+              onClick={() => setPage(p)}
+            >
+              {p}
+            </button>
+          ))}
         </nav>
+        <button
+          className="quiet theme-toggle"
+          onClick={() => setTheme(theme === "dark" ? "light" : "dark")}
+        >
+          Use {theme === "dark" ? "light" : "dark"} theme
+        </button>
         <div className="owner">
           <span>{user.username}</span>
           <button
@@ -204,8 +272,7 @@ function App() {
             onClick={() =>
               void runJob(async () => {
                 await api("/auth/logout", "POST");
-                setCSRF("");
-                setUser(null);
+                signOut();
               })
             }
           >
@@ -213,7 +280,7 @@ function App() {
           </button>
         </div>
       </aside>
-      <main>
+      <main id="main-content" tabIndex={-1} ref={content}>
         <ErrorBox error={job.error} />
         <header>
           <p className="eyebrow">YOUR WORK, WITH CONTINUITY</p>
@@ -221,13 +288,17 @@ function App() {
         </header>
         {page === "Assistant" ? (
           <Today />
+        ) : ["Sandbox", "Run code", "Use browser"].includes(page) ? (
+          <SandboxPage key={page} initialKind={page === "Use browser" ? "browser" : "code"} />
+        ) : page === "Account" ? (
+          <AccountPage account={account} onAccount={setAccount} onSession={setUser} onSignOut={signOut} />
         ) : page === "Memory" ? (
           <MemoryPage />
         ) : page === "Skills" ? (
           <SkillsPage />
         ) : page === "Settings" ? (
           <SettingsPage
-            connections={<ConnectionsPage />}
+            connections={<ConnectionsPage isOperator={account?.role === "operator"} />}
             openMemory={() => setPage("Memory")}
           />
         ) : (
@@ -240,6 +311,12 @@ function App() {
 function MemoryPage() {
   const [items, setItems] = useState<Memory[]>([]);
   const [query, setQuery] = useState("");
+  const [memoryProjects, setMemoryProjects] = useState<Project[]>([]);
+  useEffect(() => {
+    void api<Project[]>("/projects")
+      .then(setMemoryProjects)
+      .catch(() => {});
+  }, []);
   const [editing, setEditing] = useState<Memory | null>(null);
   const [loading, setLoading] = useState(true);
   const refreshVersion = useRef(0);
@@ -266,6 +343,7 @@ function MemoryPage() {
         take precedence over inferred ones.
       </p>
       <ErrorBox error={job.error} />
+      <MemorySearch projects={memoryProjects} />
       <div className="toolbar">
         <label>
           Search memory
@@ -312,6 +390,9 @@ function MemoryPage() {
                 key: String(f.get("key")),
                 content: String(f.get("content")),
                 kind: editing?.kind || "explicit",
+                project_id: editing
+                  ? editing.project_id
+                  : String(f.get("project_id") || "") || null,
                 expires_at: f.get("expires_at")
                   ? new Date(String(f.get("expires_at"))).toISOString()
                   : null,
@@ -328,6 +409,22 @@ function MemoryPage() {
             });
           }}
         >
+          <label>
+            Memory scope
+            <select
+              name="project_id"
+              aria-label="Memory scope"
+              defaultValue={editing?.project_id ?? ""}
+              disabled={!!editing}
+            >
+              <option value="">Owner-wide preference</option>
+              {memoryProjects.map((p) => (
+                <option key={p.id} value={p.id}>
+                  {p.name}
+                </option>
+              ))}
+            </select>
+          </label>
           <label>
             Preference or fact
             <input
@@ -388,7 +485,11 @@ function MemoryPage() {
             </div>
             <p className="prose">{item.content}</p>
             <small>
-              {item.source} · Updated {when(item.updated_at)} · Revision{" "}
+              {item.project_id
+                ? (memoryProjects.find((p) => p.id === item.project_id)?.name ??
+                  "Project")
+                : "Owner-wide"}{" "}
+              · {item.source} · Updated {when(item.updated_at)} · Revision{" "}
               {item.revision}
             </small>
             <div className="actions">
@@ -423,12 +524,17 @@ function Composer({
   skill = "conversation",
   onCreated,
   conversation,
+  project,
 }: {
   skill?: string;
+  project?: string;
   onCreated: (run: Run) => void;
   conversation?: string;
 }) {
   const { run: runJob, ...job } = useJob();
+  const [mode, setMode] = useState<components["schemas"]["RunView"]["mode"]>(
+    skill === "conversation" ? "ask" : "automate",
+  );
   return (
     <form
       onSubmit={(e) => {
@@ -438,6 +544,8 @@ function Composer({
         void runJob(async () => {
           const run = await api<Run>("/runs", "POST", {
             skill,
+            mode,
+            ...(project ? { project_id: project } : {}),
             prompt: String(f.get("prompt")),
             ...(conversation ? { conversation_id: conversation } : {}),
           });
@@ -447,6 +555,41 @@ function Composer({
       }}
     >
       <ErrorBox error={job.error} />
+      {skill === "conversation" && (
+        <label>
+          Mode
+          <select
+            aria-label="Mode"
+            value={mode}
+            onChange={(e) =>
+              setMode(
+                e.target.value as components["schemas"]["RunView"]["mode"],
+              )
+            }
+            aria-describedby="mode-description"
+          >
+            <option value="ask">Ask</option>
+            <option value="plan">Plan</option>
+            <option value="research">Research</option>
+            <option value="build" disabled>
+              Build · sandbox unavailable
+            </option>
+            <option value="review" disabled>
+              Review · sandbox unavailable
+            </option>
+            <option value="automate">Automate</option>
+          </select>
+          <small id="mode-description">
+            {mode === "ask"
+              ? "Answer from permitted context without executing tools."
+              : mode === "plan"
+                ? "Inspect permitted sources and save a plan without carrying it out."
+                : mode === "research"
+                  ? "Gather evidence with read-only tools."
+                  : "Execute configured workflows. External writes require approval."}
+          </small>
+        </label>
+      )}
       <label>
         {conversation
           ? "Continue this conversation"
@@ -467,6 +610,10 @@ function Composer({
   );
 }
 function Today() {
+  const [projects, setProjects] = useState<Project[]>([]);
+  const [project, setProject] = useState("");
+  const projectRef = useRef("");
+  const refreshVersion = useRef(0);
   const [runs, setRuns] = useState<Run[]>([]);
   const [worker, setWorker] = useState<WorkerStatus | null>(null);
   const [budget, setBudget] = useState<Budget | null>(null);
@@ -475,18 +622,48 @@ function Today() {
   const [conversation, setConversation] = useState("");
   const [messages, setMessages] = useState<Message[]>([]);
   const { run: runJob, ...job } = useJob();
+  const refreshProjects = useCallback(async () => {
+    const result = await api<Project[]>("/projects");
+    setProjects(result);
+    if (!projectRef.current) {
+      const initial =
+        result.find((p) => p.is_default)?.id || result[0]?.id || "";
+      projectRef.current = initial;
+      setProject(initial);
+    }
+  }, []);
+  useEffect(() => {
+    void runJob(refreshProjects);
+  }, [refreshProjects, runJob]);
   const refresh = useCallback(async () => {
+    if (!project) return;
+    const version = ++refreshVersion.current;
     const [r, w, c, b] = await Promise.all([
-      api<Run[]>("/runs"),
+      api<Run[]>("/runs?project_id=" + encodeURIComponent(project)),
       api<WorkerStatus>("/worker"),
-      api<Conversation[]>("/conversations"),
+      api<Conversation[]>(
+        "/conversations?project_id=" + encodeURIComponent(project),
+      ),
       api<Budget>("/budgets"),
     ]);
+    if (version !== refreshVersion.current || projectRef.current !== project)
+      return;
     setRuns(r);
     setWorker(w);
     setConversations(c);
     setBudget(b);
-  }, []);
+  }, [project]);
+  const selectProject = (id: string) => {
+    if (id === projectRef.current) return;
+    projectRef.current = id;
+    ++refreshVersion.current;
+    setProject(id);
+    setConversation("");
+    setConversations([]);
+    setMessages([]);
+    setSelected(null);
+    setRuns([]);
+  };
   useEffect(() => {
     void runJob(refresh);
     const id = setInterval(
@@ -518,6 +695,12 @@ function Today() {
   return (
     <>
       <ErrorBox error={job.error} />
+      <ProjectSelector
+        projects={projects}
+        selected={project}
+        onSelect={selectProject}
+        onSaved={refreshProjects}
+      />
       {worker && !worker.online && (
         <div className="notice" role="status">
           Worker offline. Queued tasks will wait until it returns. Last seen{" "}
@@ -536,6 +719,7 @@ function Today() {
         <label>
           Conversation
           <select
+            aria-label="Conversation"
             value={conversation}
             onChange={(e) => setConversation(e.target.value)}
           >
@@ -550,17 +734,22 @@ function Today() {
         {messages.map((m) => (
           <div className="message" key={m.id}>
             <strong>{m.role === "user" ? "You" : "TheCommander"}</strong>
-            <p className="prose">{m.content}</p>
+            <SafeMarkdown text={m.content} />
           </div>
         ))}
-        <Composer
-          conversation={conversation || undefined}
-          onCreated={(r) => {
-            setSelected(r.id);
-            setConversation(r.conversation_id || "");
-            void runJob(refresh);
-          }}
-        />
+        {project && (
+          <Composer
+            key={project}
+            project={project}
+            conversation={conversation || undefined}
+            onCreated={(r) => {
+              if (projectRef.current !== project) return;
+              setSelected(r.id);
+              setConversation(r.conversation_id || "");
+              void runJob(refresh);
+            }}
+          />
+        )}
         {conversation && (
           <button
             className="quiet danger"
@@ -609,7 +798,7 @@ function Today() {
           close={() => setSelected(null)}
         />
       )}
-      <SchedulePanel />
+      <SchedulePanel key={project} project={project} />
     </>
   );
 }
@@ -756,20 +945,17 @@ function RunDetail({ id, close }: { id: string; close: () => void }) {
     const result = await api<Detail>("/runs/" + id);
     if (version === requestVersion.current) setDetail(result);
   }, [id]);
-  useEffect(() => {
-    void runJob(refresh);
-    const timer = setInterval(
-      () =>
-        void refresh().catch(
-          (e) =>
-            void runJob(async () => {
-              throw e;
-            }),
-        ),
-      2500,
-    );
-    return () => clearInterval(timer);
-  }, [refresh, runJob]);
+  useRunEvents(id, refresh, (error) => {
+    void runJob(async () => {
+      throw error;
+    });
+  });
+  useEffect(
+    () => () => {
+      ++requestVersion.current;
+    },
+    [],
+  );
   return (
     <section className="run-detail" aria-label="Run details">
       <div className="row">
@@ -790,7 +976,13 @@ function RunDetail({ id, close }: { id: string; close: () => void }) {
               {detail.error}
             </p>
           )}
-          {detail.result && <p className="prose result">{detail.result}</p>}
+          {detail.result && (
+            <SafeMarkdown
+              text={detail.result}
+              className="result"
+              headingLevel={4}
+            />
+          )}
           {!["succeeded", "failed", "cancelled"].includes(detail.status) && (
             <button
               className="secondary"
@@ -919,13 +1111,19 @@ function SkillsPage() {
     </>
   );
 }
-function SchedulePanel() {
+function SchedulePanel({ project }: { project?: string }) {
   const [items, setItems] = useState<Schedule[]>([]);
   const [editing, setEditing] = useState<Schedule | null>(null);
   const { run: runJob, ...job } = useJob();
   const refresh = useCallback(
-    async () => setItems(await api<Schedule[]>("/schedules")),
-    [],
+    async () =>
+      setItems(
+        await api<Schedule[]>(
+          "/schedules" +
+            (project ? "?project_id=" + encodeURIComponent(project) : ""),
+        ),
+      ),
+    [project],
   );
   useEffect(() => {
     void runJob(refresh);
@@ -962,6 +1160,7 @@ function SchedulePanel() {
           void runJob(async () => {
             const body = {
               skill: String(f.get("skill")),
+              ...(project ? { project_id: project } : {}),
               prompt: String(f.get("prompt")),
               next_at: new Date(String(f.get("next_at"))).toISOString(),
               timezone: String(f.get("timezone")),
@@ -1110,7 +1309,7 @@ function SchedulePanel() {
     </section>
   );
 }
-function ConnectionsPage() {
+function ConnectionsPage({ isOperator }: { isOperator: boolean }) {
   const [items, setItems] = useState<Connection[]>([]);
   const { run: runJob, ...job } = useJob();
   const refresh = useCallback(
@@ -1127,7 +1326,7 @@ function ConnectionsPage() {
         never returned to this browser.
       </p>
       <ErrorBox error={job.error} />
-      <button
+      {isOperator && <button
         className="secondary"
         disabled={job.busy}
         onClick={() =>
@@ -1138,7 +1337,7 @@ function ConnectionsPage() {
         }
       >
         Import configured server credentials
-      </button>
+      </button>}
       {items.map((c) => (
         <ConnectionCard key={c.kind} connection={c} refresh={refresh} />
       ))}
@@ -1160,16 +1359,22 @@ function ConnectionCard({
         <h2>
           {c.kind === "nebius"
             ? "Nebius · NVIDIA inference"
-            : c.kind === "github"
-              ? "GitHub"
-              : c.kind === "tavily"
-                ? "Tavily research"
-                : "Workspace notes"}
+            : c.kind === "vultr"
+              ? "Vultr Serverless Inference"
+              : c.kind === "openai"
+                ? "OpenAI API"
+                : c.kind === "anthropic"
+                  ? "Anthropic API"
+                  : c.kind === "github"
+                    ? "GitHub"
+                    : c.kind === "tavily"
+                      ? "Tavily research"
+                      : "Workspace notes"}
         </h2>
         <Status value={c.status} />
       </div>
       <p>
-        {c.kind === "nebius"
+        {["nebius", "openai", "anthropic", "vultr"].includes(c.kind)
           ? "Receives your selected conversation and memory context."
           : c.kind === "github"
             ? "Reads one repository. Issue creation requires exact approval."

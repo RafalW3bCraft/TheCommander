@@ -1,0 +1,17 @@
+{
+  "command": [
+    "uv",
+    "run",
+    "python",
+    "-m",
+    "scripts.audit_repository"
+  ],
+  "started_at": "2026-10-29T05:54:07.227897+00:00",
+  "finished_at": "2026-10-29T05:54:11.350433+00:00",
+  "exit_code": 0,
+  "seconds": 4.123,
+  "head": "c9084c5ecc22d39642959ec539f898f03c19ced8",
+  "branch": "feat/enhance-codex-+",
+  "working_tree_diff_sha256": "db448de939ce9c4614cd292c46938bf49bd881578406df2f8922937fd7f179d8",
+  "limitation": "diff hash is not the release manifest; final source input identity is recorded when packaging"
+}

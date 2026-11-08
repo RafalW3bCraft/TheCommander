@@ -1,0 +1,4 @@
+FROM docker.io/library/python:3.13-slim-bookworm@sha256:4cea12ab7d78a3312c85f8cab19b6971d4fe9704da25443986c0bc20a6678850
+COPY deploy/sandbox/proxy.py /opt/commander/proxy.py
+USER 10001:10001
+ENTRYPOINT ["timeout", "--signal=KILL", "150", "python", "-I", "/opt/commander/proxy.py"]

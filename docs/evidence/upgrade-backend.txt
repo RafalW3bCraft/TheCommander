@@ -1,0 +1,115 @@
+..............................................F......................... [ 68%]
+.................................                                        [100%]
+=================================== FAILURES ===================================
+________ test_upgrade_preserves_legacy_rows_and_executes_null_snapshot _________
+
+settings = Settings(database_url='postgresql://watcher@127.0.0.1:55432/postgres', database_schema='test_89cef882ef3e40e9bbab2b661..._runs=50, max_daily_tokens=100000, daily_spend_limit_usd=None, input_usd_per_million=None, output_usd_per_million=None)
+
+    def test_upgrade_preserves_legacy_rows_and_executes_null_snapshot(settings):
+        db = Database(settings)
+        # Simulate the previous release's schema ledger without modifying installed migrations.
+        with db.connect() as conn:
+            conn.execute(sql.SQL("CREATE SCHEMA {}").format(sql.Identifier(settings.database_schema)))
+            conn.execute(
+                sql.SQL("SET search_path TO {}, public").format(
+                    sql.Identifier(settings.database_schema)
+                )
+            )
+            conn.execute(
+                "CREATE TABLE schema_versions(version text PRIMARY KEY,applied_at timestamptz NOT NULL DEFAULT now())"
+            )
+            for path in sorted(Path("commander/migrations").glob("00[1-3]_*.sql")):
+                conn.execute(path.read_text())
+                conn.execute("INSERT INTO schema_versions(version) VALUES (%s)", (path.name,))
+            owner = conn.execute(
+                "INSERT INTO owners(username,password_hash) VALUES (%s,%s) RETURNING id",
+                ("upgrade-owner", hasher.hash("fictional-upgrade-password")),
+            ).fetchone()["id"]
+            run = conn.execute(
+                "INSERT INTO runs(owner_id,skill,skill_version,prompt) VALUES (%s,'conversation','conversation-v1','Continue after upgrade') RETURNING id",
+                (owner,),
+            ).fetchone()["id"]
+>       memory = save_memory(db, owner, MemoryInput(key="upgrade", content="Preserve this preference"))
+                 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+tests/test_upgrade.py:37: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+commander/memory.py:62: in save_memory
+    row = conn.execute(
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+self = <psycopg.Connection [BAD] at 0x7ff9234d64e0>
+query = 'INSERT INTO memories(owner_id,kind,key,content,source,expires_at,project_id) VALUES (%s,%s,%s,%s,%s,%s,%s) RETURNING *'
+params = (UUID('58cdbc5d-36c3-4df0-a958-17e907106255'), 'explicit', 'upgrade', 'Preserve this preference', 'owner entry', None, ...)
+prepare = None, binary = False
+
+    def execute(
+        self,
+        query: Query,
+        params: Params | None = None,
+        *,
+        prepare: bool | None = None,
+        binary: bool = False,
+    ) -> Cursor[Row]:
+        """Execute a query and return a cursor to read its results."""
+        try:
+            cur = self.cursor()
+            if binary:
+                cur.format = BINARY
+    
+            if isinstance(query, Template):
+                if params is not None:
+                    raise TypeError(
+                        "'execute()' with string template query doesn't support parameters"
+                    )
+                return cur.execute(query, prepare=prepare)
+            else:
+                return cur.execute(query, params, prepare=prepare)
+        except e._NO_TRACEBACK as ex:
+>           raise ex.with_traceback(None)
+E           psycopg.errors.UndefinedColumn: column "project_id" of relation "memories" does not exist
+E           LINE 1: ...ories(owner_id,kind,key,content,source,expires_at,project_id...
+E                                                                        ^
+
+.venv/lib/python3.13/site-packages/psycopg/connection.py:304: UndefinedColumn
+=============================== warnings summary ===============================
+.venv/lib/python3.13/site-packages/fastapi/testclient.py:1
+  /mnt/hostshare/TheCommander/.venv/lib/python3.13/site-packages/fastapi/testclient.py:1: StarletteDeprecationWarning: Using `httpx` with `starlette.testclient` is deprecated; install `httpx2` instead.
+    from starlette.testclient import TestClient as TestClient  # noqa
+
+-- Docs: https://docs.pytest.org/en/stable/how-to/capture-warnings.html
+================================ tests coverage ================================
+_______________ coverage: platform linux, python 3.13.5-final-0 ________________
+
+Name                       Stmts   Miss  Cover   Missing
+--------------------------------------------------------
+commander/__init__.py          0      0   100%
+commander/api.py             116     11    91%   75, 82, 100, 122, 147, 151-152, 156, 171-172, 218
+commander/auth.py             45      5    89%   26, 35, 47-48, 50
+commander/broker.py          212     21    90%   73, 76, 101, 123, 127, 130, 145, 152, 160, 176, 219, 241, 261, 282, 294, 313, 318, 377, 380, 392, 401
+commander/connections.py     137     31    77%   10-12, 22, 30-32, 39, 50, 53, 76, 88, 97, 100, 102, 115, 134, 154, 158, 161, 171, 178-179, 185, 226, 232, 242, 251, 254, 269-270, 279-280
+commander/contracts.py       248      3    99%   72, 81, 118
+commander/db.py               32      0   100%
+commander/engine.py          132     10    92%   33, 42, 47, 128-129, 202, 208, 221, 234, 237
+commander/errors.py            6      0   100%
+commander/events.py           70      2    97%   42, 74
+commander/healthcheck.py       7      7     0%   3-13
+commander/inference.py        29      8    72%   7, 19, 30-38, 42, 79
+commander/memory.py           31      2    94%   27, 31
+commander/modes.py            13      1    92%   24
+commander/preferences.py     110     33    70%   10, 42, 45-46, 49, 57, 61, 69, 73-74, 87, 89, 123, 135-140, 159, 187-227
+commander/projects.py         35     14    60%   44-66
+commander/providers.py       149     81    46%   10, 14, 20, 23, 40, 50-51, 74, 84-88, 112, 115, 123, 129, 153, 160-161, 169-314
+commander/routes.py          152     14    91%   65, 78, 140, 178, 201, 206, 218, 241, 278-281, 285-286
+commander/runs.py             76      7    91%   35, 123, 126, 132, 138-139, 143
+commander/schedules.py        36      3    92%   18, 21, 63
+commander/settings.py         50     18    64%   2, 6, 37, 44-47, 52-70
+commander/skills.py           23      0   100%
+commander/worker.py           90     24    73%   58, 125-147, 151-152
+commander/workspace.py        48      3    94%   17, 21, 56
+--------------------------------------------------------
+TOTAL                       1847    298    84%
+Required test coverage of 80.0% reached. Total coverage: 83.87%
+=========================== short test summary info ============================
+FAILED tests/test_upgrade.py::test_upgrade_preserves_legacy_rows_and_executes_null_snapshot
+1 failed, 104 passed, 1 warning in 133.66s (0:02:13)

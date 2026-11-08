@@ -1,0 +1,222 @@
+Created .env.runtime with mode 0600. Use its bootstrap token on first sign-in.
+Added a local Compose database password without changing existing settings.
+Using CPython 3.13.5 interpreter at: /bin/python3
+Creating virtual environment at: .venv
+warning: Failed to hardlink files; falling back to full copy. This may lead to degraded performance.
+         If the cache and target directories are on different filesystems, hardlinking may not be supported.
+         If this is intentional, set `export UV_LINK_MODE=copy` or use `--link-mode=copy` to suppress this warning.
+Installed 62 packages in 425ms
+ + annotated-doc==0.0.5
+ + annotated-types==0.8.0
+ + anyio==4.15.1
+ + argon2-cffi==25.1.0
+ + argon2-cffi-bindings==26.1.0
+ + boolean-py==5.0
+ + cachecontrol==0.14.4
+ + certifi==2026.10.19
+ + cffi==2.1.1
+ + charset-normalizer==3.5.2
+ + click==8.5.0
+ + coverage==7.16.2
+ + cryptography==50.0.2
+ + cyclonedx-python-lib==11.12.0
+ + defusedxml==0.7.1
+ + fastapi==0.159.1
+ + filelock==4.2.4
+ + h11==0.16.0
+ + httpcore==1.0.9
+ + httpx==0.28.1
+ + idna==3.20
+ + iniconfig==2.3.1
+ + librt==0.16.0
+ + license-expression==30.4.4
+ + markdown-it-py==4.2.0
+ + mdurl==0.1.2
+ + msgpack==1.2.3
+ + mypy==1.20.2
+ + mypy-extensions==1.1.0
+ + opentelemetry-api==1.45.1
+ + packageurl-python==0.17.6
+ + packaging==26.3
+ + pathspec==1.1.1
+ + pip==26.2.2
+ + pip-api==0.0.35
+ + pip-audit==2.10.1
+ + pip-requirements-parser==32.0.1
+ + platformdirs==4.13.5
+ + pluggy==1.7.0
+ + psycopg==3.3.6
+ + psycopg-binary==3.3.6
+ + py-serializable==2.1.0
+ + pycparser==3.11
+ + pydantic==2.14.1
+ + pydantic-core==2.50.1
+ + pydantic-settings==2.16.1
+ + pygments==2.21.0
+ + pyparsing==3.3.3
+ + pytest==9.1.1
+ + pytest-cov==7.1.0
+ + python-dotenv==1.2.4
+ + requests==2.34.2
+ + rich==15.0.0
+ + ruff==0.17.1
+ + sortedcontainers==2.4.0
+ + starlette==1.9.0
+ + tomli==2.5.0
+ + tomli-w==1.2.0
+ + typing-extensions==4.16.0
+ + typing-inspection==0.4.4
+ + urllib3==2.8.0
+ + uvicorn==0.54.0
+Existing .env.runtime preserved.
+Emulate Docker CLI using podman. Create /etc/containers/nodocker to quiet msg.
+[4m>>>> Executing external compose provider "/usr/libexec/docker/cli-plugins/docker-compose". Please see podman-compose(1) for how to disable this message. <<<<
+
+[0mSending build context to Docker daemon  199.5kB
+[1/2] STEP 1/6: FROM docker.io/library/node:22-bookworm-slim@sha256:de170b39439eb0e5a3444ad7d60b015614a381e10fecae2e30ec9e735122f38d AS frontend
+[1/2] STEP 2/6: WORKDIR /build/frontend
+--> Using cache 9c5f0f2082a1026ebc0f222c8c7fe020852264901fdebc2777034175ddd45601
+--> 9c5f0f2082a1
+[1/2] STEP 3/6: COPY frontend/package.json frontend/package-lock.json ./
+--> 7c6f69134f8c
+[1/2] STEP 4/6: RUN npm ci
+npm warn deprecated eslint@9.39.5: This version is no longer supported. Please see https://eslint.org/version-support for other options.
+
+added 204 packages, and audited 205 packages in 58s
+
+52 packages are looking for funding
+  run `npm fund` for details
+
+7 moderate severity vulnerabilities
+
+To address issues that do not require attention, run:
+  npm audit fix
+
+To address all issues (including breaking changes), run:
+  npm audit fix --force
+
+Run `npm audit` for details.
+npm notice
+npm notice New major version of npm available! 10.9.9 -> 12.2.2
+npm notice Changelog: https://github.com/npm/cli/releases/tag/v12.2.2
+npm notice To update run: npm install -g npm@12.2.2
+npm notice
+--> 149b51ede1e4
+[1/2] STEP 5/6: COPY frontend/ ./
+--> 978bc492eb43
+[1/2] STEP 6/6: RUN npm run build
+
+> thecommander-ui@0.2.0 build
+> tsc --noEmit && vite build
+
+vite v6.4.5 building for production...
+transforming...
+✓ 35 modules transformed.
+rendering chunks...
+computing gzip size...
+dist/index.html                   0.36 kB │ gzip:  0.26 kB
+dist/assets/index-JwzF8Pw-.css    8.72 kB │ gzip:  2.66 kB
+dist/assets/index-B1gJpl10.js   274.75 kB │ gzip: 85.41 kB
+✓ built in 1.75s
+--> 67ef0d450e7b
+[2/2] STEP 1/14: FROM docker.io/library/python:3.13-slim-bookworm@sha256:4cea12ab7d78a3312c85f8cab19b6971d4fe9704da25443986c0bc20a6678850
+[2/2] STEP 2/14: ENV PYTHONDONTWRITEBYTECODE=1 PYTHONUNBUFFERED=1 UV_LINK_MODE=copy
+--> Using cache 522a389bd4fefaeea3f4fa7d5ecf617404433517f5094b246eed72e9328c3117
+--> 522a389bd4fe
+[2/2] STEP 3/14: WORKDIR /app
+--> Using cache 19d5a3518e4a97ad3d6377f357ad5523a9b240401f4dee7c0559bcb142bd1760
+--> 19d5a3518e4a
+[2/2] STEP 4/14: RUN pip install --no-cache-dir uv==0.13.1 && groupadd --gid 10001 commander && useradd --uid 10001 --gid 10001 --create-home commander
+--> Using cache 7e0ce7a65b6f814f5b75a230052a687085dbcec473b1049ddbdec6d4cfd1df5f
+--> 7e0ce7a65b6f
+[2/2] STEP 5/14: COPY pyproject.toml uv.lock ./
+--> 7678417e8ad5
+[2/2] STEP 6/14: RUN uv sync --frozen --no-dev
+Using CPython 3.13.17 interpreter at: /usr/local/bin/python3
+Creating virtual environment at: .venv
+Downloading cryptography (4.5MiB)
+Downloading psycopg-binary (5.0MiB)
+Downloading pydantic-core (2.1MiB)
+ Downloaded pydantic-core
+ Downloaded cryptography
+ Downloaded psycopg-binary
+Prepared 26 packages in 8.03s
+Installed 26 packages in 138ms
+ + annotated-doc==0.0.5
+ + annotated-types==0.8.0
+ + anyio==4.15.1
+ + argon2-cffi==25.1.0
+ + argon2-cffi-bindings==26.1.0
+ + certifi==2026.10.19
+ + cffi==2.1.1
+ + click==8.5.0
+ + cryptography==50.0.2
+ + fastapi==0.159.1
+ + h11==0.16.0
+ + httpcore==1.0.9
+ + httpx==0.28.1
+ + idna==3.20
+ + opentelemetry-api==1.45.1
+ + psycopg==3.3.6
+ + psycopg-binary==3.3.6
+ + pycparser==3.11
+ + pydantic==2.14.1
+ + pydantic-core==2.50.1
+ + pydantic-settings==2.16.1
+ + python-dotenv==1.2.4
+ + starlette==1.9.0
+ + typing-extensions==4.16.0
+ + typing-inspection==0.4.4
+ + uvicorn==0.54.0
+--> 2e6282f7cb94
+[2/2] STEP 7/14: COPY commander/ commander/
+--> 4b12d7a78d3e
+[2/2] STEP 8/14: COPY --from=frontend /build/frontend/dist frontend/dist
+--> 2cc299153a43
+[2/2] STEP 9/14: RUN mkdir -p /data/notes && chown -R commander:commander /data /app
+--> 22b1077dcbe3
+[2/2] STEP 10/14: USER commander
+--> 395cda094d9b
+[2/2] STEP 11/14: ENV PATH="/app/.venv/bin:$PATH" WORKSPACE_ROOT=/data/notes
+--> aa8d3fc00085
+[2/2] STEP 12/14: EXPOSE 8000
+--> 33e66cbf937a
+[2/2] STEP 13/14: CMD ["uvicorn", "commander.api:create_app", "--factory", "--host", "0.0.0.0", "--port", "8000", "--no-access-log"]
+--> 500bb32ae46e
+[2/2] STEP 14/14: LABEL "com.docker.compose.image.builder"="classic"
+[2/2] COMMIT localhost/thecommander:0.2.0
+--> 68ce9b00f703
+Successfully tagged localhost/thecommander:0.2.0
+68ce9b00f7037a1ccba6d6bcc4fa263ab4b43ebccf1ad016372932bbff1491ba
+Successfully built 68ce9b00f703
+Successfully tagged localhost/thecommander:0.2.0
+ Network thecommander-cleancheck-eec555be9a_default  Creating
+ Network thecommander-cleancheck-eec555be9a_default  Created
+ Volume "thecommander-cleancheck-eec555be9a_database"  Creating
+ Volume "thecommander-cleancheck-eec555be9a_database"  Created
+ Volume "thecommander-cleancheck-eec555be9a_notes"  Creating
+ Volume "thecommander-cleancheck-eec555be9a_notes"  Created
+ Container thecommander-cleancheck-eec555be9a-db-1  Creating
+ Container thecommander-cleancheck-eec555be9a-db-1  Created
+ Container thecommander-cleancheck-eec555be9a-worker-1  Creating
+ Container thecommander-cleancheck-eec555be9a-api-1  Creating
+ Container thecommander-cleancheck-eec555be9a-worker-1  Created
+ Container thecommander-cleancheck-eec555be9a-api-1  Created
+ Container thecommander-cleancheck-eec555be9a-db-1  Starting
+ Container thecommander-cleancheck-eec555be9a-db-1  Started
+ Container thecommander-cleancheck-eec555be9a-db-1  Waiting
+ Container thecommander-cleancheck-eec555be9a-db-1  Waiting
+ Container thecommander-cleancheck-eec555be9a-db-1  Healthy
+ Container thecommander-cleancheck-eec555be9a-worker-1  Starting
+ Container thecommander-cleancheck-eec555be9a-db-1  Healthy
+ Container thecommander-cleancheck-eec555be9a-api-1  Starting
+ Container thecommander-cleancheck-eec555be9a-worker-1  Started
+ Container thecommander-cleancheck-eec555be9a-api-1  Started
+Open http://localhost:8002. Bootstrap token is in .env.runtime.
+{"timestamp": "2026-11-05T15:35:20.188102+00:00", "deployment": "thecommander-cleancheck-eec555be9a", "checks": ["database_readiness", "production_frontend_served", "secure_owner_login", "persistent_owner_settings", "persisted_memory_export", "persistent_workspace_note", "separate_worker_heartbeat", "session_revocation"]}
+Emulate Docker CLI using podman. Create /etc/containers/nodocker to quiet msg.
+[4m>>>> Executing external compose provider "/usr/libexec/docker/cli-plugins/docker-compose". Please see podman-compose(1) for how to disable this message. <<<<
+
+[0m Container thecommander-cleancheck-eec555be9a-db-1  Running
+ Container thecommander-cleancheck-eec555be9a-api-1  Recreate
+ Container thecommander-cleancheck-eec555be9a-worker-1  Recreate

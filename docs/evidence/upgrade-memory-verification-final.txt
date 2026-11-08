@@ -1,0 +1,99 @@
+Checked 62 packages in 13ms
+All checks passed!
+60 files already formatted
+Success: no issues found in 27 source files
+============================= test session starts ==============================
+platform linux -- Python 3.13.5, pytest-9.1.1, pluggy-1.7.0
+rootdir: /mnt/hostshare/TheCommander
+configfile: pyproject.toml
+testpaths: tests
+plugins: platformdirs-4.13.5, anyio-4.15.1, cov-7.1.0
+collected 136 items
+
+tests/test_auth_memory.py .                                              [  0%]
+tests/test_events.py ............                                        [  9%]
+tests/test_live_evaluation_exit.py ..                                    [ 11%]
+tests/test_live_probe.py ......                                          [ 15%]
+tests/test_memory_index.py ..............                                [ 25%]
+tests/test_memory_retrieval.py .........                                 [ 32%]
+tests/test_projects_modes.py ........                                    [ 38%]
+tests/test_provider_adapters.py ......                                   [ 42%]
+tests/test_release_package.py ....                                       [ 45%]
+tests/test_release_settings.py ...........                               [ 53%]
+tests/test_smoke_isolation.py ....                                       [ 56%]
+tests/test_upgrade.py .                                                  [ 57%]
+tests/test_workflows.py ................................................ [ 92%]
+..........                                                               [100%]
+
+=============================== warnings summary ===============================
+.venv/lib/python3.13/site-packages/fastapi/testclient.py:1
+  /mnt/hostshare/TheCommander/.venv/lib/python3.13/site-packages/fastapi/testclient.py:1: StarletteDeprecationWarning: Using `httpx` with `starlette.testclient` is deprecated; install `httpx2` instead.
+    from starlette.testclient import TestClient as TestClient  # noqa
+
+-- Docs: https://docs.pytest.org/en/stable/how-to/capture-warnings.html
+================================ tests coverage ================================
+_______________ coverage: platform linux, python 3.13.5-final-0 ________________
+
+Name                        Stmts   Miss  Cover   Missing
+---------------------------------------------------------
+commander/__init__.py           0      0   100%
+commander/api.py              125     11    91%   77, 84, 102, 124, 149, 153-154, 158, 173-174, 242
+commander/auth.py              45      5    89%   26, 35, 47-48, 50
+commander/broker.py           212     21    90%   73, 76, 101, 123, 127, 130, 145, 152, 160, 176, 219, 241, 261, 282, 294, 313, 318, 377, 380, 392, 401
+commander/connections.py      137     12    91%   76, 101, 103, 116, 179-183, 186, 220, 226, 264-272
+commander/contracts.py        261      3    99%   72, 81, 118
+commander/db.py                32      0   100%
+commander/engine.py           143     15    90%   34, 43, 48, 102-108, 161-162, 235, 241, 254, 267, 270
+commander/errors.py             6      0   100%
+commander/events.py            70      2    97%   42, 74
+commander/healthcheck.py        7      7     0%   3-13
+commander/inference.py         41      6    85%   30-35, 43, 62, 71
+commander/memory.py            61      1    98%   27
+commander/memory_index.py      74      4    95%   82, 97, 118, 147
+commander/memory_sync.py       31      2    94%   9, 35
+commander/modes.py             13      1    92%   24
+commander/preferences.py      110      3    97%   126, 174, 179
+commander/projects.py          35      0   100%
+commander/providers.py        150     21    86%   60-61, 80, 89, 94-97, 103, 126, 130, 141, 178, 188, 190, 205-206, 215, 243, 245, 247, 254, 276
+commander/routes.py           155     13    92%   78, 142, 180, 203, 208, 220, 249, 286-289, 293-294
+commander/runs.py              76      7    91%   35, 123, 126, 132, 138-139, 143
+commander/schedules.py         36      3    92%   18, 21, 63
+commander/settings.py          57      7    88%   49-51, 53, 55, 60, 62, 64
+commander/skills.py            23      0   100%
+commander/worker.py            92     24    74%   58, 128-150, 154-155
+commander/workspace.py         48      3    94%   17, 21, 56
+---------------------------------------------------------
+TOTAL                        2040    171    92%
+Required test coverage of 80.0% reached. Total coverage: 91.62%
+================== 136 passed, 1 warning in 148.63s (0:02:28) ==================
+npm warn deprecated eslint@9.39.5: This version is no longer supported. Please see https://eslint.org/version-support for other options.
+
+added 204 packages, and audited 205 packages in 7s
+
+52 packages are looking for funding
+  run `npm fund` for details
+
+found 0 vulnerabilities
+
+> thecommander-ui@0.2.0 api:types
+> openapi-typescript ../docs/openapi.json -o src/api-schema.d.ts && prettier --write src/api-schema.d.ts
+
+✨ openapi-typescript 7.13.0
+🚀 ../docs/openapi.json → src/api-schema.d.ts [390ms]
+src/api-schema.d.ts 1090ms
+
+> thecommander-ui@0.2.0 format:check
+> prettier --check src e2e *.ts *.js package.json tsconfig.json
+
+Checking formatting...
+All matched files use Prettier code style!
+
+> thecommander-ui@0.2.0 lint
+> eslint src e2e *.ts *.js
+
+
+/mnt/hostshare/TheCommander/frontend/src/MemorySearch.tsx
+  27:17  error  The ref value 'version.current' will likely have changed by the time this effect cleanup function runs. If this ref points to a node rendered by React, copy 'version.current' to a variable inside the effect, and use that variable in the cleanup function  react-hooks/exhaustive-deps
+
+✖ 1 problem (1 error, 0 warnings)
+

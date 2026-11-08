@@ -1,4 +1,3 @@
-import os
 import uuid
 
 import psycopg
@@ -7,15 +6,14 @@ from cryptography.fernet import Fernet
 from psycopg import sql
 
 from commander.settings import Settings
+from scripts.test_database import require_test_database_url
 
 
 @pytest.fixture
 def settings(tmp_path):
     cfg = Settings(
         _env_file=None,
-        database_url=os.getenv(
-            "TEST_DATABASE_URL", "postgresql://thecommander@127.0.0.1:5433/thecommander_db"
-        ),
+        database_url=require_test_database_url(),
         database_schema="test_" + uuid.uuid4().hex,
         encryption_key=Fernet.generate_key().decode(),
         bootstrap_token="test-bootstrap-token-with-32-characters",

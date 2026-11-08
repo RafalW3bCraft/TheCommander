@@ -39,3 +39,33 @@ request with unknown consumption retains its original reservation even after
 owner limits decrease. Historical unknown rows receive the maximum supported
 108192-token reservation until they age out of the rolling 24-hour window.
 Known provider usage takes precedence. A lower setting cannot erase prior usage.
+
+## Enhancement provider selection
+
+`inference_provider` is `nebius`, `openai`, or `anthropic`. Nebius retains
+`nebius_model` and its restricted endpoint choices. Optional APIs use an explicit
+`provider_model` and fixed HTTPS origins. Configure their separate encrypted
+credentials in Connections, discover account models, then save the chosen model.
+Selection performs a live validation request and remains unchanged if validation
+fails. API credentials are independent of consumer subscriptions.
+
+Old runs retain their provider; no fallback occurs on errors, throttling or
+revocation. Optional-provider pricing is unknown; a spending cap blocks those
+requests until pricing support exists. Daily token reservations cover all providers.
+Usage identifies both provider and model. No infrastructure secrets were rotated.
+
+## Optional private memory index
+
+`MEMORY_INDEX_URL` and `MEMORY_INDEX_TOKEN` are operator-only configuration. Both
+are blank by default; the browser cannot configure a general network endpoint or
+view the token. Use a private Compose service/loopback URL or operator-controlled
+HTTPS; redirects and environment proxies are disabled. The separately selected
+`deploy/compose.memory.yaml` requires independent database and service secrets.
+It never inherits provider API credentials. See [ADR005](adr/005-memory-index.md).
+
+Memory search reports disabled/degraded/ready retrieval separately from pending
+synchronization, retry count and bounded-prefix indexing. These are operational
+states, not claims of retrieval quality. Indexing is asynchronous while the worker
+is idle; existing canonical preferences remain available during outages. Model
+embeddings use up to 512 tokens of the first 4,000 characters. Canonical memory
+retains its full text. Search queries may be shortened with an explicit indicator.
