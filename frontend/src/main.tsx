@@ -1,4 +1,5 @@
 import { SandboxPage } from "./SandboxPage";
+import { AccountPage, type Account } from "./AccountPage";
 import { MemorySearch } from "./MemorySearch";
 import React, { useCallback, useEffect, useRef, useState } from "react";
 import { createRoot } from "react-dom/client";
@@ -64,9 +65,29 @@ function Status({ value }: { value: string }) {
 }
 function App() {
   const [user, setUser] = useState<User | null>(null);
+  const [account, setAccount] = useState<Account | null>(null);
   const [ready, setReady] = useState(false);
   const [page, setPage] = useState("Assistant");
   const [bootstrap, setBootstrap] = useState(false);
+  const [register, setRegister] = useState(false);
+  const content = useRef<HTMLElement>(null);
+  const signOut = useCallback(() => {
+    setCSRF("");
+    setUser(null);
+    setAccount(null);
+    setPage("Assistant");
+  }, []);
+  useEffect(() => {
+    if (!user) return;
+    let active = true;
+    void api<Account>("/account").then((value) => {
+      if (active) setAccount(value);
+    }).catch(() => { /* Account controls show a retry; authority stays on the server. */ });
+    return () => { active = false; };
+  }, [user]);
+  useEffect(() => {
+    if (user) content.current?.focus();
+  }, [page, user]);
   const [theme, setTheme] = useState(() => {
     try {
       return localStorage.getItem("commander-theme") === "light"
@@ -85,14 +106,11 @@ function App() {
     }
   }, [theme]);
   useEffect(() => {
-    const expired = () => {
-      setCSRF("");
-      setUser(null);
-    };
+    const expired = signOut;
     window.addEventListener("commander-session-expired", expired);
     return () =>
       window.removeEventListener("commander-session-expired", expired);
-  }, []);
+  }, [signOut]);
 
   const { run: runJob, ...job } = useJob();
   useEffect(() => {
@@ -129,7 +147,7 @@ function App() {
       <main className="login">
         <p className="eyebrow">THECOMMANDER</p>
         <h1>
-          {bootstrap ? "Your personal engineering assistant" : "Welcome back"}
+          {bootstrap ? "Your personal engineering assistant" : register ? "Create your private account" : "Welcome back"}
         </h1>
         <p>
           Your memory stays in your database. Selected context goes to your
@@ -145,15 +163,17 @@ function App() {
                 username: String(form.get("username")),
                 password: String(form.get("password")),
                 ...(bootstrap ? { token: String(form.get("token")) } : {}),
+                ...(register && !bootstrap ? { invitation: String(form.get("invitation")) } : {}),
               };
               const me = await api<User>(
-                bootstrap ? "/auth/bootstrap" : "/auth/login",
+                bootstrap ? "/auth/bootstrap" : register ? "/auth/register" : "/auth/login",
                 "POST",
                 body,
               );
               setCSRF(me.csrf);
               setUser(me);
               setBootstrap(false);
+              setRegister(false);
             });
           }}
         >
@@ -171,7 +191,7 @@ function App() {
             <input
               name="password"
               type="password"
-              autoComplete={bootstrap ? "new-password" : "current-password"}
+              autoComplete={bootstrap || register ? "new-password" : "current-password"}
               minLength={12}
               maxLength={256}
               required
@@ -187,14 +207,22 @@ function App() {
               </small>
             </label>
           )}
+          {register && !bootstrap && <label>
+            Invitation token
+            <input name="invitation" type="password" required maxLength={256} autoComplete="off" />
+            <small>Use the one-time token sent privately by the operator. Public registration is closed.</small>
+          </label>}
           <button disabled={job.busy}>
             {job.busy
               ? "Please wait…"
               : bootstrap
                 ? "Create owner account"
-                : "Sign in"}
+                : register ? "Create private account" : "Sign in"}
           </button>
         </form>
+        {!bootstrap && <button className="quiet" disabled={job.busy} onClick={() => setRegister(!register)}>
+          {register ? "Back to sign in" : "Register with invitation"}
+        </button>}
       </main>
     );
   return (
@@ -214,10 +242,13 @@ function App() {
           {[
             "Assistant",
             "Sandbox",
+            "Run code",
+            "Use browser",
             "Memory",
             "Skills",
             "Settings",
             "Activity",
+            "Account",
           ].map((p) => (
             <button
               key={p}
@@ -241,8 +272,7 @@ function App() {
             onClick={() =>
               void runJob(async () => {
                 await api("/auth/logout", "POST");
-                setCSRF("");
-                setUser(null);
+                signOut();
               })
             }
           >
@@ -250,7 +280,7 @@ function App() {
           </button>
         </div>
       </aside>
-      <main id="main-content" tabIndex={-1}>
+      <main id="main-content" tabIndex={-1} ref={content}>
         <ErrorBox error={job.error} />
         <header>
           <p className="eyebrow">YOUR WORK, WITH CONTINUITY</p>
@@ -258,15 +288,17 @@ function App() {
         </header>
         {page === "Assistant" ? (
           <Today />
-        ) : page === "Sandbox" ? (
-          <SandboxPage />
+        ) : ["Sandbox", "Run code", "Use browser"].includes(page) ? (
+          <SandboxPage key={page} initialKind={page === "Use browser" ? "browser" : "code"} />
+        ) : page === "Account" ? (
+          <AccountPage account={account} onAccount={setAccount} onSession={setUser} onSignOut={signOut} />
         ) : page === "Memory" ? (
           <MemoryPage />
         ) : page === "Skills" ? (
           <SkillsPage />
         ) : page === "Settings" ? (
           <SettingsPage
-            connections={<ConnectionsPage />}
+            connections={<ConnectionsPage isOperator={account?.role === "operator"} />}
             openMemory={() => setPage("Memory")}
           />
         ) : (
@@ -1277,7 +1309,7 @@ function SchedulePanel({ project }: { project?: string }) {
     </section>
   );
 }
-function ConnectionsPage() {
+function ConnectionsPage({ isOperator }: { isOperator: boolean }) {
   const [items, setItems] = useState<Connection[]>([]);
   const { run: runJob, ...job } = useJob();
   const refresh = useCallback(
@@ -1294,7 +1326,7 @@ function ConnectionsPage() {
         never returned to this browser.
       </p>
       <ErrorBox error={job.error} />
-      <button
+      {isOperator && <button
         className="secondary"
         disabled={job.busy}
         onClick={() =>
@@ -1305,7 +1337,7 @@ function ConnectionsPage() {
         }
       >
         Import configured server credentials
-      </button>
+      </button>}
       {items.map((c) => (
         <ConnectionCard key={c.kind} connection={c} refresh={refresh} />
       ))}

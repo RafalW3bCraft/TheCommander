@@ -131,8 +131,7 @@ def create_app(settings=None, transport=None):
         auth.throttle(db, "api:" + str(row["owner_id"]), 300)
         return row["owner_id"]
 
-    def logged_in(response, owner):
-        token, result = auth.session(db, owner)
+    def set_session_cookie(response, token):
         response.set_cookie(
             "commander_session",
             token,
@@ -142,7 +141,15 @@ def create_app(settings=None, transport=None):
             max_age=43200,
             path="/",
         )
+
+    def logged_in(response, owner):
+        token, result = auth.session(db, owner)
+        set_session_cookie(response, token)
         return result
+
+    from commander import accounts
+
+    accounts.register_routes(app, db, settings, principal, logged_in, set_session_cookie)
 
     from fastapi import Response
 

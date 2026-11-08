@@ -2,7 +2,6 @@
 
 import atexit
 import json
-import os
 import threading
 import uuid
 from pathlib import Path
@@ -18,13 +17,12 @@ from commander.db import Database
 from commander.settings import Settings
 from commander.worker import Worker
 from scripts.e2e_isolation import isolate_client
+from scripts.test_database import require_test_database_url
 
 schema = "test_e2e_" + uuid.uuid4().hex
 settings = Settings(
     _env_file=None,
-    database_url=os.getenv(
-        "TEST_DATABASE_URL", "postgresql://thecommander@127.0.0.1:5433/thecommander_db"
-    ),
+    database_url=require_test_database_url(),
     database_schema=schema,
     encryption_key=Fernet.generate_key().decode(),
     bootstrap_token="test-only-bootstrap-token-not-used-in-production",

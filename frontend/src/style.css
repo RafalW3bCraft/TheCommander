@@ -630,6 +630,71 @@ button:disabled {
   padding-left: 1.4rem;
   line-height: 1.8;
 }
+.sandbox-capabilities {
+  display: block;
+  overflow-wrap: anywhere;
+}
+.sandbox-facts {
+  display: grid;
+  grid-template-columns: minmax(6rem, 1fr) minmax(0, 2fr);
+  gap: 0.35rem 1rem;
+}
+.sandbox-facts dt {
+  font-weight: 600;
+}
+.sandbox-facts dd {
+  margin: 0;
+  overflow-wrap: anywhere;
+}
+.sandbox-call-list li {
+  margin: 0.8rem 0;
+  overflow-wrap: anywhere;
+}
+.account-workspace,
+.account-workspace section,
+.account-workspace form {
+  min-width: 0;
+}
+.account-list {
+  list-style: none;
+  padding: 0;
+}
+.account-list li {
+  display: flex;
+  gap: 1rem;
+  justify-content: space-between;
+  align-items: center;
+  border-bottom: 1px solid var(--border);
+  padding: 1rem 0;
+  overflow-wrap: anywhere;
+}
+.account-person,
+.invitation-token {
+  border: 1px solid var(--border);
+  border-radius: 7px;
+  padding: 1rem;
+  margin: 1rem 0;
+}
+.checkbox-label input[type="checkbox"] {
+  width: auto;
+}
+.account-workspace button,
+.login button {
+  max-width: 100%;
+  white-space: normal;
+}
+@media (max-width: 760px) {
+  .account-list li {
+    align-items: flex-start;
+    flex-direction: column;
+  }
+  .sandbox-facts {
+    grid-template-columns: minmax(0, 1fr);
+  }
+  nav {
+    flex-wrap: wrap;
+  }
+}
 @media (max-width: 900px) {
   .sandbox-columns {
     grid-template-columns: minmax(0, 1fr);

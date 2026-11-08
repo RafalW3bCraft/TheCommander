@@ -217,10 +217,14 @@ class SandboxWorker:
         )
 
     def browser(self, job):
-        safe_url(job["url"], self.settings.sandbox_browser_domains)
+        from commander.sandbox.contracts import browser_authorization, browser_policy
+
+        policy = browser_policy(self.settings, job["url"])
         approved = job["approved_at"] is not None
         payload = {
             "url": job["url"],
+            "policy": policy,
+            "authorization": job["approval_snapshot"].get("authorization") if approved else None,
             "domains": self.settings.sandbox_browser_domains,
             "approved": approved,
             "steps": job["plan"]["steps"] if approved else [],
@@ -231,6 +235,11 @@ class SandboxWorker:
         }
         if approved:
             bound = {
+                "owner_id": str(job["owner_id"]),
+                "job_id": str(job["id"]),
+                "authorization": job["approval_snapshot"].get("authorization"),
+                "policy": policy,
+                "vision_verified": True,
                 "plan": job["plan"],
                 "domains": self.settings.sandbox_browser_domains,
                 "runtime": self.settings.sandbox_runtime,
@@ -245,6 +254,11 @@ class SandboxWorker:
                 raise DomainError(
                     "Approval no longer matches the execution plan", 409, "approval_conflict"
                 )
+            # Record the exact attempted capability before dispatch. Fail closed if cancelled.
+            if not self.event(
+                job, "browser_write_attempt", authorization=payload["authorization"]
+            ):
+                raise DomainError("Task cancelled before write", 409, "cancelled")
         result = self.run_container(job, "browser", stdjson.dumps(payload))
         if result["receipt"]["exit_code"] != 0 or result["receipt"]["stop_reason"]:
             raise DomainError(
@@ -266,6 +280,17 @@ class SandboxWorker:
             raise DomainError(
                 "Browser returned invalid evidence", 502, "invalid_evidence"
             ) from None
+        if approved:
+            authority = payload["authorization"]
+            actual = evidence.get("write_receipt") or {}
+            if (
+                actual.get("operation_id") != authority["operation_id"]
+                or actual.get("status") != "committed"
+                or actual.get("writes") != 1
+                or actual.get("message_sha256") != authority["message_sha256"]
+                or evidence["url"] != policy["fixture_origin"] + "/fixture/state/" + authority["operation_id"]
+            ):
+                raise DomainError("Write outcome uncertain; inspect and reconcile operation", 409, "uncertain")
         self.update(job, evidence=evidence)
         verification = self.infer(
             job,
@@ -311,7 +336,7 @@ class SandboxWorker:
             [
                 {
                     "role": "user",
-                    "content": "Plan up to 8 CSS-selector fill/click actions for a human to approve, or zero if observation fulfils the goal. No passwords, payment/card entry or credentials. Goal: "
+                    "content": "Only the operator-controlled fictional fixture permits actions: exactly fill #message with fictional text, then click #submit; otherwise return zero steps for read-only observation. Do not invent selectors or request authority. No passwords, payment/card entry or credentials. Goal: "
                     + job["goal"]
                     + "\nUntrusted page text: "
                     + evidence["text"]
@@ -356,7 +381,13 @@ class SandboxWorker:
             return
         from datetime import timedelta
 
+        authorization = browser_authorization(self.settings, job, plan, evidence)
         bound = {
+            "owner_id": str(job["owner_id"]),
+            "job_id": str(job["id"]),
+            "authorization": authorization,
+            "policy": policy,
+            "vision_verified": True,
             "plan": plan.model_dump(),
             "domains": self.settings.sandbox_browser_domains,
             "runtime": self.settings.sandbox_runtime,

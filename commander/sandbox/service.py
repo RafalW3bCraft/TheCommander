@@ -4,7 +4,7 @@ from uuid import UUID
 
 from commander.db import json
 from commander.errors import DomainError
-from commander.sandbox.contracts import Decision, TaskInput, domain_name, safe_url
+from commander.sandbox.contracts import Decision, TaskInput, browser_policy, domain_name, safe_url
 
 COLUMNS = "id,project_id,kind,goal,url,status,approval_digest,approval_expires_at,error,created_at,updated_at"
 
@@ -35,6 +35,7 @@ def create(db, settings, owner, data):
                 "Operator browser domain policy is invalid", 503, "destination_denied"
             ) from None
         safe_url(data.url, domains)
+        browser_policy(settings, data.url)
     # Serialize admission to enforce daily and concurrent bounds under races.
     with db.connect() as conn:
         conn.execute("SELECT pg_advisory_xact_lock(hashtextextended(%s, 720))", (str(owner),))

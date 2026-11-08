@@ -33,6 +33,8 @@ class Settings(BaseSettings):
     sandbox_model: str = Field(default="", max_length=200, pattern=r"^[A-Za-z0-9_.:/-]*$")
     sandbox_vision_model: str = Field(default="", max_length=200, pattern=r"^[A-Za-z0-9_.:/-]*$")
     sandbox_browser_domains: list[str] = Field(default_factory=list, max_length=20)
+    sandbox_browser_fixture_origin: str = ""
+    sandbox_retention_days: int = Field(default=7, ge=1, le=30)
     sandbox_timeout_seconds: int = Field(default=45, ge=5, le=120)
     sandbox_runtime: str = Field(default="runsc", pattern=r"^[a-z][a-z0-9_-]{0,30}$")
     openai_api_key: str = ""
@@ -55,6 +57,16 @@ class Settings(BaseSettings):
     @model_validator(mode="after")
     def validate_runtime(self):
         Fernet(self.encryption_key.encode())
+        if self.sandbox_browser_fixture_origin:
+            from urllib.parse import urlsplit
+
+            from commander.sandbox.contracts import safe_url
+
+            origin = self.sandbox_browser_fixture_origin
+            safe_url(origin, self.sandbox_browser_domains)
+            parsed = urlsplit(origin)
+            if parsed.path or parsed.query or parsed.fragment or parsed.port is not None:
+                raise ValueError("Browser fixture must use an exact HTTPS origin without a path")
         if self.memory_index_url:
             from commander.memory_index import MemoryIndex
 

@@ -20,6 +20,7 @@ from psycopg import sql
 from commander.api import create_app
 from commander.connections import usable_secret
 from commander.settings import Settings
+from scripts.test_database import require_test_database_url
 
 
 def main():
@@ -29,7 +30,7 @@ def main():
     schema = "test_live_" + uuid.uuid4().hex
     s = s.model_copy(
         update={
-            "database_url": os.environ["TEST_DATABASE_URL"],
+            "database_url": require_test_database_url(),
             "database_schema": schema,
             "workspace_root": Path(".runtime") / schema,
         }

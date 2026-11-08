@@ -244,7 +244,10 @@ class Connections:
         return self.list(owner)
 
     def import_environment(self, owner):
+        from commander.auth import require_operator
         from commander.contracts import ConnectionInput
+
+        require_operator(self.db, owner)
 
         imported = []
         for kind, key in [

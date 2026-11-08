@@ -2,6 +2,7 @@
 set -euo pipefail
 cd "$(dirname "$0")/.."
 uv sync --frozen
+uv run python -c 'from scripts.test_database import require_test_database_url; require_test_database_url()'
 uv run ruff check main.py commander memory_service tests scripts
 uv run ruff format --check main.py commander memory_service tests scripts
 uv run mypy commander

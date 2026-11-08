@@ -1,7 +1,6 @@
 """Bounded live Tavily validation and broker search using fictional local state."""
 
 import json
-import os
 import secrets
 import time
 import uuid
@@ -18,6 +17,7 @@ from commander.connections import usable_secret
 from commander.errors import DomainError
 from commander.settings import Settings
 from commander.worker import Worker
+from scripts.test_database import require_test_database_url
 
 
 def main():
@@ -26,7 +26,7 @@ def main():
         raise SystemExit("A real TAVILY_API_KEY is required; no fixture substituted")
     cfg = cfg.model_copy(
         update={
-            "database_url": os.environ["TEST_DATABASE_URL"],
+            "database_url": require_test_database_url(),
             "database_schema": "test_research_" + uuid.uuid4().hex,
         }
     )

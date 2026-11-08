@@ -3,7 +3,7 @@ import secrets
 from datetime import datetime, timezone
 
 from argon2 import PasswordHasher
-from argon2.exceptions import VerificationError
+from argon2.exceptions import InvalidHashError, VerificationError
 
 from commander.errors import DomainError
 
@@ -34,7 +34,7 @@ def bootstrap(db, settings, data):
         if conn.execute("SELECT 1 FROM owners LIMIT 1").fetchone():
             raise DomainError("Owner already exists. Sign in.", 409)
         owner = conn.execute(
-            "INSERT INTO owners(username,password_hash) VALUES (%s,%s) RETURNING id,username",
+            "INSERT INTO owners(username,password_hash,role) VALUES (%s,%s,'operator') RETURNING id,username",
             (data.username, hasher.hash(data.password)),
         ).fetchone()
     return owner
@@ -44,26 +44,59 @@ def login(db, data):
     owner = db.one("SELECT * FROM owners WHERE username=%s", (data.username,))
     try:
         hasher.verify(owner["password_hash"] if owner else DUMMY_HASH, data.password)
-    except VerificationError:
+    except (VerificationError, InvalidHashError):
         raise DomainError("Invalid username or password", 401, "invalid_credentials") from None
-    if not owner:
-        raise DomainError("Invalid username or password", 401)
+    if not owner or owner["disabled_at"]:
+        raise DomainError("Invalid username or password", 401, "invalid_credentials")
     return owner
 
 
-def session(db, owner):
+def insert_session(conn, owner):
     token, csrf = secrets.token_urlsafe(32), secrets.token_urlsafe(32)
-    db.one(
-        "INSERT INTO auth_sessions(token_hash,owner_id,csrf,expires_at,reauthenticated_at) VALUES (%s,%s,%s,now()+interval '12 hours',now()) RETURNING owner_id",
+    conn.execute(
+        "INSERT INTO auth_sessions(token_hash,owner_id,csrf,expires_at,reauthenticated_at) VALUES (%s,%s,%s,now()+interval '12 hours',now())",
         (digest(token), owner["id"], csrf),
     )
     return token, {"owner_id": str(owner["id"]), "username": owner["username"], "csrf": csrf}
 
 
+def session(db, owner):
+    with db.connect() as conn:
+        # Serialize session issuance against disabling the account.
+        active = conn.execute(
+            "SELECT id,username FROM owners WHERE id=%s AND disabled_at IS NULL FOR UPDATE",
+            (owner["id"],),
+        ).fetchone()
+        if not active:
+            raise DomainError("Sign in to continue", 401, "unauthenticated")
+        return insert_session(conn, active)
+
+
+def require_active(db, owner):
+    row = db.one("SELECT id,role FROM owners WHERE id=%s AND disabled_at IS NULL", (owner,))
+    if not row:
+        raise DomainError("Sign in to continue", 401, "unauthenticated")
+    return row
+
+
+def require_operator(db, owner):
+    row = require_active(db, owner)
+    if row["role"] != "operator":
+        raise DomainError("Operator access required", 403, "operator_required")
+    return row
+
+
+def verify_password(password_hash, password):
+    try:
+        hasher.verify(password_hash, password)
+    except (VerificationError, InvalidHashError):
+        raise DomainError("Password verification failed", 401, "invalid_credentials") from None
+
+
 def authenticate(db, request):
     token = request.cookies.get("commander_session", "")
     row = db.one(
-        "SELECT s.*,o.username FROM auth_sessions s JOIN owners o ON o.id=s.owner_id WHERE token_hash=%s",
+        "SELECT s.*,o.username FROM auth_sessions s JOIN owners o ON o.id=s.owner_id WHERE token_hash=%s AND o.disabled_at IS NULL",
         (digest(token),),
     )
     if not row or row["expires_at"] <= datetime.now(timezone.utc):
@@ -104,15 +137,12 @@ def reauthenticate(db, owner, token, password):
     with db.connect() as conn:
         row = conn.execute(
             """SELECT s.session_id,o.password_hash FROM auth_sessions s JOIN owners o ON o.id=s.owner_id
-              WHERE s.owner_id=%s AND s.token_hash=%s AND s.expires_at>now() FOR UPDATE OF s""",
+              WHERE s.owner_id=%s AND s.token_hash=%s AND s.expires_at>now() AND o.disabled_at IS NULL FOR UPDATE OF s""",
             (owner, digest(token)),
         ).fetchone()
         if not row:
             raise DomainError("Sign in to continue", 401, "unauthenticated")
-        try:
-            hasher.verify(row["password_hash"], password)
-        except VerificationError:
-            raise DomainError("Password verification failed", 401, "invalid_credentials") from None
+        verify_password(row["password_hash"], password)
         conn.execute(
             "UPDATE auth_sessions SET reauthenticated_at=now() WHERE session_id=%s",
             (row["session_id"],),
@@ -124,6 +154,7 @@ def reauthenticate(db, owner, token, password):
 
 
 def require_recent(db, owner, token):
+    require_active(db, owner)
     row = db.one(
         """SELECT session_id FROM auth_sessions WHERE owner_id=%s AND token_hash=%s
           AND expires_at>now() AND reauthenticated_at>now()-interval '5 minutes'""",
