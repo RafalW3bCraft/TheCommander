@@ -12,6 +12,8 @@ from commander.db import json as jsonb
 from commander.errors import DomainError
 from commander.sandbox.worker import SandboxWorker
 
+FIXTURE = "https://fixture.example.com"
+
 app = workflow_app
 
 
@@ -20,6 +22,7 @@ class FixtureRunner:
         self.calls = []
         self.code_exits = [0]
         self.fail = False
+        self.writes = []
 
     def execute(self, kind, payload, *, cancelled):
         self.calls.append((kind, payload))
@@ -32,20 +35,35 @@ class FixtureRunner:
             "stop_reason": None,
             "evidence_type": "test_fixture",
         }
+        task = json.loads(payload) if kind == "browser" else {}
+        authority = task.get("authorization")
+        write_receipt = None
+        if task.get("approved"):
+            assert authority["operation_id"] not in self.writes
+            self.writes.append(authority["operation_id"])
+            write_receipt = {
+                "operation_id": authority["operation_id"],
+                "status": "committed", "writes": 1,
+                "message_sha256": authority["message_sha256"],
+            }
         screenshot = b"\xff\xd8\xfftest-fixture-only-not-a-live-screenshot"
         output = (
             "42\n"
             if kind == "code"
             else json.dumps(
                 {
-                    "url": "https://example.com/",
+                    "url": (FIXTURE + "/fixture/state/" + authority["operation_id"])
+                    if task.get("approved") else task["url"],
                     "title": "Fixture page",
                     "text": "A controlled form",
                     "screenshot": base64.b64encode(screenshot).decode(),
                     "screenshot_sha256": hashlib.sha256(screenshot).hexdigest(),
                     "page_sha256": "a" * 64,
                     "actions_executed": len(json.loads(payload)["steps"]),
-                    "controls": [{"selector": "#name", "tag": "input"}],
+                    "controls": [{"selector": "#message", "tag": "input"},
+                                 {"selector": "#submit", "tag": "button"}],
+                    "fixture_state": "c" * 64,
+                    "write_receipt": write_receipt,
                 }
             )
         )
@@ -62,7 +80,8 @@ def sandbox(app, settings):
     settings.sandbox_enabled = True
     settings.sandbox_model = "fixture-text"
     settings.sandbox_vision_model = "fixture-vision"
-    settings.sandbox_browser_domains = ["example.com"]
+    settings.sandbox_browser_domains = ["example.com", "fixture.example.com"]
+    settings.sandbox_browser_fixture_origin = FIXTURE
     assert (
         client.put("/api/connections/vultr", json={"secret": "fixture-canary-secret"}).status_code
         == 200
@@ -81,7 +100,7 @@ def enqueue(sandbox, kind="code"):
             "kind": kind,
             "goal": "Compute the answer" if kind == "code" else "Fill the controlled form",
             "project_id": project,
-            "url": "https://example.com/" if kind == "browser" else "",
+            "url": FIXTURE + "/fixture" if kind == "browser" else "",
         },
     )
     assert response.status_code == 201, response.text
@@ -132,8 +151,9 @@ def browser_ready(sandbox):
         vendor,
         {"verified": True, "explanation": "Form visible"},
         {
-            "explanation": "Fill a public demo name",
-            "steps": [{"action": "fill", "selector": "#name", "value": "Demo"}],
+            "explanation": "Save fictional demo text",
+            "steps": [{"action": "fill", "selector": "#message", "value": "Demo"},
+                      {"action": "click", "selector": "#submit", "value": ""}],
         },
     )
     job = enqueue(sandbox, "browser")
@@ -164,6 +184,10 @@ def test_browser_observe_vision_exact_approval_execute_verify(sandbox):
     final = json.loads(runner.calls[1][1])
     assert final["approved"] and final["expected_page_sha256"] == "a" * 64
     assert final["steps"] == row["plan"]["steps"]
+    assert len(runner.writes) == 1
+    assert result["evidence"]["write_receipt"]["operation_id"] == runner.writes[0]
+    assert not worker.tick()
+    assert len(runner.writes) == 1
     messages = [body for _, _, body in vendor.calls]
     assert any(isinstance(m["content"], list) for b in messages for m in b["messages"])
 
@@ -205,6 +229,7 @@ def test_approval_never_authorizes_changed_expired_denied_cancelled_job(sandbox,
         )
     worker.tick()
     assert len(runner.calls) == 1
+    assert not runner.writes
     assert client.get("/api/sandbox/jobs/" + job).json()["status"] in (
         "denied",
         "cancelled",
@@ -289,3 +314,27 @@ def test_malformed_plan_does_not_dispatch(sandbox):
     worker.tick()
     assert client.get("/api/sandbox/jobs/" + job).json()["status"] == "failed"
     assert not runner.calls
+
+
+def test_browser_readonly_requires_live_observation_verification(sandbox):
+    client, vendor, _, _, runner, worker, _ = sandbox
+    respond(vendor, {"verified": True, "explanation": "Fixture visible"},
+            {"explanation": "Read only", "steps": []},
+            {"verified": True, "explanation": "Observed fictional message form"})
+    job = enqueue(sandbox, "browser")
+    worker.tick()
+    result = client.get("/api/sandbox/jobs/" + job).json()
+    assert result["status"] == "succeeded", result
+    assert len(runner.calls) == 1 and not runner.writes
+    assert result["evidence"]["verification"]["verified"]
+
+
+def test_failed_vision_never_requests_or_dispatches_a_write(sandbox):
+    client, vendor, _, _, runner, worker, _ = sandbox
+    respond(vendor, {"verified": False, "explanation": "Page uncertain"})
+    job = enqueue(sandbox, "browser")
+    worker.tick()
+    result = client.get("/api/sandbox/jobs/" + job).json()
+    assert result["status"] == "failed"
+    assert result["approval_digest"] is None
+    assert len(runner.calls) == 1 and not runner.writes

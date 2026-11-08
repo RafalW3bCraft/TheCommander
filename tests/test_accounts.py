@@ -72,6 +72,8 @@ def test_invalid_used_expired_revoked_invitations_and_generic_duplicate(app):
     assert register(newcomer, duplicate["token"], "another").status_code == 200
     expired = invitation(client)
     db.one("UPDATE account_invitations SET expires_at=now()-interval '1 second' WHERE id=%s RETURNING id", (expired["id"],))
+    # Exercise invitation policy separately from the deliberate five/minute route limit.
+    db.one("UPDATE rate_limits SET window_at=now()-interval '61 seconds' WHERE key LIKE 'register:%' RETURNING key")
     assert register(newcomer, expired["token"], "expired").status_code == 403
     revoked = invitation(client, "judge")
     assert client.delete("/api/admin/invitations/" + revoked["id"]).status_code == 200
@@ -159,3 +161,50 @@ def test_database_blocks_cross_account_usage_workspace_and_memory_index(app):
         db.one("INSERT INTO usage(owner_id,run_id,model,latency_ms) VALUES (%s,%s,'fixture',1) RETURNING id", (other_id, run["id"]))
     with pytest.raises(psycopg.errors.ForeignKeyViolation):
         db.one("INSERT INTO memory_index_jobs(memory_id,owner_id,project_id,revision) VALUES (gen_random_uuid(),%s,%s,1) RETURNING memory_id", (other_id, project["id"]))
+
+
+def test_registration_throttle_is_preserved_and_resets_after_window(app):
+    client, _, _, db = app
+    newcomer = TestClient(client.app)
+    for _ in range(5):
+        assert register(newcomer, "a" * 43).status_code == 403
+    assert register(newcomer, "a" * 43).status_code == 429
+    db.one("UPDATE rate_limits SET window_at=now()-interval '61 seconds' WHERE key LIKE 'register:%' RETURNING key")
+    assert register(newcomer, "a" * 43).status_code == 403
+
+
+def test_disabled_account_cannot_dispatch_stale_queue_connection_or_tool(app):
+    from commander.broker import Broker
+    from commander.contracts import RunInput
+    from commander.runs import enqueue
+    from commander.worker import Worker
+
+    client, vendor, _, db = app
+    _, account = personal_client(client, invitation(client)["token"])
+    run = enqueue(db, db.settings, account, RunInput(skill="chat", prompt="Fictional test"))
+    # Simulate a stale queue row after disabling outside the account service:
+    # dispatch itself must enforce authority, not rely on cancellation side effects.
+    db.one("UPDATE owners SET disabled_at=now() WHERE id=%s RETURNING id", (account,))
+    worker = Worker(db.settings, vendor.transport())
+    assert worker.claim() is None
+    with pytest.raises(DomainError) as error:
+        Connections(db, db.settings).get(account, "nebius")
+    assert error.value.status == 401
+    db.one("UPDATE runs SET status='running',lease_token=gen_random_uuid() WHERE id=%s RETURNING id", (run["id"],))
+    stale = db.one("SELECT * FROM runs WHERE id=%s", (run["id"],))
+    with pytest.raises(DomainError) as error:
+        Broker(db, db.settings, vendor.transport()).active(stale)
+    assert error.value.status == 401
+    assert not vendor.calls
+
+
+def test_disabled_account_due_schedule_cannot_enqueue(app):
+    from commander.schedules import dispatch_due
+
+    client, _, _, db = app
+    _, account = personal_client(client, invitation(client)["token"])
+    project = db.one("SELECT id FROM projects WHERE owner_id=%s", (account,))
+    db.one("INSERT INTO schedules(owner_id,project_id,skill,prompt,next_at) VALUES (%s,%s,'chat','Fictional schedule',now()-interval '1 minute') RETURNING id", (account, project["id"]))
+    db.one("UPDATE owners SET disabled_at=now() WHERE id=%s RETURNING id", (account,))
+    dispatch_due(db, db.settings)
+    assert not db.one("SELECT id FROM runs WHERE owner_id=%s", (account,))

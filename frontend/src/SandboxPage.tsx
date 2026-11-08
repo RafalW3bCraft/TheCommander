@@ -44,19 +44,26 @@ type SandboxJob = {
   };
   receipt?: Record<string, unknown>;
   events?: { kind: string; at?: string }[];
-  calls?: {
-    id: string;
-    phase: string;
-    provider: string;
-    model: string;
-    latency_ms: number;
-    tokens: number | null;
-    cost_usd: number | string | null;
-    usage_status: string;
-    created_at: string;
-  }[];
 };
-type Artifact = { id: string; name: string; size: number; media_type: string };
+type InferenceCall = {
+  id: string;
+  phase: string;
+  provider: string;
+  model: string;
+  status: string;
+  input_tokens: number | null;
+  output_tokens: number | null;
+  duration_ms: number | null;
+  created_at: string;
+};
+type Artifact = {
+  id: string;
+  name: string;
+  size_bytes: number;
+  media_type: string;
+  sha256: string;
+  download_url: string;
+};
 const active = new Set(["queued", "running", "approved"]);
 export function SandboxPage({ initialKind = "code" }: { initialKind?: "code" | "browser" }) {
   const refreshVersion = useRef(0);
@@ -65,6 +72,7 @@ export function SandboxPage({ initialKind = "code" }: { initialKind?: "code" | "
   const [project, setProject] = useState("");
   const [kind, setKind] = useState<"code" | "browser">(initialKind);
   const [artifacts, setArtifacts] = useState<Artifact[]>([]);
+  const [calls, setCalls] = useState<InferenceCall[]>([]);
   const [jobs, setJobs] = useState<SandboxJob[]>([]);
   const [selected, setSelected] = useState<SandboxJob | null>(null);
   const [error, setError] = useState("");
@@ -119,13 +127,15 @@ export function SandboxPage({ initialKind = "code" }: { initialKind?: "code" | "
       try {
         await refresh();
         if (selected?.id && !disposed) {
-          const [detail, files] = await Promise.all([
+          const [detail, files, inference] = await Promise.all([
             api<SandboxJob>("/sandbox/jobs/" + selected.id),
             api<Artifact[]>("/sandbox/jobs/" + selected.id + "/artifacts"),
+            api<InferenceCall[]>("/sandbox/jobs/" + selected.id + "/calls"),
           ]);
           if (!disposed) {
             setSelected(detail);
             setArtifacts(files);
+            setCalls(inference);
           }
         }
       } catch (e) {
@@ -156,6 +166,8 @@ export function SandboxPage({ initialKind = "code" }: { initialKind?: "code" | "
       setReviewed(false);
       await refresh();
     });
+  const approvalExpired = !selected?.approval_expires_at || Date.parse(selected.approval_expires_at) <= Date.now();
+  const approvalScreenshot = selected?.approval_snapshot?.screenshot || selected?.evidence?.screenshot;
   return (
     <div className="sandbox-workspace">
       <p className="eyebrow">BLAST RADIUS ZERO · VULTR</p>
@@ -206,6 +218,7 @@ export function SandboxPage({ initialKind = "code" }: { initialKind?: "code" | "
               setProject(e.target.value);
               setSelected(null);
               setArtifacts([]);
+              setCalls([]);
             }}
             required
           >
@@ -250,7 +263,7 @@ export function SandboxPage({ initialKind = "code" }: { initialKind?: "code" | "
               type="url"
               required
               maxLength={2000}
-              placeholder="https://example.com"
+              placeholder="https://example.com/"
             />
             <small>
               Exact approved domains:{" "}
@@ -280,6 +293,7 @@ export function SandboxPage({ initialKind = "code" }: { initialKind?: "code" | "
                 void action(async () => {
                   setSelected(await api<SandboxJob>("/sandbox/jobs/" + job.id));
                   setArtifacts([]);
+              setCalls([]);
                   setReviewed(false);
                 })
               }
@@ -313,7 +327,7 @@ export function SandboxPage({ initialKind = "code" }: { initialKind?: "code" | "
               )}
               {selected.plan && (
                 <>
-                  <p>{selected.plan.explanation}</p>
+                  <p><strong>Generated plan:</strong> {selected.plan.explanation}</p>
                   {selected.evidence?.url && (
                     <p>Observed URL: {selected.evidence.url}</p>
                   )}
@@ -343,7 +357,7 @@ export function SandboxPage({ initialKind = "code" }: { initialKind?: "code" | "
               )}
               {selected.evidence?.verification && (
                 <p>
-                  Vultr verification:{" "}
+                  <strong>Vultr explanation of observed evidence:</strong>{" "}{" "}
                   {selected.evidence.verification.verified
                     ? "passed"
                     : "failed"}
@@ -378,6 +392,8 @@ export function SandboxPage({ initialKind = "code" }: { initialKind?: "code" | "
                     <h4>Headers</h4><pre>{JSON.stringify(selected.approval_snapshot.authorization.headers, null, 2)}</pre>
                   </details> : <p role="alert">Exact request evidence is unavailable. Approval is disabled; reload the task or ask the operator to investigate.</p>}
                   {!selected.evidence?.verification?.verified && <p role="alert">Verification has not passed. Approval is disabled.</p>}
+                  {approvalExpired && <p role="alert">This approval has expired. Reject this plan and request a fresh preview.</p>}
+                  {!approvalScreenshot && <p role="alert">The approval screenshot is unavailable. Approval is disabled.</p>}
                   <label>
                     <input
                       type="checkbox"
@@ -397,7 +413,7 @@ export function SandboxPage({ initialKind = "code" }: { initialKind?: "code" | "
                   </label>
                   <div className="toolbar">
                     <button
-                      disabled={busy || !reviewed || !password || !selected.evidence?.verification?.verified || !selected.approval_snapshot?.authorization}
+                      disabled={busy || !reviewed || !password || !selected.evidence?.verification?.verified || !selected.approval_snapshot?.authorization || approvalExpired || !approvalScreenshot}
                       onClick={() => void decision(true)}
                     >
                       Approve exact plan
@@ -426,15 +442,14 @@ export function SandboxPage({ initialKind = "code" }: { initialKind?: "code" | "
               {artifacts.length > 0 && <section className="sandbox-artifacts" aria-label="Permitted output artifacts">
                 <h3>Output artifacts</h3>
                 <ul>{artifacts.map((file) => <li key={file.id}>
-                  <a href={"/api/sandbox/artifacts/" + encodeURIComponent(file.id)} download>{file.name}</a> · {file.size} bytes · {file.media_type}
+                  <a href={"/api/sandbox/jobs/" + encodeURIComponent(selected.id) + "/artifacts/" + encodeURIComponent(file.id)} download>{file.name}</a> · {file.size_bytes} bytes · {file.media_type}<br /><small>SHA-256: <code>{file.sha256}</code></small>
                 </li>)}</ul>
               </section>}
-              {!!selected.calls?.length && <details open>
+              {calls.length > 0 && <details open>
                 <summary>Recorded inference calls</summary>
-                <ul className="sandbox-call-list">{selected.calls.map((call) => <li key={call.id}>
+                <ul className="sandbox-call-list">{calls.map((call) => <li key={call.id}>
                   <strong>{call.phase.replaceAll("_", " ")}</strong> · {call.provider} / {call.model}
-                  <br />{call.latency_ms} ms · {call.tokens === null ? "Tokens unknown" : `${call.tokens} tokens`} · usage {call.usage_status}
-                  {call.cost_usd !== null && <> · ${call.cost_usd}</>}
+                  <br />{call.duration_ms === null ? "Duration unknown" : `${call.duration_ms} ms`} · {call.status}<br />Input tokens: {call.input_tokens ?? "Unknown"} · Output tokens: {call.output_tokens ?? "Unknown"}
                 </li>)}</ul>
               </details>}
               {!!selected.events?.length && (

@@ -16,7 +16,7 @@ type Invitation = {
   id: string;
   purpose: "personal" | "judge";
   expires_at: string;
-  used_at?: string | null;
+  consumed_at?: string | null;
   revoked_at?: string | null;
 };
 
@@ -184,8 +184,8 @@ export function AccountPage({
         <h3>Issued invitations</h3>
         {!invitations.length && <p>No invitations loaded. Verify your password above to refresh.</p>}
         <ul className="account-list">{invitations.map((invite) => <li key={invite.id}>
-          <div>{invite.purpose} · expires {when(invite.expires_at)}<br />{invite.used_at ? "Used" : invite.revoked_at ? "Revoked" : "Unused"}</div>
-          {!invite.used_at && !invite.revoked_at && <button className="secondary" disabled={busy} onClick={() => void action(async () => {
+          <div>{invite.purpose} · expires {when(invite.expires_at)}<br />{invite.consumed_at ? "Used" : invite.revoked_at ? "Revoked" : "Unused"}</div>
+          {!invite.consumed_at && !invite.revoked_at && <button className="secondary" disabled={busy} onClick={() => void action(async () => {
             await api("/admin/invitations/" + invite.id, "DELETE");
             await refreshAdmin();
             setNotice("Invitation revoked.");
