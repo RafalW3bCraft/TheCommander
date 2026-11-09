@@ -48,7 +48,7 @@ class Settings(BaseSettings):
     max_output_tokens: int = Field(default=2048, ge=128, le=8192)
     max_context_chars: int = Field(default=32000, ge=4000, le=100000)
     max_run_seconds: int = Field(default=180, ge=30, le=600)
-    max_daily_runs: int = Field(default=50, ge=1, le=1000)
+    max_daily_runs: int = Field(default=50, ge=1, le=5000)
     max_daily_tokens: int = Field(default=100000, ge=1000)
     daily_spend_limit_usd: float | None = Field(default=None, gt=0)
     input_usd_per_million: float | None = Field(default=None, ge=0)

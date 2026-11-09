@@ -242,6 +242,7 @@ class RunDetailView(RunView):
 
 
 class ConnectionConfigView(BaseModel):
+    delegated: bool = False
     expires_at: datetime | None = None
     repository: str | None = None
     domains: list[str] | None = None

@@ -82,6 +82,7 @@ class Worker:
             # Serialize brief claims, never the execution itself; one in-flight run per owner.
             conn.execute("SELECT pg_advisory_xact_lock(714895)")
             row = conn.execute("""SELECT * FROM runs r WHERE status='queued' AND available_at<=now()
+              AND EXISTS(SELECT 1 FROM owners o WHERE o.id=r.owner_id AND o.disabled_at IS NULL)
               AND NOT EXISTS(SELECT 1 FROM runs active WHERE active.owner_id=r.owner_id AND active.status='running')
               ORDER BY created_at LIMIT 1 FOR UPDATE SKIP LOCKED""").fetchone()
             if not row:

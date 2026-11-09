@@ -1,7 +1,7 @@
 from typing import Annotated
 from uuid import UUID
 
-from fastapi import Depends, Path, Query
+from fastapi import Depends, Path, Query, Request
 
 from commander import preferences, projects, runs, schedules
 from commander.broker import Broker
@@ -122,7 +122,11 @@ def install_routes(app, db, settings, principal, transport):
         return connections.list(owner)
 
     @app.post("/api/connections/import-environment", response_model=ImportConnectionsView)
-    def import_environment(owner=Depends(principal)):
+    def import_environment(request: Request, owner=Depends(principal)):
+        from commander import auth
+
+        auth.require_operator(db, owner)
+        auth.require_recent(db, owner, request.cookies.get("commander_session", ""))
         return connections.import_environment(owner)
 
     @app.put("/api/connections/{kind}", response_model=list[ConnectionView])

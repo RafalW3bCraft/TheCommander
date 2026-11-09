@@ -160,6 +160,10 @@ def create_app(settings=None, transport=None):
     @app.get("/health/ready", response_model=StatusView)
     def health_ready():
         db.one("SELECT 1")
+        if settings.sandbox_enabled and not db.one(
+            "SELECT 1 FROM sandbox_heartbeats WHERE id='runner' AND seen_at>now()-interval '30 seconds'"
+        ):
+            raise DomainError("Sandbox runner is offline", 503, "worker_unavailable")
         return {"status": "ready"}
 
     @app.get("/api/auth/status", response_model=AuthStatusView)

@@ -1,7 +1,9 @@
 """Shared budget and usage accounting for every application inference dispatch."""
 
 import json as stdjson
+from contextlib import nullcontext
 
+from commander import auth
 from commander.db import json
 from commander.errors import DomainError
 from commander.settings import inference_model
@@ -36,21 +38,57 @@ def check_budget(db, settings, owner):
 
 
 def complete(db, settings, provider, owner, secret, messages, tools=None, run_id=None, timeout=30):
+    from commander.connections import owner_lock
+    from commander.demo_grants import current
+
+    grant = current(db, owner) if settings.inference_provider == "vultr" else None
+    # A revoked/expired delegated account must not use a secret fetched just
+    # before revocation. Personal credentials remain independent of demo grants.
+    if (
+        settings.inference_provider == "vultr"
+        and not grant
+        and db.one("SELECT 1 FROM demo_provider_grants WHERE owner_id=%s", (owner,))
+        and not db.one("SELECT 1 FROM connections WHERE owner_id=%s AND kind='vultr'", (owner,))
+    ):
+        raise DomainError("Demo authorization expired or revoked", 409, "revoked")
+    # Serialize operator revoke/disable/key changes against the whole HTTP call.
+    with owner_lock(db, grant["operator_id"]) if grant else nullcontext():
+        return _complete_locked(
+            db, settings, provider, owner, secret, messages, tools, run_id, timeout, grant
+        )
+
+
+def _complete_locked(
+    db, settings, provider, owner, secret, messages, tools, run_id, timeout, grant
+):
+    auth.require_active(db, owner)
     # Caller holds owner dispatch lock. Persist unknown usage before sending;
     # interruption/lost response conservatively consumes the maximum token reserve.
+    if grant and inference_model(settings) in grant["prices"]:
+        settings = settings.model_copy(update=grant["prices"][inference_model(settings)])
     check_budget(db, settings, owner)
     if len(stdjson.dumps(messages)) + len(stdjson.dumps(tools)) > settings.max_context_chars:
         raise DomainError("Context budget exceeded; shorten the task", 422, "budget_exceeded")
-    record = db.one(
-        "INSERT INTO usage(owner_id,run_id,model,provider,latency_ms,reserved_tokens) VALUES (%s,%s,%s,%s,0,%s) RETURNING id",
-        (
-            owner,
-            run_id,
-            inference_model(settings),
-            settings.inference_provider,
-            settings.max_context_chars + settings.max_output_tokens,
-        ),
-    )
+    prices = None
+    with db.connect() as conn:
+        grant_id, reserved_cost = None, None
+        if grant:
+            from commander.demo_grants import reserve
+
+            grant_id, reserved_cost, prices = reserve(conn, grant, settings, owner, run_id)
+        record = conn.execute(
+            """INSERT INTO usage(owner_id,run_id,model,provider,latency_ms,reserved_tokens,demo_grant_id,reserved_cost_usd)
+             VALUES (%s,%s,%s,%s,0,%s,%s,%s) RETURNING id""",
+            (
+                owner,
+                run_id,
+                inference_model(settings),
+                settings.inference_provider,
+                settings.max_context_chars + settings.max_output_tokens,
+                grant_id,
+                reserved_cost,
+            ),
+        ).fetchone()
     message, usage, latency = provider.completion(secret, messages, tools, timeout)
     if usage is not None and (
         not isinstance(usage, dict)
@@ -63,6 +101,8 @@ def complete(db, settings, provider, owner, secret, messages, tools=None, run_id
             "Provider returned invalid usage; consumption remains unknown", 502, "malformed_usage"
         )
     cost = None
+    if prices:
+        settings = settings.model_copy(update=prices)
     if (
         usage
         and settings.input_usd_per_million is not None

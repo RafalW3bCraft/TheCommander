@@ -1,0 +1,19 @@
+{$APP_DOMAIN} {
+  encode zstd gzip
+  reverse_proxy api:8000
+}
+{$FIXTURE_DOMAIN} {
+  @reviewed path /fixture /fixture/commit /fixture/state/*
+  handle @reviewed {
+    reverse_proxy fixture:8081 {
+      transport http {
+        response_header_timeout 8s
+        read_timeout 8s
+        write_timeout 8s
+      }
+    }
+  }
+  handle {
+    respond "Unknown reviewed route" 404
+  }
+}

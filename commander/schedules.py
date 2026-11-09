@@ -47,7 +47,9 @@ def dispatch_due(db, settings):
     now = datetime.now(timezone.utc)
     with db.connect() as conn:
         rows = conn.execute(
-            "SELECT * FROM schedules WHERE NOT paused AND next_at<=%s ORDER BY next_at LIMIT 50 FOR UPDATE SKIP LOCKED",
+            """SELECT s.* FROM schedules s JOIN owners o ON o.id=s.owner_id
+             WHERE NOT s.paused AND s.next_at<=%s AND o.disabled_at IS NULL
+             ORDER BY s.next_at LIMIT 50 FOR UPDATE OF s SKIP LOCKED FOR SHARE OF o""",
             (now,),
         ).fetchall()
         for row in rows:
@@ -55,9 +57,16 @@ def dispatch_due(db, settings):
                 "SELECT pg_advisory_xact_lock(hashtextextended(%s,720))", (str(row["owner_id"]),)
             )
             count = conn.execute(
-                "SELECT count(*) AS n FROM runs WHERE owner_id=%s AND created_at>now()-interval '1 day'",
-                (row["owner_id"],),
+                "SELECT (SELECT count(*) FROM runs WHERE owner_id=%s AND created_at>now()-interval '1 day')+(SELECT count(*) FROM sandbox_jobs WHERE owner_id=%s AND created_at>now()-interval '1 day') AS n",
+                (row["owner_id"], row["owner_id"]),
             ).fetchone()["n"]
+            from commander.demo_grants import check_admission
+
+            try:
+                check_admission(db, row["owner_id"], conn=conn)
+            except DomainError:
+                conn.execute("UPDATE schedules SET paused=true WHERE id=%s", (row["id"],))
+                continue
             effective = resolve(db, settings, row["owner_id"])
             if count >= effective.max_daily_runs:
                 continue

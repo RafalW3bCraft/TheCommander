@@ -1,3 +1,4 @@
+from commander import auth
 from commander.connections import Connections, owner_lock
 from commander.db import json
 from commander.errors import DomainError
@@ -22,14 +23,22 @@ def enqueue(db, settings, owner, data):
     from commander import modes, projects
     from commander.preferences import resolve, values
 
+    auth.require_active(db, owner)
     modes.validate(data.mode, data.skill)
     SkillInput(prompt=data.prompt)
     settings = resolve(db, settings, owner)
     with db.connect() as conn:
         conn.execute("SELECT pg_advisory_xact_lock(hashtextextended(%s, 720))", (str(owner),))
+        if not conn.execute(
+            "SELECT id FROM owners WHERE id=%s AND disabled_at IS NULL FOR SHARE", (owner,)
+        ).fetchone():
+            raise DomainError("Sign in to continue", 401, "unauthenticated")
+        from commander.demo_grants import check_admission
+
+        check_admission(db, owner, conn=conn)
         count = conn.execute(
-            "SELECT count(*) AS n FROM runs WHERE owner_id=%s AND created_at>now()-interval '1 day'",
-            (owner,),
+            "SELECT (SELECT count(*) FROM runs WHERE owner_id=%s AND created_at>now()-interval '1 day')+(SELECT count(*) FROM sandbox_jobs WHERE owner_id=%s AND created_at>now()-interval '1 day') AS n",
+            (owner, owner),
         ).fetchone()["n"]
         if count >= settings.max_daily_runs:
             raise DomainError("Daily run budget reached", 429, "budget_exceeded")

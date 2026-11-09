@@ -80,10 +80,16 @@ function App() {
   useEffect(() => {
     if (!user) return;
     let active = true;
-    void api<Account>("/account").then((value) => {
-      if (active) setAccount(value);
-    }).catch(() => { /* Account controls show a retry; authority stays on the server. */ });
-    return () => { active = false; };
+    void api<Account>("/account")
+      .then((value) => {
+        if (active) setAccount(value);
+      })
+      .catch(() => {
+        /* Account controls show a retry; authority stays on the server. */
+      });
+    return () => {
+      active = false;
+    };
   }, [user]);
   useEffect(() => {
     if (user) content.current?.focus();
@@ -147,7 +153,11 @@ function App() {
       <main className="login">
         <p className="eyebrow">THECOMMANDER</p>
         <h1>
-          {bootstrap ? "Your personal engineering assistant" : register ? "Create your private account" : "Welcome back"}
+          {bootstrap
+            ? "Your personal engineering assistant"
+            : register
+              ? "Create your private account"
+              : "Welcome back"}
         </h1>
         <p>
           Your memory stays in your database. Selected context goes to your
@@ -163,10 +173,16 @@ function App() {
                 username: String(form.get("username")),
                 password: String(form.get("password")),
                 ...(bootstrap ? { token: String(form.get("token")) } : {}),
-                ...(register && !bootstrap ? { invitation: String(form.get("invitation")) } : {}),
+                ...(register && !bootstrap
+                  ? { invitation: String(form.get("invitation")) }
+                  : {}),
               };
               const me = await api<User>(
-                bootstrap ? "/auth/bootstrap" : register ? "/auth/register" : "/auth/login",
+                bootstrap
+                  ? "/auth/bootstrap"
+                  : register
+                    ? "/auth/register"
+                    : "/auth/login",
                 "POST",
                 body,
               );
@@ -191,38 +207,70 @@ function App() {
             <input
               name="password"
               type="password"
-              autoComplete={bootstrap || register ? "new-password" : "current-password"}
+              autoComplete={
+                bootstrap || register ? "new-password" : "current-password"
+              }
               minLength={12}
               maxLength={256}
               required
             />
           </label>
           {bootstrap && (
-            <label>
-              Bootstrap token
-              <input name="token" type="password" required minLength={32} />
-              <small>
+            <>
+              <label>
+                Bootstrap token
+                <input
+                  name="token"
+                  type="password"
+                  required
+                  minLength={32}
+                  aria-describedby="bootstrap-help"
+                />
+              </label>
+              <small id="bootstrap-help">
                 Read the token from the local .env.runtime file created by
                 setup.
               </small>
-            </label>
+            </>
           )}
-          {register && !bootstrap && <label>
-            Invitation token
-            <input name="invitation" type="password" required maxLength={256} autoComplete="off" />
-            <small>Use the one-time token sent privately by the operator. Public registration is closed.</small>
-          </label>}
+          {register && !bootstrap && (
+            <>
+              <label>
+                Invitation token
+                <input
+                  name="invitation"
+                  type="password"
+                  required
+                  maxLength={256}
+                  autoComplete="off"
+                  aria-describedby="invitation-help"
+                />
+              </label>
+              <small id="invitation-help">
+                Use the one-time token sent privately by the operator. Public
+                registration is closed.
+              </small>
+            </>
+          )}
           <button disabled={job.busy}>
             {job.busy
               ? "Please wait…"
               : bootstrap
                 ? "Create owner account"
-                : register ? "Create private account" : "Sign in"}
+                : register
+                  ? "Create private account"
+                  : "Sign in"}
           </button>
         </form>
-        {!bootstrap && <button className="quiet" disabled={job.busy} onClick={() => setRegister(!register)}>
-          {register ? "Back to sign in" : "Register with invitation"}
-        </button>}
+        {!bootstrap && (
+          <button
+            className="quiet"
+            disabled={job.busy}
+            onClick={() => setRegister(!register)}
+          >
+            {register ? "Back to sign in" : "Register with invitation"}
+          </button>
+        )}
       </main>
     );
   return (
@@ -289,16 +337,26 @@ function App() {
         {page === "Assistant" ? (
           <Today />
         ) : ["Sandbox", "Run code", "Use browser"].includes(page) ? (
-          <SandboxPage key={page} initialKind={page === "Use browser" ? "browser" : "code"} />
+          <SandboxPage
+            key={page}
+            initialKind={page === "Use browser" ? "browser" : "code"}
+          />
         ) : page === "Account" ? (
-          <AccountPage account={account} onAccount={setAccount} onSession={setUser} onSignOut={signOut} />
+          <AccountPage
+            account={account}
+            onAccount={setAccount}
+            onSession={setUser}
+            onSignOut={signOut}
+          />
         ) : page === "Memory" ? (
           <MemoryPage />
         ) : page === "Skills" ? (
           <SkillsPage />
         ) : page === "Settings" ? (
           <SettingsPage
-            connections={<ConnectionsPage isOperator={account?.role === "operator"} />}
+            connections={
+              <ConnectionsPage isOperator={account?.role === "operator"} />
+            }
             openMemory={() => setPage("Memory")}
           />
         ) : (
@@ -1326,18 +1384,20 @@ function ConnectionsPage({ isOperator }: { isOperator: boolean }) {
         never returned to this browser.
       </p>
       <ErrorBox error={job.error} />
-      {isOperator && <button
-        className="secondary"
-        disabled={job.busy}
-        onClick={() =>
-          void runJob(async () => {
-            await api("/connections/import-environment", "POST");
-            await refresh();
-          })
-        }
-      >
-        Import configured server credentials
-      </button>}
+      {isOperator && (
+        <button
+          className="secondary"
+          disabled={job.busy}
+          onClick={() =>
+            void runJob(async () => {
+              await api("/connections/import-environment", "POST");
+              await refresh();
+            })
+          }
+        >
+          Import configured server credentials
+        </button>
+      )}
       {items.map((c) => (
         <ConnectionCard key={c.kind} connection={c} refresh={refresh} />
       ))}
@@ -1353,6 +1413,7 @@ function ConnectionCard({
   refresh: () => Promise<void>;
 }) {
   const { run: runJob, ...job } = useJob();
+  const delegated = "delegated" in c.config && c.config.delegated === true;
   return (
     <section>
       <div className="row">
@@ -1390,6 +1451,7 @@ function ConnectionCard({
         </small>
       )}
       {c.detail && <p>{c.detail}</p>}
+      {delegated && <p>You have limited judge access managed by the operator. Its credential is never available to your account. Saving your own credential replaces this allowance with your personal connection.</p>}
       {c.validated_at && <small>Last checked {when(c.validated_at)}</small>}
       <ErrorBox error={job.error} />
       {job.error && (
@@ -1428,7 +1490,9 @@ function ConnectionCard({
       >
         {c.kind !== "workspace" && (
           <label>
-            {c.status === "unconfigured" || c.status === "revoked"
+            {delegated
+              ? "Your personal API credential (replaces judge allowance)"
+              : c.status === "unconfigured" || c.status === "revoked"
               ? "API credential"
               : "Replace credential (leave blank to keep)"}
             <input
@@ -1436,6 +1500,7 @@ function ConnectionCard({
               type="password"
               autoComplete="off"
               maxLength={4096}
+              required={delegated}
             />
           </label>
         )}
@@ -1489,7 +1554,7 @@ function ConnectionCard({
                 ? "Enable workspace"
                 : "Save connection"}
           </button>
-          {!["unconfigured", "revoked"].includes(c.status) && (
+          {!delegated && !["unconfigured", "revoked"].includes(c.status) && (
             <>
               <button
                 type="button"

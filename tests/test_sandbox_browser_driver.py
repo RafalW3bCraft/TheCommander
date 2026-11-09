@@ -24,9 +24,12 @@ def browser_driver(monkeypatch):
     class Route:
         def __init__(self, method, url=None, body=None, redirected=False, resource="document"):
             self.request = SimpleNamespace(
-                url=url or task["url"], method=method, post_data=body,
+                url=url or task["url"],
+                method=method,
+                post_data=body,
                 headers={"content-type": "application/x-www-form-urlencoded"},
-                resource_type=resource, frame=frame,
+                resource_type=resource,
+                frame=frame,
                 redirected_from=object() if redirected else None,
             )
 
@@ -47,7 +50,9 @@ def browser_driver(monkeypatch):
 
         def fill(self, value):
             actions.append(("fill", value))
-            context.handler(Route("POST", ORIGIN + "/fixture/commit", urlencode({"message": value})))
+            context.handler(
+                Route("POST", ORIGIN + "/fixture/commit", urlencode({"message": value}))
+            )
 
         def click(self):
             actions.append(("click", None))
@@ -64,11 +69,14 @@ def browser_driver(monkeypatch):
             if self.selector == "#revision":
                 return STATE
             if self.selector == "#receipt":
-                return json.dumps({
-                    "operation_id": task["authorization"]["operation_id"],
-                    "status": "committed", "writes": 1,
-                    "message_sha256": hashlib.sha256(b"Demo").hexdigest(),
-                })
+                return json.dumps(
+                    {
+                        "operation_id": task["authorization"]["operation_id"],
+                        "status": "committed",
+                        "writes": 1,
+                        "message_sha256": hashlib.sha256(b"Demo").hexdigest(),
+                    }
+                )
             return "Controlled page"
 
     class Page:
@@ -138,8 +146,12 @@ def browser_driver(monkeypatch):
             return Browser()
 
     monkeypatch.setitem(sys.modules, "playwright", SimpleNamespace())
-    monkeypatch.setitem(sys.modules, "playwright.sync_api", SimpleNamespace(sync_playwright=Playwright))
-    spec = importlib.util.spec_from_file_location("controlled_browser_driver", "deploy/sandbox/browser.py")
+    monkeypatch.setitem(
+        sys.modules, "playwright.sync_api", SimpleNamespace(sync_playwright=Playwright)
+    )
+    spec = importlib.util.spec_from_file_location(
+        "controlled_browser_driver", "deploy/sandbox/browser.py"
+    )
     module = importlib.util.module_from_spec(spec)
     spec.loader.exec_module(module)
 
@@ -152,22 +164,41 @@ def browser_driver(monkeypatch):
 
 
 def payload(**overrides):
-    return {"url": "https://example.com/", "domains": ["example.com", "fixture.example.com"],
-            "approved": False, "steps": [], "expected_page_sha256": PAGE_HASH,
-            "expected_url": "https://example.com/", **overrides}
+    return {
+        "url": "https://example.com/",
+        "domains": ["example.com", "fixture.example.com"],
+        "approved": False,
+        "steps": [],
+        "expected_page_sha256": PAGE_HASH,
+        "expected_url": "https://example.com/",
+        **overrides,
+    }
 
 
 def approved_payload(**overrides):
-    return payload(
-        url=ORIGIN + "/fixture", expected_url=ORIGIN + "/fixture", approved=True,
-        policy={"read_urls": [ORIGIN + "/fixture"], "fixture_origin": ORIGIN},
-        steps=[{"action": "fill", "selector": "#message", "value": "Demo"},
-               {"action": "click", "selector": "#submit", "value": ""}],
-        authorization={"method": "POST", "url": ORIGIN + "/fixture/commit", "body": "message=Demo",
-                       "headers": {"content-type": "application/x-www-form-urlencoded"},
-                       "operation_id": str(uuid4()), "page_sha256": PAGE_HASH,
-                       "fixture_state": STATE, "message_sha256": hashlib.sha256(b"Demo").hexdigest()},
-    ) | overrides
+    return (
+        payload(
+            url=ORIGIN + "/fixture",
+            expected_url=ORIGIN + "/fixture",
+            approved=True,
+            policy={"read_urls": [ORIGIN + "/fixture"], "fixture_origin": ORIGIN},
+            steps=[
+                {"action": "fill", "selector": "#message", "value": "Demo"},
+                {"action": "click", "selector": "#submit", "value": ""},
+            ],
+            authorization={
+                "method": "POST",
+                "url": ORIGIN + "/fixture/commit",
+                "body": "message=Demo",
+                "headers": {"content-type": "application/x-www-form-urlencoded"},
+                "operation_id": str(uuid4()),
+                "page_sha256": PAGE_HASH,
+                "fixture_state": STATE,
+                "message_sha256": hashlib.sha256(b"Demo").hexdigest(),
+            },
+        )
+        | overrides
+    )
 
 
 def test_observation_blocks_posts_redirects_resources_and_unreviewed_get(browser_driver):
@@ -176,7 +207,9 @@ def test_observation_blocks_posts_redirects_resources_and_unreviewed_get(browser
     assert not actions and result["actions_executed"] == 0
     assert len([r for r in requests if r[2] == "allowed"]) == 1
     assert requests[1][:3] == ("GET", "https://example.com/", "allowed")
-    assert result["screenshot_sha256"] == hashlib.sha256(b"\xff\xd8\xffcontrolled-fixture").hexdigest()
+    assert (
+        result["screenshot_sha256"] == hashlib.sha256(b"\xff\xd8\xffcontrolled-fixture").hexdigest()
+    )
 
 
 def test_fill_keeps_writes_blocked_and_click_consumes_one_exact_request(browser_driver):
@@ -187,13 +220,17 @@ def test_fill_keeps_writes_blocked_and_click_consumes_one_exact_request(browser_
     assert len([r for r in writes if r[2] == "allowed"]) == 1
     assert writes[1][2] == "denied"  # fill event cannot dispatch even the exact request
     allowed = next(r for r in writes if r[2] == "allowed")
-    assert allowed[3]["headers"]["x-commander-operation-id"] == task["authorization"]["operation_id"]
+    assert (
+        allowed[3]["headers"]["x-commander-operation-id"] == task["authorization"]["operation_id"]
+    )
     assert allowed[3]["headers"]["if-match"] == STATE
     assert result["write_receipt"]["writes"] == 1
     assert actions == [("fill", "Demo"), ("click", None)]
 
 
-@pytest.mark.parametrize("changed", [{"expected_page_sha256": "a" * 64}, {"expected_url": ORIGIN + "/other"}])
+@pytest.mark.parametrize(
+    "changed", [{"expected_page_sha256": "a" * 64}, {"expected_url": ORIGIN + "/other"}]
+)
 def test_changed_page_or_request_aborts_before_action(browser_driver, changed):
     execute, requests, actions = browser_driver
     with pytest.raises(ValueError):

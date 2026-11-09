@@ -2,6 +2,7 @@
 
 from uuid import UUID
 
+from commander import auth, demo_grants, preferences
 from commander.db import json
 from commander.errors import DomainError
 from commander.sandbox.contracts import Decision, TaskInput, browser_policy, domain_name, safe_url
@@ -17,9 +18,16 @@ def get(db, owner, job_id):
 
 
 def create(db, settings, owner, data):
+    auth.require_active(db, owner)
     if not settings.sandbox_enabled:
         raise DomainError(
             "Sandbox execution is disabled by the operator", 409, "capability_unavailable"
+        )
+    if not db.one(
+        "SELECT 1 FROM sandbox_heartbeats WHERE id='runner' AND seen_at>now()-interval '30 seconds'"
+    ):
+        raise DomainError(
+            "Sandbox runner is offline; contact the operator", 503, "worker_unavailable"
         )
     if not settings.sandbox_model or (data.kind == "browser" and not settings.sandbox_vision_model):
         raise DomainError(
@@ -36,16 +44,34 @@ def create(db, settings, owner, data):
             ) from None
         safe_url(data.url, domains)
         browser_policy(settings, data.url)
+    effective = preferences.resolve(db, settings, owner)
     # Serialize admission to enforce daily and concurrent bounds under races.
     with db.connect() as conn:
+        conn.execute("SELECT pg_advisory_xact_lock(714896)")
         conn.execute("SELECT pg_advisory_xact_lock(hashtextextended(%s, 720))", (str(owner),))
+        if (
+            conn.execute(
+                "SELECT count(*) AS n FROM sandbox_jobs WHERE status IN ('queued','running','approved','waiting_approval')"
+            ).fetchone()["n"]
+            >= 20
+        ):
+            raise DomainError("Sandbox queue is full; try again later", 429, "queue_full")
+        demo_grants.check_admission(db, owner, conn=conn)
         counts = conn.execute(
             """SELECT count(*) FILTER (WHERE created_at>now()-interval '1 day') AS daily,
          count(*) FILTER (WHERE status IN ('queued','running','approved','waiting_approval')) AS active
          FROM sandbox_jobs WHERE owner_id=%s""",
             (owner,),
         ).fetchone()
-        if counts["daily"] >= settings.max_daily_runs or counts["active"] >= 5:
+        if (
+            counts["daily"]
+            + conn.execute(
+                "SELECT count(*) AS n FROM runs WHERE owner_id=%s AND created_at>now()-interval '1 day'",
+                (owner,),
+            ).fetchone()["n"]
+            >= effective.max_daily_runs
+            or counts["active"] >= 5
+        ):
             raise DomainError("Sandbox admission limit reached", 429, "budget_exceeded")
         return conn.execute(
             """INSERT INTO sandbox_jobs(owner_id,project_id,kind,goal,url)
@@ -55,6 +81,7 @@ def create(db, settings, owner, data):
 
 
 def decide(db, owner, job_id, data):
+    auth.require_active(db, owner)
     with db.connect() as conn:
         row = conn.execute(
             "SELECT * FROM sandbox_jobs WHERE id=%s AND owner_id=%s FOR UPDATE", (job_id, owner)
@@ -97,8 +124,6 @@ def cancel(db, owner, job_id):
 def install(app, db, settings, principal):
     from fastapi import Depends, Request
 
-    from commander import auth
-
     @app.get("/api/sandbox/status")
     def status(owner=Depends(principal)):
         row = db.one("SELECT seen_at FROM sandbox_heartbeats WHERE id='runner'")
@@ -132,6 +157,73 @@ def install(app, db, settings, principal):
     @app.get("/api/sandbox/jobs/{job_id}")
     def detail(job_id: UUID, owner=Depends(principal)):
         return get(db, owner, job_id)
+
+    @app.get("/api/sandbox/jobs/{job_id}/artifacts")
+    def artifacts(job_id: UUID, owner=Depends(principal)):
+        get(db, owner, job_id)
+        rows = db.all(
+            "SELECT id,name,media_type,octet_length(data) AS size_bytes,sha256 FROM sandbox_artifacts WHERE job_id=%s AND owner_id=%s AND deleted_at IS NULL ORDER BY created_at",
+            (job_id, owner),
+        )
+        return [
+            {**row, "download_url": f"/api/sandbox/jobs/{job_id}/artifacts/{row['id']}"}
+            for row in rows
+        ]
+
+    @app.get("/api/sandbox/jobs/{job_id}/artifacts/{artifact_id}")
+    def download(job_id: UUID, artifact_id: UUID, owner=Depends(principal)):
+        from fastapi import Response
+
+        get(db, owner, job_id)
+        row = db.one(
+            "SELECT name,media_type,data FROM sandbox_artifacts WHERE id=%s AND job_id=%s AND owner_id=%s AND deleted_at IS NULL",
+            (artifact_id, job_id, owner),
+        )
+        if not row:
+            raise DomainError("Artifact not found", 404)
+        return Response(
+            bytes(row["data"]),
+            media_type=row["media_type"],
+            headers={
+                "Content-Disposition": f'attachment; filename="{row["name"]}"',
+                "X-Content-Type-Options": "nosniff",
+                "Cache-Control": "no-store",
+            },
+        )
+
+    @app.delete("/api/sandbox/jobs/{job_id}/artifacts/{artifact_id}")
+    def delete_artifact(job_id: UUID, artifact_id: UUID, owner=Depends(principal)):
+        get(db, owner, job_id)
+        row = db.one(
+            "UPDATE sandbox_artifacts SET data=NULL,deleted_at=now() WHERE id=%s AND job_id=%s AND owner_id=%s AND deleted_at IS NULL RETURNING id",
+            (artifact_id, job_id, owner),
+        )
+        if not row:
+            raise DomainError("Artifact not found", 404)
+        db.one(
+            "UPDATE sandbox_jobs SET events=events || %s WHERE id=%s AND owner_id=%s RETURNING id",
+            (json([{"kind": "artifact_deleted", "artifact_id": str(artifact_id)}]), job_id, owner),
+        )
+        return {"status": "deleted"}
+
+    @app.delete("/api/sandbox/jobs/{job_id}/evidence")
+    def delete_evidence(job_id: UUID, owner=Depends(principal)):
+        row = get(db, owner, job_id)
+        if row["status"] in {"queued", "running", "approved", "waiting_approval"}:
+            raise DomainError("Cancel the task before deleting its evidence", 409, "task_active")
+        db.one(
+            "UPDATE sandbox_jobs SET evidence='{}',approval_snapshot=approval_snapshot-'screenshot',events=events || %s WHERE id=%s AND owner_id=%s RETURNING id",
+            (json([{"kind": "evidence_deleted"}]), job_id, owner),
+        )
+        return {"status": "deleted"}
+
+    @app.get("/api/sandbox/jobs/{job_id}/calls")
+    def calls(job_id: UUID, owner=Depends(principal)):
+        get(db, owner, job_id)
+        return db.all(
+            "SELECT id,phase,provider,model,status,input_tokens,output_tokens,duration_ms,created_at FROM sandbox_calls WHERE job_id=%s AND owner_id=%s AND deleted_at IS NULL ORDER BY created_at",
+            (job_id, owner),
+        )
 
     @app.post("/api/sandbox/jobs/{job_id}/decision")
     def decision(job_id: UUID, data: Decision, request: Request, owner=Depends(principal)):

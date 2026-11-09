@@ -38,5 +38,6 @@ deploy/**
 deploy/sandbox/**
 !deploy/sandbox/proxy.py
 !deploy/sandbox/browser.py
+!deploy/sandbox/fixture.py
 # Keep private environment variants excluded even beneath admitted source dirs.
 **/.env*

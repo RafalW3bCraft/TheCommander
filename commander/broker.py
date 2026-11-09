@@ -9,6 +9,7 @@ from urllib.parse import urlparse
 
 from pydantic import BaseModel, ValidationError
 
+from commander import auth
 from commander.connections import Connections, owner_lock
 from commander.contracts import Empty, Issue, Note, Search
 from commander.db import json
@@ -61,6 +62,7 @@ class Broker:
         self.provider = self.connections.provider
 
     def active(self, run):
+        auth.require_active(self.db, run["owner_id"])
         from commander.preferences import resolve
 
         self.settings = resolve(
@@ -214,6 +216,7 @@ class Broker:
         return {"action_id": str(row["id"]), "status": "requires_exact_approval", **args}
 
     def action(self, owner, action_id):
+        auth.require_active(self.db, owner)
         row = self.db.one("SELECT * FROM actions WHERE owner_id=%s AND id=%s", (owner, action_id))
         if not row:
             raise DomainError("Action not found", 404)

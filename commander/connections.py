@@ -4,6 +4,7 @@ from typing import Any
 
 from cryptography.fernet import Fernet
 
+from commander import auth
 from commander.db import json
 from commander.errors import DomainError
 from commander.providers import Provider, ProviderError
@@ -39,7 +40,12 @@ class Connections:
         self.provider = Provider(settings, transport)
 
     def get(self, owner, kind):
+        auth.require_active(self.db, owner)
         row = self.db.one("SELECT * FROM connections WHERE owner_id=%s AND kind=%s", (owner, kind))
+        if not row and kind == "vultr":
+            from commander.demo_grants import connection
+
+            return connection(self.db, owner)
         if not row or row["status"] == "revoked":
             raise DomainError(f"Configure the {kind} connection first", 409, "disconnected")
         if not row["config"].get("enabled", True):
@@ -53,6 +59,7 @@ class Connections:
         return self.cipher.decrypt(bytes(row["secret"])).decode() if row["secret"] else ""
 
     def list(self, owner):
+        auth.require_active(self.db, owner)
         rows = {
             r["kind"]: r
             for r in self.db.all("SELECT * FROM connections WHERE owner_id=%s", (owner,))
@@ -93,6 +100,17 @@ class Connections:
                     "model": effective.nebius_model,
                     "endpoint": effective.nebius_base_url,
                 }
+            if kind == "vultr" and not row:
+                from commander.demo_grants import current
+
+                grant = current(self.db, owner)
+                if grant:
+                    item.update(
+                        status="validated",
+                        revision=grant["connection_revision"],
+                        config={"model": grant["model"], "delegated": True},
+                        detail="Expiring operator-managed demo allowance; credentials are not shared",
+                    )
             result.append(item)
         return result
 
@@ -102,6 +120,7 @@ class Connections:
         if kind == "github" and not data.repository:
             raise DomainError("Select exactly one owner/repository", 422)
         with owner_lock(self.db, owner):
+            auth.require_active(self.db, owner)
             current = self.db.one(
                 "SELECT * FROM connections WHERE owner_id=%s AND kind=%s", (owner, kind)
             )
@@ -146,6 +165,7 @@ class Connections:
 
     def revoke(self, owner, kind):
         with owner_lock(self.db, owner):
+            auth.require_active(self.db, owner)
             self.db.one(
                 "UPDATE connections SET status='revoked',secret=NULL,revision=revision+1,validated_at=NULL WHERE owner_id=%s AND kind=%s RETURNING kind",
                 (owner, kind),

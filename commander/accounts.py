@@ -106,7 +106,9 @@ def register(db, data):
             )
             return owner
     except psycopg.errors.UniqueViolation:
-        raise DomainError("Account could not be registered with these details", 409, "registration_conflict") from None
+        raise DomainError(
+            "Account could not be registered with these details", 409, "registration_conflict"
+        ) from None
 
 
 def create_invitation(db, operator, data):
@@ -158,7 +160,10 @@ def change_password(db, owner, token, data):
             if not row:
                 raise DomainError("Sign in to continue", 401, "unauthenticated")
             auth.verify_password(row["password_hash"], data.current_password)
-            conn.execute("UPDATE owners SET password_hash=%s WHERE id=%s", (auth.hasher.hash(data.password), owner))
+            conn.execute(
+                "UPDATE owners SET password_hash=%s WHERE id=%s",
+                (auth.hasher.hash(data.password), owner),
+            )
             conn.execute("DELETE FROM auth_sessions WHERE owner_id=%s", (owner,))
             new_token, result = auth.insert_session(conn, row)
             conn.execute(
@@ -188,24 +193,51 @@ def disable(db, operator, owner):
     with owner_lock(db, owner):
         with db.connect() as conn:
             conn.execute("SELECT pg_advisory_xact_lock(714895)")
-            actor = conn.execute("SELECT role,disabled_at FROM owners WHERE id=%s", (operator,)).fetchone()
+            actor = conn.execute(
+                "SELECT role,disabled_at FROM owners WHERE id=%s", (operator,)
+            ).fetchone()
             if not actor or actor["role"] != "operator" or actor["disabled_at"]:
                 raise DomainError("Operator access required", 403, "operator_required")
-            target = conn.execute("SELECT role FROM owners WHERE id=%s FOR UPDATE", (owner,)).fetchone()
+            target = conn.execute(
+                "SELECT role FROM owners WHERE id=%s FOR UPDATE", (owner,)
+            ).fetchone()
             if not target:
                 raise DomainError("Account not found", 404)
-            if target["role"] == "operator" and not conn.execute(
-                "SELECT 1 FROM owners WHERE role='operator' AND disabled_at IS NULL AND id<>%s LIMIT 1", (owner,)
-            ).fetchone():
-                raise DomainError("The last active operator cannot be disabled", 409, "last_operator")
+            if (
+                target["role"] == "operator"
+                and not conn.execute(
+                    "SELECT 1 FROM owners WHERE role='operator' AND disabled_at IS NULL AND id<>%s LIMIT 1",
+                    (owner,),
+                ).fetchone()
+            ):
+                raise DomainError(
+                    "The last active operator cannot be disabled", 409, "last_operator"
+                )
             conn.execute("UPDATE owners SET disabled_at=now() WHERE id=%s", (owner,))
             conn.execute("DELETE FROM auth_sessions WHERE owner_id=%s", (owner,))
-            conn.execute("UPDATE schedules SET paused=true,revision=revision+1 WHERE owner_id=%s", (owner,))
-            conn.execute("UPDATE runs SET status='cancelled',error='Account disabled',updated_at=now(),lease_token=NULL,lease_until=NULL WHERE owner_id=%s AND status IN ('queued','running','waiting_approval')", (owner,))
-            conn.execute("UPDATE actions SET status='denied',error='Account disabled' WHERE owner_id=%s AND status IN ('pending','approved')", (owner,))
-            conn.execute("UPDATE sandbox_jobs SET status='cancelled',error='Account disabled',updated_at=now(),lease_token=NULL,lease_until=NULL WHERE owner_id=%s AND status IN ('queued','running','waiting_approval','approved')", (owner,))
-            conn.execute("UPDATE account_invitations SET revoked_at=now() WHERE created_by=%s AND consumed_at IS NULL", (owner,))
-            conn.execute("INSERT INTO account_events(actor_id,subject_id,kind) VALUES (%s,%s,'account_disabled')", (operator, owner))
+            conn.execute(
+                "UPDATE schedules SET paused=true,revision=revision+1 WHERE owner_id=%s", (owner,)
+            )
+            conn.execute(
+                "UPDATE runs SET status='cancelled',error='Account disabled',updated_at=now(),lease_token=NULL,lease_until=NULL WHERE owner_id=%s AND status IN ('queued','running','waiting_approval')",
+                (owner,),
+            )
+            conn.execute(
+                "UPDATE actions SET status='denied',error='Account disabled' WHERE owner_id=%s AND status IN ('pending','approved')",
+                (owner,),
+            )
+            conn.execute(
+                "UPDATE sandbox_jobs SET status='cancelled',error='Account disabled',updated_at=now(),lease_token=NULL,lease_until=NULL WHERE owner_id=%s AND status IN ('queued','running','waiting_approval','approved')",
+                (owner,),
+            )
+            conn.execute(
+                "UPDATE account_invitations SET revoked_at=now() WHERE created_by=%s AND consumed_at IS NULL",
+                (owner,),
+            )
+            conn.execute(
+                "INSERT INTO account_events(actor_id,subject_id,kind) VALUES (%s,%s,'account_disabled')",
+                (operator, owner),
+            )
 
 
 def register_routes(app, db, settings, principal, logged_in, set_session_cookie):
@@ -213,6 +245,10 @@ def register_routes(app, db, settings, principal, logged_in, set_session_cookie)
         auth.require_operator(db, owner)
         auth.require_recent(db, owner, request.cookies.get("commander_session", ""))
         return owner
+
+    from commander.demo_grants import install_routes
+
+    install_routes(app, db, operator)
 
     @app.post("/api/auth/register", response_model=UserView)
     def register_account(data: Registration, request: Request, response: Response):
@@ -228,18 +264,30 @@ def register_routes(app, db, settings, principal, logged_in, set_session_cookie)
         with owner_lock(db, owner):
             auth.require_active(db, owner)
             with db.connect() as conn:
-                conn.execute("UPDATE owners SET display_name=%s WHERE id=%s", (data.display_name.strip(), owner))
-                conn.execute("INSERT INTO account_events(actor_id,subject_id,kind) VALUES (%s,%s,'profile_updated')", (owner, owner))
+                conn.execute(
+                    "UPDATE owners SET display_name=%s WHERE id=%s",
+                    (data.display_name.strip(), owner),
+                )
+                conn.execute(
+                    "INSERT INTO account_events(actor_id,subject_id,kind) VALUES (%s,%s,'profile_updated')",
+                    (owner, owner),
+                )
         return profile(db, owner)
 
     @app.post("/api/account/password", response_model=UserView)
-    def password(data: PasswordChange, request: Request, response: Response, owner=Depends(principal)):
-        token, result = change_password(db, owner, request.cookies.get("commander_session", ""), data)
+    def password(
+        data: PasswordChange, request: Request, response: Response, owner=Depends(principal)
+    ):
+        token, result = change_password(
+            db, owner, request.cookies.get("commander_session", ""), data
+        )
         set_session_cookie(response, token)
         return result
 
     @app.post("/api/auth/sessions/revoke", response_model=StatusView)
-    def bulk_revoke(data: SessionRevocation, request: Request, response: Response, owner=Depends(principal)):
+    def bulk_revoke(
+        data: SessionRevocation, request: Request, response: Response, owner=Depends(principal)
+    ):
         revoke_sessions(db, owner, request.cookies.get("commander_session", ""), data.scope)
         if data.scope == "all":
             response.delete_cookie("commander_session", path="/")
@@ -247,7 +295,9 @@ def register_routes(app, db, settings, principal, logged_in, set_session_cookie)
 
     @app.get("/api/admin/invitations", response_model=list[InvitationView])
     def invitations(owner=Depends(operator)):
-        return db.all("SELECT id,purpose,expires_at,consumed_at,revoked_at,created_at FROM account_invitations ORDER BY created_at DESC LIMIT 200")
+        return db.all(
+            "SELECT id,purpose,expires_at,consumed_at,revoked_at,created_at FROM account_invitations ORDER BY created_at DESC LIMIT 200"
+        )
 
     @app.post("/api/admin/invitations", response_model=InvitationCreated)
     def invite(data: InvitationInput, owner=Depends(operator)):
@@ -260,7 +310,9 @@ def register_routes(app, db, settings, principal, logged_in, set_session_cookie)
 
     @app.get("/api/admin/accounts", response_model=list[ProfileView])
     def list_accounts(owner=Depends(operator)):
-        return db.all("SELECT o.id AS owner_id,o.username,o.display_name,o.role,o.disabled_at,o.created_at,w.id AS workspace_id FROM owners o JOIN workspaces w ON w.owner_id=o.id ORDER BY o.created_at,o.id LIMIT 200")
+        return db.all(
+            "SELECT o.id AS owner_id,o.username,o.display_name,o.role,o.disabled_at,o.created_at,w.id AS workspace_id FROM owners o JOIN workspaces w ON w.owner_id=o.id ORDER BY o.created_at,o.id LIMIT 200"
+        )
 
     @app.post("/api/admin/accounts/{account_id}/disable", response_model=StatusView)
     def disable_account(account_id: UUID, owner=Depends(operator)):

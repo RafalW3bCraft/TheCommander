@@ -1,0 +1,42 @@
+# Controlled fictional write fixture. Never receives application secrets or Docker access.
+services:
+  fixture:
+    image: ${SANDBOX_FIXTURE_IMAGE:?Build and pin the reviewed fixture image}
+    pull_policy: never
+    build:
+      context: .
+      dockerfile: deploy/sandbox/Dockerfile.fixture
+    command: [python, -I, /opt/commander/fixture.py, --database, /data/fixture.sqlite, --host, 0.0.0.0]
+    user: "10001:10001"
+    read_only: true
+    cap_drop: [ALL]
+    security_opt: [no-new-privileges:true]
+    mem_limit: 128m
+    cpus: 0.25
+    pids_limit: 32
+    tmpfs: [/tmp:rw,noexec,nosuid,nodev,size=8m]
+    volumes: [fixture_data:/data]
+    networks: [fixture_private]
+    restart: unless-stopped
+    healthcheck:
+      test: [CMD, python, -c, "import urllib.request; urllib.request.urlopen('http://127.0.0.1:8081/fixture',timeout=3).read()"]
+      interval: 15s
+      timeout: 5s
+      retries: 3
+    logging:
+      driver: json-file
+      options: {max-size: 1m, max-file: "2"}
+  proxy:
+    environment:
+      FIXTURE_DOMAIN: ${FIXTURE_DOMAIN:?Set the exact controlled fixture hostname}
+    volumes:
+      - ./deploy/Caddyfile.fixture:/etc/caddy/Caddyfile:ro
+    networks: [default, fixture_private]
+    depends_on:
+      fixture:
+        condition: service_healthy
+networks:
+  fixture_private:
+    internal: true
+volumes:
+  fixture_data:

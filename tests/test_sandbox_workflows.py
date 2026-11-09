@@ -43,7 +43,8 @@ class FixtureRunner:
             self.writes.append(authority["operation_id"])
             write_receipt = {
                 "operation_id": authority["operation_id"],
-                "status": "committed", "writes": 1,
+                "status": "committed",
+                "writes": 1,
                 "message_sha256": authority["message_sha256"],
             }
         screenshot = b"\xff\xd8\xfftest-fixture-only-not-a-live-screenshot"
@@ -53,15 +54,18 @@ class FixtureRunner:
             else json.dumps(
                 {
                     "url": (FIXTURE + "/fixture/state/" + authority["operation_id"])
-                    if task.get("approved") else task["url"],
+                    if task.get("approved")
+                    else task["url"],
                     "title": "Fixture page",
                     "text": "A controlled form",
                     "screenshot": base64.b64encode(screenshot).decode(),
                     "screenshot_sha256": hashlib.sha256(screenshot).hexdigest(),
                     "page_sha256": "a" * 64,
                     "actions_executed": len(json.loads(payload)["steps"]),
-                    "controls": [{"selector": "#message", "tag": "input"},
-                                 {"selector": "#submit", "tag": "button"}],
+                    "controls": [
+                        {"selector": "#message", "tag": "input"},
+                        {"selector": "#submit", "tag": "button"},
+                    ],
                     "fixture_state": "c" * 64,
                     "write_receipt": write_receipt,
                 }
@@ -77,6 +81,9 @@ class FixtureRunner:
 @pytest.fixture
 def sandbox(app, settings):
     client, vendor, owner, db = app
+    db.one(
+        "INSERT INTO sandbox_heartbeats(id) VALUES('runner') ON CONFLICT(id) DO UPDATE SET seen_at=now() RETURNING id"
+    )
     settings.sandbox_enabled = True
     settings.sandbox_model = "fixture-text"
     settings.sandbox_vision_model = "fixture-vision"
@@ -85,6 +92,10 @@ def sandbox(app, settings):
     assert (
         client.put("/api/connections/vultr", json={"secret": "fixture-canary-secret"}).status_code
         == 200
+    )
+    db.one(
+        "UPDATE connections SET status='validated',validated_at=now() WHERE owner_id=%s AND kind='vultr' RETURNING owner_id",
+        (owner,),
     )
     runner = FixtureRunner()
     worker = SandboxWorker(settings, db=db, runner=runner, transport=vendor.transport())
@@ -152,8 +163,10 @@ def browser_ready(sandbox):
         {"verified": True, "explanation": "Form visible"},
         {
             "explanation": "Save fictional demo text",
-            "steps": [{"action": "fill", "selector": "#message", "value": "Demo"},
-                      {"action": "click", "selector": "#submit", "value": ""}],
+            "steps": [
+                {"action": "fill", "selector": "#message", "value": "Demo"},
+                {"action": "click", "selector": "#submit", "value": ""},
+            ],
         },
     )
     job = enqueue(sandbox, "browser")
@@ -290,7 +303,7 @@ def test_owner_scope_csrf_and_admission_limits(sandbox, settings):
         == 429
     )
     assert db.one("SELECT count(*) AS n FROM sandbox_jobs")["n"] == 1
-    assert not client.get("/api/sandbox/status").json()["worker_online"]
+    assert client.get("/api/sandbox/status").json()["worker_online"]
 
 
 def test_crash_recovery_never_replays_effects(sandbox):
@@ -318,9 +331,12 @@ def test_malformed_plan_does_not_dispatch(sandbox):
 
 def test_browser_readonly_requires_live_observation_verification(sandbox):
     client, vendor, _, _, runner, worker, _ = sandbox
-    respond(vendor, {"verified": True, "explanation": "Fixture visible"},
-            {"explanation": "Read only", "steps": []},
-            {"verified": True, "explanation": "Observed fictional message form"})
+    respond(
+        vendor,
+        {"verified": True, "explanation": "Fixture visible"},
+        {"explanation": "Read only", "steps": []},
+        {"verified": True, "explanation": "Observed fictional message form"},
+    )
     job = enqueue(sandbox, "browser")
     worker.tick()
     result = client.get("/api/sandbox/jobs/" + job).json()

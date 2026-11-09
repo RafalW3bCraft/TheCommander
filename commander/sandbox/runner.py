@@ -1,10 +1,12 @@
 """Docker-only boundary. No shell, host task execution, mounts or fallback runtime."""
 
 import hashlib
+import ipaddress
 import json
 import os
 import selectors
 import shutil
+import socket
 import subprocess
 import tempfile
 import time
@@ -13,6 +15,7 @@ from datetime import datetime, timezone
 from pathlib import Path
 
 from commander.errors import DomainError
+from commander.sandbox.artifacts import read_archive
 
 
 class DockerRunner:
@@ -88,7 +91,7 @@ class DockerRunner:
                         datetime.now(timezone.utc)
                         - datetime.fromisoformat(created.replace("Z", "+00:00"))
                     ).total_seconds()
-                    if age > 600:
+                    if age > max(90, self.settings.sandbox_timeout_seconds + 45):
                         command = (
                             ["rm", "-f", identifier]
                             if resource == "container"
@@ -145,17 +148,45 @@ class DockerRunner:
             reason,
         )
 
-    def execute(self, kind, payload, *, cancelled=lambda: False):
-        name = "commander-job-" + uuid.uuid4().hex
+    def _artifacts(self, base, name):
+        collector = Path(__file__).with_name("collector.py").read_text()
+        proc = subprocess.Popen(
+            base + ["exec", name, "python", "-I", "-c", collector],
+            stdout=subprocess.PIPE,
+            stderr=subprocess.DEVNULL,
+            env=self._env(),
+        )
+        timer = __import__("threading").Timer(10, proc.kill)
+        timer.start()
+        try:
+            assert proc.stdout is not None
+            files = read_archive(proc.stdout)
+            if proc.wait(timeout=2):
+                raise DomainError("Sandbox artifact export failed", 503, "artifact_rejected")
+            return files
+        finally:
+            timer.cancel()
+            if proc.poll() is None:
+                proc.kill()
+            proc.wait(timeout=2)
+            if proc.stdout:
+                proc.stdout.close()
+
+    def execute(self, kind, payload, *, cancelled=lambda: False, attempt_id=None):
+        name = "commander-job-" + (
+            uuid.UUID(str(attempt_id)).hex if attempt_id else uuid.uuid4().hex
+        )
         network = name + "-net"
         proxy = name + "-proxy"
         started = time.monotonic()
         cleanup = False
         result = None
+        failure: Exception | None = None
         with tempfile.TemporaryDirectory(prefix="commander-docker-") as config:
             base = self._base(config)
             try:
                 net = "none"
+                proxy_ip = None
                 network_policy = None
                 if kind == "browser":
                     version = self._control(base, ["version", "--format", "{{.Server.Version}}"])
@@ -193,6 +224,26 @@ class DockerRunner:
                             "Browser network isolation was not enforced", 503, "containment_failed"
                         )
                     net = network
+                    pinned: list[str] = []
+                    for domain in self.settings.sandbox_browser_domains:
+                        try:
+                            addresses = sorted(
+                                {
+                                    a[4][0]
+                                    for a in socket.getaddrinfo(
+                                        domain, 443, type=socket.SOCK_STREAM
+                                    )
+                                }
+                            )
+                            if not addresses or any(
+                                not ipaddress.ip_address(a).is_global for a in addresses
+                            ):
+                                raise ValueError()
+                        except (OSError, ValueError):
+                            raise DomainError(
+                                "Egress DNS validation failed", 503, "containment_failed"
+                            ) from None
+                        pinned.extend(f"{domain}={address}" for address in addresses)
                     self._control(
                         base,
                         [
@@ -200,33 +251,78 @@ class DockerRunner:
                             "--pull=never",
                             *self.flags(proxy, "bridge"),
                             self.settings.sandbox_proxy_image,
-                            *self.settings.sandbox_browser_domains,
+                            *pinned,
                         ],
                     )
                     self._control(base, ["network", "connect", "--alias", "egress", network, proxy])
                     self._control(base, ["start", proxy])
+                    proxy_info = json.loads(self._control(base, ["inspect", proxy]).stdout)[0]
+                    proxy_ip = proxy_info["NetworkSettings"]["Networks"][network]["IPAddress"]
+                    if not proxy_info["State"]["Running"] or not proxy_ip:
+                        raise DomainError(
+                            "Egress proxy failed to start", 503, "sandbox_unavailable"
+                        )
                 image = (
                     self.settings.sandbox_browser_image
                     if kind == "browser"
                     else self.settings.sandbox_code_image
                 )
-                program = (
-                    ["python", "/opt/commander/browser.py"]
-                    if kind == "browser"
-                    else ["python", "-I", "-"]
-                )
-                cmd = base + [
-                    "run",
-                    "--pull=never",
-                    "-i",
-                    *self.flags(name, net, kind == "browser"),
-                    image,
-                    "timeout",
-                    "--signal=KILL",
-                    str(self.settings.sandbox_timeout_seconds),
-                    *program,
-                ]
+                artifacts = []
+                if kind == "code":
+                    # Keep tmpfs alive until the exec process ends and output is exported.
+                    # No generated code is ever interpreted by the host process.
+                    self._control(
+                        base,
+                        [
+                            "run",
+                            "--pull=never",
+                            "-d",
+                            *self.flags(name, net),
+                            image,
+                            "python",
+                            "-I",
+                            "-c",
+                            f"import time;time.sleep({self.settings.sandbox_timeout_seconds + 30})",
+                        ],
+                    )
+                    self._control(
+                        base,
+                        ["exec", name, "python", "-I", "-c", "import os;os.mkdir('/tmp/output')"],
+                    )
+                    cmd = base + [
+                        "exec",
+                        "-i",
+                        name,
+                        "timeout",
+                        "--signal=KILL",
+                        str(self.settings.sandbox_timeout_seconds),
+                        "python",
+                        "-I",
+                        "-",
+                    ]
+                else:
+                    cmd = base + [
+                        "run",
+                        "--pull=never",
+                        "-i",
+                        "--add-host",
+                        f"egress:{proxy_ip}",
+                        *self.flags(name, net, True),
+                        image,
+                        "timeout",
+                        "--signal=KILL",
+                        str(self.settings.sandbox_timeout_seconds),
+                        "python",
+                        "/opt/commander/browser.py",
+                    ]
                 streams, exit_code, reason = self._capture(cmd, payload, cancelled)
+                if kind == "code":
+                    # The trusted collector stops descendants before opening files.
+                    if reason is None:
+                        try:
+                            artifacts = self._artifacts(base, name)
+                        except DomainError as exc:
+                            reason = exc.code
                 inspect = self._control(base, ["inspect", name], check=False)
                 actual = json.loads(inspect.stdout)[0] if inspect.returncode == 0 else None
                 if not actual:
@@ -260,7 +356,7 @@ class DockerRunner:
                     "mounts": actual.get("Mounts", []),
                     "user": actual["Config"]["User"],
                     "oom_killed": state.get("OOMKilled", False),
-                    "exit_code": state.get("ExitCode", exit_code),
+                    "exit_code": exit_code if kind == "code" else state.get("ExitCode", exit_code),
                     "stop_reason": reason,
                     "duration_ms": round((time.monotonic() - started) * 1000),
                     "stdout_sha256": hashlib.sha256(streams["stdout"].encode()).hexdigest(),
@@ -283,7 +379,23 @@ class DockerRunner:
                     raise DomainError(
                         "Docker did not enforce containment policy", 503, "containment_failed"
                     )
-                result = {**streams, "receipt": receipt}
+                result = {**streams, "receipt": receipt, "artifacts": artifacts}
+            except Exception as exc:
+                result = {
+                    "stdout": "",
+                    "stderr": "",
+                    "artifacts": [],
+                    "receipt": {
+                        "destroyed": False,
+                        "exit_code": None,
+                        "runtime": self.settings.sandbox_runtime,
+                        "stop_reason": exc.code
+                        if isinstance(exc, DomainError)
+                        else "runner_failed",
+                        "duration_ms": round((time.monotonic() - started) * 1000),
+                    },
+                }
+                failure = exc
             finally:
                 removed = self._control(base, ["rm", "-f", name], check=False)
                 cleanup = removed.returncode == 0
@@ -294,10 +406,9 @@ class DockerRunner:
             if result is not None:
                 result["receipt"]["destroyed"] = cleanup
                 if not cleanup:
-                    raise DomainError(
-                        "Sandbox cleanup failed; operator intervention required",
-                        503,
-                        "cleanup_failed",
-                    )
+                    result["receipt"]["stop_reason"] = "cleanup_failed"
+                if failure is not None:
+                    setattr(failure, "execution_result", result)
+                    raise failure
                 return result
         raise DomainError("Sandbox execution failed", 503, "sandbox_unavailable")

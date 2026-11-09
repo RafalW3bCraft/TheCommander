@@ -120,6 +120,7 @@ def test_real_browser_observation_with_network_gateway():
             {
                 "url": "https://example.com/",
                 "domains": ["example.com"],
+                "policy": {"read_urls": ["https://example.com/"], "fixture_origin": ""},
                 "approved": False,
                 "steps": [],
             }
