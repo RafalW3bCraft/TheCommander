@@ -1,0 +1,60 @@
+{
+  "scope": "Domain and HTTPS configuration of the existing deployment; not full release acceptance",
+  "date": "2026-11-08",
+  "hostname": "wadjet.tech",
+  "vm_ipv4": "207.246.82.5",
+  "source_checkout_sha": "39cbfa44540759e1976a2dc1b38d279399c32621",
+  "source_checkout_dirty_work_preserved": true,
+  "application_image_id": "sha256:fc51789b877d4938af91190c280f37eb2c64bf5e1af176f201abd10355bb5d66",
+  "application_image_retained_without_rebuild": true,
+  "image_source_sha_independently_embedded": false,
+  "existing_private_env_files_unchanged": true,
+  "production_origin": "https://wadjet.tech",
+  "production_flag": true,
+  "effective_environment_provider": "vultr",
+  "provider_execution_tested_in_this_change": false,
+  "backup": {
+    "location": "protected VM-local .runtime directory; not exported",
+    "postgresql_archive_valid": true,
+    "isolated_restore_counts_match": true,
+    "original_owner_count": 1,
+    "encrypted_connections_decrypted": 3,
+    "workspace_archive_readable": true,
+    "temporary_restore_database_removed": true
+  },
+  "dns": {
+    "all_four_authoritative_nameservers_match_root_and_fixture": true,
+    "root_public_resolvers_1_1_1_1_and_8_8_8_8_match": true,
+    "some_negative_recursive_caches_still_observed": true,
+    "fixture_service_published": false
+  },
+  "external_probe_transport": "Public VM address with wadjet.tech Host/SNI and default trust-store certificate/hostname verification; local resolver negative cache bypassed for transport only",
+  "checks": {
+    "https_index": 200,
+    "javascript_asset": 200,
+    "css_asset": 200,
+    "health_live": 200,
+    "health_ready": 200,
+    "unauthenticated_me": 401,
+    "unauthenticated_projects": 401,
+    "foreign_origin_login": 403,
+    "http_redirect": 308,
+    "http_redirect_target": "https://wadjet.tech/",
+    "hsts": "max-age=31536000",
+    "ordinary_worker_heartbeat_current": true
+  },
+  "certificate": {
+    "issuer": "Let's Encrypt YE2",
+    "hostname_verified": true,
+    "expires_utc": "2027-02-06T09:40:56Z",
+    "sha256": "cecca049d757d90cbf01165774407a741d9b21ef8f47b130de98b832a0c39039",
+    "automatic_renewal_configured": true,
+    "same_certificate_after_proxy_restart": true,
+    "readiness_after_proxy_restart": 200,
+    "observed_tls_version": "TLSv1.3"
+  },
+  "pending": [
+    "Existing-owner browser login and actual Secure cookie header confirmation",
+    "Full release, sandbox, judge and production gates remain separate"
+  ]
+}

@@ -63,15 +63,26 @@ test("sandbox displays evidence and requires deliberate exact approval", async (
     status: "waiting_approval",
     created_at: "2026-11-04T09:00:00Z",
     approval_digest: "a".repeat(64),
-    approval_expires_at: "2026-11-08T23:00:00Z",
+    approval_expires_at: new Date(Date.now() + 15 * 60 * 1000).toISOString(),
     plan: {
       explanation: "Inspect before acting",
       steps: [{ action: "fill", selector: "#name", value: "Demo" }],
     },
     evidence: {
+      screenshot: "/9j/4AAQSkZJRgABAQAAAQABAAD/2Q==",
       verification: {
         verified: true,
         explanation: "Controlled vision fixture",
+      },
+    },
+    approval_snapshot: {
+      screenshot: "/9j/4AAQSkZJRgABAQAAAQABAAD/2Q==",
+      authorization: {
+        method: "POST",
+        url: "https://example.com/fixture/commit",
+        body: "message=Demo",
+        headers: { "content-type": "application/x-www-form-urlencoded" },
+        operation_id: "fixture-operation",
       },
     },
     receipt: { destroyed: true, evidence_type: "test_fixture" },
@@ -100,6 +111,24 @@ test("sandbox displays evidence and requires deliberate exact approval", async (
       approvals += 1;
       job.status = "approved";
       await route.fulfill({ json: job });
+    } else if (url.pathname.endsWith("/artifacts")) {
+      await route.fulfill({ json: [] });
+    } else if (url.pathname.endsWith("/calls")) {
+      await route.fulfill({
+        json: [
+          {
+            id: "fixture-call",
+            phase: "browser_plan",
+            provider: "vultr",
+            model: "fixture-text",
+            status: "succeeded",
+            input_tokens: 20,
+            output_tokens: 10,
+            duration_ms: 100,
+            created_at: job.created_at,
+          },
+        ],
+      });
     } else {
       await route.fulfill({
         json: url.pathname.endsWith("/jobs") ? [job] : job,
@@ -127,6 +156,9 @@ test("sandbox displays evidence and requires deliberate exact approval", async (
     .click();
   await expect(page.getByText("Inspect before acting")).toBeVisible();
   await expect(
+    page.getByText("vultr / fixture-text", { exact: false }),
+  ).toBeVisible();
+  await expect(
     page.getByRole("button", { name: "Approve exact plan" }),
   ).toBeDisabled();
   expect(approvals).toBe(0);
@@ -135,7 +167,7 @@ test("sandbox displays evidence and requires deliberate exact approval", async (
     page.getByRole("button", { name: "Approve exact plan" }),
   ).toBeDisabled();
   await page
-    .getByLabel("Confirm owner password")
+    .getByLabel("Confirm account password")
     .fill("fictional-browser-password");
   const download = page.waitForEvent("download");
   await page.getByRole("button", { name: "Export evidence" }).click();

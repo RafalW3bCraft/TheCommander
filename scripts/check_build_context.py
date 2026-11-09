@@ -15,7 +15,11 @@ def main():
     with tempfile.TemporaryDirectory(prefix="commander-context-check-") as directory:
         root = Path(directory)
         shutil.copyfile(".dockerignore", root / ".dockerignore")
-        admitted = ["deploy/sandbox/browser.py", "deploy/sandbox/proxy.py"]
+        admitted = [
+            "deploy/sandbox/browser.py",
+            "deploy/sandbox/proxy.py",
+            "deploy/sandbox/fixture.py",
+        ]
         excluded = [
             ".env",
             ".env.runtime",

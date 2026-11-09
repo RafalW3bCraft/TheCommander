@@ -35,7 +35,7 @@ db.migrate()
 # budget. Production throttling remains unchanged.
 for username in ("browser-owner", "upgrade-browser-owner"):
     db.one(
-        "INSERT INTO owners(username,password_hash) VALUES (%s,%s) RETURNING id",
+        "INSERT INTO owners(username,password_hash,role) VALUES (%s,%s,'operator') RETURNING id",
         (username, hasher.hash("fictional-browser-password")),
     )
 issues = []

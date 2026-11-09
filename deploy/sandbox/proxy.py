@@ -5,6 +5,7 @@ import select
 import socket
 import socketserver
 import sys
+import threading
 import time
 
 
@@ -40,8 +41,16 @@ class Gateway(socketserver.StreamRequestHandler):
                 break
         try:
             # Resolve once, validate ALL answers, connect to a numeric address.
-            address = public_addresses(host)[0]
-            with socket.create_connection((address, 443), timeout=5) as upstream:
+            upstream = None
+            for address in self.server.pinned_peers[host]:
+                try:
+                    upstream = socket.create_connection((address, 443), timeout=5)
+                    break
+                except OSError:
+                    continue
+            if upstream is None:
+                return
+            with upstream:
                 self.wfile.write(b"HTTP/1.1 200 Connection Established\r\n\r\n")
                 self.wfile.flush()
                 deadline, transferred = time.monotonic() + 120, 0
@@ -61,9 +70,47 @@ class Server(socketserver.ThreadingTCPServer):
     allow_reuse_address = True
     daemon_threads = True
     request_queue_size = 16
+    slots = threading.BoundedSemaphore(16)
+
+    def process_request(self, request, address):
+        if not self.slots.acquire(blocking=False):
+            self.shutdown_request(request)
+            return
+        try:
+            super().process_request(request, address)
+        except Exception:
+            self.slots.release()
+            raise
+
+    def process_request_thread(self, request, address):
+        try:
+            super().process_request_thread(request, address)
+        finally:
+            self.slots.release()
+
+
+def pinned_peers(arguments):
+    """Accept only public numeric peers resolved and reviewed by the trusted runner."""
+    result = {}
+    for item in arguments:
+        domain, separator, address = item.partition("=")
+        if not separator or not domain or any(c in domain for c in "/:@\\"):
+            raise ValueError("Invalid pinned proxy authority")
+        ip = ipaddress.ip_address(address)
+        if not ip.is_global:
+            raise ValueError("Non-public pinned proxy address")
+        result.setdefault(domain, []).append(str(ip))
+    if not result:
+        raise ValueError("Pinned proxy peers are required")
+    return result
 
 
 if __name__ == "__main__":
+    try:
+        peers = pinned_peers(sys.argv[1:])
+    except ValueError:
+        raise SystemExit("Invalid pinned proxy configuration") from None
     with Server(("0.0.0.0", 3128), Gateway) as server:
-        server.domains = frozenset(sys.argv[1:])
+        server.domains = frozenset(peers)
+        server.pinned_peers = peers
         server.serve_forever()

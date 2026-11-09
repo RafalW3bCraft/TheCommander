@@ -44,27 +44,39 @@ type SandboxJob = {
   };
   receipt?: Record<string, unknown>;
   events?: { kind: string; at?: string }[];
-  calls?: {
-    id: string;
-    phase: string;
-    provider: string;
-    model: string;
-    latency_ms: number;
-    tokens: number | null;
-    cost_usd: number | string | null;
-    usage_status: string;
-    created_at: string;
-  }[];
 };
-type Artifact = { id: string; name: string; size: number; media_type: string };
+type InferenceCall = {
+  id: string;
+  phase: string;
+  provider: string;
+  model: string;
+  status: string;
+  input_tokens: number | null;
+  output_tokens: number | null;
+  duration_ms: number | null;
+  created_at: string;
+};
+type Artifact = {
+  id: string;
+  name: string;
+  size_bytes: number;
+  media_type: string;
+  sha256: string;
+  download_url: string;
+};
 const active = new Set(["queued", "running", "approved"]);
-export function SandboxPage({ initialKind = "code" }: { initialKind?: "code" | "browser" }) {
+export function SandboxPage({
+  initialKind = "code",
+}: {
+  initialKind?: "code" | "browser";
+}) {
   const refreshVersion = useRef(0);
   const [status, setStatus] = useState<SandboxStatus | null>(null);
   const [projects, setProjects] = useState<Project[]>([]);
   const [project, setProject] = useState("");
   const [kind, setKind] = useState<"code" | "browser">(initialKind);
   const [artifacts, setArtifacts] = useState<Artifact[]>([]);
+  const [calls, setCalls] = useState<InferenceCall[]>([]);
   const [jobs, setJobs] = useState<SandboxJob[]>([]);
   const [selected, setSelected] = useState<SandboxJob | null>(null);
   const [error, setError] = useState("");
@@ -119,13 +131,15 @@ export function SandboxPage({ initialKind = "code" }: { initialKind?: "code" | "
       try {
         await refresh();
         if (selected?.id && !disposed) {
-          const [detail, files] = await Promise.all([
+          const [detail, files, inference] = await Promise.all([
             api<SandboxJob>("/sandbox/jobs/" + selected.id),
             api<Artifact[]>("/sandbox/jobs/" + selected.id + "/artifacts"),
+            api<InferenceCall[]>("/sandbox/jobs/" + selected.id + "/calls"),
           ]);
           if (!disposed) {
             setSelected(detail);
             setArtifacts(files);
+            setCalls(inference);
           }
         }
       } catch (e) {
@@ -156,24 +170,38 @@ export function SandboxPage({ initialKind = "code" }: { initialKind?: "code" | "
       setReviewed(false);
       await refresh();
     });
+  const approvalExpired =
+    !selected?.approval_expires_at ||
+    Date.parse(selected.approval_expires_at) <= Date.now();
+  const approvalScreenshot =
+    selected?.approval_snapshot?.screenshot || selected?.evidence?.screenshot;
   return (
     <div className="sandbox-workspace">
       <p className="eyebrow">BLAST RADIUS ZERO · VULTR</p>
       <p>
         Ask for a result. Inspect the generated plan, execution receipt and
         verification. Code runs offline. A browser write requires review of the
-        exact request, screenshot and verification before your approval.
-        Use public, non-sensitive tasks and an operator-approved site.
+        exact request, screenshot and verification before your approval. Use
+        public, non-sensitive tasks and an operator-approved site.
       </p>
       <div className="sandbox-health" role="status">
         {status?.enabled ? "Execution enabled" : "Execution disabled"} ·{" "}
         {status?.worker_online ? "Runner online" : "Runner offline"} ·{" "}
         {status?.model || "Vultr model not configured"}
-        {status && <small className="sandbox-capabilities">Runtime: {status.runtime} · Vision model: {status.vision_model || "Not configured"}</small>}
+        {status && (
+          <small className="sandbox-capabilities">
+            Runtime: {status.runtime} · Vision model:{" "}
+            {status.vision_model || "Not configured"}
+          </small>
+        )}
       </div>
-      {status && (!status.enabled || !status.worker_online) && <p>
-        {!status.enabled ? "The operator must verify containment and enable execution before tasks can run." : "The runner is unavailable. Ask the operator to check the worker service; no new task can start here."}
-      </p>}
+      {status && (!status.enabled || !status.worker_online) && (
+        <p>
+          {!status.enabled
+            ? "The operator must verify containment and enable execution before tasks can run."
+            : "The runner is unavailable. Ask the operator to check the worker service; no new task can start here."}
+        </p>
+      )}
       {error && (
         <div role="alert" className="error">
           {error}
@@ -197,7 +225,12 @@ export function SandboxPage({ initialKind = "code" }: { initialKind?: "code" | "
         }}
       >
         <h2>New sandbox task</h2>
-        {!projects.length && <p>Create your first project in Assistant before starting a sandbox task.</p>}
+        {!projects.length && (
+          <p>
+            Create your first project in Assistant before starting a sandbox
+            task.
+          </p>
+        )}
         <label>
           Project
           <select
@@ -206,6 +239,7 @@ export function SandboxPage({ initialKind = "code" }: { initialKind?: "code" | "
               setProject(e.target.value);
               setSelected(null);
               setArtifacts([]);
+              setCalls([]);
             }}
             required
           >
@@ -241,7 +275,11 @@ export function SandboxPage({ initialKind = "code" }: { initialKind?: "code" | "
             }
           />
         </label>
-        <p className="muted">{kind === "code" ? "Example: calculate the mean of [8, 12, 19, 21, 25] and save the results as a CSV in /output." : "Start with a read-only task on an approved public page. Writes are limited to the operator’s controlled fixture."}</p>
+        <p className="muted">
+          {kind === "code"
+            ? "Example: calculate the mean of [8, 12, 19, 21, 25] and save the results as a CSV in /tmp/output."
+            : "Start with a read-only task on an approved public page. Writes are limited to the operator’s controlled fixture."}
+        </p>
         {kind === "browser" && (
           <label>
             Starting HTTPS URL
@@ -250,7 +288,7 @@ export function SandboxPage({ initialKind = "code" }: { initialKind?: "code" | "
               type="url"
               required
               maxLength={2000}
-              placeholder="https://example.com"
+              placeholder="https://example.com/"
             />
             <small>
               Exact approved domains:{" "}
@@ -264,7 +302,11 @@ export function SandboxPage({ initialKind = "code" }: { initialKind?: "code" | "
             busy || !project || !status?.enabled || !status.worker_online
           }
         >
-          {busy ? "Submitting…" : kind === "code" ? "Run code" : "Inspect browser task"}
+          {busy
+            ? "Submitting…"
+            : kind === "code"
+              ? "Run code"
+              : "Inspect browser task"}
         </button>
       </form>
       <div className="sandbox-columns">
@@ -280,6 +322,7 @@ export function SandboxPage({ initialKind = "code" }: { initialKind?: "code" | "
                 void action(async () => {
                   setSelected(await api<SandboxJob>("/sandbox/jobs/" + job.id));
                   setArtifacts([]);
+                  setCalls([]);
                   setReviewed(false);
                 })
               }
@@ -303,9 +346,18 @@ export function SandboxPage({ initialKind = "code" }: { initialKind?: "code" | "
           ) : (
             <>
               <h3>{selected.goal}</h3>
-              <p><small>Run ID: <code>{selected.id}</code></small></p>
+              <p>
+                <small>
+                  Run ID: <code>{selected.id}</code>
+                </small>
+              </p>
               <p className="status">{selected.status.replaceAll("_", " ")}</p>
-              {selected.status === "uncertain" && <p role="alert">The write outcome is uncertain. Do not repeat it. The operator must reconcile the target state before another attempt.</p>}
+              {selected.status === "uncertain" && (
+                <p role="alert">
+                  The write outcome is uncertain. Do not repeat it. The operator
+                  must reconcile the target state before another attempt.
+                </p>
+              )}
               {selected.error && (
                 <p role="alert" className="error">
                   {selected.error}
@@ -313,7 +365,9 @@ export function SandboxPage({ initialKind = "code" }: { initialKind?: "code" | "
               )}
               {selected.plan && (
                 <>
-                  <p>{selected.plan.explanation}</p>
+                  <p>
+                    <strong>Generated plan:</strong> {selected.plan.explanation}
+                  </p>
                   {selected.evidence?.url && (
                     <p>Observed URL: {selected.evidence.url}</p>
                   )}
@@ -343,18 +397,34 @@ export function SandboxPage({ initialKind = "code" }: { initialKind?: "code" | "
               )}
               {selected.evidence?.verification && (
                 <p>
-                  Vultr verification:{" "}
+                  <strong>Vultr explanation of observed evidence:</strong>{" "}
                   {selected.evidence.verification.verified
                     ? "passed"
                     : "failed"}
                   . {selected.evidence.verification.explanation}
                 </p>
               )}
-              {selected.status !== "waiting_approval" && selected.approval_snapshot?.screenshot && <details>
-                <summary>Original approval screenshot</summary>
-                <img className="sandbox-screenshot" alt="Browser state presented for the original approval" src={"data:image/jpeg;base64," + selected.approval_snapshot.screenshot} />
-                <pre>{JSON.stringify(selected.approval_snapshot.authorization, null, 2)}</pre>
-              </details>}
+              {selected.status !== "waiting_approval" &&
+                selected.approval_snapshot?.screenshot && (
+                  <details>
+                    <summary>Original approval screenshot</summary>
+                    <img
+                      className="sandbox-screenshot"
+                      alt="Browser state presented for the original approval"
+                      src={
+                        "data:image/jpeg;base64," +
+                        selected.approval_snapshot.screenshot
+                      }
+                    />
+                    <pre>
+                      {JSON.stringify(
+                        selected.approval_snapshot.authorization,
+                        null,
+                        2,
+                      )}
+                    </pre>
+                  </details>
+                )}
               {selected.status === "waiting_approval" && (
                 <fieldset>
                   <legend>Approve exact browser actions</legend>
@@ -367,24 +437,67 @@ export function SandboxPage({ initialKind = "code" }: { initialKind?: "code" | "
                   <code className="sandbox-digest">
                     {selected.approval_digest}
                   </code>
-                  {selected.approval_snapshot?.authorization ? <details open>
-                    <summary>Exact authorized request</summary>
-                    <dl className="sandbox-facts">
-                      <dt>Method</dt><dd>{selected.approval_snapshot.authorization.method}</dd>
-                      <dt>Target</dt><dd>{selected.approval_snapshot.authorization.url}</dd>
-                      <dt>Operation</dt><dd>{selected.approval_snapshot.authorization.operation_id}</dd>
-                    </dl>
-                    <h4>Payload</h4><pre>{selected.approval_snapshot.authorization.body}</pre>
-                    <h4>Headers</h4><pre>{JSON.stringify(selected.approval_snapshot.authorization.headers, null, 2)}</pre>
-                  </details> : <p role="alert">Exact request evidence is unavailable. Approval is disabled; reload the task or ask the operator to investigate.</p>}
-                  {!selected.evidence?.verification?.verified && <p role="alert">Verification has not passed. Approval is disabled.</p>}
+                  {selected.approval_snapshot?.authorization ? (
+                    <details open>
+                      <summary>Exact authorized request</summary>
+                      <dl className="sandbox-facts">
+                        <dt>Method</dt>
+                        <dd>
+                          {selected.approval_snapshot.authorization.method}
+                        </dd>
+                        <dt>Target</dt>
+                        <dd>{selected.approval_snapshot.authorization.url}</dd>
+                        <dt>Operation</dt>
+                        <dd>
+                          {
+                            selected.approval_snapshot.authorization
+                              .operation_id
+                          }
+                        </dd>
+                      </dl>
+                      <h4>Payload</h4>
+                      <pre>{selected.approval_snapshot.authorization.body}</pre>
+                      <h4>Headers</h4>
+                      <pre>
+                        {JSON.stringify(
+                          selected.approval_snapshot.authorization.headers,
+                          null,
+                          2,
+                        )}
+                      </pre>
+                    </details>
+                  ) : (
+                    <p role="alert">
+                      Exact request evidence is unavailable. Approval is
+                      disabled; reload the task or ask the operator to
+                      investigate.
+                    </p>
+                  )}
+                  {!selected.evidence?.verification?.verified && (
+                    <p role="alert">
+                      Verification has not passed. Approval is disabled.
+                    </p>
+                  )}
+                  {approvalExpired && (
+                    <p role="alert">
+                      This approval has expired. Reject this plan and request a
+                      fresh preview.
+                    </p>
+                  )}
+                  {!approvalScreenshot && (
+                    <p role="alert">
+                      The approval screenshot is unavailable. Approval is
+                      disabled.
+                    </p>
+                  )}
                   <label>
                     <input
                       type="checkbox"
                       checked={reviewed}
                       onChange={(e) => setReviewed(e.target.checked)}
                     />{" "}
-                    I reviewed every selector, payload, screenshot and target above.
+                    I reviewed every selector, payload, screenshot and target
+                    above.
                   </label>
                   <label>
                     Confirm account password
@@ -397,7 +510,15 @@ export function SandboxPage({ initialKind = "code" }: { initialKind?: "code" | "
                   </label>
                   <div className="toolbar">
                     <button
-                      disabled={busy || !reviewed || !password || !selected.evidence?.verification?.verified || !selected.approval_snapshot?.authorization}
+                      disabled={
+                        busy ||
+                        !reviewed ||
+                        !password ||
+                        !selected.evidence?.verification?.verified ||
+                        !selected.approval_snapshot?.authorization ||
+                        approvalExpired ||
+                        !approvalScreenshot
+                      }
                       onClick={() => void decision(true)}
                     >
                       Approve exact plan
@@ -412,35 +533,100 @@ export function SandboxPage({ initialKind = "code" }: { initialKind?: "code" | "
                   </div>
                 </fieldset>
               )}
-              {selected.receipt && Object.keys(selected.receipt).length > 0 && <dl className="sandbox-facts">
-                <dt>Exit status</dt><dd>{selected.receipt.exit_code === undefined ? "Not recorded" : String(selected.receipt.exit_code)}</dd>
-                <dt>Container cleanup</dt><dd>{selected.receipt.destroyed === true ? "Removal confirmed" : selected.receipt.destroyed === false ? "Removal failed — operator attention required" : "Not recorded"}</dd>
-                <dt>Observed runtime</dt><dd>{String(selected.receipt.runtime ?? "Not recorded")}</dd>
-                <dt>Execution time</dt><dd>{selected.receipt.duration_ms === undefined ? "Not recorded" : `${String(selected.receipt.duration_ms)} ms`}</dd>
-              </dl>}
-              {(selected.evidence?.stdout !== undefined || selected.evidence?.stderr !== undefined) && <details open>
-                <summary>Actual process output</summary>
-                <h4>stdout</h4><pre>{selected.evidence.stdout || "(empty)"}</pre>
-                <h4>stderr</h4><pre>{selected.evidence.stderr || "(empty)"}</pre>
-              </details>}
-              {artifacts.length > 0 && <section className="sandbox-artifacts" aria-label="Permitted output artifacts">
-                <h3>Output artifacts</h3>
-                <ul>{artifacts.map((file) => <li key={file.id}>
-                  <a href={"/api/sandbox/artifacts/" + encodeURIComponent(file.id)} download>{file.name}</a> · {file.size} bytes · {file.media_type}
-                </li>)}</ul>
-              </section>}
-              {!!selected.calls?.length && <details open>
-                <summary>Recorded inference calls</summary>
-                <ul className="sandbox-call-list">{selected.calls.map((call) => <li key={call.id}>
-                  <strong>{call.phase.replaceAll("_", " ")}</strong> · {call.provider} / {call.model}
-                  <br />{call.latency_ms} ms · {call.tokens === null ? "Tokens unknown" : `${call.tokens} tokens`} · usage {call.usage_status}
-                  {call.cost_usd !== null && <> · ${call.cost_usd}</>}
-                </li>)}</ul>
-              </details>}
+              {selected.receipt && Object.keys(selected.receipt).length > 0 && (
+                <dl className="sandbox-facts">
+                  <dt>Exit status</dt>
+                  <dd>
+                    {selected.receipt.exit_code === undefined
+                      ? "Not recorded"
+                      : String(selected.receipt.exit_code)}
+                  </dd>
+                  <dt>Container cleanup</dt>
+                  <dd>
+                    {selected.receipt.destroyed === true
+                      ? "Removal confirmed"
+                      : selected.receipt.destroyed === false
+                        ? "Removal failed — operator attention required"
+                        : "Not recorded"}
+                  </dd>
+                  <dt>Observed runtime</dt>
+                  <dd>{String(selected.receipt.runtime ?? "Not recorded")}</dd>
+                  <dt>Execution time</dt>
+                  <dd>
+                    {selected.receipt.duration_ms === undefined
+                      ? "Not recorded"
+                      : `${String(selected.receipt.duration_ms)} ms`}
+                  </dd>
+                </dl>
+              )}
+              {(selected.evidence?.stdout !== undefined ||
+                selected.evidence?.stderr !== undefined) && (
+                <details open>
+                  <summary>Actual process output</summary>
+                  <h4>stdout</h4>
+                  <pre>{selected.evidence.stdout || "(empty)"}</pre>
+                  <h4>stderr</h4>
+                  <pre>{selected.evidence.stderr || "(empty)"}</pre>
+                </details>
+              )}
+              {artifacts.length > 0 && (
+                <section
+                  className="sandbox-artifacts"
+                  aria-label="Permitted output artifacts"
+                >
+                  <h3>Output artifacts</h3>
+                  <ul>
+                    {artifacts.map((file) => (
+                      <li key={file.id}>
+                        <a
+                          href={
+                            "/api/sandbox/jobs/" +
+                            encodeURIComponent(selected.id) +
+                            "/artifacts/" +
+                            encodeURIComponent(file.id)
+                          }
+                          download
+                        >
+                          {file.name}
+                        </a>{" "}
+                        · {file.size_bytes} bytes · {file.media_type}
+                        <br />
+                        <small>
+                          SHA-256: <code>{file.sha256}</code>
+                        </small>
+                      </li>
+                    ))}
+                  </ul>
+                </section>
+              )}
+              {calls.length > 0 && (
+                <details open>
+                  <summary>Recorded inference calls</summary>
+                  <ul className="sandbox-call-list">
+                    {calls.map((call) => (
+                      <li key={call.id}>
+                        <strong>{call.phase.replaceAll("_", " ")}</strong> ·{" "}
+                        {call.provider} / {call.model}
+                        <br />
+                        {call.duration_ms === null
+                          ? "Duration unknown"
+                          : `${call.duration_ms} ms`}{" "}
+                        · {call.status}
+                        <br />
+                        Input tokens: {call.input_tokens ?? "Unknown"} · Output
+                        tokens: {call.output_tokens ?? "Unknown"}
+                      </li>
+                    ))}
+                  </ul>
+                </details>
+              )}
               {!!selected.events?.length && (
                 <ol className="sandbox-timeline">
                   {selected.events.map((event, i) => (
-                    <li key={i}>{event.kind.replaceAll("_", " ")}{event.at ? ` · ${when(event.at)}` : ""}</li>
+                    <li key={i}>
+                      {event.kind.replaceAll("_", " ")}
+                      {event.at ? ` · ${when(event.at)}` : ""}
+                    </li>
                   ))}
                 </ol>
               )}

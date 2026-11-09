@@ -187,6 +187,7 @@ def test_runner_inspects_enforced_limits_and_destroys_resources(monkeypatch):
     monkeypatch.setattr("commander.sandbox.runner.shutil.which", lambda _: "/usr/bin/docker")
     runner = DockerRunner(runner_config(sandbox_code_image="trusted:version"))
     commands = []
+    monkeypatch.setattr(runner, "_artifacts", lambda *_: [])
     actual = {
         "Id": "fixture-container",
         "Image": "sha256:fixture",

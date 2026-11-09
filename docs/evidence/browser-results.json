@@ -1,7 +1,7 @@
 {
   "config": {
     "argv": [
-      "/home/watcher/.nvm/versions/node/v22.23.3/bin/node",
+      "/mnt/hostshare/TheCommander/.runtime/node22/node-v22.23.4-linux-x64/bin/node",
       "/mnt/hostshare/TheCommander/frontend/node_modules/.bin/playwright",
       "test"
     ],
@@ -56,6 +56,7 @@
         "timeout": 120000,
         "use": {
           "baseURL": "http://127.0.0.1:8010",
+          "actionTimeout": 15000,
           "viewport": {
             "width": 1440,
             "height": 900
@@ -101,6 +102,90 @@
   },
   "suites": [
     {
+      "title": "accounts.spec.ts",
+      "file": "accounts.spec.ts",
+      "column": 0,
+      "line": 0,
+      "specs": [
+        {
+          "title": "operator invitation creates a private account with revocable independent sessions",
+          "ok": true,
+          "tags": [],
+          "tests": [
+            {
+              "timeout": 120000,
+              "annotations": [],
+              "expectedStatus": "passed",
+              "projectId": "chromium",
+              "projectName": "chromium",
+              "results": [
+                {
+                  "workerIndex": 0,
+                  "parallelIndex": 0,
+                  "status": "passed",
+                  "duration": 8962,
+                  "errors": [],
+                  "stdout": [],
+                  "stderr": [],
+                  "retry": 0,
+                  "startTime": "2026-11-08T15:42:10.289Z",
+                  "annotations": [],
+                  "attachments": []
+                }
+              ],
+              "status": "expected"
+            }
+          ],
+          "id": "cbe1475516a9f5b841ab-e290ec8874917a66d1f3",
+          "file": "accounts.spec.ts",
+          "line": 17,
+          "column": 1
+        }
+      ]
+    },
+    {
+      "title": "sandbox.spec.ts",
+      "file": "sandbox.spec.ts",
+      "column": 0,
+      "line": 0,
+      "specs": [
+        {
+          "title": "sandbox displays evidence and requires deliberate exact approval",
+          "ok": true,
+          "tags": [],
+          "tests": [
+            {
+              "timeout": 120000,
+              "annotations": [],
+              "expectedStatus": "passed",
+              "projectId": "chromium",
+              "projectName": "chromium",
+              "results": [
+                {
+                  "workerIndex": 0,
+                  "parallelIndex": 0,
+                  "status": "passed",
+                  "duration": 4553,
+                  "errors": [],
+                  "stdout": [],
+                  "stderr": [],
+                  "retry": 0,
+                  "startTime": "2026-11-08T15:42:19.414Z",
+                  "annotations": [],
+                  "attachments": []
+                }
+              ],
+              "status": "expected"
+            }
+          ],
+          "id": "938300ed68fe3b47f7ef-34073121f3a347088d19",
+          "file": "sandbox.spec.ts",
+          "line": 4,
+          "column": 1
+        }
+      ]
+    },
+    {
       "title": "workflows.spec.ts",
       "file": "workflows.spec.ts",
       "column": 0,
@@ -122,12 +207,12 @@
                   "workerIndex": 0,
                   "parallelIndex": 0,
                   "status": "passed",
-                  "duration": 17118,
+                  "duration": 15385,
                   "errors": [],
                   "stdout": [],
                   "stderr": [],
                   "retry": 0,
-                  "startTime": "2026-10-29T11:12:44.226Z",
+                  "startTime": "2026-11-08T15:42:24.011Z",
                   "annotations": [],
                   "attachments": []
                 }
@@ -137,7 +222,7 @@
           ],
           "id": "26aa48cee8983222f549-4adce86fbf3b3ec59ded",
           "file": "workflows.spec.ts",
-          "line": 14,
+          "line": 21,
           "column": 1
         },
         {
@@ -156,12 +241,12 @@
                   "workerIndex": 0,
                   "parallelIndex": 0,
                   "status": "passed",
-                  "duration": 9783,
+                  "duration": 11229,
                   "errors": [],
                   "stdout": [],
                   "stderr": [],
                   "retry": 0,
-                  "startTime": "2026-10-29T11:13:01.749Z",
+                  "startTime": "2026-11-08T15:42:39.417Z",
                   "annotations": [],
                   "attachments": []
                 }
@@ -171,7 +256,7 @@
           ],
           "id": "26aa48cee8983222f549-1def9012388ffb9da11c",
           "file": "workflows.spec.ts",
-          "line": 152,
+          "line": 159,
           "column": 1
         },
         {
@@ -190,12 +275,12 @@
                   "workerIndex": 0,
                   "parallelIndex": 0,
                   "status": "passed",
-                  "duration": 7401,
+                  "duration": 10347,
                   "errors": [],
                   "stdout": [],
                   "stderr": [],
                   "retry": 0,
-                  "startTime": "2026-10-29T11:13:11.550Z",
+                  "startTime": "2026-11-08T15:42:50.701Z",
                   "annotations": [],
                   "attachments": []
                 }
@@ -205,7 +290,7 @@
           ],
           "id": "26aa48cee8983222f549-0f23078745a73525703e",
           "file": "workflows.spec.ts",
-          "line": 243,
+          "line": 250,
           "column": 1
         },
         {
@@ -224,12 +309,12 @@
                   "workerIndex": 0,
                   "parallelIndex": 0,
                   "status": "passed",
-                  "duration": 10174,
+                  "duration": 9281,
                   "errors": [],
                   "stdout": [],
                   "stderr": [],
                   "retry": 0,
-                  "startTime": "2026-10-29T11:13:18.980Z",
+                  "startTime": "2026-11-08T15:43:01.101Z",
                   "annotations": [],
                   "attachments": []
                 }
@@ -239,7 +324,7 @@
           ],
           "id": "26aa48cee8983222f549-d9fc84cb307b726280ac",
           "file": "workflows.spec.ts",
-          "line": 283,
+          "line": 290,
           "column": 1
         },
         {
@@ -258,12 +343,12 @@
                   "workerIndex": 0,
                   "parallelIndex": 0,
                   "status": "passed",
-                  "duration": 2402,
+                  "duration": 2192,
                   "errors": [],
                   "stdout": [],
                   "stderr": [],
                   "retry": 0,
-                  "startTime": "2026-10-29T11:13:29.200Z",
+                  "startTime": "2026-11-08T15:43:10.408Z",
                   "annotations": [],
                   "attachments": []
                 }
@@ -273,7 +358,7 @@
           ],
           "id": "26aa48cee8983222f549-f363aa8668782a4b157d",
           "file": "workflows.spec.ts",
-          "line": 464,
+          "line": 471,
           "column": 1
         },
         {
@@ -292,12 +377,12 @@
                   "workerIndex": 0,
                   "parallelIndex": 0,
                   "status": "passed",
-                  "duration": 4483,
+                  "duration": 3488,
                   "errors": [],
                   "stdout": [],
                   "stderr": [],
                   "retry": 0,
-                  "startTime": "2026-10-29T11:13:31.635Z",
+                  "startTime": "2026-11-08T15:43:12.621Z",
                   "annotations": [],
                   "attachments": []
                 }
@@ -307,7 +392,7 @@
           ],
           "id": "26aa48cee8983222f549-219e87ebc7ee85b3e6a0",
           "file": "workflows.spec.ts",
-          "line": 545,
+          "line": 552,
           "column": 1
         },
         {
@@ -326,12 +411,12 @@
                   "workerIndex": 0,
                   "parallelIndex": 0,
                   "status": "passed",
-                  "duration": 6617,
+                  "duration": 4876,
                   "errors": [],
                   "stdout": [],
                   "stderr": [],
                   "retry": 0,
-                  "startTime": "2026-10-29T11:13:36.163Z",
+                  "startTime": "2026-11-08T15:43:16.134Z",
                   "annotations": [],
                   "attachments": []
                 }
@@ -341,7 +426,7 @@
           ],
           "id": "26aa48cee8983222f549-e5d02e0023cb7fe991b9",
           "file": "workflows.spec.ts",
-          "line": 584,
+          "line": 591,
           "column": 1
         }
       ]
@@ -368,12 +453,12 @@
                   "workerIndex": 0,
                   "parallelIndex": 0,
                   "status": "passed",
-                  "duration": 3968,
+                  "duration": 2775,
                   "errors": [],
                   "stdout": [],
                   "stderr": [],
                   "retry": 0,
-                  "startTime": "2026-10-29T11:13:42.837Z",
+                  "startTime": "2026-11-08T15:43:21.057Z",
                   "annotations": [],
                   "attachments": []
                 }
@@ -383,7 +468,7 @@
           ],
           "id": "4cdea4e1e96334bacba2-6e25e857addf9c37f9a2",
           "file": "z-upgrade.spec.ts",
-          "line": 18,
+          "line": 25,
           "column": 1
         },
         {
@@ -402,12 +487,12 @@
                   "workerIndex": 0,
                   "parallelIndex": 0,
                   "status": "passed",
-                  "duration": 9921,
+                  "duration": 4894,
                   "errors": [],
                   "stdout": [],
                   "stderr": [],
                   "retry": 0,
-                  "startTime": "2026-10-29T11:13:46.846Z",
+                  "startTime": "2026-11-08T15:43:23.851Z",
                   "annotations": [],
                   "attachments": []
                 }
@@ -417,7 +502,7 @@
           ],
           "id": "4cdea4e1e96334bacba2-967ba8018c2b655b1a49",
           "file": "z-upgrade.spec.ts",
-          "line": 108,
+          "line": 115,
           "column": 1
         },
         {
@@ -436,12 +521,12 @@
                   "workerIndex": 0,
                   "parallelIndex": 0,
                   "status": "passed",
-                  "duration": 3600,
+                  "duration": 2486,
                   "errors": [],
                   "stdout": [],
                   "stderr": [],
                   "retry": 0,
-                  "startTime": "2026-10-29T11:13:56.804Z",
+                  "startTime": "2026-11-08T15:43:28.772Z",
                   "annotations": [],
                   "attachments": []
                 }
@@ -451,7 +536,7 @@
           ],
           "id": "4cdea4e1e96334bacba2-1c2479c1a3289e4f02cd",
           "file": "z-upgrade.spec.ts",
-          "line": 184,
+          "line": 191,
           "column": 1
         }
       ]
@@ -459,9 +544,9 @@
   ],
   "errors": [],
   "stats": {
-    "startTime": "2026-10-29T11:12:37.194Z",
-    "duration": 83551.55,
-    "expected": 10,
+    "startTime": "2026-11-08T15:42:05.489Z",
+    "duration": 86103.887,
+    "expected": 12,
     "skipped": 0,
     "unexpected": 0,
     "flaky": 0

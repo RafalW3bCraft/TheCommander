@@ -41,7 +41,7 @@ class Preferences(Strict):
     max_output_tokens: int | None = Field(default=None, ge=128, le=8192)
     max_context_chars: int | None = Field(default=None, ge=4000, le=100000)
     max_run_seconds: int | None = Field(default=None, ge=30, le=600)
-    max_daily_runs: int | None = Field(default=None, ge=1, le=1000)
+    max_daily_runs: int | None = Field(default=None, ge=1, le=5000)
     max_daily_tokens: int | None = Field(default=None, ge=1000)
     daily_spend_limit_usd: float | None = Field(default=None, gt=0, allow_inf_nan=False)
 
@@ -85,6 +85,11 @@ def values(settings):
 def resolve(db, operator, owner, snapshot=None, *, for_run=False):
     row = db.one("SELECT * FROM owner_settings WHERE owner_id=%s", (owner,))
     current = {**values(operator), **(row["preferences"] if row else {})}
+    from commander.demo_grants import current as demo_grant
+
+    grant = demo_grant(db, owner)
+    if grant and not (row and "inference_provider" in row["preferences"]):
+        current.update(inference_provider="vultr", provider_model=grant["model"])
     selected = {**current, **(snapshot or {})}
     if (for_run and snapshot is None) or (
         snapshot is not None and "inference_provider" not in snapshot

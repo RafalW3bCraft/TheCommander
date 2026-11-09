@@ -1,5 +1,6 @@
 """Durable, idempotent synchronization of canonical memory into a derived index."""
 
+from commander.connections import owner_lock
 from commander.memory_index import IndexUnavailable, MemoryIndex
 
 
@@ -16,7 +17,8 @@ def sync_one(db, index):
         conn.execute("""INSERT INTO memory_index_jobs(memory_id,owner_id,project_id,revision,deleted)
           SELECT memory_id,owner_id,project_id,revision,true FROM memory_index_state
           WHERE expires_at<=now() ON CONFLICT(memory_id) DO NOTHING""")
-        job = conn.execute("""SELECT * FROM memory_index_jobs WHERE available_at<=now()
+        job = conn.execute("""SELECT * FROM memory_index_jobs j WHERE available_at<=now()
+          AND EXISTS(SELECT 1 FROM owners o WHERE o.id=j.owner_id AND o.disabled_at IS NULL)
           AND (lease_until IS NULL OR lease_until<now())
           ORDER BY available_at,memory_id LIMIT 1 FOR UPDATE SKIP LOCKED""").fetchone()
         if not job:
@@ -25,6 +27,15 @@ def sync_one(db, index):
             "UPDATE memory_index_jobs SET lease_until=now()+interval '45 seconds',attempts=attempts+1 WHERE memory_id=%s",
             (job["memory_id"],),
         )
+    with owner_lock(db, job["owner_id"]):
+        if not db.one(
+            "SELECT 1 FROM owners WHERE id=%s AND disabled_at IS NULL", (job["owner_id"],)
+        ):
+            return True
+        return _sync_claimed(db, index, job)
+
+
+def _sync_claimed(db, index, job):
     row = db.one(
         "SELECT *, (expires_at IS NULL OR expires_at>now()) AS eligible FROM memories WHERE id=%s AND owner_id=%s",
         (job["memory_id"], job["owner_id"]),
