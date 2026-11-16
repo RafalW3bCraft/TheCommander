@@ -13,6 +13,7 @@ from commander.auth import hasher
 from commander.broker import Broker
 from commander.contracts import MemoryInput, RunInput
 from commander.db import Database
+from commander.engine import Engine
 from commander.errors import DomainError
 from commander.memory import save_memory
 from commander.providers import Provider
@@ -346,6 +347,77 @@ def test_schedule_without_browser_and_concurrent_claim(app, settings):
     updated = db.one("SELECT * FROM schedules WHERE id=%s", (schedule["id"],))
     assert updated["next_at"] > datetime.now(timezone.utc)
     assert client.get("/api/worker").json()["online"]
+    assert db.one(
+        "SELECT 1 FROM events e JOIN runs r ON r.id=e.run_id WHERE r.schedule_id=%s AND e.kind='queued'",
+        (schedule["id"],),
+    )
+
+
+def test_spent_daily_budget_defers_schedule_without_spinning(app, settings):
+    client, _vendor, _owner, db = app
+    current = client.get("/api/settings")
+    assert current.status_code == 200, current.text
+    limited = client.patch(
+        "/api/settings",
+        json={"revision": current.json()["revision"], "max_daily_runs": 1},
+    )
+    assert limited.status_code == 200, limited.text
+    held = client.post(
+        "/api/runs",
+        json={"skill": "conversation", "mode": "ask", "prompt": "Hold the daily run budget"},
+    )
+    assert held.status_code == 200, held.text
+    created = client.post(
+        "/api/schedules",
+        json={
+            "prompt": "Retry only after the daily budget frees",
+            "next_at": (datetime.now(timezone.utc) - timedelta(minutes=2)).isoformat(),
+            "timezone": "America/New_York",
+            "interval_seconds": 60,
+        },
+    )
+    assert created.status_code == 200, created.text
+    schedule_id = created.json()["id"]
+    from commander.schedules import BUDGET_BACKOFF, dispatch_due
+
+    dispatch_due(db, settings)
+    deferred = db.one("SELECT * FROM schedules WHERE id=%s", (schedule_id,))
+    assert db.all("SELECT id FROM runs WHERE schedule_id=%s", (schedule_id,)) == []
+    assert deferred["last_at"] is None
+    assert deferred["paused"] is False
+    assert deferred["revision"] == 2
+    remaining = deferred["next_at"] - datetime.now(timezone.utc)
+    assert timedelta(0) < remaining <= BUDGET_BACKOFF
+    dispatch_due(db, settings)
+    again = db.one("SELECT revision, next_at, paused FROM schedules WHERE id=%s", (schedule_id,))
+    assert again["revision"] == deferred["revision"]
+    assert again["next_at"] == deferred["next_at"]
+    assert again["paused"] is False
+    assert db.all("SELECT id FROM runs WHERE schedule_id=%s", (schedule_id,)) == []
+    restored = client.patch(
+        "/api/settings",
+        json={"revision": limited.json()["revision"], "max_daily_runs": 50},
+    )
+    assert restored.status_code == 200, restored.text
+    db.one(
+        "UPDATE schedules SET next_at=now()-interval '1 minute' WHERE id=%s RETURNING id",
+        (schedule_id,),
+    )
+    dispatch_due(db, settings)
+    rows = db.all("SELECT id FROM runs WHERE schedule_id=%s", (schedule_id,))
+    assert len(rows) == 1
+    assert db.one(
+        "SELECT 1 FROM events WHERE run_id=%s AND kind='queued'",
+        (rows[0]["id"],),
+    )
+
+
+def test_offline_eval_harness_scores_tool_selection_cancellation_and_memory(app, settings):
+    from scripts.evaluate_offline import evaluate
+
+    report = evaluate(*app, settings)
+    assert report["failed"] == [], report
+    assert report["passed"] == 3
 
 
 def test_worker_crash_recovery_preserves_uncertain_write(app, settings):
@@ -856,6 +928,130 @@ def test_retry_recovery_clears_old_failure_on_success(app, settings):
     detail = client.get("/api/runs/" + run["id"]).json()
     assert detail["status"] == "succeeded"
     assert detail["error"] is None
+
+
+def test_stale_finish_cannot_resurrect_cancelled_run(app, settings, monkeypatch):
+    client, vendor, owner, db = app
+    queued = client.post("/api/runs", json={"prompt": "Cancel me"}).json()
+    claimed = Worker(settings, vendor.transport()).claim()
+    original = Broker.active
+
+    def raced(self, run):
+        current = original(self, run)
+        db.one(
+            "UPDATE runs SET status='cancelled',lease_until=NULL WHERE id=%s RETURNING id",
+            (run["id"],),
+        )
+        return current
+
+    monkeypatch.setattr(Broker, "active", raced)
+    with pytest.raises(DomainError) as failure:
+        Engine(db, settings, vendor.transport()).finish(claimed, "succeeded", "stale completion")
+    assert failure.value.code == "cancelled"
+    detail = client.get("/api/runs/" + queued["id"]).json()
+    assert detail["status"] == "cancelled"
+    assert detail["result"] != "stale completion"
+    assert "succeeded" not in {item["kind"] for item in detail["events"]}
+    assert "skill_output" not in {item["kind"] for item in detail["events"]}
+    messages = client.get("/api/conversations/" + queued["conversation_id"] + "/messages").json()
+    assert all(item["content"] != "stale completion" for item in messages)
+
+
+def test_recovery_ignores_receipt_without_url_and_drops_lease(app, settings):
+    from commander.db import json as jsonb
+
+    client, vendor, owner, db = app
+    queued = client.post("/api/runs", json={"prompt": "Recover receipt"}).json()
+    worker = Worker(settings, vendor.transport())
+    claimed = worker.claim()
+    assert str(claimed["id"]) == queued["id"]
+    db.one(
+        """INSERT INTO actions(owner_id,run_id,tool,arguments,args_hash,connection_revision,status,receipt)
+           VALUES (%s,%s,'propose_issue',%s,'abc',1,'succeeded',%s) RETURNING id""",
+        (owner, claimed["id"], jsonb({"title": "x"}), jsonb({"provider": "github"})),
+    )
+    db.one(
+        "UPDATE runs SET lease_until=now()-interval '1 second',result='keep me' WHERE id=%s RETURNING id",
+        (claimed["id"],),
+    )
+    worker.recover()
+    stored = db.one(
+        "SELECT status,result,error,lease_token FROM runs WHERE id=%s", (claimed["id"],)
+    )
+    assert stored["status"] == "succeeded"
+    assert stored["result"] == "keep me"
+    assert stored["error"] is None
+    assert stored["lease_token"] is None
+
+
+def test_cancel_does_not_clobber_success_committed_while_waiting(app, settings):
+    import threading
+    import time
+
+    from psycopg import sql
+
+    from commander.runs import cancel
+
+    client, vendor, owner, db = app
+    queued = client.post("/api/runs", json={"prompt": "Race cancel"}).json()
+    Worker(settings, vendor.transport()).claim()
+    held = threading.Event()
+    release = threading.Event()
+    errors = []
+
+    def locker():
+        conn = psycopg.connect(settings.database_url)
+        try:
+            conn.execute(
+                sql.SQL("SET search_path TO {}, public").format(
+                    sql.Identifier(settings.database_schema)
+                )
+            )
+            conn.execute("SELECT id FROM runs WHERE id=%s FOR UPDATE", (queued["id"],))
+            held.set()
+            assert release.wait(5)
+            conn.execute(
+                "UPDATE runs SET status='succeeded',result='kept success',error=NULL WHERE id=%s",
+                (queued["id"],),
+            )
+            conn.commit()
+        except Exception as exc:
+            errors.append(exc)
+            held.set()
+        finally:
+            conn.close()
+
+    def canceller():
+        try:
+            cancel(db, owner, queued["id"])
+        except Exception as exc:
+            errors.append(exc)
+
+    locker_thread = threading.Thread(target=locker)
+    locker_thread.start()
+    assert held.wait(5)
+    cancel_thread = threading.Thread(target=canceller)
+    cancel_thread.start()
+    deadline = time.monotonic() + 3
+    blocked = False
+    while time.monotonic() < deadline:
+        waiting = db.one(
+            """SELECT 1 AS waiting FROM pg_stat_activity
+               WHERE position('cancelled' in query) > 0 AND wait_event_type='Lock' AND state='active'"""
+        )
+        if waiting:
+            blocked = True
+            break
+        time.sleep(0.02)
+    release.set()
+    cancel_thread.join(timeout=5)
+    locker_thread.join(timeout=5)
+    assert not errors
+    assert blocked
+    detail = client.get("/api/runs/" + queued["id"]).json()
+    assert detail["status"] == "succeeded"
+    assert detail["result"] == "kept success"
+    assert all(item["kind"] != "cancelled" for item in detail["events"])
 
 
 def test_release_has_no_legacy_command_routes(app):

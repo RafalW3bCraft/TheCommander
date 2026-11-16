@@ -50,8 +50,11 @@ The supported runtime is FastAPI, React, PostgreSQL and one durable worker.
 Legacy Flask code is retired from the working tree under ADR004; original Git
 history and a hashed local archive retain provenance. Existing public-schema data
 is untouched, and commander.cli still imports reviewed legacy JSON.
-Shell execution, arbitrary HTTP retrieval, email, calendars, voice and swarms are
-outside this release. ECC is retained development tooling, excluded from images.
+Shell execution, arbitrary HTTP retrieval, email, calendars, server-side voice
+pipelines and swarms are outside this release. The Assistant UI may offer
+optional browser Web Speech dictation and local read-aloud; those never call a
+paid speech API and never unlock sandbox or browser tools. ECC is retained
+development tooling, excluded from images.
 
 ## API and state specification
 

@@ -247,6 +247,23 @@ small {
 .danger {
   color: var(--danger);
 }
+.voice-controls,
+.voice-playback {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.65rem;
+  align-items: center;
+  margin: 0.35rem 0 0.75rem;
+}
+.voice-controls small,
+.voice-playback-unavailable {
+  color: var(--muted);
+  flex: 1 1 12rem;
+}
+.message .voice-playback,
+.message .voice-playback-unavailable {
+  margin-top: 0.35rem;
+}
 .status {
   font-size: 0.72rem;
   line-height: 1.2;

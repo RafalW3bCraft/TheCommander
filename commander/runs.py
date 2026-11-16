@@ -96,13 +96,17 @@ def detail(db, owner, run_id):
 
 def cancel(db, owner, run_id):
     with owner_lock(db, owner):
-        row = owned_run(db, owner, run_id)
-        if row["status"] not in ("succeeded", "failed", "cancelled"):
-            with db.connect() as conn:
-                conn.execute(
-                    "UPDATE runs SET status='cancelled',lease_until=NULL,updated_at=now() WHERE id=%s",
-                    (run_id,),
-                )
+        owned_run(db, owner, run_id)
+        with db.connect() as conn:
+            # One conditional write. A receipt restored while this waited must stay succeeded.
+            row = conn.execute(
+                """UPDATE runs SET status='cancelled',lease_token=NULL,lease_until=NULL,updated_at=now()
+                   WHERE id=%s AND owner_id=%s
+                   AND status IN ('queued','running','waiting_approval','uncertain')
+                   RETURNING id""",
+                (run_id, owner),
+            ).fetchone()
+            if row:
                 conn.execute(
                     "UPDATE actions SET status='denied',error='Run cancelled' WHERE run_id=%s AND status IN ('pending','approved')",
                     (run_id,),

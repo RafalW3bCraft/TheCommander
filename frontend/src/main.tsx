@@ -26,6 +26,8 @@ import { SettingsPage } from "./SettingsPage";
 import { useRunEvents } from "./useRunEvents";
 import { SafeMarkdown } from "./SafeMarkdown";
 import { ProjectSelector, type Project } from "./ProjectSelector";
+import { DictationButton, SpeakReplyButton } from "./VoiceControls";
+import { humanConnectionStatus } from "./voice";
 import type { components } from "./api-schema";
 function localInputTime(value: string | null | undefined) {
   if (!value) return "";
@@ -58,9 +60,11 @@ function ErrorBox({ error }: { error: string }) {
     </div>
   ) : null;
 }
-function Status({ value }: { value: string }) {
+function Status({ value, label }: { value: string; label?: string }) {
   return (
-    <span className={"status " + value}>{value.replaceAll("_", " ")}</span>
+    <span className={"status " + value}>
+      {label ?? value.replaceAll("_", " ")}
+    </span>
   );
 }
 function App() {
@@ -224,6 +228,7 @@ function App() {
                   type="password"
                   required
                   minLength={32}
+                  maxLength={200}
                   aria-describedby="bootstrap-help"
                 />
               </label>
@@ -241,7 +246,7 @@ function App() {
                   name="invitation"
                   type="password"
                   required
-                  maxLength={256}
+                  maxLength={200}
                   autoComplete="off"
                   aria-describedby="invitation-help"
                 />
@@ -590,6 +595,8 @@ function Composer({
   conversation?: string;
 }) {
   const { run: runJob, ...job } = useJob();
+  const [prompt, setPrompt] = useState("");
+  const dictationBase = useRef("");
   const [mode, setMode] = useState<components["schemas"]["RunView"]["mode"]>(
     skill === "conversation" ? "ask" : "automate",
   );
@@ -597,17 +604,20 @@ function Composer({
     <form
       onSubmit={(e) => {
         e.preventDefault();
-        const f = new FormData(e.currentTarget);
         const form = e.currentTarget;
+        const text = prompt.trim();
+        if (!text) return;
         void runJob(async () => {
           const run = await api<Run>("/runs", "POST", {
             skill,
             mode,
             ...(project ? { project_id: project } : {}),
-            prompt: String(f.get("prompt")),
+            prompt: text,
             ...(conversation ? { conversation_id: conversation } : {}),
           });
           form.reset();
+          setPrompt("");
+          dictationBase.current = "";
           onCreated(run);
         });
       }}
@@ -654,15 +664,36 @@ function Composer({
           : "What needs your attention?"}
         <textarea
           name="prompt"
+          aria-label={
+            conversation
+              ? "Continue this conversation"
+              : "What needs your attention?"
+          }
           placeholder="Help me choose the next step for my project…"
           required
           maxLength={8000}
+          value={prompt}
+          onChange={(e) => setPrompt(e.target.value)}
         />
       </label>
-      <button disabled={job.busy}>{job.busy ? "Queuing…" : "Run task"}</button>
+      <DictationButton
+        disabled={job.busy}
+        onListeningChange={(listening) => {
+          if (listening) dictationBase.current = prompt.replace(/\s+$/, "");
+          else dictationBase.current = "";
+        }}
+        onTranscript={(text) => {
+          const base = dictationBase.current;
+          setPrompt((base ? base + " " : "") + text);
+        }}
+      />
+      <button disabled={job.busy || !prompt.trim()}>
+        {job.busy ? "Queuing…" : "Run task"}
+      </button>
       <small>
         Runs continue in the background. External writes always need your exact
-        approval.
+        approval. Dictation only fills this prompt; it never enables sandbox or
+        browser tools.
       </small>
     </form>
   );
@@ -793,6 +824,7 @@ function Today() {
           <div className="message" key={m.id}>
             <strong>{m.role === "user" ? "You" : "TheCommander"}</strong>
             <SafeMarkdown text={m.content} />
+            {m.role !== "user" && <SpeakReplyButton text={m.content} />}
           </div>
         ))}
         {project && (
@@ -888,9 +920,11 @@ function RunList({
 function ActionCard({
   action,
   refresh,
+  runId,
 }: {
   action: Action;
   refresh: () => Promise<void>;
+  runId: string;
 }) {
   const { run: runJob, ...job } = useJob();
   const [edit, setEdit] = useState(false);
@@ -966,8 +1000,25 @@ function ActionCard({
             >
               Approve this exact issue
             </button>
-            <button className="secondary" onClick={() => setEdit(!edit)}>
+            <button
+              type="button"
+              className="secondary"
+              onClick={() => setEdit(!edit)}
+            >
               {edit ? "Cancel edit" : "Edit proposal"}
+            </button>
+            <button
+              type="button"
+              className="quiet danger"
+              disabled={job.busy || edit}
+              onClick={() =>
+                void runJob(async () => {
+                  await api("/runs/" + runId + "/cancel", "POST");
+                  await refresh();
+                })
+              }
+            >
+              Deny and stop this run
             </button>
           </>
         )}
@@ -1072,7 +1123,7 @@ function RunDetail({ id, close }: { id: string; close: () => void }) {
               </button>
             )}
           {detail.actions.map((a) => (
-            <ActionCard key={a.id} action={a} refresh={refresh} />
+            <ActionCard key={a.id} action={a} runId={id} refresh={refresh} />
           ))}
           {detail.evidence.length > 0 && (
             <>
@@ -1369,6 +1420,7 @@ function SchedulePanel({ project }: { project?: string }) {
 }
 function ConnectionsPage({ isOperator }: { isOperator: boolean }) {
   const [items, setItems] = useState<Connection[]>([]);
+  const [operatorPassword, setOperatorPassword] = useState("");
   const { run: runJob, ...job } = useJob();
   const refresh = useCallback(
     async () => setItems(await api<Connection[]>("/connections")),
@@ -1383,20 +1435,56 @@ function ConnectionsPage({ isOperator }: { isOperator: boolean }) {
         Connect only what you need. Credentials are encrypted on the server and
         never returned to this browser.
       </p>
+      <p>
+        Status guide: <strong>Not set up yet</strong> means add a credential,{" "}
+        <strong>Saved — test to confirm</strong> means click Test connection,{" "}
+        <strong>Ready</strong> means TheCommander can use it, and{" "}
+        <strong>Needs a fresh check</strong> means test again after idle time.
+        Tasks fail closed until at least one inference connection is Ready.
+      </p>
+      <button
+        type="button"
+        className="quiet"
+        disabled={job.busy}
+        onClick={() => void runJob(refresh)}
+      >
+        Refresh connection status
+      </button>
       <ErrorBox error={job.error} />
       {isOperator && (
-        <button
-          className="secondary"
-          disabled={job.busy}
-          onClick={() =>
+        <form
+          onSubmit={(event) => {
+            event.preventDefault();
             void runJob(async () => {
+              await api("/auth/reauthenticate", "POST", {
+                password: operatorPassword,
+              });
+              setOperatorPassword("");
               await api("/connections/import-environment", "POST");
               await refresh();
-            })
-          }
+            });
+          }}
         >
-          Import configured server credentials
-        </button>
+          <label>
+            Operator password
+            <input
+              type="password"
+              autoComplete="current-password"
+              required
+              maxLength={256}
+              value={operatorPassword}
+              onChange={(event) => setOperatorPassword(event.target.value)}
+              aria-describedby="import-help"
+            />
+          </label>
+          <small id="import-help">
+            Import is allowed only after a recent password check. The password
+            is sent once and is not stored in this page.
+          </small>
+          <button className="secondary" disabled={job.busy} type="submit">
+            Import configured server credentials
+          </button>
+        </form>
       )}
       {items.map((c) => (
         <ConnectionCard key={c.kind} connection={c} refresh={refresh} />
@@ -1432,16 +1520,16 @@ function ConnectionCard({
                       ? "Tavily research"
                       : "Workspace notes"}
         </h2>
-        <Status value={c.status} />
+        <Status value={c.status} label={humanConnectionStatus(c.status)} />
       </div>
       <p>
         {["nebius", "openai", "anthropic", "vultr"].includes(c.kind)
-          ? "Receives your selected conversation and memory context."
+          ? "Powers chat replies. Paste an API key from that provider, save, then Test connection."
           : c.kind === "github"
-            ? "Reads one repository. Issue creation requires exact approval."
+            ? "Reads one repository. Creating a GitHub issue always asks for your exact approval first."
             : c.kind === "tavily"
-              ? "Sends your research query to Tavily and restricts results to approved domains."
-              : "Creates and reads Markdown notes in your owner-scoped server directory."}
+              ? "Optional web research. Results stay limited to the domains you approve below."
+              : "Optional local Markdown notes stored only for your account on this server."}
       </p>
       {c.config.model && (
         <small>
@@ -1451,7 +1539,13 @@ function ConnectionCard({
         </small>
       )}
       {c.detail && <p>{c.detail}</p>}
-      {delegated && <p>You have limited judge access managed by the operator. Its credential is never available to your account. Saving your own credential replaces this allowance with your personal connection.</p>}
+      {delegated && (
+        <p>
+          You have limited judge access managed by the operator. Its credential
+          is never available to your account. Saving your own credential
+          replaces this allowance with your personal connection.
+        </p>
+      )}
       {c.validated_at && <small>Last checked {when(c.validated_at)}</small>}
       <ErrorBox error={job.error} />
       {job.error && (
@@ -1493,8 +1587,8 @@ function ConnectionCard({
             {delegated
               ? "Your personal API credential (replaces judge allowance)"
               : c.status === "unconfigured" || c.status === "revoked"
-              ? "API credential"
-              : "Replace credential (leave blank to keep)"}
+                ? "API credential"
+                : "Replace credential (leave blank to keep)"}
             <input
               name="secret"
               type="password"

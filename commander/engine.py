@@ -314,10 +314,15 @@ class Engine:
         with owner_lock(self.db, run["owner_id"]):
             self.broker.active(run)
             with self.db.connect() as conn:
-                conn.execute(
-                    "UPDATE runs SET status=%s,result=%s,error=NULL,lease_until=NULL,updated_at=now() WHERE id=%s AND lease_token=%s",
+                # Lease recovery or cancellation can commit after the activity check.
+                # A stale worker must not resurrect that run or append its output.
+                updated = conn.execute(
+                    """UPDATE runs SET status=%s,result=%s,error=NULL,lease_token=NULL,lease_until=NULL,updated_at=now()
+                       WHERE id=%s AND lease_token=%s AND status='running' RETURNING id""",
                     (status, result, run["id"], run["lease_token"]),
-                )
+                ).fetchone()
+                if not updated:
+                    raise DomainError("Run is no longer active", 409, "cancelled")
                 conn.execute(
                     "INSERT INTO events(run_id,kind,payload) VALUES (%s,'skill_output',%s)",
                     (run["id"], json(output.model_dump())),

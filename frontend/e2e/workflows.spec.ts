@@ -24,6 +24,9 @@ test("desktop owner memory connections three skills approvals and receipts", asy
   const errors: string[] = [];
   page.on("pageerror", (error) => errors.push(error.message));
   await login(page);
+  await expect(
+    page.getByRole("button", { name: "Start dictation", exact: true }),
+  ).toBeVisible();
   await page.getByRole("button", { name: "Memory", exact: true }).click();
   await page.getByLabel("Preference or fact").fill("Browser preference");
   await page

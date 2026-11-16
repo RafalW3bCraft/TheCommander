@@ -60,15 +60,19 @@ class Worker:
                     status = "uncertain"
                 else:
                     status = "queued" if row["attempts"] < 3 else "failed"
+                receipt = succeeded["receipt"] if succeeded else None
+                url = receipt.get("url") if isinstance(receipt, dict) else None
                 conn.execute(
-                    "UPDATE runs SET status=%s,error=%s,result=%s,lease_until=NULL,available_at=now()+interval '5 seconds',updated_at=now() WHERE id=%s",
+                    """UPDATE runs SET status=%s,error=%s,result=%s,lease_token=NULL,lease_until=NULL,
+                       available_at=now()+interval '5 seconds',updated_at=now()
+                       WHERE id=%s AND status='running'""",
                     (
                         status,
                         None
                         if status == "succeeded"
                         else "Worker stopped; recovery checkpoint applied",
-                        "Verified issue: " + succeeded["receipt"]["url"]
-                        if status == "succeeded"
+                        "Verified issue: " + url
+                        if status == "succeeded" and isinstance(url, str) and url
                         else row["result"],
                         row["id"],
                     ),
@@ -117,11 +121,14 @@ class Worker:
             logger.warning(
                 "run_failure run=%s code=%s type=%s", run["id"], code, type(exc).__name__
             )
-            self.db.one(
-                "UPDATE runs SET status=CASE WHEN EXISTS(SELECT 1 FROM actions a WHERE a.run_id=runs.id AND a.status IN ('executing','uncertain')) OR EXISTS(SELECT 1 FROM events e WHERE e.run_id=runs.id AND e.kind='note_intent') THEN 'uncertain' ELSE 'failed' END,error=%s,lease_until=NULL,updated_at=now() WHERE id=%s AND status='running' AND lease_token=%s RETURNING id",
+            failed = self.db.one(
+                """UPDATE runs SET status=CASE WHEN EXISTS(SELECT 1 FROM actions a WHERE a.run_id=runs.id AND a.status IN ('executing','uncertain')) OR EXISTS(SELECT 1 FROM events e WHERE e.run_id=runs.id AND e.kind='note_intent') THEN 'uncertain' ELSE 'failed' END,
+                   error=%s,lease_token=NULL,lease_until=NULL,updated_at=now()
+                   WHERE id=%s AND status='running' AND lease_token=%s RETURNING id""",
                 (message, run["id"], run["lease_token"]),
             )
-            event(self.db, run["id"], "error", {"message": message, "code": code})
+            if failed:
+                event(self.db, run["id"], "error", {"message": message, "code": code})
         self.heartbeat()
         return True
 

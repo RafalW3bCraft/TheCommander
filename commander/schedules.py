@@ -5,6 +5,10 @@ from commander.errors import DomainError
 from commander.preferences import resolve, values
 from commander.skills import definition
 
+# A spent daily budget must not leave next_at in the past. Worker ticks otherwise
+# lock the same due rows forever. Five minutes is the retry bound, not a skip.
+BUDGET_BACKOFF = timedelta(minutes=5)
+
 
 def save(db, owner, data, schedule_id=None):
     from commander.projects import require
@@ -69,10 +73,15 @@ def dispatch_due(db, settings):
                 continue
             effective = resolve(db, settings, row["owner_id"])
             if count >= effective.max_daily_runs:
+                conn.execute(
+                    "UPDATE schedules SET next_at=%s,revision=revision+1 WHERE id=%s",
+                    (now + BUDGET_BACKOFF, row["id"]),
+                )
                 continue
-            conn.execute(
+            inserted = conn.execute(
                 """INSERT INTO runs(owner_id,schedule_id,occurrence_at,skill,skill_version,prompt,settings_snapshot,project_id)
-               VALUES (%s,%s,%s,%s,%s,%s,%s,%s) ON CONFLICT(schedule_id,occurrence_at) DO NOTHING""",
+               VALUES (%s,%s,%s,%s,%s,%s,%s,%s) ON CONFLICT(schedule_id,occurrence_at) DO NOTHING
+               RETURNING id""",
                 (
                     row["owner_id"],
                     row["id"],
@@ -83,7 +92,11 @@ def dispatch_due(db, settings):
                     json(values(effective)),
                     row["project_id"],
                 ),
-            )
+            ).fetchone()
+            if inserted:
+                conn.execute(
+                    "INSERT INTO events(run_id,kind) VALUES (%s,'queued')", (inserted["id"],)
+                )
             next_at = None
             if row["interval_seconds"]:
                 elapsed = (now - row["next_at"]).total_seconds()

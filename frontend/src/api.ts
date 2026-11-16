@@ -46,12 +46,32 @@ export async function api<T>(
     if (response.status === 401 && path !== "/auth/login") {
       window.dispatchEvent(new Event("commander-session-expired"));
     }
-    throw new ApiError(
-      data.error?.message || "Request failed",
-      response.status,
-    );
+    throw new ApiError(failureMessage(data), response.status);
   }
   return data as T;
+}
+function failureMessage(data: unknown): string {
+  const error =
+    data && typeof data === "object" && "error" in data
+      ? (data as { error?: { message?: unknown; fields?: unknown } }).error
+      : undefined;
+  const message =
+    error && typeof error.message === "string"
+      ? error.message
+      : "Request failed";
+  const fields = Array.isArray(error?.fields) ? error.fields : [];
+  const detail = fields
+    .map((item) => {
+      if (!item || typeof item !== "object") return "";
+      const record = item as { field?: unknown; message?: unknown };
+      const field = typeof record.field === "string" ? record.field : "";
+      const text = typeof record.message === "string" ? record.message : "";
+      const name = field.replace(/^(body|query|path)\./, "");
+      return name && text ? `${name}: ${text}` : text;
+    })
+    .filter(Boolean)
+    .join("; ");
+  return detail ? `${message} (${detail})` : message;
 }
 export function when(value: string | null) {
   return value ? new Date(value).toLocaleString() : "—";

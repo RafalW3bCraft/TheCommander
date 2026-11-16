@@ -1,5 +1,15 @@
 # Vultr verification
 
+## Ref check — 2026-11-16
+
+Checked in a writable copy of this repository, not by redeploying:
+
+- `HEAD`, `origin/main`, and `origin/HEAD` are `50f7c0cee8ef5e09a9046c18b81479f1d043d92a` (`Merge pull request #14 from RafalW3bCraft/vultr`).
+- `origin/vultr` is `08dc39fde04c3917da32d6bb86b4ff2caf219f5d`. Local `vultr` is two merge commits ahead of that remote-tracking ref.
+- Local branch `main` is still `005deba0b0ee7a5c36bb57304bf0d542b5842005`, 17 commits behind `origin/main`.
+
+The 2026-11-05 section below is a historical record for `8ab487716b1d73395dca49fd87db1a5e54fa7821`. This session did not re-run its CI jobs, public HTTPS checks, live provider calls, or gVisor. Those remain unverified for `50f7c0c`.
+
 ## Current repair cycle — 2026-11-05
 
 Implementation source: `8ab487716b1d73395dca49fd87db1a5e54fa7821`, branch
